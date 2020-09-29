@@ -6,6 +6,7 @@ const saltRounds = 10;
 const gravatar = require('gravatar');
 const jwt = require('jsonwebtoken');
 const keys = require("../../config/keys")
+const passport = require("passport")
 
 // 引入 User 才可以做查詢
 const User = require("../../models/User")
@@ -27,7 +28,7 @@ router.post("/register", (req,res)=>{
 	User.findOne({email:req.body.email})
 	.then((user)=>{
 		if(user){
-			return res.status(400).json({email:"email已經被註冊"})
+			return res.status(400).json("email已經被註冊")
 		}else{
 
 			const avatar = gravatar.url(req.body.email, {s: '200', r: 'pg', d: 'mm'});
@@ -35,7 +36,8 @@ router.post("/register", (req,res)=>{
 				name:req.body.name,
 				email:req.body.email,
 				avatar,
-				password:req.body.password
+				password:req.body.password,
+				identity:req.body.identity
 			})
 
 			// 加密的東東 bcrypt
@@ -65,26 +67,48 @@ router.post("/login", (req,res)=>{
 	User.findOne({email})
 	.then(user=>{
 		if(!user || password==undefined){
-			return res.status(404).json({email:"用戶不存在！"})
+			return res.status(404).json("用戶不存在！")
 		}else{
 			bcrypt.compare(password, user.password)
 			// 使用 promise 方式 .then  (本來是使用 ()=> )
 			.then(isMatch=>{
 				if(isMatch){
 					// jwt.sign("規則","加密名字","過期時間","箭頭函數")
-					const rule = {id:user.id, emai:user.email}
+					const rule = {id:
+						user.id,
+						emai:user.email,
+						avatar:user.avatar,
+						identity:user.identity
+					}
 					jwt.sign(rule,keys.secretOrKey,{expiresIn:3600},(err, token)=>{
 						if(err) throw err
 						res.json({
 							success:true,
-							token:"waha"+token
+							token:"Bearer "+token
 						})
 					})
 				}else{
-					return res.status(400).json({password:"密碼錯誤"})
+					return res.status(400).json("密碼錯誤")
 				}
 			})
 		}
+	})
+})
+
+// $router POST api/users/current
+// @desc   return current user
+// @access Private
+
+// router.get("/current", "驗證token",(req, res)=>{
+// 	res.json({msg:"success"})
+// })
+router.get("/current", passport.authenticate("jwt", {session:false}),(req, res)=>{
+	// res.json(req.user) // 不需要把整個 user 資訊返回
+	res.json({
+		id:req.user.id,
+		name:req.user.name,
+		email:req.user.email,
+		identity:req.user.identity
 	})
 })
 
