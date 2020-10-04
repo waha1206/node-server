@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "restful api",
   "main": "server.js",
-	"scripts": {
-		"client-install":"npm install --prefix client",
-		"client":"npm start --prefix client",
+  "scripts": {
+    "client-install": "npm install --prefix client",
+    "client": "npm start --prefix client",
     "start": "node server.js",
-		"server": "nodemon server.js",
-		"dev":"concurrently \"npm run server\" \"npm run client\""
+    "server": "nodemon server.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "waha",
   "license": "ISC",
@@ -24,6 +24,13 @@
   },
   "devDependencies": {
     "eslint": "^7.10.0",
-    "eslint-plugin-vue": "^6.2.2"
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "eslint-plugin-vue": "^7.0.0"
   }
 }
