@@ -41,7 +41,7 @@
     </div>
     <div class="table_container">
       <el-table
-        stripe="true"
+        :stripe="true"
         v-if="tableData.length > 0"
         :data="tableData"
         style="width: 100%"
@@ -202,6 +202,7 @@ export default {
     // 頁碼
     handleSizeChange(page_size) {
       // 切換每頁有幾條數據
+
       localStorage.page_size = page_size
       this.my_paginations.page_index = 1
       this.my_paginations.page_size = page_size
@@ -243,7 +244,7 @@ export default {
       this.my_paginations.total = this.allTableData.length
       this.my_paginations.page_index = 1
       if (localStorage.page_size) {
-        this.my_paginations.page_size = localStorage.page_size
+        this.my_paginations.page_size = Number(localStorage.page_size)
       } else {
         this.my_paginations.page_size = 5
       }
