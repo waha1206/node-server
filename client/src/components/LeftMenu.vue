@@ -61,7 +61,20 @@ export default {
             {
               path: 'infoshow',
               name: '個人資料'
-            }
+            },
+            { path: 'a', name: '管理所有用戶' }
+          ]
+        },
+        {
+          icon: 'fa-asterisk',
+          name: '程式測試區',
+          path: 'b',
+          children: [
+            {
+              path: 'c',
+              name: '檔案上傳練習'
+            },
+            { path: 'd', name: '其他雜項' }
           ]
         }
       ]
