@@ -7,6 +7,7 @@ const app = express()
 // 引入 users.js
 const users = require('./routes/api/users.js')
 const profiles = require('./routes/api/profiles.js')
+const customers = require('./routes/api/customers')
 
 // db config
 const db = require('./config/keys').mongoURI
@@ -35,6 +36,7 @@ const port = process.env.PORT || 5000
 // 使用 routes 下的 api 下的 users 其實在上面就引入了  const users = require("./routes/api/users.js")
 app.use('/api/user/', users)
 app.use('/api/profiles/', profiles)
+app.use('/api/customer', customers)
 
 // 監聽
 app.listen(port, () => {

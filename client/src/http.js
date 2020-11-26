@@ -43,15 +43,17 @@ axios.interceptors.response.use(
   (error) => {
     // 錯誤提醒
     endLoading()
-    Message.error(error.response.data)
 
-    const { status } = err.response
+    const { status } = error.response
+    console.log(status)
     if (status == 401) {
-      Message.err('token 失效，請重新登入！')
+      Message.error('token 失效，請重新登入！')
       // 清除 token
       localStorage.removeItem('eleToken')
       // 跳轉到登入頁面
       router.push('/login')
+    } else {
+      Message.error(error.response.data)
     }
     return Promise.reject(error)
   }

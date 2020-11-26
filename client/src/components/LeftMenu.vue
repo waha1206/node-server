@@ -44,12 +44,36 @@ export default {
       items: [
         {
           icon: 'fa-money',
-          name: '原料管理',
+          name: '資料庫增刪查找',
           path: 'fund',
           children: [
             {
               path: 'fundlist',
-              name: '原物料增刪查改'
+              name: 'DEMO表單使用'
+            },
+            {
+              path: 'customer-manager',
+              name: '客戶資料管理'
+            },
+            {
+              path: 'user-manager',
+              name: '使用者管理'
+            },
+            {
+              path: 'material-manager',
+              name: '原物料管理'
+            },
+            {
+              path: 'process-manager',
+              name: '加工費用管理'
+            },
+            {
+              path: 'product-template-manager',
+              name: '公版商品管理'
+            },
+            {
+              path: 'product-profit-manager',
+              name: '商品利潤管理'
             }
           ]
         },
