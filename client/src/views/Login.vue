@@ -97,6 +97,7 @@ export default {
             // 取得 token 並且放到 application 下面的 localstorage
             // res.json 從伺服器端發送過來，在  client 接收到後，要去解析 res.data 因為，返回的資料會放到裡面
             // 我們這次 server 端返回的是  {success:true , token:****************}
+
             const { token } = res.data
             // 上面等同於  const token = res.data.token
 
@@ -105,7 +106,7 @@ export default {
 
             // 解析 token
             const decoded = jwt_decode(token)
-            // console.log('decoded', decoded)
+            console.log('decoded', decoded)
 
             // token 存儲到 vuex 中
             this.$store.dispatch('setIsAutnenticated', !this.isEmpty(decoded))

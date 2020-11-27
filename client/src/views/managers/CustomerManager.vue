@@ -2,13 +2,42 @@
   <div>
     <div class="customer-manager">
       <p>我是客戶資料管理器</p>
+      <el-button type="primary">點我一下</el-button>
     </div>
+    <MyDialog
+      :dialog="dialog"
+      :formData="formData"
+      @update="getProfile"
+    ></MyDialog>
   </div>
 </template>
 
 <script>
+import MyDialog from '../../components/MyDialog'
+
 export default {
-  name: 'customer-manager'
+  name: 'customer-manager',
+  data() {
+    return {
+      formData: {
+        type: '',
+        describe: '',
+        income: '',
+        expend: '',
+        cash: '',
+        remark: '',
+        id: ''
+      },
+      dialog: {
+        show: true,
+        title: '展示一下',
+        option: 'edit'
+      }
+    }
+  },
+  components: {
+    MyDialog
+  }
 }
 </script>
 

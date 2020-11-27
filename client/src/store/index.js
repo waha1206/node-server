@@ -19,6 +19,10 @@ const getters = {
   user: (state) => state.user
 }
 
+// 注意 store.dispath 這個是可以使用異步函數，而Mutation 則為同步函數
+// Action 提交的是 mutation，而不是直接变更状态。
+// Action 可以包含任意异步操作。
+
 const mutations = {
   [types.SET_IS_AUTNENTIATED](state, isAutnenticated) {
     if (isAutnenticated) state.isAutnenticated = isAutnenticated
