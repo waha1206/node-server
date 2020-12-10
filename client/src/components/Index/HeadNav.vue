@@ -2,7 +2,7 @@
   <header class="head-nav">
     <el-row>
       <el-col :span="6" class="log-container">
-        <img src="../assets/logo.png" class="logo" alt="" />
+        <img src="../../assets/logo.png" class="logo" alt="" />
         <span class="title">麥歐後台管理系統</span>
       </el-col>
       <el-col :span="6" class="user">

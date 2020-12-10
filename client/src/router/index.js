@@ -7,7 +7,6 @@ import NotFond from '../views/404.vue'
 import Home from '../views/Home.vue'
 import InfoShow from '../views/InfoShow.vue'
 import FundList from '../views/FundList.vue'
-import CustomerManager from '../views/managers/CustomerManager.vue'
 
 Vue.use(VueRouter)
 
@@ -49,10 +48,12 @@ const router = new VueRouter({
         {
           path: '/customer-manager',
           name: 'customer-manager',
-          component: CustomerManager
-          // component: () => {
-          //   import('../views/managers/CustomerManager.vue')
-          // }
+          component: () => import('../views/managers/CustomerManager.vue')
+        },
+        {
+          path: '/categories-manager',
+          name: 'categories-manager',
+          component: () => import('../views/managers/CategoriesManager.vue')
         }
       ]
     },

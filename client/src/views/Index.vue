@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import HeadNav from '../components/HeadNav'
-import LeftMenu from '../components/LeftMenu'
+import HeadNav from '../components/Index/HeadNav'
+import LeftMenu from '../components/Index/LeftMenu'
 export default {
   name: 'index',
   components: {

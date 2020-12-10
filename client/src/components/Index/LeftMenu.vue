@@ -56,6 +56,10 @@ export default {
               name: '客戶資料管理'
             },
             {
+              path: 'categories-manager',
+              name: '商品分類管理'
+            },
+            {
               path: 'user-manager',
               name: '使用者管理'
             },
