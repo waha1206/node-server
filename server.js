@@ -8,6 +8,7 @@ const app = express()
 const users = require('./routes/api/users.js')
 const profiles = require('./routes/api/profiles.js')
 const customers = require('./routes/api/customers')
+const categories = require('./routes/api/categories')
 
 // db config
 const db = require('./config/keys').mongoURI
@@ -37,6 +38,7 @@ const port = process.env.PORT || 5000
 app.use('/api/user/', users)
 app.use('/api/profiles/', profiles)
 app.use('/api/customer', customers)
+app.use('/api/categories', categories)
 
 // 監聽
 app.listen(port, () => {

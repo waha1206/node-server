@@ -3,47 +3,81 @@
     <div class="customer-manager"></div>
     <el-container>
       <el-header>
-        <el-button type="primary" size="small">新增商品代號</el-button>
+        <el-button type="primary" size="small" @click="addLevelOne"
+          >新增商品代號</el-button
+        >
+        <el-button type="primary" size="small" @click="getCategories"
+          >取得商品類別資訊</el-button
+        >
       </el-header>
       <el-container>
-        <el-aside width="400px">商品代號</el-aside>
-        <el-aside width="400px">Aside</el-aside>
+        <el-aside width="50%">商品代號</el-aside>
+        <el-aside width="50%">Aside</el-aside>
         <!-- <el-main>Main</el-main> -->
       </el-container>
     </el-container>
-    <!-- <MyDialog
+    <CategoriesDialog
       :dialog="dialog"
       :formData="formData"
-      @update="getProfile"
-    ></MyDialog> -->
+      :categoriesData="categoriesData"
+      @update="getCategories"
+    ></CategoriesDialog>
   </div>
 </template>
 
 <script>
-import MyDialog from '../../components/MyDialog'
+import CategoriesDialog from '../../components/CategoriesManager/CategoriesDialog'
 
 export default {
-  name: 'customer-manager',
+  name: 'categories-manager',
   data() {
     return {
+      innerDialog: false,
+      categoriesData: [], // 開始就先讀取資料庫的數據
       formData: {
         type: '',
+        name: '',
         describe: '',
-        income: '',
-        expend: '',
-        cash: '',
-        remark: '',
+        last_modify_user: '',
         id: ''
       },
       dialog: {
-        show: true,
+        show: false,
         title: '展示一下',
         option: 'edit'
       }
     }
   },
   components: {
-    MyDialog
+    CategoriesDialog
+  },
+  created() {
+    this.getCategories()
+  },
+  methods: {
+    // 一開始就取得 商品分類袋號資訊
+    getCategories() {
+      this.$axios
+        .get('/api/categories')
+        .then((res) => {
+          // 把資料庫的數據都先讀出來
+          this.categoriesData = res.data
+          console.log(this.categoriesData)
+          // 設置分頁數據
+          // this.setPaginations()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    // 添加一筆新的商品分類代號 TD SS GG ... 等等
+    addLevelOne() {
+      this.dialog = {
+        show: true,
+        title: '新增加第一層的商品分類目錄',
+        option: 'add'
+      }
+    }
   }
 }
 </script>

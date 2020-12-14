@@ -4,16 +4,16 @@
       <p>我是客戶資料管理器</p>
       <el-button type="primary">點我一下</el-button>
     </div>
-    <MyDialog
+    <!-- <MyDialog
       :dialog="dialog"
       :formData="formData"
       @update="getProfile"
-    ></MyDialog>
+    ></MyDialog> -->
   </div>
 </template>
 
 <script>
-import MyDialog from '../../components/MyDialog'
+import MyDialog from '../../components/FundList/MyDialog'
 
 export default {
   name: 'customer-manager',

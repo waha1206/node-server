@@ -15,6 +15,7 @@
           label-width="120px"
           style="margin:10px;width:auto"
         >
+          <!-- 下拉選單的使用範例 -->
           <el-form-item label="收支類型：">
             <el-select v-model="formData.type" placeholder="收支類型">
               <el-option

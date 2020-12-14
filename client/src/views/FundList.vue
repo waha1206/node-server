@@ -149,7 +149,7 @@
   </div>
 </template>
 <script>
-import MyDialog from '../components/MyDialog'
+import MyDialog from '../components/FundList/MyDialog'
 import { MessageBox } from 'element-ui'
 
 export default {
