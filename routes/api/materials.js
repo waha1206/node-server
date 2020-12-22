@@ -13,7 +13,7 @@ router.get('/test', (req, res) => {
   res.json('msg:login works')
 })
 
-// $router POST api/users/register
+// $router POST api/material/upload
 // @desc   返回的請求的 json 數據
 // @access public
 router.post(
@@ -26,7 +26,7 @@ router.post(
     // res.json('msg:chats works');
     // return;
 
-    const materials = new Array()
+    const materials = new Array(req.body.length)
 
     for (let i = 0; i < req.body.length; i++) {
       const material = new Material({
@@ -71,19 +71,18 @@ router.post(
   }
 )
 
-// $router POST api/users/login
-// @desc   返回 token jwt passport
-// @access public
-
-// $router GET api/customer/all
+// $router GET api/material/all
 // @desc   取得所有使用者資料
 // @access Private
-router.post(
-  '/search',
+router.get(
+  '/',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Material.find({ company: { $regex: req.body.key } }).then((customers) => {
-      res.json(customers)
+    Material.find({}, null, { limit: 10 }).then((materials) => {
+      if (!materials) {
+        return res.status(400).json('沒有任何原物料資訊')
+      }
+      res.json(materials)
     })
   }
 )

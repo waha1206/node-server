@@ -64,7 +64,7 @@ export default {
               name: '使用者管理'
             },
             {
-              path: 'material-manager',
+              path: 'materials-manager',
               name: '原物料管理'
             },
             {

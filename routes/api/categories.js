@@ -41,7 +41,7 @@ router.post(
 )
 
 // $router get api/categories
-// @desc   獲取所有訊息
+// @desc   獲取所有分類資訊
 // @access private
 // 使用 hander 要驗證 token
 // body 不用放，因為他會獲取所有訊息

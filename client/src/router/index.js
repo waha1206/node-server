@@ -54,6 +54,11 @@ const router = new VueRouter({
           path: '/categories-manager',
           name: 'categories-manager',
           component: () => import('../views/managers/CategoriesManager.vue')
+        },
+        {
+          path: '/materials-manager',
+          name: 'materials-manager',
+          component: () => import('../views/managers/MaterialsManager.vue')
         }
       ]
     },
