@@ -3,48 +3,114 @@
     <el-container>
       <el-header>
         <el-button type="primary" size="small" @click="addMaterial"
+          >新增原物料分類</el-button
+        >
+        <el-button type="primary" size="small" @click="addMaterial"
           >新增原物料</el-button
         >
         <el-button type="primary" size="small">取得商品類別資訊</el-button>
       </el-header>
       <el-container>
-        <el-aside width="100%">
-          <el-table
-            :data="
-              allMaterialData.filter(
-                (data) =>
-                  !search ||
-                  data.name.toLowerCase().includes(search.toLowerCase())
-              )
-            "
-            style="width: 100%"
-          >
-            <el-table-column label="Date" prop="date"> </el-table-column>
-            <el-table-column label="Name" prop="name"> </el-table-column>
-            <el-table-column align="right">
-              <template slot="header" slot-scope="scope">
-                <el-input
-                  v-model="search"
-                  size="mini"
-                  placeholder="输入关键字搜索"
-                />
-              </template>
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  @click="handleEdit(scope.$index, scope.row)"
-                  >Edit</el-button
-                >
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)"
-                  >Delete</el-button
-                >
-              </template>
-            </el-table-column>
-          </el-table></el-aside
+        <!-- <el-aside width="100%"> -->
+        <el-table
+          :stripe="true"
+          :data="
+            allMaterialData.filter(
+              (data) =>
+                !search ||
+                data.product_name.toLowerCase().includes(search.toLowerCase())
+            )
+          "
+          style="width: 100%"
         >
+          <!-- 序號 -->
+          <el-table-column
+            type="index"
+            label="序號"
+            align="center"
+            width="70"
+          ></el-table-column>
+          <!-- 原物料名稱 -->
+          <el-table-column
+            label="原物料名稱"
+            prop="product_name"
+            align="left"
+            width="350"
+          >
+            <!-- 原物料分類 -->
+          </el-table-column>
+          <el-table-column
+            label="分類"
+            prop="material_class"
+            align="center"
+            width="70"
+          >
+          </el-table-column>
+            <!-- 售價 -->
+          </el-table-column>
+          <el-table-column
+            label="售價"
+            prop="unit_price"
+            align="center"
+            width="70"
+          >
+          </el-table-column>
+            <!-- 目前庫存 -->
+          </el-table-column>
+          <el-table-column
+            label="目前庫存"
+            prop="storage"
+            align="center"
+            width="80"
+          >
+          </el-table-column>
+            <!-- 最低庫存 -->
+          </el-table-column>
+          <el-table-column
+            label="最低庫存"
+            prop="stock_alert"
+            align="center"
+            width="80"
+          >
+          </el-table-column>
+            <!-- 商品材質 -->
+          </el-table-column>
+          <el-table-column
+            label="商品材質"
+            prop="raw_material"
+            align="center"
+            width="150"
+          >
+          </el-table-column>
+
+
+          <!-- 搜尋欄位 -->
+          <el-table-column align="center" width="150">
+            <!-- header 代表放到列的說明文字那邊 -->
+            <template slot="header" slot-scope="scope">
+              <el-input
+                v-model="search"
+                size="mini"
+                placeholder="輸入關鍵字搜尋"
+              />
+            </template>
+            <!-- slot 崁入兩個按鈕 -->
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                @click="handleEdit(scope.$index, scope.row)"
+                >編輯</el-button
+              >
+              <el-button
+                size="mini"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row)"
+                >刪除</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- </el-aside> -->
 
         <!-- <el-main>Main</el-main> -->
       </el-container>
@@ -91,6 +157,12 @@ export default {
     this.getMaterials()
   },
   methods: {
+    handleEdit(index, row) {
+      console.log(index, row)
+    },
+    handleDelete(index, row) {
+      console.log(index, row)
+    },
     addMaterial() {
       console.log('新增原物料')
     },
@@ -100,7 +172,7 @@ export default {
         .then((res) => {
           // console.log('views/FundList.vue', res)
           this.allMaterialData = res.data
-          console.log(this.allMaterialData)
+          console.log('allMaterialData的內容', this.allMaterialData)
 
           // 設置分頁數據
           // this.setPaginations()

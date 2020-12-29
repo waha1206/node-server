@@ -92,14 +92,14 @@
         </el-table-column>
         <el-table-column prop="remark" label="備註" align="center" width="220">
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           prop="operation"
           align="center"
           label="操作"
           fixed="right"
           width="180"
         >
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           prop="operation"
           label="操作"

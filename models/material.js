@@ -103,6 +103,9 @@ const MaterialSchema = new Schema({
   },
   stock_alert: {
     type: String
+  },
+  material_class: {
+    type: String
   }
 })
 
