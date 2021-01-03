@@ -10,7 +10,7 @@ const Material = require('../../models/Material')
 // @desc   返回的請求的 json 數據
 // @access public
 router.get('/test', (req, res) => {
-  res.json('msg:login works')
+  res.json('msg:material is works')
 })
 
 // $router POST api/material/upload
@@ -78,12 +78,74 @@ router.get(
   '/',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Material.find({}, null, { limit: 10 }).then((materials) => {
+    Material.find({}, null, { limit: 15 }).then((materials) => {
       if (!materials) {
         return res.status(400).json('沒有任何原物料資訊')
       }
       res.json(materials)
     })
+  }
+)
+
+// $router post api/material/edit/:id
+// @desc   編輯訊息接口
+// @access private
+// 使用 hander 要驗證 token
+// 有看到 post 就代表他會使用到 body 傳遞 數據 {}
+// 有看到 /:id 就代表要從 params 接收一個 id 進來
+router.post(
+  '/edit/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const materialFields = {}
+
+    // if (req.body.type) materialClassFields.type = req.body.type
+    // if (req.body.name) materialClassFields.name = req.body.name
+    // if (req.body.describe) materialClassFields.describe = req.body.describe
+    for (const prop in req.body) {
+      materialFields[prop] = req.body[prop]
+    }
+
+    // console.log(materialFields)
+    // res.json('msg:material is works')
+
+    Material.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $set: materialFields },
+      { new: true }
+    ).then((materials) => res.json(materials))
+  }
+)
+
+// $router post api/material/add
+// @desc   創建訊息接口
+// @access private
+// 使用 hander 要驗證 token
+// 使用 body 要放創建的資料 key:value
+router.post(
+  '/add',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const materialFields = {}
+
+    for (const prop in req.body) {
+      materialFields[prop] = req.body[prop]
+    }
+
+    console.log(materialFields)
+    console.log(req.body.product_name)
+
+    Material.findOne({ product_name: req.body.product_name }).then(
+      (material) => {
+        if (material) {
+          return res.status(400).json('此原物料的名稱已經存在')
+        } else {
+          new Material(material).save().then((material) => {
+            res.json(material)
+          })
+        }
+      }
+    )
   }
 )
 

@@ -18,9 +18,31 @@ router.get('/test', (req, res) => {
   res.json('msg:login works')
 })
 
+// $router POST api/users/get-user-name
+// @desc   返回的請求的 json 數據
+// @access public
+
+// 查詢數據庫中此ID的使用者名稱
+router.post(
+  '/get-user-name',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // console.log(req.body)
+    console.log(req.body)
+    User.findOne({ _id: req.body.id }).then((user) => {
+      if (!user) {
+        return res.status(400).json('使用者不存在！')
+      } else {
+        res.json(user)
+      }
+    })
+  }
+)
+
 // $router POST api/users/register
 // @desc   返回的請求的 json 數據
 // @access public
+
 router.post('/register', (req, res) => {
   // console.log(req.body)
 
@@ -126,6 +148,37 @@ router.get(
       name: req.user.name,
       email: req.user.email,
       identity: req.user.identity
+    })
+  }
+)
+
+// $router GET api/users/user-info
+// @desc   取得所有使用者 id 與 name
+// @access Private
+router.get(
+  '/user-info',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    User.find().then((users) => {
+      if (!users) {
+        return res.status(400).json('沒有任何使用者資料')
+      }
+
+      // 先宣告一個數組
+      const userInfo = []
+      // keys 是你要取得的 key
+      const keys = ['_id', 'name']
+      // 把每個使用者都抓出來 index 是數字 所以要用 users[index] 去取得該物件
+      for (const index in users) {
+        // 要複製的空對象
+        const objCopy = {}
+        // 把要複製的物件，用 forEach (這邊找的是 _id 跟 name) 從 users[index][key] 複製到 objCopy[key]
+        keys.forEach((key) => (objCopy[key] = users[index][key]))
+        // 把複製好的物件 推到 userInfo 裡面
+        userInfo.push(objCopy)
+      }
+
+      res.json(userInfo)
     })
   }
 )

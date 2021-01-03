@@ -10,6 +10,7 @@ const profiles = require('./routes/api/profiles.js')
 const customers = require('./routes/api/customers')
 const categories = require('./routes/api/categories')
 const materials = require('./routes/api/materials')
+const materialClass = require('./routes/api/materialClass')
 
 // db config
 const db = require('./config/keys').mongoURI
@@ -41,6 +42,7 @@ app.use('/api/profiles/', profiles)
 app.use('/api/customer', customers)
 app.use('/api/categories', categories)
 app.use('/api/material', materials)
+app.use('/api/material-class', materialClass)
 
 // 監聽
 app.listen(port, () => {
