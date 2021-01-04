@@ -78,7 +78,8 @@ router.get(
   '/',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Material.find({}, null, { limit: 15 }).then((materials) => {
+    Material.find({}, null, { limit: 300 }).then((materials) => {
+      // Material.find().then((materials) => {
       if (!materials) {
         return res.status(400).json('沒有任何原物料資訊')
       }
