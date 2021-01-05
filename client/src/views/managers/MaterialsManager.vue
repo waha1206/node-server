@@ -8,7 +8,25 @@
         <el-button type="primary" size="small" @click="handleAddMaterial"
           >新增原物料</el-button
         >
-        <el-button type="primary" size="small">取得商品類別資訊</el-button>
+        <div class="materal-class-container">
+          <el-select
+            v-model="materialClassName"
+            @change="handleMaterialClassChange"
+            filterable
+            size="mini"
+            placeholder="可以透過關鍵字搜尋"
+          >
+            <!-- 我的理解 option 裡面的 :value 所綁定的值，會往上傳遞到 el-select 裡面的 v-model="data return 裡面設定的變數名稱" -->
+            <el-option
+              v-for="item in materialClassData"
+              :key="item.type"
+              :label="item.name"
+              :value="item._id"
+            >
+            </el-option>
+          </el-select>
+        </div>
+        <!-- {{ materialClassName }} -->
       </el-header>
       <el-container>
         <!-- <el-aside width="100%"> -->
@@ -16,7 +34,7 @@
           size="mini"
           :stripe="true"
           :data="
-            allMaterialData.filter(
+            tableData.filter(
               (data) =>
                 !search ||
                 data.product_name.toLowerCase().includes(search.toLowerCase())
@@ -183,17 +201,32 @@
             </template>
           </el-table-column>
         </el-table>
+
         <!-- </el-aside> -->
 
         <!-- <el-main>Main</el-main> -->
       </el-container>
     </el-container>
-    <MaterialsDialog
+    <!-- 分頁 -->
+    <div class="pagination">
+      <el-pagination
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page.sync="my_paginations.page_index"
+        :page-size="my_paginations.page_size"
+        :page-sizes="my_paginations.page_sizes"
+        :total="my_paginations.total"
+        layout="total, sizes, prev, pager, next, jumper"
+      >
+      </el-pagination>
+    </div>
+    <MaterialClassDialog
       :dialog="dialog"
       :formData="formData"
       :materialClassData="materialClassData"
       @update="getMaterialClass"
-    ></MaterialsDialog>
+    ></MaterialClassDialog>
     <MaterialEditDialog
       :dialog="materialEditDialog"
       :formData="materilaFormDate"
@@ -205,7 +238,7 @@
 </template>
 
 <script>
-import MaterialsDialog from '../../components/MaterialsManager/MaterialsDialog'
+import MaterialClassDialog from '../../components/MaterialsManager/MaterialClassDialog'
 import MaterialEditDialog from '../../components/MaterialsManager/MaterialEditDialog'
 import { MessageBox } from 'element-ui'
 
@@ -213,6 +246,8 @@ export default {
   name: 'materials-manager',
   data() {
     return {
+      materialClassName: '',
+      tableData: [],
       materialClassData: [],
       allMaterialData: [],
       allUserNameId: [],
@@ -274,11 +309,18 @@ export default {
         title: '展示一下',
         option: 'edit',
         materialClass: ''
+      },
+      my_paginations: {
+        page_index: 1, // 位於當前第幾頁
+        total: 0, // 總數
+        page_size: 10, // 每一頁顯示幾條數據
+        page_sizes: [5, 10, 15, 20] // 選擇一頁要顯示多少條
+        // layouts: 'total, sizes, prev, pager, next, jumper'
       }
     }
   },
   components: {
-    MaterialsDialog,
+    MaterialClassDialog,
     MaterialEditDialog
   },
   created() {
@@ -287,6 +329,34 @@ export default {
     this.getUserInfo()
   },
   methods: {
+    handleMaterialClassChange(value) {
+      localStorage.material_class = value
+      this.getMaterials()
+    },
+    handleSizeChange(page_size) {
+      // 切換每頁有幾條數據
+
+      localStorage.material_page_size = page_size
+      this.my_paginations.page_index = 1
+      this.my_paginations.page_size = page_size
+      this.tableData = this.allMaterialData.filter((item, index) => {
+        return index < page_size
+      })
+    },
+    handleCurrentChange(page) {
+      // 獲取當前頁面
+      let index = this.my_paginations.page_size * (page - 1)
+      // 數據的總數
+      let nums = this.my_paginations.page_size * page
+      // 容器
+      let tables = []
+      for (let i = index; i < nums; i++) {
+        if (this.allMaterialData[i]) {
+          tables.push(this.allMaterialData[i])
+        }
+        this.tableData = tables
+      }
+    },
     handleAddMaterial(index, row) {
       this.materialEditDialog = {
         show: true,
@@ -337,17 +407,51 @@ export default {
         })
     },
     getMaterials() {
-      this.$axios
-        .get('/api/material')
-        .then((res) => {
-          // console.log('views/FundList.vue', res)
-          this.allMaterialData = res.data
-          // 設置分頁數據
-          // this.setPaginations()
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      // 	第一次進來，要是沒有找到 localStorage.material_class 就會全讀資料庫
+      // 如果有紀錄的話，就會只讀紀錄部分的分類商品
+      if (localStorage.material_class) {
+        // 如果一進來這個 元件 的時候發現有紀錄 原料分類，就先把它放進去 select 中
+        this.materialClassName = localStorage.material_class
+        // const url = `get-from-class/${this.localStorage.material_class}`
+        this.$axios
+          .get(`/api/material/get-from-class/${localStorage.material_class}`)
+          .then((res) => {
+            this.allMaterialData = res.data
+            this.tableData = res.data
+
+            this.setPaginations()
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      } else {
+        // 撈整個資料庫所有的原物料資料
+        this.$axios
+          .get('/api/material')
+          .then((res) => {
+            // console.log('views/FundList.vue', res)
+            this.allMaterialData = res.data
+            // 設置分頁數據
+            this.setPaginations()
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
+    },
+    setPaginations() {
+      // 分頁屬性設置
+      this.my_paginations.total = this.allMaterialData.length
+      this.my_paginations.page_index = 1
+      if (localStorage.material_page_size) {
+        this.my_paginations.page_size = Number(localStorage.material_page_size)
+      } else {
+        this.my_paginations.page_size = 5
+      }
+      // 設置分頁數據
+      this.tableData = this.allMaterialData.filter((item, index) => {
+        return index < this.my_paginations.page_size
+      })
     },
     // 添加一筆新的商品分類代號 TD SS GG ... 等等
     addMaterialClass() {
@@ -415,5 +519,14 @@ body > .el-container {
 
 .el-container:nth-child(7) .el-aside {
   line-height: 320px;
+}
+
+.pagination {
+  text-align: left;
+  margin-top: 10px;
+}
+.materal-class-container {
+  display: inline-block;
+  margin-left: 10px;
 }
 </style>

@@ -78,13 +78,46 @@ router.get(
   '/',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Material.find({}, null, { limit: 300 }).then((materials) => {
+    Material.find({}, null, { limit: 1000 }).then((materials) => {
       // Material.find().then((materials) => {
       if (!materials) {
         return res.status(400).json('沒有任何原物料資訊')
       }
       res.json(materials)
     })
+  }
+)
+
+// $router post api/material/get-from-class/:class
+// @desc   編輯訊息接口
+// @access private
+// 使用 hander 要驗證 token
+// 有看到 post 就代表他會使用到 body 傳遞 數據 {}
+// 有看到 /:id 就代表要從 params 接收一個 id 進來
+// 這個接口是根據 class 返回 符合該分類的原料資訊 class = _id
+router.get(
+  '/get-from-class/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    if (req.params.id !== '5ff4078d3b32f548ecebff25') {
+      Material.find({ material_class: req.params.id }, null, {}).then(
+        (materials) => {
+          // Material.find().then((materials) => {
+          if (!materials) {
+            return res.status(400).json('沒有任何原物料資訊')
+          }
+          res.json(materials)
+        }
+      )
+    } else {
+      Material.find({}, null, {}).then((materials) => {
+        // Material.find().then((materials) => {
+        if (!materials) {
+          return res.status(400).json('沒有任何原物料資訊')
+        }
+        res.json(materials)
+      })
+    }
   }
 )
 

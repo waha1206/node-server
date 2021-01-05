@@ -174,7 +174,7 @@
 <script>
 import { MessageBox } from 'element-ui'
 export default {
-  name: 'my-dialog',
+  name: 'material_class_dialog',
   props: {
     dialog: Object,
     formData: Object,
