@@ -231,6 +231,7 @@ export default {
       this.dialog.option = 'edit'
     },
     handleDelete(row) {
+      if (row._id === '5ff4078d3b32f548ecebff25') return
       MessageBox.confirm(
         '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
         '嚴重警告！！！'

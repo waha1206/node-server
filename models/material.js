@@ -7,6 +7,9 @@ const MaterialSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  product_name: {
+    type: String
+  },
   last_archive_person: {
     type: Date,
     default: Date.now

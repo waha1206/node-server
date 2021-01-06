@@ -140,7 +140,7 @@ router.post(
       materialFields[prop] = req.body[prop]
     }
 
-    // console.log(materialFields)
+    console.log(materialFields)
     // res.json('msg:material is works')
 
     Material.findByIdAndUpdate(
@@ -163,7 +163,9 @@ router.post(
     const materialFields = {}
 
     for (const prop in req.body) {
-      materialFields[prop] = req.body[prop]
+      if (req.body[prop] !== '') {
+        materialFields[prop] = req.body[prop]
+      }
     }
 
     console.log(materialFields)
@@ -174,7 +176,7 @@ router.post(
         if (material) {
           return res.status(400).json('此原物料的名稱已經存在')
         } else {
-          new Material(material).save().then((material) => {
+          new Material(materialFields).save().then((material) => {
             res.json(material)
           })
         }
