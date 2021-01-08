@@ -136,6 +136,9 @@ router.post(
     // if (req.body.type) materialClassFields.type = req.body.type
     // if (req.body.name) materialClassFields.name = req.body.name
     // if (req.body.describe) materialClassFields.describe = req.body.describe
+
+    console.log(req.body)
+
     for (const prop in req.body) {
       materialFields[prop] = req.body[prop]
     }

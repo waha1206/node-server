@@ -30,6 +30,7 @@
                     @change="selectChang"
                     v-model="dialog.materialClass"
                     placeholder="原料分類"
+                    filterable
                     size="mini"
                   >
                     <!-- :lable 這個是顯示出來的  :value 這個要指定到 _id 因為我要存到資料庫，我需要唯一的一個 key (_id)-->
@@ -58,11 +59,11 @@
           <el-row :gutter="20" type="flex" class="row-bg">
             <el-col :span="6"
               ><div class="grid-content ">
-                <el-form-item prop="the_cose" label="商品成本：">
+                <el-form-item prop="the_cost" label="商品成本：">
                   <el-input
                     size="mini"
-                    type="the_cose"
-                    v-model="formData.the_cose"
+                    type="the_cost"
+                    v-model="formData.the_cost"
                   ></el-input>
                 </el-form-item>
               </div>
