@@ -10,9 +10,8 @@ const MaterialSchema = new Schema({
   product_name: {
     type: String
   },
-  last_archive_person: {
-    type: Date,
-    default: Date.now
+  last_modify_date: {
+    type: Date
   },
   old_serial_numbers: {
     type: String

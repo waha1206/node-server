@@ -172,7 +172,6 @@ router.post(
     }
 
     console.log(materialFields)
-    console.log(req.body.product_name)
 
     Material.findOne({ product_name: req.body.product_name }).then(
       (material) => {

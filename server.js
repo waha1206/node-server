@@ -11,6 +11,8 @@ const customers = require('./routes/api/customers')
 const categories = require('./routes/api/categories')
 const materials = require('./routes/api/materials')
 const materialClass = require('./routes/api/materialClass')
+const suppliers = require('./routes/api/suppliers')
+const supplierClass = require('./routes/api/supplierClass')
 
 // db config
 const db = require('./config/keys').mongoURI
@@ -39,10 +41,12 @@ const port = process.env.PORT || 5000
 // 使用 routes 下的 api 下的 users 其實在上面就引入了  const users = require("./routes/api/users.js")
 app.use('/api/user/', users)
 app.use('/api/profiles/', profiles)
-app.use('/api/customer', customers)
-app.use('/api/categories', categories)
-app.use('/api/material', materials)
-app.use('/api/material-class', materialClass)
+app.use('/api/customer/', customers)
+app.use('/api/categories/', categories)
+app.use('/api/material/', materials)
+app.use('/api/material-class/', materialClass)
+app.use('/api/supplier/', suppliers)
+app.use('/api/supplier-class/', supplierClass)
 
 // 監聽
 app.listen(port, () => {

@@ -2,15 +2,15 @@
   <div class="materials-manager">
     <el-container>
       <el-header>
-        <el-button type="primary" size="small" @click="addMaterialClass"
-          >新增原物料分類</el-button
+        <el-button type="primary" size="small" @click="handleAddSupplierClass"
+          >新增供應商分類</el-button
         >
-        <el-button type="primary" size="small" @click="handleAddMaterial"
-          >新增原物料</el-button
+        <el-button type="primary" size="small" @click="handleAddSupplier"
+          >新增供應商</el-button
         >
         <div class="materal-class-container">
           <el-select
-            v-model="materialClassName"
+            v-model="supplierClassName"
             @change="handleMaterialClassChange"
             filterable
             size="mini"
@@ -18,7 +18,7 @@
           >
             <!-- 我的理解 option 裡面的 :value 所綁定的值，會往上傳遞到 el-select 裡面的 v-model="data return 裡面設定的變數名稱" -->
             <el-option
-              v-for="item in materialClassData"
+              v-for="item in supplierClassData"
               :key="item.type"
               :label="item.name"
               :value="item._id"
@@ -26,7 +26,7 @@
             </el-option>
           </el-select>
         </div>
-        <!-- {{ materialClassName }} -->
+        <!-- {{ supplierClassName }} -->
       </el-header>
       <el-container>
         <!-- <el-aside width="100%"> -->
@@ -49,132 +49,125 @@
             align="center"
             width="70"
           ></el-table-column>
-          <!-- 原物料名稱 -->
+          <!-- 供應商公司抬頭 -->
           <el-table-column
-            label="原物料名稱"
-            prop="product_name"
+            label="供應商公司抬頭"
+            prop="company"
             align="left"
-            width="350"
+            width="180"
+          >
+          </el-table-column>
+          <!-- 統編 -->
+          <el-table-column
+            label="統編"
+            prop="tax_id_number"
+            align="center"
+            width="70"
           >
           </el-table-column>
           <!-- 商品說明 -->
           <!-- 說明跳出來對話框的區塊 -->
-          <el-table-column label="說明" width="70" align="center">
+          <el-table-column label="詳細資料" width="70" align="center">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="right">
-                <p>分類：{{ getMaterilaClassNameById(scope.row) }}</p>
-                <p>品名：{{ scope.row.product_name }}</p>
-                <p>成本：{{ scope.row.the_cost }}</p>
-                <p>售價：{{ scope.row.retail_price }}</p>
-                <p>單價：{{ scope.row.unit_price }}</p>
-                <p>利潤：{{ scope.row.company_profit }}</p>
-                <p>庫存：{{ scope.row.storage }}</p>
-                <p>材質：{{ scope.row.raw_material }}</p>
-                <p>單位：{{ scope.row.unit }}</p>
-                <p>供應商：{{ scope.row.supplier }}</p>
+                <p>建檔日期：{{ getDate(scope.row.create_date) }}</p>
+                <p>供應商類別：{{ getSupplierClassNameById(scope.row) }}</p>
+                <p>公司名稱：{{ scope.row.company }}</p>
+                <p>公司統編：{{ scope.row.tax_id_number }}</p>
+                <p>資本額：{{ scope.row.registered_capital }}</p>
+                <p>匯款帳號：{{ scope.row.bank_account }}</p>
+                <p>業務姓名：{{ scope.row.sales_name }}</p>
+                <p>業務手機：{{ scope.row.sales_cell_phone }}</p>
+                <p>業務電話：{{ scope.row.sales_telephone }}</p>
+                <p>業務MAIL：{{ scope.row.sales_email }}</p>
+                <p>會計姓名：{{ scope.row.accounting_name }}</p>
+                <p>會計手機：{{ scope.row.accounting_cell_phone }}</p>
+                <p>會計電話：{{ scope.row.accounting_telephone }}</p>
+                <p>會計MAIL：{{ scope.row.accounting_mail }}</p>
+                <p>公司電話：{{ scope.row.company_telephone }}</p>
+                <p>公司傳真：{{ scope.row.company_fax }}</p>
+                <p>公司地址：{{ scope.row.company_address }}</p>
+                <p>店面電話：{{ scope.row.storefront_telephone }}</p>
+                <p>店面傳真：{{ scope.row.storefront_fax }}</p>
+                <p>店面地址：{{ scope.row.storefront_address }}</p>
+                <p>
+                  官網：<a :href="scope.row.website" target="_blank">{{
+                    scope.row.website
+                  }}</a>
+                </p>
+                <p>付款條件：{{ scope.row.payment_terms }}</p>
+                <p>商品交期：{{ scope.row.delivery }}</p>
+
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="mini">完整說明</el-tag>
                 </div>
               </el-popover>
             </template>
           </el-table-column>
-          <!-- 圖片 -->
-          <el-table-column label="圖片" width="50" align="center">
-            <template slot-scope="scope">
-              <el-popover trigger="hover" placement="right">
-                <div slot="reference" class="name-wrapper">
-                  <el-tag size="mini">圖片</el-tag>
-                </div>
-              </el-popover>
-            </template>
-          </el-table-column>
-          <!-- 顏色 -->
+
+          <!-- 匯款帳號 -->
           <el-table-column
-            label="顏色"
-            prop="product_color"
+            label="匯款帳號"
+            prop="bank_account"
             align="center"
-            width="70"
+            width="140"
           >
           </el-table-column>
           <!-- 原物料分類，從分類ID回傳分類名稱 -->
-          <el-table-column label="分類" align="center" width="120">
+          <!-- <el-table-column label="分類" align="center" width="120">
             <template slot-scope="scope">
-              {{ getMaterilaClassNameById(scope.row) }}
+              {{ getSupplierClassNameById(scope.row) }}
             </template>
-          </el-table-column>
-          <!-- 售價 -->
+          </el-table-column> -->
+          <!-- 業務名稱 -->
           <el-table-column
-            label="售價"
-            prop="retail_price"
+            label="業務名稱"
+            prop="sales_name"
             align="center"
             width="70"
           >
           </el-table-column>
-          <!-- 單位售價 -->
+          <!-- 業務手機 -->
           <el-table-column
-            label="單位售價"
-            prop="unit_price"
+            label="業務電話"
+            prop="sales_cell_phone"
             align="center"
-            width="70"
+            width="100"
           >
           </el-table-column>
-          <!-- 目前庫存 -->
+          <!-- 業務分機 -->
           <el-table-column
-            label="目前庫存"
-            prop="storage"
+            label="業務分機"
+            prop="sales_telephone"
             align="center"
-            width="80"
+            width="110"
           >
           </el-table-column>
-          <!-- 最低庫存 -->
+          <!-- 公司地址 -->
           <el-table-column
-            label="最低庫存"
-            prop="stock_alert"
+            label="公司地址"
+            prop="company_address"
             align="center"
-            width="80"
+            width="320"
           >
           </el-table-column>
-          <!-- 訂購天數 -->
+          <!-- 付款條件 -->
           <el-table-column
             label="訂購天數"
-            prop="lead_time"
+            prop="payment_terms"
             align="center"
-            width="80"
+            width="100"
           >
           </el-table-column>
-          <!-- 商品材質 -->
+          <!-- 訂貨交期 -->
           <el-table-column
-            label="商品材質"
-            prop="raw_material"
+            label="訂貨交期"
+            prop="delivery"
             align="center"
             width="150"
           >
           </el-table-column>
-          <!-- 供應商資料 -->
-          <el-table-column label="供應商" width="200" align="center">
-            <template slot-scope="scope">
-              <el-popover trigger="hover" placement="top">
-                <p>姓名: {{ scope.row.name }}</p>
-                <p>住址: {{ scope.row.address }}</p>
-                <div slot="reference" class="name-wrapper">
-                  <el-tag
-                    size="mini"
-                    v-if="scope.row.supplier"
-                    @click="handleEditSupplier(scope.$index, scope.row)"
-                  >
-                    {{ scope.row.supplier }}
-                  </el-tag>
-                  <el-tag
-                    size="mini"
-                    v-else="scope.row.supplier"
-                    @click="handleEditSupplier(scope.$index, scope.row)"
-                    style="background:red; color:yellow"
-                    >點擊我選擇供應商</el-tag
-                  >
-                </div>
-              </el-popover>
-            </template>
-          </el-table-column>
+
           <!-- 搜尋欄位 -->
           <el-table-column align="center" width="150">
             <!-- header 代表放到列的說明文字那邊 -->
@@ -221,75 +214,68 @@
       >
       </el-pagination>
     </div>
-    <MaterialClassDialog
-      :dialog="dialog"
+    <SupplierClassDialog
+      :dialog="addSupplierClassDialog"
       :formData="formData"
-      :materialClassData="materialClassData"
-      @update="getMaterialClass"
-    ></MaterialClassDialog>
-    <MaterialEditDialog
-      :dialog="materialEditDialog"
-      :formData="materialFormDate"
-      :materialClassData="materialClassData"
+      :supplierClassData="supplierClassData"
+      @update="getSupplierClass"
+    ></SupplierClassDialog>
+    <SupplierEditDialog
+      :dialog="supplierEditDialog"
+      :formData="supplierFormDate"
+      :supplierClassData="supplierClassData"
       :allUserNameId="allUserNameId"
-      @update="getMaterials"
-    ></MaterialEditDialog>
+      @update="getSuppliers"
+    ></SupplierEditDialog>
   </div>
 </template>
 
 <script>
-import MaterialClassDialog from '../../components/MaterialsManager/MaterialClassDialog'
-import MaterialEditDialog from '../../components/MaterialsManager/MaterialEditDialog'
+import SupplierClassDialog from '../../components/SuppliersManager/SupplierClassDialog'
+import SupplierEditDialog from '../../components/SuppliersManager/SupplierEditDialog'
 import { MessageBox } from 'element-ui'
 
 export default {
-  name: 'materials-manager',
+  name: 'suppliers-manager',
   data() {
     return {
-      materialClassName: '',
+      supplierClassName: '',
       tableData: [],
-      materialClassData: [],
-      allMaterialData: [],
+      supplierClassData: [],
+      allSupplierlData: [],
       allUserNameId: [],
       search: '',
       innerDialog: false,
       materialsData: [], // 開始就先讀取資料庫的數據
-      materialFormDate: {
-        old_serial_numbers: '',
-        product_name: '',
-        unit_price: '',
-        company_profit: '',
-        unit: '',
-        product_category: '',
-        the_cost: '',
-        retail_price: '',
-        product_profit: '',
-        product_description: '',
-        storage: '',
-        product_color: '',
-        various_elements: '',
-        length: '',
-        extra_freight: '',
-        lead_time: '',
-        raw_material: '',
-        minimum_order_quantity: '',
-        supplier: '',
-        supplier_contact_person: '',
-        supplier_phone_number: '',
-        supplier_fax_number: '',
-        supplier_cell_phone: '',
-        supplier_address: '',
-        supplier_email: '',
-        remark: '',
-        supplier_bank_information: '',
-        product_website: '',
-        supplier_number: '',
-        product_picture_website: '',
-        create_date: '',
-        last_modify_date: '',
+      supplierFormDate: {
+        supplier_class: '',
+        company: '',
+        tax_id_number: '',
+        registered_capital: '',
+        bank_account: '',
+        sales_name: '',
+        sales_cell_phone: '',
+        sales_telephone: '',
+        sales_email: '',
+        accounting_name: '',
+        accounting_cell_phone: '',
+        accounting_telephone: '',
+        accounting_mail: '',
+        company_telephone: '',
+        company_fax: '',
+        company_address: '',
+        storefront_telephone: '',
+        storefront_fax: '',
+        storefront_address: '',
+        website: '',
+        payment_terms: '',
+        major_products: '',
+        delivery: '',
+        remarks: '',
         last_edit_person: '',
-        stock_alert: ''
+        last_modify_date: ''
       },
+
       // 編輯原物料的分類跳出視窗
       formData: {
         type: '',
@@ -303,12 +289,21 @@ export default {
         title: '展示一下',
         option: 'edit'
       },
+      // 新增供應商類別的控制物件
+      addSupplierClassDialog: {
+        show: false,
+        title: '展示一下',
+        option: 'edit'
+      },
+      // 讀取所有 supplier class 紀錄後傳到 SupplierClassDialog 元件，prop 的屬性
+      supplierClassFormData: {},
+
       // 編輯原物料的跳出視窗
-      materialEditDialog: {
+      supplierEditDialog: {
         show: false,
         title: '展示一下',
         option: 'edit',
-        materialClass: ''
+        supplierClass: ''
       },
       my_paginations: {
         page_index: 1, // 位於當前第幾頁
@@ -320,26 +315,30 @@ export default {
     }
   },
   components: {
-    MaterialClassDialog,
-    MaterialEditDialog
+    SupplierClassDialog,
+    SupplierEditDialog
   },
   created() {
-    this.getMaterials()
-    this.getMaterialClass()
+    this.getSuppliers()
+    this.getSupplierClass()
     this.getUserInfo()
   },
   methods: {
+    // 時間轉換
+    getDate(dt) {
+      return this.$moment(dt).format('YYYY年MM月DD日-HH：mm')
+    },
     handleMaterialClassChange(value) {
-      localStorage.material_class = value
-      this.getMaterials()
+      localStorage.supplier_class = value
+      this.getSuppliers()
     },
     handleSizeChange(page_size) {
       // 切換每頁有幾條數據
 
-      localStorage.material_page_size = page_size
+      localStorage.supplier_page_size = page_size
       this.my_paginations.page_index = 1
       this.my_paginations.page_size = page_size
-      this.tableData = this.allMaterialData.filter((item, index) => {
+      this.tableData = this.allSupplierlData.filter((item, index) => {
         return index < page_size
       })
     },
@@ -351,54 +350,54 @@ export default {
       // 容器
       let tables = []
       for (let i = index; i < nums; i++) {
-        if (this.allMaterialData[i]) {
-          tables.push(this.allMaterialData[i])
+        if (this.allSupplierlData[i]) {
+          tables.push(this.allSupplierlData[i])
         }
         this.tableData = tables
       }
     },
-    handleAddMaterial(index, row) {
-      this.materialEditDialog = {
+    handleAddSupplier(index, row) {
+      this.supplierEditDialog = {
         show: true,
-        title: '原物料編輯',
+        title: '新增供應商',
         option: 'add',
-        materialClass: ''
+        supplierClass: ''
       }
       // 把選中的原物料資訊 賦值到 this.materialFormData 裡面去
       // 先清空
-      for (let prop in this.materialFormDate) {
-        this.materialFormDate[prop] = ''
+      for (let prop in this.supplierFormDate) {
+        this.supplierFormDate[prop] = ''
       }
     },
     handleEditSupplier(index, row) {
       console.log('重新選擇供應商')
     },
     handleEditMaterial(index, row) {
-      this.materialEditDialog = {
+      this.supplierEditDialog = {
         show: true,
         title: '原物料編輯',
         option: 'edit',
-        materialClass: this.getMaterilaClassNameById(row)
+        supplierClass: this.getSupplierClassNameById(row)
       }
       // 把選中的原物料資訊 賦值到 this.materialFormData 裡面去
       // 先清空
-      for (let prop in this.materialFormDate) {
-        this.materialFormDate[prop] = ''
+      for (let prop in this.supplierFormDate) {
+        this.supplierFormDate[prop] = ''
       }
       // 再把點擊到的 row 的資料複製過去
       for (let prop in row) {
-        this.materialFormDate[prop] = row[prop]
+        this.supplierFormDate[prop] = row[prop]
       }
     },
     handleDeleteMaterial(index, row) {
       console.log(index, row)
     },
-    getMaterialClass() {
+    getSupplierClass() {
       this.$axios
-        .get('/api/material-class')
+        .get('/api/supplier-class')
         .then((res) => {
           // console.log('views/FundList.vue', res)
-          this.materialClassData = res.data
+          this.supplierClassData = res.data
           // 設置分頁數據
           // this.setPaginations()
         })
@@ -406,17 +405,19 @@ export default {
           console.log(err)
         })
     },
-    getMaterials() {
-      // 	第一次進來，要是沒有找到 localStorage.material_class 就會全讀資料庫
+    getSuppliers() {
+      // 	第一次進來，要是沒有找到 localStorage.supplier_class 就會全讀資料庫
       // 如果有紀錄的話，就會只讀紀錄部分的分類商品
-      if (localStorage.material_class) {
+      if (localStorage.supplier_class) {
         // 如果一進來這個 元件 的時候發現有紀錄 原料分類，就先把它放進去 select 中
-        this.materialClassName = localStorage.material_class
-        // const url = `get-from-class/${this.localStorage.material_class}`
+        this.supplierClassName = localStorage.supplier_class
+        // const url = `get-from-class/${this.localStorage.supplier_class}`
         this.$axios
-          .get(`/api/material/get-from-class/${localStorage.material_class}`)
+          .get(`/api/supplier/get-from-class/${localStorage.supplier_class}`)
           .then((res) => {
-            this.allMaterialData = res.data
+            this.allSupplierlData = res.data
+            // this.tableData = res.data
+
             this.setPaginations()
           })
           .catch((err) => {
@@ -425,10 +426,10 @@ export default {
       } else {
         // 撈整個資料庫所有的原物料資料
         this.$axios
-          .get('/api/material')
+          .get('/api/supplier')
           .then((res) => {
             // console.log('views/FundList.vue', res)
-            this.allMaterialData = res.data
+            this.allSupplierlData = res.data
             // 設置分頁數據
             this.setPaginations()
           })
@@ -439,30 +440,30 @@ export default {
     },
     setPaginations() {
       // 分頁屬性設置
-      this.my_paginations.total = this.allMaterialData.length
+      this.my_paginations.total = this.allSupplierlData.length
       this.my_paginations.page_index = 1
-      if (localStorage.material_page_size) {
-        this.my_paginations.page_size = Number(localStorage.material_page_size)
+      if (localStorage.supplier_page_size) {
+        this.my_paginations.page_size = Number(localStorage.supplier_page_size)
       } else {
         this.my_paginations.page_size = 5
       }
       // 設置分頁數據
-      this.tableData = this.allMaterialData.filter((item, index) => {
+      this.tableData = this.allSupplierlData.filter((item, index) => {
         return index < this.my_paginations.page_size
       })
     },
     // 添加一筆新的商品分類代號 TD SS GG ... 等等
-    addMaterialClass() {
-      this.dialog = {
+    handleAddSupplierClass() {
+      this.addSupplierClassDialog = {
         show: true,
-        title: '新增原物料分類',
+        title: '新增供應商分類',
         option: 'add'
       }
     },
-    getMaterilaClassNameById(row) {
+    getSupplierClassNameById(row) {
       let className = ''
-      this.materialClassData.forEach((e) => {
-        if (e._id === row.material_class) {
+      this.supplierClassData.forEach((e) => {
+        if (e._id === row.supplier_class) {
           className = e.name
         }
       })

@@ -13,7 +13,7 @@
             <!-- 左側表格的區塊 -->
             <div class="table-container">
               <el-table
-                :data="materialClassData"
+                :data="supplierClassData"
                 style="width: 100%"
                 size="mini"
               >
@@ -26,7 +26,7 @@
                 </el-table-column>
                 <el-table-column
                   prop="name"
-                  label="中文"
+                  label="分類"
                   width="120px"
                   align="center"
                 >
@@ -88,7 +88,7 @@
               <el-form-item prop="type" label="編號(數字)：">
                 <el-input type="type" v-model="formData.type"></el-input>
               </el-form-item>
-              <el-form-item prop="name" label="類型(中文)：">
+              <el-form-item prop="name" label="分類(中文)：">
                 <el-input type="name" v-model="formData.name"></el-input>
               </el-form-item>
               <el-form-item prop="describe" label="分類說明：">
@@ -174,11 +174,11 @@
 <script>
 import { MessageBox } from 'element-ui'
 export default {
-  name: 'material_class_dialog',
+  name: 'supplier_class_dialog',
   props: {
     dialog: Object,
     formData: Object,
-    materialClassData: Array
+    supplierClassData: Array
   },
   data() {
     return {
@@ -231,14 +231,14 @@ export default {
       this.dialog.option = 'edit'
     },
     handleDelete(row) {
-      if (row._id === '5ff4078d3b32f548ecebff25') return
+      if (row._id === '5ffab3a6e9ef2204146af688') return
       MessageBox.confirm(
         '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
         '嚴重警告！！！'
       )
         .then(() => {
           this.$axios
-            .delete(`/api/material-class/delete/${row._id}`)
+            .delete(`/api/supplier-class/delete/${row._id}`)
             .then((res) => {
               this.$message('刪除成功！')
               this.$emit('update')
@@ -262,7 +262,7 @@ export default {
               : `edit/${this.materialClassEditForm._id}`
 
           this.$axios
-            .post(`/api/material-class/${url}`, uploadFormData)
+            .post(`/api/supplier-class/${url}`, uploadFormData)
             .then((res) => {
               console.log('(儲存/修改) 商品分類成功！')
               // 添加成功

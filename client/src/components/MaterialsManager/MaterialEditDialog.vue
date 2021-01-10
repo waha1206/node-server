@@ -224,11 +224,12 @@
             </el-col>
             <el-col :span="6">
               <div class="grid-content ">
-                <el-form-item prop="last_archive_person" label="修改時間：">
+                <el-form-item prop="" label="修改時間：">
                   <el-input
+                    :disabled="true"
                     size="mini"
-                    type="last_archive_person"
-                    v-model="formData.last_archive_person"
+                    type=""
+                    v-model="getDate"
                   ></el-input>
                 </el-form-item>
               </div>
@@ -291,6 +292,7 @@ export default {
       this.$refs[form].validate((valid) => {
         if (valid && !this.formData.material_class == '') {
           this.formData.last_edit_person = this.user.id
+          this.formData.last_modify_date = new Date()
           const url =
             this.dialog.option == 'add' ? 'add' : `edit/${this.formData._id}`
           this.$axios
@@ -317,6 +319,14 @@ export default {
 
   computed: {
     ...mapGetters(['user']),
+    // 時間轉換
+    getDate() {
+      if (!this.formData.last_modify_date) return '目前沒有修改過'
+      return this.$moment(this.formData.last_modify_date).format(
+        'YYYY年MM月DD日 - HH：mm'
+      )
+    },
+    // 取得修改人的_id 轉換成 name
     getUserNameById() {
       if (!this.formData.last_edit_person) return '目前沒有修改過'
       let name = ''
