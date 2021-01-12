@@ -31,7 +31,7 @@ router.post(
 
     MaterialClass.findOne({ type: req.body.type }).then((materialClass) => {
       if (materialClass) {
-        return res.status(400).json('此商品類型(英文)已經存在')
+        return res.status(400).json('此商品類型(編號)已經存在')
       } else {
         new MaterialClass(materialClassFields).save().then((materialClass) => {
           res.json(materialClass)
@@ -106,6 +106,18 @@ router.post(
       { $set: materialClassFields },
       { new: true }
     ).then((materialClass) => res.json(materialClass))
+
+    // MaterialClass.findOne({ type: req.body.type }).then((materialClass) => {
+    //   if (materialClass) {
+    //     return res.status(400).json('此商品類型(編號)已經存在')
+    //   } else {
+    //     MaterialClass.findByIdAndUpdate(
+    //       { _id: req.params.id },
+    //       { $set: materialClassFields },
+    //       { new: true }
+    //     ).then((materialClass) => res.json(materialClass))
+    //   }
+    // })
   }
 )
 

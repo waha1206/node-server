@@ -18,8 +18,8 @@
           >
             <!-- 我的理解 option 裡面的 :value 所綁定的值，會往上傳遞到 el-select 裡面的 v-model="data return 裡面設定的變數名稱" -->
             <el-option
-              v-for="item in materialClassData"
-              :key="item.type"
+              v-for="(item, index) in materialClassData"
+              :key="index"
               :label="item.name"
               :value="item._id"
             >
@@ -54,7 +54,7 @@
             label="原物料名稱"
             prop="product_name"
             align="left"
-            width="350"
+            width="400"
           >
           </el-table-column>
           <!-- 商品說明 -->
@@ -139,7 +139,7 @@
             label="訂購天數"
             prop="lead_time"
             align="center"
-            width="80"
+            width="140"
           >
           </el-table-column>
           <!-- 商品材質 -->
@@ -154,8 +154,81 @@
           <el-table-column label="供應商" width="200" align="center">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="left">
-                <p>姓名: {{ scope.row.name }}</p>
-                <p>住址: {{ scope.row.address }}</p>
+                <div v-if="scope.row.supplier_id">
+                  <p>供應商名稱: {{ getSupplierById(scope.row).company }}</p>
+                  <p>
+                    公司統編：{{ getSupplierById(scope.row).tax_id_number }}
+                  </p>
+                  <p>
+                    資本額：{{ getSupplierById(scope.row).registered_capital }}
+                  </p>
+                  <p>匯款帳號：{{ getSupplierById(scope.row).bank_account }}</p>
+                  <p>業務姓名：{{ getSupplierById(scope.row).sales_name }}</p>
+                  <p>
+                    業務手機：{{ getSupplierById(scope.row).sales_cell_phone }}
+                  </p>
+                  <p>
+                    業務電話：{{ getSupplierById(scope.row).sales_telephone }}
+                  </p>
+                  <p>業務MAIL：{{ getSupplierById(scope.row).sales_email }}</p>
+                  <p>
+                    會計姓名：{{ getSupplierById(scope.row).accounting_name }}
+                  </p>
+                  <p>
+                    會計手機：{{
+                      getSupplierById(scope.row).accounting_cell_phone
+                    }}
+                  </p>
+                  <p>
+                    會計電話：{{
+                      getSupplierById(scope.row).accounting_telephone
+                    }}
+                  </p>
+                  <p>
+                    會計MAIL：{{ getSupplierById(scope.row).accounting_mail }}
+                  </p>
+                  <p>
+                    公司電話：{{ getSupplierById(scope.row).company_telephone }}
+                  </p>
+                  <p>公司傳真：{{ getSupplierById(scope.row).company_fax }}</p>
+                  <p>
+                    公司地址：{{ getSupplierById(scope.row).company_address }}
+                  </p>
+                  <p>
+                    店面電話：{{
+                      getSupplierById(scope.row).storefront_telephone
+                    }}
+                  </p>
+                  <p>
+                    店面傳真：{{ getSupplierById(scope.row).storefront_fax }}
+                  </p>
+                  <p>
+                    店面地址：{{
+                      getSupplierById(scope.row).storefront_address
+                    }}
+                  </p>
+                  <p>
+                    官網：<a
+                      :href="getSupplierById(scope.row).website"
+                      target="_blank"
+                      >{{ getSupplierById(scope.row).website }}</a
+                    >
+                  </p>
+                  <p>
+                    付款條件：{{ getSupplierById(scope.row).payment_terms }}
+                  </p>
+                  <p>商品交期：{{ getSupplierById(scope.row).delivery }}</p>
+                  <p>廠長備註：{{ getSupplierById(scope.row).remarks }}</p>
+                  <p>
+                    會計備註：{{
+                      getSupplierById(scope.row).accounting_remarks
+                    }}
+                  </p>
+                </div>
+                <div v-else>
+                  <p>請先建立建立供應商</p>
+                </div>
+
                 <div slot="reference" class="name-wrapper">
                   <el-tag
                     size="mini"
@@ -224,6 +297,7 @@
     </div>
     <!-- 分頁結束 -->
     <MaterialClassDialog
+      v-if="materialClassData[0]"
       :dialog="dialog"
       :formData="formData"
       :materialClassData="materialClassData"
@@ -356,6 +430,15 @@ export default {
     this.getSupplierClass()
   },
   methods: {
+    getSupplierById(row) {
+      let supplier = {}
+      this.allSupplierlData.forEach((e) => {
+        if (e._id === row.supplier_id) {
+          supplier = e
+        }
+      })
+      return supplier
+    },
     getSupplierNameById(row) {
       let supplierName = ''
       this.allSupplierlData.forEach((e) => {
@@ -363,8 +446,6 @@ export default {
           supplierName = e.company
         }
       })
-
-      console.log(row)
       return supplierName
     },
     getSupplierClass() {

@@ -12,11 +12,7 @@
           <el-aside width="50%" class="grid-content bg-purple">
             <!-- 左側表格的區塊 -->
             <div class="table-container">
-              <el-table
-                :data="supplierClassData"
-                style="width: 100%"
-                size="mini"
-              >
+              <el-table :data="tableData" style="width: 100%" size="mini">
                 <el-table-column
                   prop="type"
                   label="編號"
@@ -112,11 +108,26 @@
 
           <!-- <el-main>Main</el-main> -->
         </el-container>
+        <!-- 分頁 -->
+        <div class="pagination">
+          <el-pagination
+            background
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page.sync="my_paginations.page_index"
+            :page-size="my_paginations.page_size"
+            :page-sizes="my_paginations.page_sizes"
+            :total="my_paginations.total"
+            layout="total, sizes, prev, pager, next, jumper"
+          >
+          </el-pagination>
+        </div>
+        <!-- 分頁結束 -->
       </div>
     </el-dialog>
     <el-dialog
       title="編輯商品代號"
-      :visible.sync="categoriesEditDialog"
+      :visible.sync="supplierClassEditDialog"
       width="25%"
     >
       <el-form
@@ -164,7 +175,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="categoriesEditDialog = false">取消</el-button>
+        <el-button @click="supplierClassEditDialog = false">取消</el-button>
         <el-button type="primary" @click="onSubmit('editForm')">修改</el-button>
       </div>
     </el-dialog>
@@ -182,6 +193,14 @@ export default {
   },
   data() {
     return {
+      tableData: [],
+      my_paginations: {
+        page_index: 1, // 位於當前第幾頁
+        total: 0, // 總數
+        page_size: 10, // 每一頁顯示幾條數據
+        page_sizes: [5, 10, 12] // 選擇一頁要顯示多少條
+        // layouts: 'total, sizes, prev, pager, next, jumper'
+      },
       formLabelWidth: '',
       materialClassEditForm: {
         type: '',
@@ -197,7 +216,7 @@ export default {
           { required: false, message: '此欄位可以為空', trigger: 'blur' }
         ]
       },
-      categoriesEditDialog: false,
+      supplierClassEditDialog: false,
       // 下拉選單的 opation
       format_type_list: ['拉鍊', '五金', '棉花', '側標', '香精', '井字結'],
       // 驗證表單，form_rules 這個是驗證 addForm 的欄位
@@ -210,18 +229,67 @@ export default {
       }
     }
   },
+  created() {
+    this.setPaginations()
+  },
+  watch: {
+    // 這裡是個知識點，請參考 MaterialClassDialog.vue 的 watch 部分有詳細的說明
+    supplierClassData() {
+      this.setPaginations()
+    }
+  },
   computed: {
     user() {
       return this.$store.getters.user
     }
   },
   methods: {
+    setPaginations() {
+      // 分頁屬性設置
+      this.my_paginations.total = this.supplierClassData.length
+      this.my_paginations.page_index = 1
+      if (localStorage.supplier_class_page_size) {
+        this.my_paginations.page_size = Number(
+          localStorage.supplier_class_page_size
+        )
+      } else {
+        this.my_paginations.page_size = 5
+      }
+      // 設置分頁數據
+      this.tableData = this.supplierClassData.filter((item, index) => {
+        return index < this.my_paginations.page_size
+      })
+    },
+    // 分頁操作
+    handleSizeChange(page_size) {
+      // 切換每頁有幾條數據
+      localStorage.supplier_class_page_size = page_size
+      this.my_paginations.page_index = 1
+      this.my_paginations.page_size = page_size
+      this.tableData = this.supplierClassData.filter((item, index) => {
+        return index < page_size
+      })
+    },
+    handleCurrentChange(page) {
+      // 獲取當前頁面
+      let index = this.my_paginations.page_size * (page - 1)
+      // 數據的總數
+      let nums = this.my_paginations.page_size * page
+      // 容器
+      let tables = []
+      for (let i = index; i < nums; i++) {
+        if (this.supplierClassData[i]) {
+          tables.push(this.supplierClassData[i])
+        }
+        this.tableData = tables
+      }
+    },
     handleAdd(form) {
       this.dialog.option = 'add'
       this.onSubmit(form)
     },
     handleEdit(row) {
-      this.categoriesEditDialog = true
+      this.supplierClassEditDialog = true
       for (let prop in this.materialClassEditForm) {
         this.materialClassEditForm[prop] = ''
       }
@@ -271,7 +339,7 @@ export default {
                 type: 'success'
               })
               // 不管怎麼樣都隱藏 edit dialog 的視窗
-              this.categoriesEditDialog = false
+              this.supplierClassEditDialog = false
               // this.dialog.show = false
               // 刷新網頁，傳遞給父組件做更新
               this.$emit('update')
@@ -306,5 +374,9 @@ export default {
   overflow: hidden;
 
   box-sizing: border-box;
+}
+.pagination {
+  text-align: left;
+  margin-top: 10px;
 }
 </style>

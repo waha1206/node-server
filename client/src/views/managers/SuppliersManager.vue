@@ -217,6 +217,7 @@
       </el-pagination>
     </div>
     <SupplierClassDialog
+      v-if="supplierClassData[0]"
       :dialog="addSupplierClassDialog"
       :formData="formData"
       :supplierClassData="supplierClassData"
