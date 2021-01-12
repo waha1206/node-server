@@ -37,7 +37,7 @@
             tableData.filter(
               (data) =>
                 !search ||
-                data.product_name.toLowerCase().includes(search.toLowerCase())
+                data.company.toLowerCase().includes(search.toLowerCase())
             )
           "
           style="width: 100%"
@@ -97,6 +97,8 @@
                 </p>
                 <p>付款條件：{{ scope.row.payment_terms }}</p>
                 <p>商品交期：{{ scope.row.delivery }}</p>
+                <p>廠長備註：{{ scope.row.remarks }}</p>
+                <p>會計備註：{{ scope.row.accounting_remarks }}</p>
 
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="mini">完整說明</el-tag>
@@ -124,7 +126,7 @@
             label="業務名稱"
             prop="sales_name"
             align="center"
-            width="70"
+            width="90"
           >
           </el-table-column>
           <!-- 業務手機 -->
@@ -332,9 +334,9 @@ export default {
       localStorage.supplier_class = value
       this.getSuppliers()
     },
+    // 分頁
     handleSizeChange(page_size) {
       // 切換每頁有幾條數據
-
       localStorage.supplier_page_size = page_size
       this.my_paginations.page_index = 1
       this.my_paginations.page_size = page_size

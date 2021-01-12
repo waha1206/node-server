@@ -435,25 +435,42 @@
           </el-row>
           <!-- 第七列結束 -->
 
-          <!-- 第八列開始，備註 -->
+          <!-- 第八列開始，廠長備註，會計備註 -->
           <el-row :gutter="20" type="flex" class="row-bg">
             <el-col :span="12">
               <div class="grid-content ">
                 <el-form-item
                   prop="remarks"
-                  label="備註事項："
+                  label="廠長備註："
                   label-width="110px"
                 >
                   <el-input
                     size="mini"
                     type="remarks"
                     v-model="formData.remarks"
-                    placeholder="請任意填寫"
+                    placeholder="廠長專用備註欄位"
+                  ></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="12">
+              <div class="grid-content ">
+                <el-form-item
+                  prop="accounting_remarks"
+                  label="會計備註："
+                  label-width="110px"
+                >
+                  <el-input
+                    size="mini"
+                    type="accounting_remarks"
+                    v-model="formData.accounting_remarks"
+                    placeholder="會計專用備註欄位"
                   ></el-input>
                 </el-form-item>
               </div>
             </el-col>
           </el-row>
+
           <!-- 第八列結束 -->
 
           <!-- 取消與提交 -->

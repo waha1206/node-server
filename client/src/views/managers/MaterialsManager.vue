@@ -153,16 +153,17 @@
           <!-- 供應商資料 -->
           <el-table-column label="供應商" width="200" align="center">
             <template slot-scope="scope">
-              <el-popover trigger="hover" placement="top">
+              <el-popover trigger="hover" placement="left">
                 <p>姓名: {{ scope.row.name }}</p>
                 <p>住址: {{ scope.row.address }}</p>
                 <div slot="reference" class="name-wrapper">
                   <el-tag
                     size="mini"
-                    v-if="scope.row.supplier"
+                    v-if="scope.row.supplier_id"
                     @click="handleEditSupplier(scope.$index, scope.row)"
                   >
-                    {{ scope.row.supplier }}
+                    <!-- {{ scope.row.supplier_id }} -->
+                    {{ getSupplierNameById(scope.row) }}
                   </el-tag>
                   <el-tag
                     size="mini"
@@ -221,6 +222,7 @@
       >
       </el-pagination>
     </div>
+    <!-- 分頁結束 -->
     <MaterialClassDialog
       :dialog="dialog"
       :formData="formData"
@@ -234,12 +236,25 @@
       :allUserNameId="allUserNameId"
       @update="getMaterials"
     ></MaterialEditDialog>
+    <!-- 非常重要的知識點，遠端讀取資料庫後，要等到接收到遠端資料完畢後，才可以掛載子元件
+		判斷式大概如下：v-if="allSupplierlData[0]"
+		詳細的說明網頁連結：https://bit.ly/2LCp1CV
+		 -->
+    <MaterialSupplierDialog
+      v-if="allSupplierlData[0]"
+      :dialog="materialSupplierDialog"
+      :supplier="allSupplierlData"
+      :supplierClassData="supplierClassData"
+      @update="getMaterials"
+    >
+    </MaterialSupplierDialog>
   </div>
 </template>
 
 <script>
 import MaterialClassDialog from '../../components/MaterialsManager/MaterialClassDialog'
 import MaterialEditDialog from '../../components/MaterialsManager/MaterialEditDialog'
+import MaterialSupplierDialog from '../../components/MaterialsManager/MateriaSupplierDialog'
 import { MessageBox } from 'element-ui'
 
 export default {
@@ -250,7 +265,9 @@ export default {
       tableData: [],
       materialClassData: [],
       allMaterialData: [],
+      allSupplierlData: [],
       allUserNameId: [],
+      supplierClassData: [],
       search: '',
       innerDialog: false,
       materialsData: [], // 開始就先讀取資料庫的數據
@@ -303,6 +320,13 @@ export default {
         title: '展示一下',
         option: 'edit'
       },
+      // 控制 supplier dialog 的物件
+      materialSupplierDialog: {
+        show: false,
+        title: '請選擇供應商',
+        option: 'edit',
+        material_id: ''
+      },
       // 編輯原物料的跳出視窗
       materialEditDialog: {
         show: false,
@@ -321,14 +345,41 @@ export default {
   },
   components: {
     MaterialClassDialog,
-    MaterialEditDialog
+    MaterialEditDialog,
+    MaterialSupplierDialog
   },
   created() {
     this.getMaterials()
     this.getMaterialClass()
     this.getUserInfo()
+    this.getSuppliers()
+    this.getSupplierClass()
   },
   methods: {
+    getSupplierNameById(row) {
+      let supplierName = ''
+      this.allSupplierlData.forEach((e) => {
+        if (e._id === row.supplier_id) {
+          supplierName = e.company
+        }
+      })
+
+      console.log(row)
+      return supplierName
+    },
+    getSupplierClass() {
+      this.$axios
+        .get('/api/supplier-class')
+        .then((res) => {
+          // console.log('views/FundList.vue', res)
+          this.supplierClassData = res.data
+          // 設置分頁數據
+          // this.setPaginations()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
     handleMaterialClassChange(value) {
       localStorage.material_class = value
       this.getMaterials()
@@ -371,7 +422,13 @@ export default {
       }
     },
     handleEditSupplier(index, row) {
-      console.log('重新選擇供應商')
+      // 把該原料的 _id 編號傳給子元件，然後在子元件更新資料庫的欄位 supplier_id
+      this.materialSupplierDialog = {
+        show: true,
+        title: '請選擇供應商',
+        option: 'edit',
+        material: row._id
+      }
     },
     handleEditMaterial(index, row) {
       this.materialEditDialog = {
@@ -473,6 +530,17 @@ export default {
         .get('/api/user/user-info')
         .then((res) => {
           this.allUserNameId = res.data
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    getSuppliers() {
+      // 撈整個資料庫所有的供應商資料
+      this.$axios
+        .get('/api/supplier')
+        .then((res) => {
+          this.allSupplierlData = res.data
         })
         .catch((err) => {
           console.log(err)

@@ -248,6 +248,22 @@
               </div>
             </el-col>
           </el-row>
+          <!-- 第五列結束 -->
+          <!-- 第六列，供應商ID -->
+          <el-row :gutter="20" type="flex" class="row-bg">
+            <el-col :span="6">
+              <div class="grid-content ">
+                <el-form-item prop="supplier_id" label="供應商：">
+                  <el-input
+                    size="mini"
+                    type="supplier_id"
+                    v-model="formData.supplier_id"
+                  ></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+          </el-row>
+          <!-- 第六列結束 -->
 
           <el-form-item class="text_right">
             <el-button type="warning" @click="dialog.show = false"

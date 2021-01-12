@@ -94,7 +94,7 @@ const MaterialSchema = new Schema({
   product_website: {
     type: String
   },
-  supplier_number: {
+  supplier_id: {
     type: String
   },
   product_picture_website: {

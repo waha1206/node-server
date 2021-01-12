@@ -80,6 +80,9 @@ const SupplierSchema = new Schema({
   remarks: {
     type: String
   },
+  accounting_remarks: {
+    type: String
+  },
   last_edit_person: {
     type: String
   },
