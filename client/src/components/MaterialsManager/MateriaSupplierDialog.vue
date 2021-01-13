@@ -171,7 +171,6 @@ export default {
   methods: {
     setPaginations() {
       // 分頁屬性設置
-      console.log('初始化')
       this.my_paginations.total = this.supplier.length
       this.my_paginations.page_index = 1
       if (localStorage.material_supplier_page_size) {

@@ -87,7 +87,9 @@ const router = new VueRouter({
 })
 
 // 路由守衛 --- 要在這邊實現
+// 說明範例，如何做權限管理 https://codepen.io/CHUPAIWANG/pen/LYZQaXr
 router.beforeEach((to, from, next) => {
+  // console.log($store.state.isAutnenticated)
   const isLogin = localStorage.eleToken ? true : false
   if (to.path == '/login' || to.path == '/register') {
     next()

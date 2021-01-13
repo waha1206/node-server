@@ -428,6 +428,7 @@ export default {
     this.getUserInfo()
     this.getSuppliers()
     this.getSupplierClass()
+    console.log(this.$route.fullPath)
   },
   methods: {
     getSupplierById(row) {
