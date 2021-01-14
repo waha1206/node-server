@@ -51,7 +51,7 @@
 import jwt_decode from 'jwt-decode'
 
 export default {
-  name: 'register',
+  name: 'login',
   component: {},
   data() {
     return {

@@ -65,6 +65,12 @@
             width="70"
           >
           </el-table-column>
+          <!-- 分類 -->
+          <el-table-column label="分類" align="center" width="120">
+            <template slot-scope="scope">
+              {{ getSupplierClassNameById(scope.row) }}
+            </template>
+          </el-table-column>
           <!-- 商品說明 -->
           <!-- 說明跳出來對話框的區塊 -->
           <el-table-column label="詳細資料" width="70" align="center">
