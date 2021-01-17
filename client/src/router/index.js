@@ -7,6 +7,8 @@ import NotFond from '../views/404.vue'
 import Home from '../views/Home.vue'
 import InfoShow from '../views/InfoShow.vue'
 import FundList from '../views/FundList.vue'
+import store from '../store'
+import { includePermission } from '../utils/permission'
 
 Vue.use(VueRouter)
 
@@ -53,7 +55,7 @@ const router = new VueRouter({
           name: 'customer-manager',
           component: () => import('../views/managers/CustomerManager.vue'),
           meta: {
-            permission: ['U_1_2']
+            permission: ['print_authority_r']
           }
         },
         {
@@ -61,7 +63,7 @@ const router = new VueRouter({
           name: 'user-manager',
           component: () => import('../views/managers/UserManager.vue'),
           meta: {
-            permission: ['U_1_2']
+            permission: ['print_authority_r']
           }
         },
         {
@@ -75,12 +77,18 @@ const router = new VueRouter({
         {
           path: '/materials-manager',
           name: 'materials-manager',
-          component: () => import('../views/managers/MaterialsManager.vue')
+          component: () => import('../views/managers/MaterialsManager.vue'),
+          meta: {
+            permission: ['U_1_3']
+          }
         },
         {
           path: '/suppliers-manager',
           name: 'suppliers-manager',
-          component: () => import('../views/managers/SuppliersManager.vue')
+          component: () => import('../views/managers/SuppliersManager.vue'),
+          meta: {
+            permission: ['U_1_3']
+          }
         }
       ]
     },
@@ -102,14 +110,12 @@ const router = new VueRouter({
     }
   ]
 })
-
+// route = 路線    router = 路由器
 // 路由守衛 --- 要在這邊實現
 // 說明範例，如何做權限管理 https://codepen.io/CHUPAIWANG/pen/LYZQaXr
 router.beforeEach((to, from, next) => {
-  const { permission } = to.meta
-  console.log(permission)
   console.log('我是全域前置守衛 beforeEach')
-  // console.log($store.state.isAutnenticated)
+
   const isLogin = localStorage.eleToken ? true : false
   if (to.path == '/login' || to.path == '/register') {
     next()
@@ -118,10 +124,19 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-router.beforeResolve((to, from, next) => {
+router.beforeResolve(async (to, from, next) => {
   // console.log(
   //   '解析守衛：跳轉前觸發，但是在beforeEach後觸發，所有元件內守衛與非同步路由元件被解析後才呼叫'
   // )
+  console.log('我是解析守衛，負責判斷有沒有權限在這邊處理')
+  await store.dispatch('getPermissionList')
+  const { permission } = to.meta
+  if (includePermission(permission)) {
+    console.log('有權限')
+  } else {
+    console.log('沒有權限')
+  }
+
   next()
 })
 

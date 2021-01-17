@@ -62,7 +62,6 @@ export default {
         .then((res) => {
           // 把資料庫的數據都先讀出來
           this.categoriesData = res.data
-          console.log(this.categoriesData)
           // 設置分頁數據
           // this.setPaginations()
         })

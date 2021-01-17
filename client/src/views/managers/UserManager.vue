@@ -352,7 +352,7 @@ export default {
         page_index: 1, // 位於當前第幾頁
         total: 0, // 總數
         page_size: 10, // 每一頁顯示幾條數據
-        page_sizes: [5, 10, 15] // 選擇一頁要顯示多少條
+        page_sizes: [5, 10, 15, 17] // 選擇一頁要顯示多少條
         // layouts: 'total, sizes, prev, pager, next, jumper'
       },
       // 選種的使用者資料，傳遞到 UserEditDialog 的子元件中使用

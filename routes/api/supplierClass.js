@@ -72,7 +72,7 @@ router.get(
   '/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    SupplierClass.findOne({ _di: req.params._id })
+    SupplierClass.findOne({ _id: req.params._id })
       .then((supplierClass) => {
         if (!supplierClass) {
           return res.status(400).json('沒有任何內容')

@@ -23,7 +23,7 @@ axios.interceptors.request.use(
     if (localStorage.eleToken) {
       // 設置統一個請求 header 把 ls 裡面的 tokent 放進去驗證客戶是否是 合法的
       config.headers.Authorization = localStorage.eleToken
-      console.log('NODE-SERVER/http.js', '請求攔截')
+      // console.log('NODE-SERVER/http.js', '請求攔截')
     }
 
     return config

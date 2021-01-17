@@ -179,7 +179,7 @@ router.get(
   }
 )
 // $router GET api/users/user-permission-list
-// @desc   取得所有使用者 id 與 name
+// @desc   取得所有的使用者資料與權限，管理使用者的管理員專用
 // @access Private
 router.get(
   '/user-permission-list',
@@ -247,6 +247,41 @@ router.post(
       { $set: userFields },
       { new: true }
     ).then((user) => res.json(user))
+  }
+)
+// $router post api/user/promossion/:id
+// @desc   取得單一使用者的權限
+// @access private
+// 使用 hander 要驗證 token
+// 有看到 post 就代表他會使用到 body 傳遞 數據 {}
+// 有看到 /:id 就代表要從 params 接收一個 id 進來
+// 功能：更新使用者資料
+router.post(
+  '/permission',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const userFields = {}
+
+    // if (req.body.type) materialClassFields.type = req.body.type
+    // if (req.body.name) materialClassFields.name = req.body.name
+    // if (req.body.describe) materialClassFields.describe = req.body.describe
+
+    const query = { _id: req.body._id }
+    const options = {
+      'permission.permission_list': 1
+    }
+
+    User.findOne(query, options)
+      .then((user) => {
+        if (!user) {
+          return res.status(400).json('無此使用者')
+        }
+        // console.log(user)
+        res.json(user)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
   }
 )
 
