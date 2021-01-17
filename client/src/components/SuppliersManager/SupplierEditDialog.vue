@@ -85,12 +85,16 @@
                   label-width="110px"
                   label="供應商資本額："
                 >
-                  <el-input
+                  <my-currency-input
+                    type="registered_capital"
+                    v-model="formData.registered_capital"
+                  ></my-currency-input>
+                  <!-- <el-input
                     size="mini"
                     placeholder="請輸入純數字"
                     type="registered_capital"
                     v-model="formData.registered_capital"
-                  ></el-input>
+                  ></el-input> -->
                 </el-form-item>
               </div>
             </el-col>

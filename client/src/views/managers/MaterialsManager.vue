@@ -422,6 +422,14 @@ export default {
     MaterialEditDialog,
     MaterialSupplierDialog
   },
+  beforeRouteEnter(to, from, next) {
+    // console.log('元件內的 beforeRouterEnter，不能使用this,因為此時尚未創建成功')
+    next()
+  },
+  beforeRouteLeave(to, from, next) {
+    // console.log('beforeRouteLeave 我要離開這個元件了')
+    next()
+  },
   created() {
     this.getMaterials()
     this.getMaterialClass()

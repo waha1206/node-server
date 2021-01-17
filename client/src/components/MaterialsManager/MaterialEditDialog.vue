@@ -305,6 +305,7 @@ export default {
       this.formData.material_class = id
     },
     onSubmit(form) {
+      console.log('有道喔')
       this.$refs[form].validate((valid) => {
         if (valid && !this.formData.material_class == '') {
           this.formData.last_edit_person = this.user.id
@@ -328,6 +329,11 @@ export default {
             .catch((err) => {
               console.log('axios添加數據失敗==>MyDialog.vue==>', err)
             })
+        } else {
+          this.$message({
+            message: '請選擇商品分類',
+            type: 'error'
+          })
         }
       })
     }

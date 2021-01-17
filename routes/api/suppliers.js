@@ -20,8 +20,8 @@ router.get(
   '/',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Supplier.find({}, null, { limit: 10 }).then((supplier) => {
-      // Material.find().then((materials) => {
+    // Supplier.find({}, null, { limit: 10 }).then((supplier) => {
+    Supplier.find().then((supplier) => {
       if (!supplier) {
         return res.status(400).json('沒有任何原物料資訊')
       }
@@ -79,13 +79,9 @@ router.post(
     // if (req.body.name) materialClassFields.name = req.body.name
     // if (req.body.describe) materialClassFields.describe = req.body.describe
 
-    console.log(req.body)
-
     for (const prop in req.body) {
       supplierFields[prop] = req.body[prop]
     }
-
-    console.log(supplierFields)
 
     Supplier.findByIdAndUpdate(
       { _id: req.params.id },

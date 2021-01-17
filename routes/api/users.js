@@ -21,7 +21,6 @@ router.get('/test', (req, res) => {
 // $router POST api/users/get-user-name
 // @desc   返回的請求的 json 數據
 // @access public
-
 // 查詢數據庫中此ID的使用者名稱
 router.post(
   '/get-user-name',
@@ -42,7 +41,6 @@ router.post(
 // $router POST api/users/register
 // @desc   返回的請求的 json 數據
 // @access public
-
 router.post('/register', (req, res) => {
   // console.log(req.body)
 
@@ -134,10 +132,6 @@ router.post('/login', (req, res) => {
 // $router POST api/users/current
 // @desc   return current user
 // @access Private
-
-// router.get("/current", "驗證token",(req, res)=>{
-// res.json({msg:"success"})
-// })
 router.get(
   '/current',
   passport.authenticate('jwt', { session: false }),
@@ -159,28 +153,104 @@ router.get(
   '/user-info',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    User.find().then((users) => {
+    User.find({}, { _id: 1, name: 1 }).then((users) => {
       if (!users) {
         return res.status(400).json('沒有任何使用者資料')
       }
 
-      // 先宣告一個數組
-      const userInfo = []
-      // keys 是你要取得的 key
-      const keys = ['_id', 'name']
-      // 把每個使用者都抓出來 index 是數字 所以要用 users[index] 去取得該物件
-      for (const index in users) {
-        // 要複製的空對象
-        const objCopy = {}
-        // 把要複製的物件，用 forEach (這邊找的是 _id 跟 name) 從 users[index][key] 複製到 objCopy[key]
-        keys.forEach((key) => (objCopy[key] = users[index][key]))
-        // 把複製好的物件 推到 userInfo 裡面
-        userInfo.push(objCopy)
-      }
+      // // 先宣告一個數組
+      // const userInfo = []
+      // // keys 是你要取得的 key
+      // const keys = ['_id', 'name']
+      // // 把每個使用者都抓出來 index 是數字 所以要用 users[index] 去取得該物件
+      // for (const index in users) {
+      //   // 要複製的空對象
+      //   const objCopy = {}
+      //   // 把要複製的物件，用 forEach (這邊找的是 _id 跟 name) 從 users[index][key] 複製到 objCopy[key]
+      //   keys.forEach((key) => (objCopy[key] = users[index][key]))
+      //   // 把複製好的物件 推到 userInfo 裡面
+      //   userInfo.push(objCopy)
+      // }
+      // console.log(userInfo)
+      // res.json(userInfo)
 
-      res.json(userInfo)
+      res.json(users)
     })
   }
 )
+// $router GET api/users/user-permission-list
+// @desc   取得所有使用者 id 與 name
+// @access Private
+router.get(
+  '/user-permission-list',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // https://blog.csdn.net/Altaba/article/details/79067700
+    // 獲取客戶的真實IP
+    const getClientIp = function (req) {
+      return (
+        req.headers['x-forwarded-for'] ||
+        req.connection.remoteAddress ||
+        req.socket.remoteAddress ||
+        req.connection.socket.remoteAddress
+      )
+    }
+    console.log(getClientIp(req))
+
+    // 獲取客戶的域名
+    // eslint-disable-next-line no-useless-escape
+    let domain = req.headers.referer.match(/^(\w+:\/\/)?([^\/]+)/i)
+    domain = domain
+      ? domain[2].split(':')[0].split('.').slice(-2).join('.')
+      : null
+    console.log(domain)
+
+    // User.find({}, { _id: 1, name: 1, email: 1, identity: 1 }).then((users) => {
+    User.find({}, {}).then((users) => {
+      if (!users) {
+        return res.status(400).json('沒有任何使用者資料')
+      }
+      res.json(users)
+    })
+  }
+)
+
+// $router post api/user/edit/:id
+// @desc   編輯訊息接口
+// @access private
+// 使用 hander 要驗證 token
+// 有看到 post 就代表他會使用到 body 傳遞 數據 {}
+// 有看到 /:id 就代表要從 params 接收一個 id 進來
+// 功能：更新使用者資料
+router.post(
+  '/edit/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const userFields = {}
+
+    // if (req.body.type) materialClassFields.type = req.body.type
+    // if (req.body.name) materialClassFields.name = req.body.name
+    // if (req.body.describe) materialClassFields.describe = req.body.describe
+
+    console.log(req.body)
+
+    for (const prop in req.body) {
+      userFields[prop] = req.body[prop]
+    }
+
+    console.log(typeof userFields.activated)
+
+    // res.json('msg:material is works')
+
+    User.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $set: userFields },
+      { new: true }
+    ).then((user) => res.json(user))
+  }
+)
+
+// 技術點，獲取IP存到 mongodb
+// https://blog.csdn.net/Altaba/article/details/79067700
 
 module.exports = router

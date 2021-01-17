@@ -25,6 +25,9 @@ const router = new VueRouter({
       // 要有默認子路由，那，副路由的名字 name 得去掉
       // path:'/' 的路由是子路由，這個例子來說是這樣，所以他不能有 name 屬性，要碼刪掉這個子路由的 name 屬性，要麼設置他的path 不為 '/'
       component: Index,
+      meta: {
+        permission: ['ACTIVATED']
+      },
       children: [
         {
           path: '/home',
@@ -48,12 +51,26 @@ const router = new VueRouter({
         {
           path: '/customer-manager',
           name: 'customer-manager',
-          component: () => import('../views/managers/CustomerManager.vue')
+          component: () => import('../views/managers/CustomerManager.vue'),
+          meta: {
+            permission: ['U_1_2']
+          }
+        },
+        {
+          path: '/user-manager',
+          name: 'user-manager',
+          component: () => import('../views/managers/UserManager.vue'),
+          meta: {
+            permission: ['U_1_2']
+          }
         },
         {
           path: '/categories-manager',
           name: 'categories-manager',
-          component: () => import('../views/managers/CategoriesManager.vue')
+          component: () => import('../views/managers/CategoriesManager.vue'),
+          meta: {
+            permission: ['U_1_3', 'categories']
+          }
         },
         {
           path: '/materials-manager',
@@ -89,6 +106,9 @@ const router = new VueRouter({
 // 路由守衛 --- 要在這邊實現
 // 說明範例，如何做權限管理 https://codepen.io/CHUPAIWANG/pen/LYZQaXr
 router.beforeEach((to, from, next) => {
+  const { permission } = to.meta
+  console.log(permission)
+  console.log('我是全域前置守衛 beforeEach')
   // console.log($store.state.isAutnenticated)
   const isLogin = localStorage.eleToken ? true : false
   if (to.path == '/login' || to.path == '/register') {
@@ -96,6 +116,19 @@ router.beforeEach((to, from, next) => {
   } else {
     isLogin ? next() : next('/login')
   }
+})
+
+router.beforeResolve((to, from, next) => {
+  // console.log(
+  //   '解析守衛：跳轉前觸發，但是在beforeEach後觸發，所有元件內守衛與非同步路由元件被解析後才呼叫'
+  // )
+  next()
+})
+
+router.afterEach((to, from, next) => {
+  // console.log(
+  //   '後置鉤子，導航被確認後觸發，所以被稱為鉤子，不是守衛，因為跳轉後觸發，所以沒有next()'
+  // )
 })
 
 export default router
