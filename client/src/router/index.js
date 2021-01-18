@@ -48,46 +48,49 @@ const router = new VueRouter({
         {
           path: '/fundlist',
           name: 'fundlist',
-          component: FundList
+          component: FundList,
+          meta: {
+            permission: ['print_authority_U_555r']
+          }
         },
         {
-          path: '/customer-manager',
+          path: '/customer-manager', // 客戶管理
           name: 'customer-manager',
           component: () => import('../views/managers/CustomerManager.vue'),
           meta: {
-            permission: ['print_authority_r']
+            permission: ['customer_authority_r']
           }
         },
         {
-          path: '/user-manager',
+          path: '/user-manager', // 使用者管理
           name: 'user-manager',
           component: () => import('../views/managers/UserManager.vue'),
           meta: {
-            permission: ['print_authority_r']
+            permission: ['user_authority_r']
           }
         },
         {
-          path: '/categories-manager',
+          path: '/categories-manager', // 商品管理
           name: 'categories-manager',
           component: () => import('../views/managers/CategoriesManager.vue'),
           meta: {
-            permission: ['U_1_3', 'categories']
+            permission: ['U_1_3', 'product_authority_r']
           }
         },
         {
-          path: '/materials-manager',
+          path: '/materials-manager', // 原物料管理
           name: 'materials-manager',
           component: () => import('../views/managers/MaterialsManager.vue'),
           meta: {
-            permission: ['U_1_3']
+            permission: ['material_authority_r']
           }
         },
         {
-          path: '/suppliers-manager',
+          path: '/suppliers-manager', // 供應商管理
           name: 'suppliers-manager',
           component: () => import('../views/managers/SuppliersManager.vue'),
           meta: {
-            permission: ['U_1_3']
+            permission: ['supplier_authority_r']
           }
         }
       ]
@@ -133,11 +136,12 @@ router.beforeResolve(async (to, from, next) => {
   const { permission } = to.meta
   if (includePermission(permission)) {
     console.log('有權限')
+    next()
   } else {
+    // 沒有權限就會禁止跳轉，先做到這邊吧
     console.log('沒有權限')
+    next('/')
   }
-
-  next()
 })
 
 router.afterEach((to, from, next) => {

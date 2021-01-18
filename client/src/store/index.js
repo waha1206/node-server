@@ -55,7 +55,8 @@ const actions = {
   },
   getPermissionList: async ({ state, commit }) => {
     // 先防止重複提取
-    if (state.permissionList.length) return
+    // if (state.permissionList.length) return
+    if (!state.isAutnenticated) return
     // 跟資料庫要資料，返回的值為 res.data.permission.permission_list
     await axios
       .post('/api/user/permission', { _id: state.user.id })

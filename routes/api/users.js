@@ -260,7 +260,7 @@ router.post(
   '/permission',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    const userFields = {}
+    // const userFields = {}
 
     // if (req.body.type) materialClassFields.type = req.body.type
     // if (req.body.name) materialClassFields.name = req.body.name
@@ -272,12 +272,12 @@ router.post(
     }
 
     User.findOne(query, options)
-      .then((user) => {
-        if (!user) {
+      .then((permission) => {
+        if (!permission) {
           return res.status(400).json('無此使用者')
         }
         // console.log(user)
-        res.json(user)
+        res.json(permission)
       })
       .catch((err) => {
         res.status(404).json(err)
