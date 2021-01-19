@@ -50,15 +50,31 @@ const router = new VueRouter({
           name: 'fundlist',
           component: FundList,
           meta: {
-            permission: ['print_authority_U_555r']
+            permission: ['customer_authority_r', 'other']
           }
         },
         {
-          path: '/customer-manager', // 客戶管理
+          path: '/customer-manager', // 客戶資料管理
           name: 'customer-manager',
           component: () => import('../views/managers/CustomerManager.vue'),
           meta: {
             permission: ['customer_authority_r']
+          }
+        },
+        {
+          path: '/suppliers-manager', // 供應商管理
+          name: 'suppliers-manager',
+          component: () => import('../views/managers/SuppliersManager.vue'),
+          meta: {
+            permission: ['supplier_authority_r']
+          }
+        },
+        {
+          path: '/categories-manager', // 商品建構管理
+          name: 'categories-manager',
+          component: () => import('../views/managers/CategoriesManager.vue'),
+          meta: {
+            permission: ['product_authority_r']
           }
         },
         {
@@ -69,28 +85,13 @@ const router = new VueRouter({
             permission: ['user_authority_r']
           }
         },
-        {
-          path: '/categories-manager', // 商品管理
-          name: 'categories-manager',
-          component: () => import('../views/managers/CategoriesManager.vue'),
-          meta: {
-            permission: ['U_1_3', 'product_authority_r']
-          }
-        },
+
         {
           path: '/materials-manager', // 原物料管理
           name: 'materials-manager',
           component: () => import('../views/managers/MaterialsManager.vue'),
           meta: {
             permission: ['material_authority_r']
-          }
-        },
-        {
-          path: '/suppliers-manager', // 供應商管理
-          name: 'suppliers-manager',
-          component: () => import('../views/managers/SuppliersManager.vue'),
-          meta: {
-            permission: ['supplier_authority_r']
           }
         }
       ]
@@ -132,7 +133,7 @@ router.beforeResolve(async (to, from, next) => {
   //   '解析守衛：跳轉前觸發，但是在beforeEach後觸發，所有元件內守衛與非同步路由元件被解析後才呼叫'
   // )
   console.log('我是解析守衛，負責判斷有沒有權限在這邊處理')
-  await store.dispatch('getPermissionList')
+  // await store.dispatch('getPermissionList')
   const { permission } = to.meta
   if (includePermission(permission)) {
     console.log('有權限')

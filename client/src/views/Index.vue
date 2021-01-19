@@ -13,6 +13,7 @@ import HeadNav from '../components/Index/HeadNav'
 import LeftMenu from '../components/Index/LeftMenu'
 export default {
   name: 'index',
+
   components: {
     HeadNav,
     LeftMenu

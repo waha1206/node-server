@@ -270,7 +270,7 @@ router.post(
     const options = {
       'permission.permission_list': 1
     }
-
+    console.log('permission 提取權限中')
     User.findOne(query, options)
       .then((permission) => {
         if (!permission) {

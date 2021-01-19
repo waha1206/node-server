@@ -2,16 +2,15 @@ import Vue from 'vue'
 import App from './App.vue'
 import axios from './http'
 import moment from 'moment'
-
 import ElementUI from 'element-ui'
-
 import 'element-ui/lib/theme-chalk/index.css'
-
 import router from './router'
 import store from './store'
 // https://www.cnblogs.com/yck123/p/11212979.html
 // 滑鼠事件控制台警告 - 使用的插件
 import 'default-passive-events'
+// 把判斷 permission 的功用函式引入
+import { includePermission } from '../src/utils/permission'
 
 Vue.config.productionTip = false
 
@@ -33,6 +32,19 @@ Vue.directive('price', {
       ) {
         return pre + groupOf3Digital.replace(/\d{3}/g, ',$&')
       })
+  }
+})
+
+// 判斷此 html 有沒有包含允許的 promission，為了不跟 v-if 衝突所以自定義 v-promission
+// 使用方式 →
+Vue.directive('permission', {
+  bind: function(el, binding) {
+    const permissions = binding.value
+    if (!includePermission(permissions)) {
+      el.classList.add('hide')
+    } else {
+      el.classList.remove('hide')
+    }
   }
 })
 

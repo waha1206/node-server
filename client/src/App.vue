@@ -13,8 +13,10 @@ export default {
     // Action 可以包含任意异步操作。
     if (localStorage.eleToken) {
       const decode = jwt_decode(localStorage.eleToken)
+      // 開始先讀取我要的資料
       this.$store.dispatch('setIsAutnenticated', !this.isEmpty(decode))
       this.$store.dispatch('setUser', decode)
+      this.$store.dispatch('getPermissionList')
     }
   },
   methods: {
