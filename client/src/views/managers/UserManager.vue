@@ -538,4 +538,8 @@ export default {
   text-align: left;
   line-height: 60px;
 }
+.pagination {
+  text-align: left;
+  margin-top: 10px;
+}
 </style>

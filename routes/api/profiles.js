@@ -69,7 +69,7 @@ router.get(
   '/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Profile.findOne({ _di: req.params._id })
+    Profile.findOne({ _id: req.params._id })
       .then((profile) => {
         if (!profile) {
           return res.status(400).json('沒有任何內容')

@@ -278,6 +278,7 @@ router.post(
         }
         // console.log(user)
         res.json(permission)
+        console.log('permission 提取權限完畢')
       })
       .catch((err) => {
         res.status(404).json(err)

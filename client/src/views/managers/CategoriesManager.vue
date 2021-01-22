@@ -4,10 +4,10 @@
     <el-container>
       <el-header>
         <el-button type="primary" size="small" @click="addLevelOne"
-          >新增商品代號</el-button
+          >新增第一層分類</el-button
         >
-        <el-button type="primary" size="small" @click="getCategories"
-          >取得商品類別資訊</el-button
+        <el-button type="primary" size="small" @click="addLevelTwo"
+          >新增第二層分類</el-button
         >
       </el-header>
       <el-container>
@@ -16,32 +16,58 @@
         <!-- <el-main>Main</el-main> -->
       </el-container>
     </el-container>
-    <CategoriesDialog
-      :dialog="dialog"
-      :formData="formData"
-      :categoriesData="categoriesData"
-      @update="getCategories"
-    ></CategoriesDialog>
+    <CategoriesLevelOneDialog
+      v-if="categoriesLevelOneData[0]"
+      :dialog="categoriesLevelOneDialog"
+      :formData="categoriesLevelOneFormData"
+      :categoriesData="categoriesLevelOneData"
+      @update="getCategoriesLevelOneData"
+    ></CategoriesLevelOneDialog>
+    <!-- v-if="categoriesLevelTwoData[0]" -->
+    <CategoriesLevelTwoDialog
+      :dialog="categoriesLevelTwoDialog"
+      :formData="categoriesLevelTwoFormData"
+      :categoriesLevelTwoData="categoriesLevelTwoData"
+      :categoriesLevelOneData="categoriesLevelOneData"
+      @update="getCategoriesLevelTwoData"
+    ></CategoriesLevelTwoDialog>
   </div>
 </template>
 
 <script>
-import CategoriesDialog from '../../components/CategoriesManager/CategoriesDialog'
+import CategoriesLevelOneDialog from '../../components/CategoriesManager/CategoriesLevelOneDialog'
+import CategoriesLevelTwoDialog from '../../components/CategoriesManager/CategoriesLevelTwoDialog'
 
 export default {
   name: 'categories-manager',
   data() {
     return {
-      innerDialog: false,
-      categoriesData: [], // 開始就先讀取資料庫的數據
-      formData: {
+      categoriesLevelOneData: [], // 開始就先讀取資料庫的數據
+      categoriesLevelTwoData: [], // 開始就先讀取資料庫的數據
+      categoriesLevelOneFormData: {
         type: '',
         name: '',
         describe: '',
         last_modify_user: '',
-        id: ''
+        id: '',
+        level: 1
       },
-      dialog: {
+      categoriesLevelTwoFormData: {
+        type: '',
+        name: '',
+        describe: '',
+        last_modify_user: '',
+        id: '',
+        level: 2,
+        level_one_id: ''
+      },
+      categoriesLevelOneDialog: {
+        show: false,
+        title: '展示一下',
+        option: 'edit',
+        level_one_id: ''
+      },
+      categoriesLevelTwoDialog: {
         show: false,
         title: '展示一下',
         option: 'edit'
@@ -49,19 +75,21 @@ export default {
     }
   },
   components: {
-    CategoriesDialog
+    CategoriesLevelOneDialog,
+    CategoriesLevelTwoDialog
   },
   created() {
-    this.getCategories()
+    this.getCategoriesLevelOneData()
+    this.getCategoriesLevelTwoData()
   },
   methods: {
     // 一開始就取得 商品分類袋號資訊
-    getCategories() {
+    getCategoriesLevelOneData() {
       this.$axios
         .get('/api/categories')
         .then((res) => {
           // 把資料庫的數據都先讀出來
-          this.categoriesData = res.data
+          this.categoriesLevelOneData = res.data
           // 設置分頁數據
           // this.setPaginations()
         })
@@ -69,11 +97,32 @@ export default {
           console.log(err)
         })
     },
+    getCategoriesLevelTwoData() {
+      this.$axios
+        .get('/api/categories/two')
+        .then((res) => {
+          // 把資料庫的數據都先讀出來
+          this.categoriesLevelTwoData = res.data
+          // 設置分頁數據
+          // this.setPaginations()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+
     // 添加一筆新的商品分類代號 TD SS GG ... 等等
     addLevelOne() {
-      this.dialog = {
+      this.categoriesLevelOneDialog = {
         show: true,
         title: '新增加第一層的商品分類目錄',
+        option: 'add'
+      }
+    },
+    addLevelTwo() {
+      this.categoriesLevelTwoDialog = {
+        show: true,
+        title: '新增加第二層的商品分類目錄',
         option: 'add'
       }
     }

@@ -11,17 +11,17 @@
         <el-container>
           <el-aside width="50%" class="grid-content bg-purple">
             <div class="table-container">
-              <el-table :data="categoriesData" style="width: 100%" size="mini">
+              <el-table :data="tableData" style="width: 100%" size="mini">
                 <el-table-column
                   prop="type"
-                  label="英文"
+                  label="第一層編號"
                   width="120px"
                   align="center"
                 >
                 </el-table-column>
                 <el-table-column
                   prop="name"
-                  label="中文"
+                  label="第一層中文"
                   width="120px"
                   align="center"
                 >
@@ -65,10 +65,10 @@
               style="margin:10px;width:auto"
             >
               <!-- 這邊開始新增 -->
-              <el-form-item prop="type" label="類型(英文)：">
+              <el-form-item prop="type" label="第一層編號：" size="mini">
                 <el-input type="type" v-model="formData.type"></el-input>
               </el-form-item>
-              <el-form-item prop="name" label="類型(中文)：">
+              <el-form-item prop="name" label="第一層中文：" size="mini">
                 <el-input type="name" v-model="formData.name"></el-input>
               </el-form-item>
               <!--提交與取消鍵 -->
@@ -85,6 +85,21 @@
 
           <!-- <el-main>Main</el-main> -->
         </el-container>
+        <!-- 分頁 -->
+        <div class="pagination">
+          <el-pagination
+            background
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page.sync="my_paginations.page_index"
+            :page-size="my_paginations.page_size"
+            :page-sizes="my_paginations.page_sizes"
+            :total="my_paginations.total"
+            layout="total, sizes, prev, pager, next, jumper"
+          >
+          </el-pagination>
+        </div>
+        <!-- 分頁結束 -->
       </div>
     </el-dialog>
     <el-dialog
@@ -133,7 +148,7 @@
 <script>
 import { MessageBox } from 'element-ui'
 export default {
-  name: 'my-dialog',
+  name: 'categories-level-one-dialog',
   props: {
     dialog: Object,
     formData: Object,
@@ -141,11 +156,20 @@ export default {
   },
   data() {
     return {
+      tableData: [],
       formLabelWidth: '',
       categoriesEditForm: {
         type: '',
         name: '',
         _id: ''
+      },
+      // 管理分頁
+      my_paginations: {
+        page_index: 1, // 位於當前第幾頁
+        total: 0, // 總數
+        page_size: 10, // 每一頁顯示幾條數據
+        page_sizes: [5, 10, 12] // 選擇一頁要顯示多少條
+        // layouts: 'total, sizes, prev, pager, next, jumper'
       },
       // 這個是驗證 editCategoriesEditForm的表單欄位
       categoriesEditFormRules: {
@@ -165,12 +189,59 @@ export default {
       }
     }
   },
+  created() {
+    this.setPaginations()
+  },
+  watch: {
+    categoriesData() {
+      this.setPaginations()
+    }
+  },
   computed: {
     user() {
       return this.$store.getters.user
     }
   },
   methods: {
+    setPaginations() {
+      // 分頁屬性設置
+      this.my_paginations.total = this.categoriesData.length
+      this.my_paginations.page_index = 1
+      if (localStorage.categories_class_page_size) {
+        this.my_paginations.page_size = Number(
+          localStorage.categories_class_page_size
+        )
+      } else {
+        this.my_paginations.page_size = 5
+      }
+      // 設置分頁數據
+      this.tableData = this.categoriesData.filter((item, index) => {
+        return index < this.my_paginations.page_size
+      })
+    },
+    handleSizeChange(page_size) {
+      // 切換每頁有幾條數據
+      localStorage.categories_class_page_size = page_size
+      this.my_paginations.page_index = 1
+      this.my_paginations.page_size = page_size
+      this.tableData = this.categoriesData.filter((item, index) => {
+        return index < page_size
+      })
+    },
+    handleCurrentChange(page) {
+      // 獲取當前頁面
+      let index = this.my_paginations.page_size * (page - 1)
+      // 數據的總數
+      let nums = this.my_paginations.page_size * page
+      // 容器
+      let tables = []
+      for (let i = index; i < nums; i++) {
+        if (this.categoriesData[i]) {
+          tables.push(this.categoriesData[i])
+        }
+        this.tableData = tables
+      }
+    },
     handleAdd(form) {
       this.dialog.option = 'add'
       this.onSubmit(form)
@@ -183,6 +254,7 @@ export default {
       this.dialog.option = 'edit'
     },
     handleDelete(row) {
+      return
       MessageBox.confirm(
         '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
         '嚴重警告！！！'
@@ -212,7 +284,7 @@ export default {
             this.dialog.option == 'add'
               ? 'add'
               : `edit/${this.categoriesEditForm._id}`
-
+          uploadFormData.level = 1
           this.$axios
             .post(`/api/categories/${url}`, uploadFormData)
             .then((res) => {
@@ -258,5 +330,9 @@ export default {
   overflow: hidden;
 
   box-sizing: border-box;
+}
+.pagination {
+  text-align: left;
+  margin-top: 10px;
 }
 </style>
