@@ -123,6 +123,21 @@
             </el-row>
           </el-header>
           <!-- 第三行開始，圖片上傳 -->
+          <!-- 圖片上傳的教學 https://segmentfault.com/a/1190000013796215 -->
+          <!-- 上傳一張照片的時候隱藏 後面的 + 框框  https://www.twblogs.net/a/5b81a49e2b71772165ad9752 -->
+          <div>
+            <p>要提交的表單內容：{{ levelThreeFormData }}</p>
+            <p>-----------------</p>
+            <p v-for="item in updateLevelTwoData">
+              {{ item.type }}{{ item.name }}--{{ item._id }}
+            </p>
+            <p>-----------------</p>
+            <P>預覽 (dialogImageUrl)：{{ dialogImageUrl }}</P>
+            <p>-----------------</p>
+            <p>{{ levelThreeFormData.uploadData }}</p>
+            <p>-----------------</p>
+            <p>files:{{ files }}</p>
+          </div>
           <el-main>
             <div class="image-warp">
               <el-form-item
@@ -132,11 +147,31 @@
                 label-width="120px"
                 prop="describe"
               >
+                <!-- :class="{ disabled: uploadDisabled }" -->
                 <el-upload
-                  action="#"
+                  :data="levelThreeFormData.uploadData"
+                  action="uploadActionUrl"
                   list-type="picture-card"
                   :auto-upload="false"
+                  accept="image/jpeg,image/gif,image/png"
+                  multiple
+                  :limit="5"
+                  :file-list="files"
+                  :on-change="onFileChange"
                 >
+                  <el-dialog
+                    :visible.sync="dialogVisible"
+                    append-to-body
+                    width="520px"
+                  >
+                    <img
+                      width="480px"
+                      height="480px"
+                      fit="contain"
+                      :src="dialogImageUrl"
+                      alt=""
+                    />
+                  </el-dialog>
                   <i slot="default" class="el-icon-plus"></i>
                   <div class="image-content" slot="file" slot-scope="{ file }">
                     <img
@@ -153,15 +188,15 @@
                       </span>
                       <span
                         v-if="!disabled"
-                        class="el-upload-list__item-delete"
+                        class="el-upload-list__item-download"
                         @click="handleDownload(file)"
                       >
                         <i class="el-icon-download"></i>
                       </span>
+                      <!-- v-if="!disabled" -->
                       <span
-                        v-if="!disabled"
                         class="el-upload-list__item-delete"
-                        @click="handleRemove(file)"
+                        @click="handleRemove(file, files)"
                       >
                         <i class="el-icon-delete"></i>
                       </span>
@@ -169,8 +204,6 @@
                   </div>
                 </el-upload>
               </el-form-item>
-              <!-- </el-col> -->
-              <!-- </el-col> -->
             </div>
           </el-main>
           <!-- 取消與提交 -->
@@ -200,14 +233,6 @@
 
         <!-- 要提交的formData 裡面的資料 -->
 
-        <!-- <p>要提交的表單內容：{{ levelThreeFormData }}</p>
-        <p>-----------------</p>
-        <p v-for="item in updateLevelTwoData">
-          {{ item.type }}{{ item.name }}--{{ item._id }}
-        </p>
-        <p>-----------------</p>
-        <P>{{ dialogImageUrl }}</P> -->
-
         <!-- <p v-for="item in categoriesLevelTwoData">{{ item.name }}</p> -->
         <!-- <p>{{ dialog }}</p>
       <p>{{ formData }}</p>
@@ -230,20 +255,31 @@ export default {
   data() {
     return {
       // 圖片上傳
+      files: [],
       dialogImageUrl: '',
       dialogVisible: false,
-      disabled: false,
+      disabled: Boolean,
       updateLevelTwoData: [],
       // upload 第三層的商品 formData
       levelThreeFormData: {
         levelOneId: '',
         levelTwoId: '',
         name: '',
-        describe: ''
+        describe: '',
+        uploadData: {
+          dataType: '0',
+          oldFilePath: ''
+        }
       },
       form_rules: {
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }]
       }
+    }
+  },
+  computed: {
+    uploadDisabled: function() {
+      console.log(this.files.length)
+      // return this.files.length > 0
     }
   },
   watch: {
@@ -252,17 +288,6 @@ export default {
     }
   },
   methods: {
-    // 圖片上傳的三個 methods
-    handleRemove(file) {
-      console.log(file)
-    },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url
-      this.dialogVisible = true
-    },
-    handleDownload(file) {
-      console.log(file)
-    },
     levelOneChang(id) {
       this.levelThreeFormData.levelTwoId = ''
       this.updateLevelTwoData = this.categoriesLevelTwoData.filter((item) => {
@@ -304,6 +329,49 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+    },
+    // 圖片上傳的 function
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
+      for (let index = 0; index < fileList.length; index++) {
+        if (fileList[index].uid == file.uid) {
+          this.files.splice(index, 1) //移除数组中要删除的图片
+        }
+      }
+    },
+    // 跳出預覽圖片預覽視窗
+    // https://www.codeleading.com/article/29861991468/
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
+    },
+    handleDownload(file) {
+      console.log(file)
+    },
+    onFileChange(file, fileList) {
+      console.log('onFileChange', file)
+      console.log('onFileChange', fileList)
+      const isIMAGE =
+        file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'
+      const isLt1M = file.size / 1024 / 1024 < 1
+
+      if (!isIMAGE) {
+        this.$message.error('只能上传jpg/png图片!')
+        return false
+      }
+      if (!isLt1M) {
+        this.$message.error('上传文件大小不能超过 1MB!')
+        return false
+      }
+      var reader = new FileReader()
+      reader.readAsDataURL(file.raw)
+      reader.onload = function(e) {
+        // console.log(this.result) //图片的base64数据
+      }
+      this.files.push(file)
+    },
+    onFilePreview(file) {
+      console.log(file)
     }
   }
 }
@@ -367,6 +435,9 @@ export default {
 
 .image-content {
   float: left;
-  margin-bottom: 0px;
+  margin-bottom: 5px;
 }
+/* div.disabled .el-upload--picture-card {
+  display: none;
+} */
 </style>
