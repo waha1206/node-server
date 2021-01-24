@@ -156,6 +156,7 @@ export default {
   },
   data() {
     return {
+      dontRemove: '5fd54071cbcb7757640a7ee7',
       tableData: [],
       formLabelWidth: '',
       categoriesEditForm: {
@@ -254,7 +255,11 @@ export default {
       this.dialog.option = 'edit'
     },
     handleDelete(row) {
-      return
+      // 讓全部分類無法刪除
+      if (this.dontRemove === row._id) {
+        this.$message('您不能刪除這個選項')
+        return
+      }
       MessageBox.confirm(
         '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
         '嚴重警告！！！'

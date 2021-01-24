@@ -9,6 +9,9 @@
         <el-button type="primary" size="small" @click="addLevelTwo"
           >新增第二層分類</el-button
         >
+        <el-button type="primary" size="small" @click="addLevelThree"
+          >新增第三層商品</el-button
+        >
       </el-header>
       <el-container>
         <el-aside width="50%">商品代號</el-aside>
@@ -16,6 +19,7 @@
         <!-- <el-main>Main</el-main> -->
       </el-container>
     </el-container>
+    <!-- 新增第一層商品的 dialog -->
     <CategoriesLevelOneDialog
       v-if="categoriesLevelOneData[0]"
       :dialog="categoriesLevelOneDialog"
@@ -31,12 +35,22 @@
       :categoriesLevelOneData="categoriesLevelOneData"
       @update="getCategoriesLevelTwoData"
     ></CategoriesLevelTwoDialog>
+    <!-- 新增第三層商品的 dialog -->
+    <CategoriesLevelThreeDialog
+      v-if="categoriesLevelTwoData[0] && categoriesLevelOneData[0]"
+      :dialog="categoriesLevelThreeDialog"
+      :formData="categoriesLevelThreeFormData"
+      :categoriesLevelOneData="categoriesLevelOneData"
+      :categoriesLevelTwoData="categoriesLevelTwoData"
+      @update="getCategoriesLevelThreeData"
+    ></CategoriesLevelThreeDialog>
   </div>
 </template>
 
 <script>
 import CategoriesLevelOneDialog from '../../components/CategoriesManager/CategoriesLevelOneDialog'
 import CategoriesLevelTwoDialog from '../../components/CategoriesManager/CategoriesLevelTwoDialog'
+import CategoriesLevelThreeDialog from '../../components/CategoriesManager/categoriesLevelThreeDialog'
 
 export default {
   name: 'categories-manager',
@@ -44,6 +58,7 @@ export default {
     return {
       categoriesLevelOneData: [], // 開始就先讀取資料庫的數據
       categoriesLevelTwoData: [], // 開始就先讀取資料庫的數據
+      categoriesLevelThreeData: [], // 開始就先讀取資料庫的數據
       categoriesLevelOneFormData: {
         type: '',
         name: '',
@@ -61,6 +76,15 @@ export default {
         level: 2,
         level_one_id: ''
       },
+      categoriesLevelThreeFormData: {
+        type: '',
+        name: '',
+        describe: '',
+        last_modify_user: '',
+        id: '',
+        level: 3,
+        level_one_id: ''
+      },
       categoriesLevelOneDialog: {
         show: false,
         title: '展示一下',
@@ -71,16 +95,23 @@ export default {
         show: false,
         title: '展示一下',
         option: 'edit'
+      },
+      categoriesLevelThreeDialog: {
+        show: false,
+        title: '展示一下',
+        option: 'edit'
       }
     }
   },
   components: {
     CategoriesLevelOneDialog,
-    CategoriesLevelTwoDialog
+    CategoriesLevelTwoDialog,
+    CategoriesLevelThreeDialog
   },
   created() {
     this.getCategoriesLevelOneData()
     this.getCategoriesLevelTwoData()
+    this.getCategoriesLevelThreeData()
   },
   methods: {
     // 一開始就取得 商品分類袋號資訊
@@ -110,6 +141,7 @@ export default {
           console.log(err)
         })
     },
+    getCategoriesLevelThreeData() {},
 
     // 添加一筆新的商品分類代號 TD SS GG ... 等等
     addLevelOne() {
@@ -123,6 +155,13 @@ export default {
       this.categoriesLevelTwoDialog = {
         show: true,
         title: '新增加第二層的商品分類目錄',
+        option: 'add'
+      }
+    },
+    addLevelThree() {
+      this.categoriesLevelThreeDialog = {
+        show: true,
+        title: '新增加第三層的商品',
         option: 'add'
       }
     }

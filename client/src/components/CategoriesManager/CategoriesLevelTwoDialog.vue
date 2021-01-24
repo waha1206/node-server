@@ -19,20 +19,29 @@
               size="mini"
             >
               <!-- :lable 這個是顯示出來的  :value 這個要指定到 _id 因為我要存到資料庫，我需要唯一的一個 key (_id)-->
+              <!-- value 這邊綁定的是此 陣列裡面，要傳給 select v-mode 的值 -->
+              <!-- label 就單純的顯示再 input 上面可以看到的文字 -->
               <el-option
+                <el-option
                 v-for="(levelOneData, index) in categoriesLevelOneData"
                 :key="index"
                 :value="levelOneData._id"
                 :label="levelOneData.name"
-              ></el-option>
-            </el-select></div
-        ></el-col>
+              >
+                <span style="float: left">{{ levelOneData.type }}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">{{
+                  levelOneData.name
+                }}</span></el-option
+              >
+            </el-select>
+          </div></el-col
+        >
       </el-row>
 
       <div class="form">
         <el-container>
           <!-- dialog 左側 -->
-          <el-aside width="70%" class="grid-content bg-purple">
+          <el-aside width="65%" class="grid-content bg-purple">
             <div class="table-container">
               <el-table :data="tableData" style="width: 100%" size="mini">
                 <el-table-column
@@ -85,7 +94,7 @@
           </el-aside>
 
           <!-- dialog 右側 -->
-          <el-aside width="30%" class="grid-content bg-purple-light">
+          <el-aside width="35%" class="grid-content bg-purple-light">
             <el-form
               ref="form"
               :model="formData"
@@ -109,7 +118,13 @@
                     :key="index"
                     :value="levelOneData._id"
                     :label="levelOneData.name"
-                  ></el-option>
+                  >
+                    <span style="float: left">{{ levelOneData.type }}</span>
+                    <span
+                      style="float: right; color: #8492a6; font-size: 13px"
+                      >{{ levelOneData.name }}</span
+                    >
+                  </el-option>
                 </el-select>
               </el-form-item>
               <!-- 這邊開始新增 -->
@@ -234,6 +249,7 @@ export default {
   },
   data() {
     return {
+      dontRemove: '5fd54071cbcb7757640a7ee7',
       filterTableData: {
         tableData: [],
         levelOneId: ''
@@ -301,8 +317,8 @@ export default {
       if (localStorage.level_one_id) {
         this.filterTableData.levelOneId = localStorage.level_one_id
       } else {
-        this.filterTableData.levelOneId = '5fd54071cbcb7757640a7ee7'
-        localStorage.level_one_id = '5fd54071cbcb7757640a7ee7'
+        this.filterTableData.levelOneId = this.dontRemove
+        localStorage.level_one_id = this.dontRemove
       }
       this.filterTableDataChange(this.filterTableData.levelOneId)
     },
@@ -310,7 +326,7 @@ export default {
     filterTableDataChange(id) {
       this.filterTableData.levelOneId = id
       localStorage.level_one_id = id
-      if (this.filterTableData.levelOneId == '5fd54071cbcb7757640a7ee7') {
+      if (this.filterTableData.levelOneId == this.dontRemove) {
         this.filterTableData.tableData = this.categoriesLevelTwoData
       } else {
         this.filterTableData.tableData = this.categoriesLevelTwoData.filter(
@@ -379,14 +395,13 @@ export default {
       this.dialog.option = 'edit'
     },
     handleDelete(row) {
-      return
       MessageBox.confirm(
         '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
         '嚴重警告！！！'
       )
         .then(() => {
           this.$axios
-            .delete(`/api/categories/delete/${row._id}`)
+            .delete(`/api/categories/delete-level-two/${row._id}`)
             .then((res) => {
               this.$message('刪除成功！')
               this.$emit('update')
@@ -408,6 +423,11 @@ export default {
               ? 'add'
               : `edit/${this.categoriesEditForm._id}`
           uploadFormData.level = 2
+          if (uploadFormData.level_one_id === this.dontRemove) {
+            this.$message('請重新選擇第一層分類，您不能選擇全部分類')
+            return
+          }
+
           this.$axios
             .post(`/api/categories/${url}`, uploadFormData)
             .then((res) => {

@@ -130,7 +130,7 @@
           <!-- 第三列，業務姓名，業務手機，業務傳真，業務MAIL -->
           <el-row :gutter="20" type="flex" class="row-bg">
             <el-col :span="6">
-              <div class="grid-content ">
+              <div class="grid-content">
                 <el-form-item
                   prop="sales_name"
                   label="業務姓名："
