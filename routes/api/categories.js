@@ -51,7 +51,27 @@ router.post(
       categoriesFields.level_one_id = req.body.level_one_id
     }
 
-    CategoryLevel.findOne({ type: req.body.type }).then((category) => {
+    if (req.body.level === 3) {
+      if (req.body.level_two_id) {
+        categoriesFields.level_two_id = req.body.level_two_id
+      }
+      // 多張圖片
+      if (req.body.imgs) {
+        categoriesFields.imgs = req.body.imgs.split('|')
+      }
+      if (req.body.last_modify_date) {
+        categoriesFields.last_modify_date = req.body.last_modify_date
+      }
+      if (req.body.last_edit_person) {
+        categoriesFields.last_edit_person = req.body.last_edit_person
+      }
+      if (req.body.status)
+        categoriesFields.status = Object.assign({}, req.body.status)
+    }
+
+    console.log(categoriesFields)
+
+    CategoryLevel.findOne({ name: req.body.name }).then((category) => {
       if (category) {
         return res.status(400).json('此商品類型(英文)已經存在')
       } else {
@@ -61,6 +81,7 @@ router.post(
             res.json(category)
           })
           .catch((err) => {
+            console.log(err)
             res.status(404).json(err)
           })
       }
@@ -99,6 +120,28 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     CategoriesLevelTwo.find()
+      .then((categories) => {
+        if (!categories) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(categories)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
+// $router get api/categories/three
+// @desc   獲取所有分類資訊
+// @access private
+// 使用 hander 要驗證 token
+// body 不用放，因為他會獲取所有訊息
+router.get(
+  '/three',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    CategoriesLevelThree.find()
       .then((categories) => {
         if (!categories) {
           return res.status(400).json('沒有任何內容')

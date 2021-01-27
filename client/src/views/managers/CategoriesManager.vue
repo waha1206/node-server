@@ -3,6 +3,16 @@
     <div class="customer-manager"></div>
     <el-container>
       <el-header>
+        <div class="cascader-wrap">
+          <el-cascader
+            v-model="choiceLevelTwoValue"
+            expand-trigger="hover"
+            size="mini"
+            placeholder="請選擇第二層分類"
+            :options="levelOneTowOption"
+            filterable
+          ></el-cascader>
+        </div>
         <el-button type="primary" size="small" @click="addLevelOne"
           >新增第一層分類</el-button
         >
@@ -14,7 +24,7 @@
         >
       </el-header>
       <el-container>
-        <el-aside width="50%">商品代號</el-aside>
+        <el-aside width="50%">{{ op }}</el-aside>
         <el-aside width="50%">Aside</el-aside>
         <!-- <el-main>Main</el-main> -->
       </el-container>
@@ -42,6 +52,7 @@
       :formData="categoriesLevelThreeFormData"
       :categoriesLevelOneData="categoriesLevelOneData"
       :categoriesLevelTwoData="categoriesLevelTwoData"
+      :allUserNameId="allUserNameId"
       @update="getCategoriesLevelThreeData"
     ></CategoriesLevelThreeDialog>
   </div>
@@ -56,6 +67,21 @@ export default {
   name: 'categories-manager',
   data() {
     return {
+      optipons: [
+        {
+          value: 'level one',
+          label: '第一層',
+          children: [{ value: 'level two', label: '第二層' }]
+        },
+        {
+          value: 'level one',
+          label: '第一層++',
+          children: [{ value: 'level two++', label: '第二層++' }]
+        }
+      ],
+      choiceLevelTwoValue: '',
+      levelOneTowOption: [], // 存放第一層與第二層的分類
+      allUserNameId: [], // 所有使用者
       categoriesLevelOneData: [], // 開始就先讀取資料庫的數據
       categoriesLevelTwoData: [], // 開始就先讀取資料庫的數據
       categoriesLevelThreeData: [], // 開始就先讀取資料庫的數據
@@ -108,12 +134,57 @@ export default {
     CategoriesLevelTwoDialog,
     CategoriesLevelThreeDialog
   },
+  computed: {
+    op() {
+      this.levelOneTowOption = []
+      this.categoriesLevelOneData.forEach((item) => {
+        // console.log(index, item.name, item._id)
+        let obj = {
+          value: '',
+          label: '',
+          children: []
+        }
+        obj.value = item._id
+        obj.label = item.type + ' ' + item.name
+        this.levelOneTowOption.push(obj)
+      })
+
+      for (let i = 0; i < this.levelOneTowOption.length; i++) {
+        const level_one_id = this.levelOneTowOption[i].value
+        this.categoriesLevelTwoData.forEach((item) => {
+          if (item.level_one_id === level_one_id) {
+            let obj2 = {
+              value: '',
+              label: ''
+            }
+            obj2.value = item._id
+            obj2.label = item.type + ' ' + item.name
+            this.levelOneTowOption[i].children.push(obj2)
+          }
+        })
+      }
+      return this.choiceLevelTwoValue
+    }
+  },
+
   created() {
     this.getCategoriesLevelOneData()
     this.getCategoriesLevelTwoData()
     this.getCategoriesLevelThreeData()
+    this.getUserInfo()
   },
   methods: {
+    // 取得所有使用者的資訊
+    getUserInfo() {
+      this.$axios
+        .get('/api/user/user-info')
+        .then((res) => {
+          this.allUserNameId = res.data
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
     // 一開始就取得 商品分類袋號資訊
     getCategoriesLevelOneData() {
       this.$axios
@@ -141,7 +212,19 @@ export default {
           console.log(err)
         })
     },
-    getCategoriesLevelThreeData() {},
+    getCategoriesLevelThreeData() {
+      this.$axios
+        .get('/api/categories/three')
+        .then((res) => {
+          // 把資料庫的數據都先讀出來
+          this.categoriesLevelThreeData = res.data
+          // 設置分頁數據
+          // this.setPaginations()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
 
     // 添加一筆新的商品分類代號 TD SS GG ... 等等
     addLevelOne() {
@@ -211,5 +294,10 @@ body > .el-container {
 
 .el-container:nth-child(7) .el-aside {
   line-height: 320px;
+}
+.cascader-wrap {
+  float: left;
+  margin: 0 10px 0 0;
+  padding: 0;
 }
 </style>

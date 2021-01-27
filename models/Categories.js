@@ -87,21 +87,32 @@ const CategoryLevelThreeSchema = new Schema({
     type: String
   },
   imgs: {
-    type: String
+    type: [String]
   },
   describe: {
-    type: String
-  },
-  last_modify_user: {
     type: String
   },
   date: {
     type: Date,
     default: Date.now
   },
+  status: {
+    activated: {
+      type: Boolean,
+      dafault: false
+    },
+    vip: {
+      type: Boolean,
+      default: false
+    }
+  },
   level_two_id: {
     type: String,
-    required: [true, '多對一必填寫primarykey']
+    required: [true, '第二層分類_id必填寫']
+  },
+  level_one_id: {
+    type: String,
+    required: [true, '第一層分類_id必填寫']
   },
   last_edit_person: {
     type: String

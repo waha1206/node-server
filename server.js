@@ -18,12 +18,17 @@ const supplierClass = require('./routes/api/supplierClass')
 const db = require('./config/keys').mongoURI
 
 // 使用 body-parser 中間件
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
+// app.use(bodyParser.json())
+// app.use(bodyParser.urlencoded({ extended: false }))
 
 app.get('/', (req, res) => {
   res.send('Hello World')
 })
+
+// 設定上傳文件的最大 kbs
+app.use(bodyParser.json({ limit: '50mb' }))
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
+
 mongoose
   .connect(db, {
     useNewUrlParser: true,
