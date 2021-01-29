@@ -7,7 +7,7 @@
           <el-cascader
             @change="onOptionsChange"
             v-model="choiceLevelTwoValue"
-            props.expand-trigger="hover"
+            :props="{ expandTrigger: 'hover' }"
             size="mini"
             placeholder="請選擇第二層分類"
             :options="levelOneTowOption"
@@ -207,7 +207,42 @@ export default {
   },
   mounted() {
     this.setCascaderOptions()
-    this.getCategoriesLevelThreeData()
+  },
+  watch: {
+    // 如果 level one 跟 level two 都有資料的時候，就更動 cascader 的聯集選擇器
+    categoriesLevelTwoData() {
+      if (this.categoriesLevelTwoData[0]) {
+        console.log('設定  cascader')
+        this.levelOneTowOption = []
+        this.categoriesLevelOneData.forEach((item) => {
+          // console.log(index, item.name, item._id)
+          let obj = {
+            value: '',
+            label: '',
+            children: []
+          }
+          obj.value = item._id
+          obj.label = item.type + ' ' + item.name
+          this.levelOneTowOption.push(obj)
+        })
+
+        for (let i = 0; i < this.levelOneTowOption.length; i++) {
+          const level_one_id = this.levelOneTowOption[i].value
+          this.categoriesLevelTwoData.forEach((item) => {
+            if (item.level_one_id === level_one_id) {
+              let obj2 = {
+                value: '',
+                label: ''
+              }
+              obj2.value = item._id
+              obj2.label = item.type + ' ' + item.name
+              this.levelOneTowOption[i].children.push(obj2)
+            }
+          })
+        }
+      }
+      this.getCategoriesLevelThreeData()
+    }
   },
 
   methods: {
@@ -221,41 +256,11 @@ export default {
         this.choiceLevelTwoValue[1] = localStorage.choiceLevelTwoValue
       }
     },
-    watch: {
-      categoriesLevelOneData() {
-        console.log(this.categoriesLevelOneData)
-        console.log(this.categoriesLevelTwoData)
-      }
-    },
+
     onOptionsChange(value) {
       // 當分類選擇異動的時候，再重新的撈第三層的商品資料
-      this.levelOneTowOption = []
-      this.categoriesLevelOneData.forEach((item) => {
-        // console.log(index, item.name, item._id)
-        let obj = {
-          value: '',
-          label: '',
-          children: []
-        }
-        obj.value = item._id
-        obj.label = item.type + ' ' + item.name
-        this.levelOneTowOption.push(obj)
-      })
-
-      for (let i = 0; i < this.levelOneTowOption.length; i++) {
-        const level_one_id = this.levelOneTowOption[i].value
-        this.categoriesLevelTwoData.forEach((item) => {
-          if (item.level_one_id === level_one_id) {
-            let obj2 = {
-              value: '',
-              label: ''
-            }
-            obj2.value = item._id
-            obj2.label = item.type + ' ' + item.name
-            this.levelOneTowOption[i].children.push(obj2)
-          }
-        })
-      }
+      localStorage.choiceLevelOneValue = value[0]
+      localStorage.choiceLevelTwoValue = value[1]
       this.getCategoriesLevelThreeData()
     },
     // 取得所有使用者的資訊
@@ -298,15 +303,14 @@ export default {
     },
     // 取得第三層的商品資訊，使用選擇到的第二層分類 id ，回傳值忽略掉 imgs 欄位，有需要再另外取得
     getCategoriesLevelThreeData() {
-      console.log('this.choiceLevelTwoValue', this.choiceLevelTwoValue)
       if (!this.choiceLevelTwoValue[1]) return
       this.$axios
-        .get(`/api/categories/three/${localStorage.choiceLevelTwoValue}`)
+        .get(`/api/categories/three/${this.choiceLevelTwoValue[1]}`)
         .then((res) => {
           // 把資料庫的數據都先讀出來
           this.categoriesLevelThreeData = res.data
           this.tableData = res.data
-          console.log(res.data)
+
           // 設置分頁數據
           // this.setPaginations()
         })
