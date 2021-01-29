@@ -5,6 +5,7 @@
       <el-header>
         <div class="cascader-wrap">
           <el-cascader
+            @change="onOptionsChange"
             v-model="choiceLevelTwoValue"
             expand-trigger="hover"
             size="mini"
@@ -22,10 +23,72 @@
         <el-button type="primary" size="small" @click="addLevelThree"
           >新增第三層商品</el-button
         >
+        <span style="display:none"> {{ choiceLevelTwoClass }}</span>
       </el-header>
       <el-container>
-        <el-aside width="50%">{{ op }}</el-aside>
-        <el-aside width="50%">Aside</el-aside>
+        <el-table
+          size="mini"
+          :stripe="true"
+          :data="
+            tableData.filter(
+              (data) =>
+                !search ||
+                data.name.toLowerCase().includes(search.toLowerCase())
+            )
+          "
+          style="width: 100%"
+        >
+          <!-- 序號 -->
+          <el-table-column
+            type="index"
+            label="序號"
+            align="center"
+            width="70"
+          ></el-table-column>
+          <!-- 商品名稱 -->
+          <el-table-column
+            label="供應商公司抬頭"
+            prop="name"
+            align="left"
+            width="180"
+          ></el-table-column>
+          <!-- 商品名稱 -->
+          <el-table-column
+            label="狀態"
+            prop="status.activated"
+            align="left"
+            width="70"
+          >
+          </el-table-column>
+
+          <!-- 搜尋欄位 -->
+          <el-table-column align="center" width="150">
+            <!-- header 代表放到列的說明文字那邊 -->
+            <template slot="header" slot-scope="scope">
+              <el-input
+                v-model="search"
+                size="mini"
+                placeholder="輸入關鍵字搜尋"
+              />
+            </template>
+            <!-- slot 崁入兩個按鈕 -->
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                @click="handleEditMaterial(scope.$index, scope.row)"
+                >編輯</el-button
+              >
+              <el-button
+                size="mini"
+                type="danger"
+                @click="handleDeleteMaterial(scope.$index, scope.row)"
+                >刪除</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- <el-aside width="50%">{{ choiceLevelTwoClass }}</el-aside>
+        <el-aside width="50%">Aside</el-aside> -->
         <!-- <el-main>Main</el-main> -->
       </el-container>
     </el-container>
@@ -79,7 +142,9 @@ export default {
           children: [{ value: 'level two++', label: '第二層++' }]
         }
       ],
-      choiceLevelTwoValue: '',
+      search: '',
+      tableData: [],
+      choiceLevelTwoValue: [],
       levelOneTowOption: [], // 存放第一層與第二層的分類
       allUserNameId: [], // 所有使用者
       categoriesLevelOneData: [], // 開始就先讀取資料庫的數據
@@ -135,7 +200,8 @@ export default {
     CategoriesLevelThreeDialog
   },
   computed: {
-    op() {
+    choiceLevelTwoClass() {
+      console.log('次數')
       this.levelOneTowOption = []
       this.categoriesLevelOneData.forEach((item) => {
         // console.log(index, item.name, item._id)
@@ -172,8 +238,29 @@ export default {
     this.getCategoriesLevelTwoData()
     this.getCategoriesLevelThreeData()
     this.getUserInfo()
+    this.setLevelTwoOptions()
+  },
+  watch: {
+    choiceLevelTwoValue() {
+      // 紀錄選擇的第二層分類 id 到 loclStorage 下次再進來的時候讀取
+      if (this.choiceLevelTwoValue) {
+        localStorage.choiceLevelOneValue = this.choiceLevelTwoValue[0]
+        localStorage.choiceLevelTwoValue = this.choiceLevelTwoValue[1]
+      }
+    }
   },
   methods: {
+    // 一進來就回到上次查詢的第二層資料位置
+    setLevelTwoOptions() {
+      if (localStorage.choiceLevelTwoValue) {
+        this.choiceLevelTwoValue[0] = localStorage.choiceLevelOneValue
+        this.choiceLevelTwoValue[1] = localStorage.choiceLevelTwoValue
+      }
+    },
+    onOptionsChange(value) {
+      console.log(value)
+      this.getCategoriesLevelThreeData()
+    },
     // 取得所有使用者的資訊
     getUserInfo() {
       this.$axios
@@ -185,7 +272,7 @@ export default {
           console.log(err)
         })
     },
-    // 一開始就取得 商品分類袋號資訊
+    // 一開始就取得 商品分類代號資訊
     getCategoriesLevelOneData() {
       this.$axios
         .get('/api/categories')
@@ -212,12 +299,15 @@ export default {
           console.log(err)
         })
     },
+    // 取得第三層的商品資訊，使用選擇到的第二層分類 id ，回傳值忽略掉 imgs 欄位，有需要再另外取得
     getCategoriesLevelThreeData() {
       this.$axios
-        .get('/api/categories/three')
+        .get(`/api/categories/three/${localStorage.choiceLevelTwoValue}`)
         .then((res) => {
           // 把資料庫的數據都先讀出來
           this.categoriesLevelThreeData = res.data
+          this.tableData = res.data
+          console.log(res.data)
           // 設置分頁數據
           // this.setPaginations()
         })
@@ -295,9 +385,16 @@ body > .el-container {
 .el-container:nth-child(7) .el-aside {
   line-height: 320px;
 }
+/* 調整 div 容器最大的寬度 */
 .cascader-wrap {
   float: left;
-  margin: 0 10px 0 0;
+  margin: 0 15px 0 0;
   padding: 0;
+  width: 300px;
+}
+
+/* 直接調整 el-cascader 沒有用，因為外面套了一個 div 該 class 為 .el-cascader--mini */
+.el-cascader--mini {
+  width: 100% !important;
 }
 </style>

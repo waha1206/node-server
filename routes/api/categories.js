@@ -65,8 +65,9 @@ router.post(
       if (req.body.last_edit_person) {
         categoriesFields.last_edit_person = req.body.last_edit_person
       }
-      if (req.body.status)
+      if (req.body.status) {
         categoriesFields.status = Object.assign({}, req.body.status)
+      }
     }
 
     console.log(categoriesFields)
@@ -138,10 +139,16 @@ router.get(
 // 使用 hander 要驗證 token
 // body 不用放，因為他會獲取所有訊息
 router.get(
-  '/three',
+  '/three/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    CategoriesLevelThree.find()
+    // query 選擇的條件
+    // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
+    const query = { level_two_id: req.params.id }
+    const options = {
+      imgs: 0
+    }
+    CategoriesLevelThree.find(query, options)
       .then((categories) => {
         if (!categories) {
           return res.status(400).json('沒有任何內容')
