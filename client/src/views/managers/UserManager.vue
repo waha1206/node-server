@@ -447,6 +447,7 @@ export default {
       }
     },
     handleDeleteUser() {},
+    // 分頁設定
     setPaginations() {
       // 分頁屬性設置
       this.my_paginations.total = this.allUserData.length

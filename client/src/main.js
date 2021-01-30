@@ -3,6 +3,8 @@ import App from './App.vue'
 import axios from './http'
 import moment from 'moment'
 import ElementUI from 'element-ui'
+// 引入繁體中文
+import locale from 'element-ui/lib/locale/lang/zh-TW'
 import 'element-ui/lib/theme-chalk/index.css'
 import router from './router'
 import store from './store'
@@ -14,7 +16,7 @@ import { includePermission } from '../src/utils/permission'
 
 Vue.config.productionTip = false
 
-Vue.use(ElementUI)
+Vue.use(ElementUI, { locale }) // 掛載繁體中文
 
 Vue.prototype.$axios = axios
 

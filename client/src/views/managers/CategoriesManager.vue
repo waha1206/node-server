@@ -51,15 +51,143 @@
             align="left"
             width="180"
           ></el-table-column>
-          <!-- 商品名稱 -->
+          <!-- 商品編號 -->
           <el-table-column
-            label="狀態"
-            prop="status.activated"
-            align="left"
+            label="商品編號"
+            prop="type"
+            align="center"
             width="70"
           >
           </el-table-column>
+          <!-- 版型商品編號 -->
+          <el-table-column
+            label="版型編號"
+            prop="pattern_no"
+            align="center"
+            width="120"
+          >
+          </el-table-column>
+          <!-- 啟用/VIP -->
+          <el-table-column label="啟用 / VIP" align="center" width="110">
+            <template slot-scope="scope">
+              <el-tag v-if="scope.row.status.activated" type="" size="mini"
+                >啟用</el-tag
+              >
+              <el-tag v-else type="warning" size="mini">關閉</el-tag>
+              &nbsp
+              <el-tag v-if="scope.row.status.vip" type="" size="mini"
+                >啟用</el-tag
+              >
+              <el-tag v-else type="warning" size="mini">關閉</el-tag>
+            </template>
+          </el-table-column>
+          <!-- 多圖 -->
+          <el-table-column label="單圖" width="70" align="center">
+            <template slot-scope="scope">
+              <!-- v-for="(item, index) in scope.row.imgs" -->
+              <img
+                v-if="scope.row.imgs[0]"
+                width="50px"
+                height="50px"
+                :src="scope.row.imgs[0]"
+                alt=""
+              />
+            </template>
+          </el-table-column>
+          <!-- 多圖 -->
+          <el-table-column label="多圖" width="70" align="center">
+            <template slot-scope="scope">
+              <el-popover trigger="hover" placement="left">
+                <img
+                  v-for="(item, index) in scope.row.imgs"
+                  width="200px"
+                  height="200px"
+                  :key="index"
+                  :src="item"
+                  alt=""
+                />
+                <div slot="reference" class="name-wrapper">
+                  <el-tag size="mini">多圖</el-tag>
+                </div>
+              </el-popover>
+            </template>
+          </el-table-column>
 
+          <!-- 說明跳出來對話框的區塊 -->
+          <el-table-column label="詳細資料" width="70" align="center">
+            <template slot-scope="scope">
+              <el-popover trigger="hover" placement="right">
+                <p>建檔日期：{{ getDate(scope.row.create_date) }}</p>
+                <p>商品名稱：{{ scope.row.name }}</p>
+                <p>商品編號：{{ scope.row.type }}</p>
+                <p>商品說明：{{ scope.row.describe }}</p>
+                <p>
+                  商品狀態：<span v-if="scope.row.status.activated"
+                    >已經啟用</span
+                  >
+                  <span else>尚未啟用</span>
+                  <span>、</span>
+                  <span v-if="scope.row.status.vip">VIP已啟用</span>
+                  <span v-else>VIP未啟用</span>
+                </p>
+                <p>修改時間：{{ getDate(scope.row.last_modify_date) }}</p>
+                <p>
+                  修改人員：{{ getUserNameById(scope.row.last_edit_person) }}
+                </p>
+                <p>影片名稱：{{ scope.row.introduction_video.label }}</p>
+                <p>
+                  影片連結：<a
+                    :href="scope.row.introduction_video.link"
+                    target="_blank"
+                    >{{ scope.row.introduction_video.link }}</a
+                  >
+                </p>
+                <p>布料校色：{{ scope.row.salting_on_color_video.label }}</p>
+                <p>
+                  校色連結：<a
+                    :href="scope.row.salting_on_color_video.link"
+                    target="_blank"
+                    >{{ scope.row.salting_on_color_video.link }}</a
+                  >
+                </p>
+                <p>其它影片(一)：{{ scope.row.note_one_video.label }}</p>
+                <p>
+                  影片連結(一)：<a
+                    :href="scope.row.note_one_video.link"
+                    target="_blank"
+                    >{{ scope.row.note_one_video.link }}</a
+                  >
+                </p>
+                <p>其它影片(二)：{{ scope.row.note_two_video.label }}</p>
+                <p>
+                  影片連結(二)：<a
+                    :href="scope.row.note_two_video.link"
+                    target="_blank"
+                    >{{ scope.row.note_two_video.link }}</a
+                  >
+                </p>
+                <p>版型編號：{{ scope.row.pattern_no }}</p>
+                <p>
+                  版型連結：<a
+                    :href="scope.row.pattern_download"
+                    target="_blank"
+                    >{{ scope.row.pattern_download }}</a
+                  >
+                </p>
+                <div slot="reference" class="name-wrapper">
+                  <el-tag size="mini">完整說明</el-tag>
+                </div>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <!-- 商品說明 -->
+          <el-table-column
+            label="商品說明"
+            prop="describe"
+            align="center"
+            width="500"
+          >
+          </el-table-column>
           <!-- 搜尋欄位 -->
           <el-table-column align="center" width="150">
             <!-- header 代表放到列的說明文字那邊 -->
@@ -91,6 +219,20 @@
         <!-- <el-main>Main</el-main> -->
       </el-container>
     </el-container>
+    <!-- 分頁 -->
+    <div class="pagination">
+      <el-pagination
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page.sync="my_paginations.page_index"
+        :page-size="my_paginations.page_size"
+        :page-sizes="my_paginations.page_sizes"
+        :total="my_paginations.total"
+        layout="total, sizes, prev, pager, next, jumper"
+      >
+      </el-pagination>
+    </div>
     <!-- 新增第一層商品的 dialog -->
     <CategoriesLevelOneDialog
       v-if="categoriesLevelOneData[0]"
@@ -129,20 +271,16 @@ export default {
   name: 'categories-manager',
   data() {
     return {
-      optipons: [
-        {
-          value: 'level one',
-          label: '第一層',
-          children: [{ value: 'level two', label: '第二層' }]
-        },
-        {
-          value: 'level one',
-          label: '第一層++',
-          children: [{ value: 'level two++', label: '第二層++' }]
-        }
-      ],
-      search: '',
-      tableData: [],
+      // 管理分頁的物件
+      my_paginations: {
+        page_index: 1, // 位於當前第幾頁
+        total: 0, // 總數
+        page_size: 10, // 每一頁顯示幾條數據
+        page_sizes: [5, 10, 15, 17] // 選擇一頁要顯示多少條
+        // layouts: 'total, sizes, prev, pager, next, jumper'
+      },
+      search: '', // 表格搜尋的值
+      tableData: [], // 表格的資料
       choiceLevelTwoValue: [], // cascader 選擇的品項
       levelOneTowOption: [], // 存放第一層與第二層的分類
       allUserNameId: [], // 所有使用者
@@ -198,7 +336,6 @@ export default {
     CategoriesLevelTwoDialog,
     CategoriesLevelThreeDialog
   },
-  computed: {},
 
   created() {
     this.getCategoriesLevelOneData()
@@ -212,7 +349,7 @@ export default {
     // 如果 level one 跟 level two 都有資料的時候，就更動 cascader 的聯集選擇器
     categoriesLevelTwoData() {
       if (this.categoriesLevelTwoData[0]) {
-        console.log('設定  cascader')
+        console.log('categoriesManage.vue watch', '設定  cascader')
         this.levelOneTowOption = []
         this.categoriesLevelOneData.forEach((item) => {
           // console.log(index, item.name, item._id)
@@ -246,6 +383,19 @@ export default {
   },
 
   methods: {
+    getUserNameById(id) {
+      if (!id) return
+      let name = ''
+      this.allUserNameId.forEach((item, index) => {
+        if (item._id == id) name = item.name
+      })
+      return name
+    },
+
+    // 時間轉換
+    getDate(dt) {
+      return this.$moment(dt).format('YYYY年MM月DD日-HH：mm')
+    },
     setCascaderOptions() {
       // ，就讀回來上次的紀錄
       if (
@@ -308,11 +458,10 @@ export default {
         .get(`/api/categories/three/${this.choiceLevelTwoValue[1]}`)
         .then((res) => {
           // 把資料庫的數據都先讀出來
-          this.categoriesLevelThreeData = res.data
-          this.tableData = res.data
-
+          this.categoriesLevelThreeData = [...res.data]
+          console.log(this.categoriesLevelThreeData)
           // 設置分頁數據
-          // this.setPaginations()
+          this.setPaginations()
         })
         .catch((err) => {
           console.log(err)
@@ -340,7 +489,48 @@ export default {
         title: '新增加第三層的商品',
         option: 'add'
       }
+    },
+    // 分頁設定
+    setPaginations() {
+      // 分頁屬性設置
+      this.my_paginations.total = this.categoriesLevelThreeData.length
+      this.my_paginations.page_index = 1
+      if (localStorage.categories_page_size) {
+        this.my_paginations.page_size = Number(
+          localStorage.categories_page_size
+        )
+      } else {
+        this.my_paginations.page_size = 5
+      }
+      // 設置分頁數據
+      this.tableData = this.categoriesLevelThreeData.filter((item, index) => {
+        return index < this.my_paginations.page_size
+      })
+    },
+    handleSizeChange(page_size) {
+      // 切換每頁有幾條數據
+      localStorage.categories_page_size = page_size
+      this.my_paginations.page_index = 1
+      this.my_paginations.page_size = page_size
+      this.tableData = this.categoriesLevelThreeData.filter((item, index) => {
+        return index < page_size
+      })
+    },
+    handleCurrentChange(page) {
+      // 獲取當前頁面
+      let index = this.my_paginations.page_size * (page - 1)
+      // 數據的總數
+      let nums = this.my_paginations.page_size * page
+      // 容器
+      let tables = []
+      for (let i = index; i < nums; i++) {
+        if (this.categoriesLevelThreeData[i]) {
+          tables.push(this.categoriesLevelThreeData[i])
+        }
+        this.tableData = tables
+      }
     }
+    // 分頁設定結束
   }
 }
 </script>
@@ -399,5 +589,9 @@ body > .el-container {
 /* 直接調整 el-cascader 沒有用，因為外面套了一個 div 該 class 為 .el-cascader--mini */
 .el-cascader--mini {
   width: 100% !important;
+}
+.pagination {
+  text-align: left;
+  margin-top: 10px;
 }
 </style>

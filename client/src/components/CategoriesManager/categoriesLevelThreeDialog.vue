@@ -191,24 +191,180 @@
                 </div>
               </el-col>
             </el-row>
+            <!-- 第四行開始，商品介紹影片，校色影片-->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="影片名稱："
+                    size="mini"
+                    label-width="120px"
+                    prop="introduction_video.label"
+                  >
+                    <el-input
+                      type="type"
+                      placeholder="零錢包的製作影片"
+                      v-model="levelThreeFormData.introduction_video.label"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="影片連結："
+                    size="mini"
+                    label-width="120px"
+                    prop="introduction_video.link"
+                  >
+                    <el-input
+                      type="type"
+                      placeholder="https://youtu.be/Olm_oOCY_2Y"
+                      v-model="levelThreeFormData.introduction_video.link"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="布料校色："
+                    size="mini"
+                    label-width="120px"
+                    prop="salting_on_color_video.label"
+                  >
+                    <el-input
+                      type="type"
+                      placeholder="布料校色"
+                      v-model="levelThreeFormData.salting_on_color_video.label"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="校色連結："
+                    size="mini"
+                    label-width="120px"
+                    prop="salting_on_color_video.link"
+                  >
+                    <el-input
+                      type="type"
+                      placeholder="https://youtu.be/Olm_oOCY_2Y"
+                      v-model="levelThreeFormData.salting_on_color_video.link"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+            </el-row>
+            <!-- 第五行開始，其他影片(一)，其他影片(二)-->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="其它(一)："
+                    size="mini"
+                    label-width="120px"
+                    prop="note_one_video.label"
+                  >
+                    <el-input
+                      type="type"
+                      placeholder="影片(一)"
+                      v-model="levelThreeFormData.note_one_video.label"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="連結(一)："
+                    size="mini"
+                    label-width="120px"
+                    prop="note_one_video.link"
+                  >
+                    <el-input
+                      type="type"
+                      placeholder="https://youtu.be/Olm_oOCY_2Y"
+                      v-model="levelThreeFormData.note_one_video.link"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="其它(二)："
+                    size="mini"
+                    label-width="120px"
+                    prop="note_two_video.label"
+                  >
+                    <el-input
+                      type="type"
+                      placeholder="影片(二)"
+                      v-model="levelThreeFormData.note_two_video.label"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="連結(二)："
+                    size="mini"
+                    label-width="120px"
+                    prop="note_two_video.link"
+                  >
+                    <el-input
+                      type="type"
+                      placeholder="https://youtu.be/Olm_oOCY_2Y"
+                      v-model="levelThreeFormData.note_two_video.link"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+            </el-row>
+            <!-- 第六行開始，版型編號-->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="12">
+                <div class="grid-content">
+                  <el-form-item
+                    label="版型編號："
+                    size="mini"
+                    label-width="120px"
+                    prop="pattern_no"
+                  >
+                    <el-input
+                      type="type"
+                      placeholder="版型編號範例尚未制定"
+                      v-model="levelThreeFormData.pattern_no"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="12">
+                <div class="grid-content">
+                  <el-form-item
+                    label="版型下載："
+                    size="mini"
+                    label-width="120px"
+                    prop="pattern_download"
+                  >
+                    <el-input
+                      type="type"
+                      placeholder="雲端的下載連結網址，通常是一個google雲端目錄"
+                      v-model="levelThreeFormData.pattern_download"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+            </el-row>
           </el-header>
-          <!-- 第四行開始，圖片上傳 -->
+          <!-- 第七行開始，圖片上傳 -->
           <!-- 圖片上傳的教學 https://segmentfault.com/a/1190000013796215 -->
           <!-- 上傳一張照片的時候隱藏 後面的 + 框框  https://www.twblogs.net/a/5b81a49e2b71772165ad9752 -->
           <!-- 另外一種做法：https://blog.csdn.net/zaocha321/article/details/103345423 -->
-          <!-- <div>
-            <p>要提交的表單內容：{{ levelThreeFormData }}</p>
-            <p>-----------------</p>
-            <p v-for="item in updateLevelTwoData">
-              {{ item.type }}{{ item.name }}--{{ item._id }}
-            </p>
-            <p>-----------------</p>
-            <P>預覽 (dialogImageUrl)：{{ dialogImageUrl }}</P>
-            <p>-----------------</p>
-            <p>{{ uploadData }}</p>
-            <p>-----------------</p>
-            <p>files:{{ files }}</p>
-          </div> -->
           <el-main>
             <!-- <div class="image-warp"> -->
             <el-form-item
@@ -277,6 +433,7 @@
             </el-form-item>
             <!-- </div> -->
           </el-main>
+
           <!-- 取消、提交、重置 -->
           <el-row :gutter="20" type="flex" class="row-bg">
             <!-- 這裡有個問題點，沒有清除浮動 -->
@@ -339,12 +496,15 @@ export default {
         type: '',
         describe: '',
         level: 0,
+        pattern_no: '', // 版型編號
+        pattern_download: '', // 雲端下載連結，存放雲端資料夾的網址
+        introduction_video: { label: '', link: '' }, // 商品影片
+        salting_on_color_video: { label: '', link: '' }, // 校色影片
+        note_one_video: { label: '', link: '' }, // 其它影片(一)
+        note_two_video: { label: '', link: '' }, // 其它影片(二)
         last_modify_date: Date,
         last_edit_person: '',
-        status: {
-          activated: false,
-          vip: false
-        }
+        status: { activated: false, vip: false } // 啟用？網頁端會看到商品與否，VIP = 客製化商品專屬
       },
       form_rules: {
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
@@ -403,8 +563,27 @@ export default {
         imgs: this.levelThreeFormData.imgs.join('|'),
         last_modify_date: new Date(),
         last_edit_person: this.user.id,
-        status: Object.assign({}, this.levelThreeFormData.status)
+        status: Object.assign({}, this.levelThreeFormData.status),
+        pattern_no: this.levelThreeFormData.pattern_no,
+        pattern_download: this.levelThreeFormData.pattern_download,
+        introduction_video: Object.assign(
+          {},
+          this.levelThreeFormData.introduction_video
+        ),
+        salting_on_color_video: Object.assign(
+          {},
+          this.levelThreeFormData.salting_on_color_video
+        ),
+        note_one_video: Object.assign(
+          {},
+          this.levelThreeFormData.note_one_video
+        ),
+        note_two_video: Object.assign(
+          {},
+          this.levelThreeFormData.note_two_video
+        )
       }
+      console.log(uploadFormData)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 紀錄最後修改的使用者，最後修改的時間放到了 server 端去紀錄

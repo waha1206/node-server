@@ -59,6 +59,9 @@ router.post(
       if (req.body.imgs) {
         categoriesFields.imgs = req.body.imgs.split('|')
       }
+      if (req.body.describe) {
+        categoriesFields.describe = req.body.describe
+      }
       if (req.body.last_modify_date) {
         categoriesFields.last_modify_date = req.body.last_modify_date
       }
@@ -68,10 +71,40 @@ router.post(
       if (req.body.status) {
         categoriesFields.status = Object.assign({}, req.body.status)
       }
+      if (req.body.pattern_no) {
+        categoriesFields.pattern_no = req.body.pattern_no
+      }
+
+      if (req.body.pattern_download) {
+        categoriesFields.pattern_download = req.body.pattern_download
+      }
+
+      if (req.body.introduction_video) {
+        categoriesFields.introduction_video = Object.assign(
+          {},
+          req.body.introduction_video
+        )
+      }
+      if (req.body.salting_on_color_video) {
+        categoriesFields.salting_on_color_video = Object.assign(
+          {},
+          req.body.salting_on_color_video
+        )
+      }
+      if (req.body.note_one_video) {
+        categoriesFields.note_one_video = Object.assign(
+          {},
+          req.body.note_one_video
+        )
+      }
+      if (req.body.note_two_video) {
+        categoriesFields.note_two_video = Object.assign(
+          {},
+          req.body.note_two_video
+        )
+      }
     }
-
     console.log(categoriesFields)
-
     CategoryLevel.findOne({ name: req.body.name }).then((category) => {
       if (category) {
         return res.status(400).json('此商品類型(英文)已經存在')
@@ -82,7 +115,6 @@ router.post(
             res.json(category)
           })
           .catch((err) => {
-            console.log(err)
             res.status(404).json(err)
           })
       }
@@ -146,7 +178,7 @@ router.get(
     // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
     const query = { level_two_id: req.params.id }
     const options = {
-      imgs: 0
+      // imgs: 0
     }
     CategoriesLevelThree.find(query, options)
       .then((categories) => {

@@ -89,6 +89,33 @@ const CategoryLevelThreeSchema = new Schema({
   imgs: {
     type: [String]
   },
+  // 版型編號
+  pattern_no: {
+    type: String
+  },
+  pattern_download: {
+    type: String
+  },
+  // 校色的影片網址
+  salting_on_color_video: {
+    label: { type: String },
+    link: { type: String }
+  },
+  // 商品介紹影片
+  introduction_video: {
+    label: { type: String },
+    link: { type: String }
+  },
+  // 商品製作須知 (一)
+  note_one_video: {
+    label: { type: String },
+    link: { type: String }
+  },
+  // 商品製作須知 (二)
+  note_two_video: {
+    label: { type: String },
+    link: { type: String }
+  },
   describe: {
     type: String
   },
