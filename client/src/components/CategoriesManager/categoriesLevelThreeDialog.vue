@@ -493,7 +493,9 @@ export default {
       }
     }
   },
-
+  created() {
+    this.getImgs()
+  },
   computed: {
     getDate() {
       if (!this.levelThreeFormData) return '目前沒有修改過'
@@ -516,6 +518,18 @@ export default {
   },
   watch: {
     dialog() {
+      this.getImgs()
+    },
+    'levelThreeFormData.status.activated'() {
+      // console.log(this.levelThreeFormData.status)
+    },
+    updateLevelTwoData() {
+      console.log('恩，有變動')
+    }
+  },
+  methods: {
+    getImgs() {
+      console.log('第一階段有觸發')
       this.files = []
       // https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
       // base64toBlob 超強範例！
@@ -526,6 +540,7 @@ export default {
       // this.dialogVisible = true
 
       if (this.levelThreeFormData.imgs.length > 0) {
+        console.log('第二階段有觸發')
         this.levelThreeFormData.imgs.forEach((img) => {
           // params[0] 裡面是檔案格式
           // params[1] 裡面是 base64
@@ -538,14 +553,6 @@ export default {
         })
       }
     },
-    'levelThreeFormData.status.activated'() {
-      // console.log(this.levelThreeFormData.status)
-    },
-    updateLevelTwoData() {
-      console.log('恩，有變動')
-    }
-  },
-  methods: {
     // 第一層被選中後，就會去更新第二層的資料
     levelOneChang(id) {
       this.levelThreeFormData.level_two_id = ''

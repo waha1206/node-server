@@ -504,11 +504,9 @@ export default {
       }
       // 新增，就把要傳到子元件裡面的資料清空，這邊傳到子元件是 formData
       this.formData = Object.assign({}, this.categoriesLevelThreeFormData)
-      console.log('formData', this.formData)
     },
     // 編輯選中的商品資料
     handleEditcategory(index, row) {
-      console.log(row, index)
       this.categoriesLevelThreeDialog = {
         show: true,
         title: '編輯加第三層的商品',
@@ -516,7 +514,6 @@ export default {
       }
       // 把 row 裡面的資料深拷貝一份給 formdata 這是是傳到 子元件裡面所需要的屬性
       this.formData = Object.assign({}, row)
-      console.log('formData', this.formData)
     },
     // 分頁設定
     setPaginations() {
