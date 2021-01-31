@@ -538,7 +538,6 @@ export default {
       // 秀出圖片
       // this.dialogImageUrl = obj.url
       // this.dialogVisible = true
-
       if (this.levelThreeFormData.imgs.length > 0) {
         console.log('第二階段有觸發')
         this.levelThreeFormData.imgs.forEach((img) => {
