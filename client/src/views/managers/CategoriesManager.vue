@@ -202,7 +202,7 @@
             <template slot-scope="scope">
               <el-button
                 size="mini"
-                @click="handleEditMaterial(scope.$index, scope.row)"
+                @click="handleEditcategory(scope.$index, scope.row)"
                 >編輯</el-button
               >
               <el-button
@@ -250,10 +250,11 @@
       @update="getCategoriesLevelTwoData"
     ></CategoriesLevelTwoDialog>
     <!-- 新增第三層商品的 dialog -->
+    <!-- v-if 判斷很重要，add 的話，原始的 form 裡面會有一個內定的 level = 3 如果是 edit 的話就要判斷有沒有 _id 這個值 -->
     <CategoriesLevelThreeDialog
-      v-if="categoriesLevelTwoData[0] && categoriesLevelOneData[0]"
+      v-if="formData.level == 3 || formData._id"
       :dialog="categoriesLevelThreeDialog"
-      :formData="categoriesLevelThreeFormData"
+      :levelThreeFormData="formData"
       :categoriesLevelOneData="categoriesLevelOneData"
       :categoriesLevelTwoData="categoriesLevelTwoData"
       :allUserNameId="allUserNameId"
@@ -265,7 +266,7 @@
 <script>
 import CategoriesLevelOneDialog from '../../components/CategoriesManager/CategoriesLevelOneDialog'
 import CategoriesLevelTwoDialog from '../../components/CategoriesManager/CategoriesLevelTwoDialog'
-import CategoriesLevelThreeDialog from '../../components/CategoriesManager/categoriesLevelThreeDialog'
+import CategoriesLevelThreeDialog from '../../components/CategoriesManager/CategoriesLevelThreeDialog'
 
 export default {
   name: 'categories-manager',
@@ -287,6 +288,7 @@ export default {
       categoriesLevelOneData: [], // 開始就先讀取資料庫的數據
       categoriesLevelTwoData: [], // 開始就先讀取資料庫的數據
       categoriesLevelThreeData: [], // 開始就先讀取資料庫的數據
+      formData: {},
       categoriesLevelOneFormData: {
         type: '',
         name: '',
@@ -305,10 +307,22 @@ export default {
         level_one_id: ''
       },
       categoriesLevelThreeFormData: {
-        type: '',
+        imgs: [],
+        level_one_id: '',
+        level_two_id: '',
         name: '',
+        type: '',
         describe: '',
-        last_modify_user: '',
+        level: 0,
+        pattern_no: '', // 版型編號
+        pattern_download: '', // 雲端下載連結，存放雲端資料夾的網址
+        introduction_video: { label: '', link: '' }, // 商品影片
+        salting_on_color_video: { label: '', link: '' }, // 校色影片
+        note_one_video: { label: '', link: '' }, // 其它影片(一)
+        note_two_video: { label: '', link: '' }, // 其它影片(二)
+        last_modify_date: '',
+        last_edit_person: '',
+        status: { activated: false, vip: false }, // 啟用？網頁端會看到商品與否，VIP = 客製化商品專屬
         id: '',
         level: 3,
         level_one_id: ''
@@ -459,7 +473,6 @@ export default {
         .then((res) => {
           // 把資料庫的數據都先讀出來
           this.categoriesLevelThreeData = [...res.data]
-          console.log(this.categoriesLevelThreeData)
           // 設置分頁數據
           this.setPaginations()
         })
@@ -489,6 +502,21 @@ export default {
         title: '新增加第三層的商品',
         option: 'add'
       }
+      // 新增，就把要傳到子元件裡面的資料清空，這邊傳到子元件是 formData
+      this.formData = Object.assign({}, this.categoriesLevelThreeFormData)
+      console.log('formData', this.formData)
+    },
+    // 編輯選中的商品資料
+    handleEditcategory(index, row) {
+      console.log(row, index)
+      this.categoriesLevelThreeDialog = {
+        show: true,
+        title: '編輯加第三層的商品',
+        option: 'edit'
+      }
+      // 把 row 裡面的資料深拷貝一份給 formdata 這是是傳到 子元件裡面所需要的屬性
+      this.formData = Object.assign({}, row)
+      console.log('formData', this.formData)
     },
     // 分頁設定
     setPaginations() {

@@ -104,7 +104,7 @@ router.post(
         )
       }
     }
-    console.log(categoriesFields)
+    // console.log(categoriesFields)
     CategoryLevel.findOne({ name: req.body.name }).then((category) => {
       if (category) {
         return res.status(400).json('此商品類型(英文)已經存在')
@@ -247,11 +247,67 @@ router.post(
 
     if (req.body.type) categoryFields.type = req.body.type
     if (req.body.name) categoryFields.name = req.body.name
+    if (req.body.level_one_id) {
+      categoryFields.level_one_id = req.body.level_one_id
+    }
+    if (req.body.level === 3) {
+      if (req.body.level_two_id) {
+        categoryFields.level_two_id = req.body.level_two_id
+      }
+      // 多張圖片
+      if (req.body.imgs) {
+        categoryFields.imgs = req.body.imgs.split('|')
+      }
+      if (req.body.describe) {
+        categoryFields.describe = req.body.describe
+      }
+      if (req.body.last_modify_date) {
+        categoryFields.last_modify_date = req.body.last_modify_date
+      }
+      if (req.body.last_edit_person) {
+        categoryFields.last_edit_person = req.body.last_edit_person
+      }
+      if (req.body.status) {
+        categoryFields.status = Object.assign({}, req.body.status)
+      }
+      if (req.body.pattern_no) {
+        categoryFields.pattern_no = req.body.pattern_no
+      }
 
+      if (req.body.pattern_download) {
+        categoryFields.pattern_download = req.body.pattern_download
+      }
+
+      if (req.body.introduction_video) {
+        categoryFields.introduction_video = Object.assign(
+          {},
+          req.body.introduction_video
+        )
+      }
+      if (req.body.salting_on_color_video) {
+        categoryFields.salting_on_color_video = Object.assign(
+          {},
+          req.body.salting_on_color_video
+        )
+      }
+      if (req.body.note_one_video) {
+        categoryFields.note_one_video = Object.assign(
+          {},
+          req.body.note_one_video
+        )
+      }
+      if (req.body.note_two_video) {
+        categoryFields.note_two_video = Object.assign(
+          {},
+          req.body.note_two_video
+        )
+      }
+    }
+    console.log(categoryFields.imgs.length)
     CategoryLevel.findByIdAndUpdate(
       { _id: req.params.id },
       { $set: categoryFields },
-      { new: true }
+      { new: false }
     ).then((catrgory) => res.json(catrgory))
   }
 )

@@ -466,10 +466,10 @@
 
 <script>
 export default {
-  name: 'categories-level-three-dialog',
+  name: 'categories-level-three-edit-dialog',
   props: {
     dialog: Object,
-    levelThreeFormData: Object,
+    formData: Object,
     categoriesLevelOneData: Array,
     allUserNameId: Array,
     categoriesLevelTwoData: Array
@@ -487,26 +487,46 @@ export default {
       dialogVisible: false,
       disabled: Boolean,
       updateLevelTwoData: [],
+      // upload 第三層的商品 formData
+      levelThreeFormData: {
+        imgs: [],
+        level_one_id: '',
+        level_two_id: '',
+        name: '',
+        type: '',
+        describe: '',
+        level: 0,
+        pattern_no: '', // 版型編號
+        pattern_download: '', // 雲端下載連結，存放雲端資料夾的網址
+        introduction_video: { label: '', link: '' }, // 商品影片
+        salting_on_color_video: { label: '', link: '' }, // 校色影片
+        note_one_video: { label: '', link: '' }, // 其它影片(一)
+        note_two_video: { label: '', link: '' }, // 其它影片(二)
+        last_modify_date: Date,
+        last_edit_person: '',
+        status: { activated: false, vip: false } // 啟用？網頁端會看到商品與否，VIP = 客製化商品專屬
+      },
       form_rules: {
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }]
       }
     }
   },
-
+  mounted() {
+    // console.log(this.allUserNameId)
+  },
   computed: {
     getDate() {
-      if (!this.levelThreeFormData) return '目前沒有修改過'
-      return this.$moment(this.levelThreeFormData.last_modify_date).format(
+      if (!this.formData.last_modify_date) return '目前沒有修改過'
+      return this.$moment(this.formData.last_modify_date).format(
         'YYYY年MM月DD日-HH:mm'
       )
     },
     getUserNameById() {
-      if (!this.levelThreeFormData) return '目前沒有修改過'
+      if (!this.formData.last_edit_person) return '目前沒有修改過'
       let name = ''
       this.allUserNameId.forEach((item, index) => {
-        if (item._id == this.levelThreeFormData.last_edit_person)
-          name = item.name
+        if (item._id == this.formData.last_edit_person) name = item.name
       })
       return name
     },
@@ -515,38 +535,14 @@ export default {
     }
   },
   watch: {
-    dialog() {
-      this.files = []
-      // https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
-      // base64toBlob 超強範例！
-      // 編輯商品的時候，要拚接 base64 格式與檔頭，然後 push 到 this.files 裡面會有一個內定的 下面是出處
-      // https://blog.csdn.net/hequhecong10857/article/details/108276022
-      // 秀出圖片
-      // this.dialogImageUrl = obj.url
-      // this.dialogVisible = true
-
-      if (this.levelThreeFormData.imgs.length > 0) {
-        this.levelThreeFormData.imgs.forEach((img) => {
-          // params[0] 裡面是檔案格式
-          // params[1] 裡面是 base64
-          const params = img.split(',')
-          let obj = {
-            name: '商品照片',
-            url: 'data:image/jpeg;base64,' + params[1]
-          }
-          this.files.push(obj)
-        })
-      }
-    },
     'levelThreeFormData.status.activated'() {
-      // console.log(this.levelThreeFormData.status)
+      console.log(this.levelThreeFormData.status)
     },
     updateLevelTwoData() {
       console.log('恩，有變動')
     }
   },
   methods: {
-    // 第一層被選中後，就會去更新第二層的資料
     levelOneChang(id) {
       this.levelThreeFormData.level_two_id = ''
       this.updateLevelTwoData = this.categoriesLevelTwoData.filter((item) => {
@@ -587,6 +583,7 @@ export default {
           this.levelThreeFormData.note_two_video
         )
       }
+      console.log(uploadFormData)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 紀錄最後修改的使用者，最後修改的時間放到了 server 端去紀錄
@@ -595,10 +592,10 @@ export default {
             this.$message('請重新選擇第一層分類，您不能選擇全部分類')
             return
           }
+          this.formData.last_edit_person = this.user.id
+          this.formData.last_modify_date = new Date()
           const url =
-            this.dialog.option == 'add'
-              ? 'add'
-              : `edit/${this.levelThreeFormData._id}`
+            this.dialog.option == 'add' ? 'add' : `edit/${this.formData._id}`
           this.$axios
             .post(`/api/categories/${url}`, uploadFormData)
             .then((res) => {
@@ -631,16 +628,11 @@ export default {
     },
     // 圖片上傳的 function
     handleRemove(file, fileList) {
-      let _index = 0
       for (let index = 0; index < fileList.length; index++) {
         if (fileList[index].uid == file.uid) {
           this.files.splice(index, 1) //移除数组中要删除的图片
-          _index = index
         }
       }
-      // 如果是 edit 狀態的話，要把 this.levelThreeFormData 中的 imgs 也移除掉
-      if (this.dialog.option !== 'edit') return
-      this.levelThreeFormData.imgs.splice(_index, 1)
     },
     // 跳出預覽圖片預覽視窗
     // https://www.codeleading.com/article/29861991468/
@@ -672,7 +664,6 @@ export default {
         }
         return false
       }
-
       let reader = new FileReader()
       const _this = this
 
@@ -683,8 +674,6 @@ export default {
       reader.readAsDataURL(file.raw)
       // 重點，把 file 存到 files 這樣 upload 才有辦法操控元件的移除、下載 等等動作  預覽不用
       this.files.push(file)
-      // console.log('file', file)
-      // console.log('this.files', this.files)
     },
     onFilePreview(file) {
       console.log(file)
