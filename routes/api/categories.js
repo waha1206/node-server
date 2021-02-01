@@ -303,7 +303,7 @@ router.post(
         )
       }
     }
-    console.log(categoryFields.imgs.length)
+
     CategoryLevel.findByIdAndUpdate(
       { _id: req.params.id },
       { $set: categoryFields },

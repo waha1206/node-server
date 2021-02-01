@@ -517,6 +517,7 @@ export default {
     }
   },
   watch: {
+    // 當 props dialog 有新的 資料進來 (這邊是點擊【編輯】 的時候會觸發) 然後更新 Imgs 但是第一次還是要掛載於 created() 裡面喔
     dialog() {
       this.getImgs()
     },
@@ -528,8 +529,8 @@ export default {
     }
   },
   methods: {
+    // 把從資料庫讀進來的 Imgs (base64) 拼接成 el-upload 的 files 可以接受的格式，這樣就會顯示出來了
     getImgs() {
-      console.log('第一階段有觸發')
       this.files = []
       // https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
       // base64toBlob 超強範例！
@@ -539,7 +540,6 @@ export default {
       // this.dialogImageUrl = obj.url
       // this.dialogVisible = true
       if (this.levelThreeFormData.imgs.length > 0) {
-        console.log('第二階段有觸發')
         this.levelThreeFormData.imgs.forEach((img) => {
           // params[0] 裡面是檔案格式
           // params[1] 裡面是 base64

@@ -106,7 +106,7 @@ export default {
 
             // 解析 token
             const decoded = jwt_decode(token)
-            console.log('decoded', decoded)
+            // console.log('decoded', decoded)
 
             // token 存儲到 vuex 中
             this.$store.dispatch('setIsAutnenticated', !this.isEmpty(decoded))

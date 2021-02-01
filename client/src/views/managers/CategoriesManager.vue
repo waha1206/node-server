@@ -185,8 +185,11 @@
             label="商品說明"
             prop="describe"
             align="center"
-            width="500"
+            width="320"
           >
+          </el-table-column>
+          <!-- 添加原料 -->
+          <el-table-column label="添加原料" prop="" align="center" width="500">
           </el-table-column>
           <!-- 搜尋欄位 -->
           <el-table-column align="center" width="150">
@@ -277,7 +280,7 @@ export default {
         page_index: 1, // 位於當前第幾頁
         total: 0, // 總數
         page_size: 10, // 每一頁顯示幾條數據
-        page_sizes: [5, 10, 15, 17] // 選擇一頁要顯示多少條
+        page_sizes: [5, 7, 8, 9, 10] // 選擇一頁要顯示多少條
         // layouts: 'total, sizes, prev, pager, next, jumper'
       },
       search: '', // 表格搜尋的值
