@@ -85,11 +85,19 @@ const router = new VueRouter({
             permission: ['user_authority_r']
           }
         },
-
         {
           path: '/materials-manager', // 原物料管理
           name: 'materials-manager',
           component: () => import('../views/managers/MaterialsManager.vue'),
+          meta: {
+            permission: ['material_authority_r']
+          }
+        },
+        {
+          path: '/materials-group-manager', // 原物料組管理
+          name: 'materials-manager',
+          component: () =>
+            import('../views/managers/MaterialsGroupManager.vue'),
           meta: {
             permission: ['material_authority_r']
           }
@@ -136,11 +144,11 @@ router.beforeResolve(async (to, from, next) => {
   // await store.dispatch('getPermissionList')
   const { permission } = to.meta
   if (includePermission(permission)) {
-    console.log('有權限')
+    // console.log('有權限')
     next()
   } else {
     // 沒有權限就會禁止跳轉，先做到這邊吧
-    console.log('沒有權限')
+    // console.log('沒有權限')
     next('/')
   }
 })

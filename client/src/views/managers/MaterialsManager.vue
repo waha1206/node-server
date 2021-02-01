@@ -408,6 +408,7 @@ export default {
         option: 'edit',
         materialClass: ''
       },
+      // 控制分頁
       my_paginations: {
         page_index: 1, // 位於當前第幾頁
         total: 0, // 總數

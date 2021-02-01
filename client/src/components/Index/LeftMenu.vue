@@ -103,6 +103,13 @@ export default {
               }
             },
             {
+              path: 'materials-group-manager',
+              name: '原物料組管理',
+              meta: {
+                permission: ['material_authority_r']
+              }
+            },
+            {
               path: 'process-manager',
               name: '加工費用管理',
               meta: {

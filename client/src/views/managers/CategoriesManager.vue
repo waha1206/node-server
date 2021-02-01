@@ -23,6 +23,9 @@
         <el-button type="primary" size="small" @click="addLevelThree"
           >新增第三層商品</el-button
         >
+        <el-button type="primary" size="small" @click="addMaterialGroup"
+          >建立組合商品</el-button
+        >
       </el-header>
       <el-container>
         <el-table
@@ -345,6 +348,11 @@ export default {
         show: false,
         title: '展示一下',
         option: 'edit'
+      },
+      addMaterialGroupDialog: {
+        show: false,
+        title: '建立原料組合',
+        option: 'edit'
       }
     }
   },
@@ -400,6 +408,7 @@ export default {
   },
 
   methods: {
+    addMaterialGroup() {},
     getUserNameById(id) {
       if (!id) return
       let name = ''

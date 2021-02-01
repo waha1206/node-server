@@ -176,6 +176,7 @@ router.get(
   (req, res) => {
     // query 選擇的條件
     // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
+    console.log(req.params)
     const query = { level_two_id: req.params.id }
     const options = {
       // imgs: 0
@@ -303,7 +304,9 @@ router.post(
         )
       }
     }
-
+    if (categoryFields.imgs.length) {
+      console.log(categoryFields.imgs.length)
+    }
     CategoryLevel.findByIdAndUpdate(
       { _id: req.params.id },
       { $set: categoryFields },
