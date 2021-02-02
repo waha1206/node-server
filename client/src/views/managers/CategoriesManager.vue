@@ -336,8 +336,7 @@ export default {
       categoriesLevelOneDialog: {
         show: false,
         title: '展示一下',
-        option: 'edit',
-        level_one_id: ''
+        option: 'edit'
       },
       categoriesLevelTwoDialog: {
         show: false,

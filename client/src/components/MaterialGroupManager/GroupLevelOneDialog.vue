@@ -106,13 +106,13 @@
     </el-dialog>
     <el-dialog
       title="編輯商品代號"
-      :visible.sync="categoriesEditDialog"
+      :visible.sync="levelOneEditDialog"
       width="25%"
     >
       <el-form
         ref="editForm"
-        :model="categoriesEditForm"
-        :rules="categoriesEditFormRules"
+        :model="levelOneEditForm"
+        :rules="levelOneEditFormRules"
         label-width="120px"
         style="margin:10px;width:auto"
       >
@@ -122,7 +122,7 @@
           :label-width="formLabelWidth"
         >
           <el-input
-            v-model="categoriesEditForm.type"
+            v-model="levelOneEditForm.type"
             autocomplete="off"
             placeholder="請輸入大寫英文"
           ></el-input>
@@ -133,14 +133,14 @@
           :label-width="formLabelWidth"
         >
           <el-input
-            v-model="categoriesEditForm.name"
+            v-model="levelOneEditForm.name"
             autocomplete="off"
             placeholder="請輸入大寫英文"
           ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="categoriesEditDialog = false">取消</el-button>
+        <el-button @click="levelOneEditDialog = false">取消</el-button>
         <el-button type="primary" @click="onSubmit('editForm')">修改</el-button>
       </div>
     </el-dialog>
@@ -158,13 +158,14 @@ export default {
   },
   data() {
     return {
-      dontRemove: '5fd54071cbcb7757640a7ee7',
       tableData: [],
       formLabelWidth: '',
-      categoriesEditForm: {
+      levelOneEditForm: {
         type: '',
         name: '',
-        _id: ''
+        _id: '',
+        level: 1,
+        option: ''
       },
       // 管理分頁
       my_paginations: {
@@ -175,11 +176,11 @@ export default {
         // layouts: 'total, sizes, prev, pager, next, jumper'
       },
       // 這個是驗證 editCategoriesEditForm的表單欄位
-      categoriesEditFormRules: {
+      levelOneEditFormRules: {
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }]
       },
-      categoriesEditDialog: false,
+      levelOneEditDialog: false,
       // 下拉選單的 opation
       format_type_list: ['拉鍊', '五金', '棉花', '側標', '香精', '井字結'],
       // 驗證表單，form_rules 這個是驗證 addForm 的欄位
@@ -196,7 +197,8 @@ export default {
     this.setPaginations()
   },
   watch: {
-    formData() {
+    groupLevelOneData() {
+      // 資料有更新喔
       this.setPaginations()
     }
   },
@@ -248,29 +250,27 @@ export default {
 
     // 新增、編輯、刪除 第一層的分類
     handleAdd(form) {
-      this.dialog.option = 'add'
+      this.levelOneEditForm.option = 'add'
       this.onSubmit(form)
     },
     handleEdit(row) {
-      this.categoriesEditDialog = true
-      this.categoriesEditForm.type = row.type
-      this.categoriesEditForm.name = row.name
-      this.categoriesEditForm._id = row._id
-      this.dialog.option = 'edit'
+      // 第一層的資料
+      this.levelOneEditDialog = true
+      this.levelOneEditForm.type = row.type
+      this.levelOneEditForm.name = row.name
+      this.levelOneEditForm._id = row._id
+      this.levelOneEditForm.level = 1
+      this.levelOneEditForm.option = 'edit'
     },
     handleDelete(row) {
       // 讓全部分類無法刪除
-      if (this.dontRemove === row._id) {
-        this.$message('您不能刪除這個選項')
-        return
-      }
       MessageBox.confirm(
         '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
         '嚴重警告！！！'
       )
         .then(() => {
           this.$axios
-            .delete(`/api/categories/delete/${row._id}`)
+            .delete(`/api/material-group/delete-level-one/${row._id}`)
             .then((res) => {
               this.$message('刪除成功！')
               this.$emit('update')
@@ -282,31 +282,30 @@ export default {
     },
     // 新增商品類別代號
     onSubmit(form) {
-      console.log(this.dialog)
       const uploadFormData =
-        this.dialog.option == 'add' ? this.formData : this.categoriesEditForm
-
-      console.log(uploadFormData)
+        this.levelOneEditForm.option == 'add'
+          ? this.formData
+          : this.levelOneEditForm
 
       this.$refs[form].validate((valid) => {
         if (valid && !uploadFormData.type == '') {
           const url =
-            this.dialog.option == 'add'
+            this.levelOneEditForm.option == 'add'
               ? 'add'
-              : `edit/${this.categoriesEditForm._id}`
-          uploadFormData.level = 1
+              : `edit/${this.levelOneEditForm._id}`
+          uploadFormData.level = this.levelOneEditForm.level
           this.$axios
             .post(`/api/material-group/${url}`, uploadFormData)
             .then((res) => {
-              console.log('(儲存/修改) 原料第一層分類成功！')
+              console.log('(儲存/修改) 原料組合第一層分類成功！')
               // 添加成功
               this.$message({
                 message: '數據添加成功',
                 type: 'success'
               })
               // 不管怎麼樣都隱藏 edit dialog 的視窗
-              this.categoriesEditDialog = false
-              // this.dialog.show = false
+              this.levelOneEditDialog = false
+
               // 刷新網頁，傳遞給父組件做更新
               this.$emit('update')
             })

@@ -69,6 +69,7 @@
     </el-container>
     <!-- v-if="false" -->
     <GroupLevelOneDialog
+      v-if="groupLevelOneData[0]"
       :dialog="addLevelOneDialog"
       :formData="levelOneData"
       :groupLevelOneData="groupLevelOneData"
@@ -121,19 +122,25 @@ export default {
       addLevelOneDialog: {
         show: false,
         title: '新增加第一層的商品分類組合',
-        option: 'edit'
+        option: 'edit',
+        level: 1
       },
       addLevelTwoDialog: {
         show: false,
         title: '建立原料組合',
-        option: 'edit'
+        option: 'edit',
+        level: 2
       },
       addLevelThreeDialog: {
         show: false,
         title: '建立原料組合',
-        option: 'edit'
+        option: 'edit',
+        level: 3
       }
     }
+  },
+  created() {
+    this.getGroupLevelOneData()
   },
   components: {
     GroupLevelOneDialog
@@ -143,10 +150,11 @@ export default {
   methods: {
     getGroupLevelOneData() {
       this.$axios
-        .get('/api/material-group')
+        .get('/api/material-group/one/')
         .then((res) => {
           // 把資料庫的數據都先讀出來
           this.groupLevelOneData = res.data
+          console.log(res.data)
           // 設置分頁數據
           // this.setPaginations()
         })
@@ -159,7 +167,8 @@ export default {
       this.addLevelOneDialog = {
         show: true,
         title: '新增加第一層的商品分類組合',
-        option: 'add'
+        option: 'add',
+        level: 1
       }
     },
     // 新增第二層
