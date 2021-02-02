@@ -645,7 +645,8 @@ export default {
         }
       }
       // 如果是 edit 狀態的話，要把 this.levelThreeFormData 中的 imgs 也移除掉
-      if (this.dialog.option !== 'edit') return
+      // if (this.dialog.option !== 'edit') return
+
       this.levelThreeFormData.imgs.splice(_index, 1)
     },
     // 跳出預覽圖片預覽視窗

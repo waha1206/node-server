@@ -208,13 +208,13 @@
             <template slot-scope="scope">
               <el-button
                 size="mini"
-                @click="handleEditcategory(scope.$index, scope.row)"
+                @click="handleEditCategory(scope.$index, scope.row)"
                 >編輯</el-button
               >
               <el-button
                 size="mini"
                 type="danger"
-                @click="handleDeleteMaterial(scope.$index, scope.row)"
+                @click="handleDeleteCategory(scope.$index, scope.row)"
                 >刪除</el-button
               >
             </template>
@@ -518,7 +518,7 @@ export default {
       this.formData = Object.assign({}, this.categoriesLevelThreeFormData)
     },
     // 編輯選中的商品資料
-    handleEditcategory(index, row) {
+    handleEditCategory(index, row) {
       this.categoriesLevelThreeDialog = {
         show: true,
         title: '編輯加第三層的商品',
@@ -526,6 +526,11 @@ export default {
       }
       // 把 row 裡面的資料深拷貝一份給 formdata 這是是傳到 子元件裡面所需要的屬性
       this.formData = Object.assign({}, row)
+    },
+    // 刪除第一層的 class 目前不開放
+    handleDeleteCategory() {
+      this.$message('暫時不提供刪除的功能，請與管理員聯繫！')
+      return
     },
     // 分頁設定
     setPaginations() {

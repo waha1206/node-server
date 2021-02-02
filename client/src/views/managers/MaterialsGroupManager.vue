@@ -33,6 +33,33 @@
             align="center"
             width="70"
           ></el-table-column>
+
+          <!-- 搜尋欄位、編輯與刪除的按扭 -->
+          <!-- 搜尋欄位 -->
+          <el-table-column align="center" width="150">
+            <!-- header 代表放到列的說明文字那邊 -->
+            <template slot="header" slot-scope="scope">
+              <el-input
+                v-model="search"
+                size="mini"
+                placeholder="輸入關鍵字搜尋"
+              />
+            </template>
+            <!-- slot 崁入兩個按鈕 -->
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                @click="handleEditGroupMember(scope.$index, scope.row)"
+                >編輯</el-button
+              >
+              <el-button
+                size="mini"
+                type="danger"
+                @click="handleDeleteGroupMember(scope.$index, scope.row)"
+                >刪除</el-button
+              >
+            </template>
+          </el-table-column>
         </el-table>
 
         <!-- </el-aside> -->
@@ -40,6 +67,13 @@
         <!-- <el-main>Main</el-main> -->
       </el-container>
     </el-container>
+    <!-- v-if="false" -->
+    <GroupLevelOneDialog
+      :dialog="addLevelOneDialog"
+      :formData="levelOneData"
+      :groupLevelOneData="groupLevelOneData"
+      @update="getGroupLevelOneData"
+    ></GroupLevelOneDialog>
     <!-- 分頁 -->
     <div class="pagination">
       <el-pagination
@@ -61,12 +95,21 @@
 </template>
 
 <script>
+import GroupLevelOneDialog from '../../components/MaterialGroupManager/GroupLevelOneDialog'
+
 export default {
   name: 'material-group-manager',
   data() {
     return {
+      search: '',
       tableData: [],
-      levelThreeTableData: [],
+      groupLevelOneData: [], // 這個是讀取伺服器傳回來的陣列
+
+      // 這個是 form 表單，內建了schema
+      levelOneData: {
+        type: '',
+        name: ''
+      },
       // 控制分頁
       my_paginations: {
         page_index: 1, // 位於當前第幾頁
@@ -77,7 +120,7 @@ export default {
       },
       addLevelOneDialog: {
         show: false,
-        title: '建立原料組合',
+        title: '新增加第一層的商品分類組合',
         option: 'edit'
       },
       addLevelTwoDialog: {
@@ -93,11 +136,24 @@ export default {
     }
   },
   components: {
-    // GroupLevelOneDialog,
+    GroupLevelOneDialog
     // GroupLevelTwoDialog,
     // GroupLevelThreeDialog
   },
   methods: {
+    getGroupLevelOneData() {
+      this.$axios
+        .get('/api/material-group')
+        .then((res) => {
+          // 把資料庫的數據都先讀出來
+          this.groupLevelOneData = res.data
+          // 設置分頁數據
+          // this.setPaginations()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
     // 新增第一層
     addGroupLevelOne() {
       this.addLevelOneDialog = {
@@ -122,6 +178,9 @@ export default {
         option: 'add'
       }
     },
+    // 編輯與刪除 第三層 group member
+    handleEditGroupMember() {},
+    handleDeleteGroupMember() {},
     // 分頁設定
     setPaginations() {
       this.my_paginations.total = this.levelThreeTableData.length
