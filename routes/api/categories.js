@@ -153,6 +153,7 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     CategoriesLevelTwo.find()
+      .sort({ type: 1 })
       .then((categories) => {
         if (!categories) {
           return res.status(400).json('沒有任何內容')

@@ -314,18 +314,18 @@ export default {
       return levelOneName
     },
     initFilterData() {
-      if (localStorage.level_one_id) {
-        this.filterTableData.levelOneId = localStorage.level_one_id
+      if (localStorage.categories_level_one_id) {
+        this.filterTableData.levelOneId = localStorage.categories_level_one_id
       } else {
         this.filterTableData.levelOneId = this.dontRemove
-        localStorage.level_one_id = this.dontRemove
+        localStorage.categories_level_one_id = this.dontRemove
       }
       this.filterTableDataChange(this.filterTableData.levelOneId)
     },
     // 控制 table 要揭示出來的資料
     filterTableDataChange(id) {
       this.filterTableData.levelOneId = id
-      localStorage.level_one_id = id
+      localStorage.categories_level_one_id = id
       if (this.filterTableData.levelOneId == this.dontRemove) {
         this.filterTableData.tableData = this.categoriesLevelTwoData
       } else {

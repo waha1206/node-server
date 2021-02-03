@@ -6,27 +6,33 @@
       :close-on-click-model="false"
       :close-on-press-escape="false"
       :modal-append-to-body="false"
+      width="980px"
     >
       <div class="form">
         <el-container>
-          <el-aside width="50%" class="grid-content bg-purple">
+          <el-aside width="65%" class="grid-content bg-purple">
             <div class="table-container">
+              <!-- *************************** table 區塊 裡面編輯跟刪除 *************************** -->
               <el-table :data="tableData" style="width: 100%" size="mini">
                 <el-table-column
                   prop="type"
-                  label="第一層編號"
-                  width="120px"
+                  label="編號"
+                  width="80px"
                   align="center"
                 >
                 </el-table-column>
                 <el-table-column
                   prop="name"
-                  label="第一層中文"
-                  width="180"
+                  label="分類名"
+                  width="180px"
                   align="center"
                 >
                 </el-table-column>
-
+                <el-table-column label="大分類" align="center" width="180px">
+                  <template slot-scope="scope">
+                    {{ getLevelOneNameById(scope.row) }}
+                  </template>
+                </el-table-column>
                 <el-table-column
                   prop="operation"
                   label="操作"
@@ -54,24 +60,59 @@
                   </template>
                 </el-table-column>
               </el-table>
+              <!-- *************************** table 結束 裡面編輯跟刪除 *************************** -->
             </div>
           </el-aside>
 
           <!-- 右半邊的新增第一層分類 -->
-          <el-aside width="50%" class="grid-content bg-purple-light">
+          <el-aside width="35%" class="grid-content bg-purple-light">
             <el-form
               ref="form"
               :model="formData"
-              :rules="form_rules"
+              :rules="formDataRules"
               label-width="120px"
               style="margin:10px;width:auto"
             >
-              <!-- 這邊開始新增 -->
-              <el-form-item prop="type" label="第一層編號：" size="mini">
-                <el-input type="type" v-model="formData.type"></el-input>
+              <!-- 下拉選單，第一層的資料類型，新增第二層資料的時候使用，這邊是新增 ADD 使用的是 formData -->
+              <!-- 這裡的formData 剛進來的時候，應該是青空的，因為要建立新的資料  跟  editForm 不一樣，修改的 form 裡面會有資料-->
+              <el-form-item label="第一層分類：">
+                <el-select
+                  @change="formDataSelectChang"
+                  v-model="formData.level_one_id"
+                  placeholder="選擇第一層的分類"
+                  filterable
+                  size="mini"
+                >
+                  <!-- :lable 這個是顯示出來的  :value 這個要指定到 _id 因為我要存到資料庫，我需要唯一的一個 key (_id)-->
+                  <el-option
+                    v-for="(levelOneData, index) in groupLevelOneData"
+                    :key="index"
+                    :value="levelOneData._id"
+                    :label="levelOneData.name"
+                  >
+                    <!-- 下拉的選單，左邊放 type 右邊放 name -->
+                    <span style="float: left">{{ levelOneData.type }}</span>
+                    <span
+                      style="float: right; color: #8492a6; font-size: 13px"
+                      >{{ levelOneData.name }}</span
+                    >
+                  </el-option>
+                </el-select>
               </el-form-item>
-              <el-form-item prop="name" label="第一層中文：" size="mini">
-                <el-input type="name" v-model="formData.name"></el-input>
+              <!-- 這邊開始新增 -->
+              <el-form-item prop="type" label="二層編號：" size="mini">
+                <el-input
+                  type="type"
+                  v-model="formData.type"
+                  placeholder="請輸入4碼數字 例如：0001"
+                ></el-input>
+              </el-form-item>
+              <el-form-item prop="name" label="二層分類名：" size="mini">
+                <el-input
+                  type="name"
+                  v-model="formData.name"
+                  placeholder="請輸入中文敘述"
+                ></el-input>
               </el-form-item>
               <!--提交與取消鍵 -->
               <el-form-item class="text_right">
@@ -104,27 +145,57 @@
         <!-- 分頁結束 -->
       </div>
     </el-dialog>
+
+    <!-- ****************************** 這個 dialog 是 點擊左邊的 編輯 / 刪除 的區塊 ****************************** -->
+    <!-- ****************************** 只有這邊會使用到 editForm levelTwoEditForm ****************************** -->
     <el-dialog
       title="編輯商品代號"
-      :visible.sync="levelOneEditDialog"
+      :visible.sync="levelTwoEditDialog"
       width="25%"
     >
       <el-form
         ref="editForm"
-        :model="levelOneEditForm"
-        :rules="levelOneEditFormRules"
+        :model="levelTwoEditForm"
+        :rules="levelTwoEditFormRules"
         label-width="120px"
         style="margin:10px;width:auto"
       >
+        <!-- 下拉選單，轉換成文字，這邊是 editForm 的 會取出舊資料，修改後上傳到資料庫裏面-->
+        <!-- v-model 裡面放的是會顯示出來的值 這邊我從 creagoriesEditForm 裡面抓原本他自己的 level_one_name 顯示出來 -->
+        <!-- option 是提供這個元件其他的選項 value = 顯示在 option 裡面的大分類中文名稱，value 為該大分類的 id 他默認會塞到 editForm 裡面去 -->
+        <!-- editFormSelectChang(id) {
+      			 this.categoriesEditForm.level_one_id = id
+    				 },
+						 這一段程式碼，會在 selectChange 事件發生的時候，把 level_one_id 放到 editForm 裡面去
+             其他的值會在傳送資料時 ( onSubmit ) 的函式裡面 把 editForm 的數值陸續搬遷到 uploadFormData 封裝成物件後再丟到服務端去更新資料
+						 -->
+        <el-form-item label="大分類：">
+          <el-select
+            @change="editFormSelectChang"
+            v-model="levelTwoEditForm.level_one_name"
+            placeholder="選擇大分類"
+            filterable
+            size="mini"
+          >
+            <!-- :lable 這個是顯示出來的  :value 這個要指定到 _id 因為我要存到資料庫，我需要唯一的一個 key (_id)-->
+            <!-- v-for 裡面會顯示出 option 裡面的所有資料，這邊是指定到 categoriesLevelOneData -->
+            <el-option
+              v-for="(levelOneData2, index) in groupLevelOneData"
+              :key="index"
+              :value="levelOneData2._id"
+              :label="levelOneData2.name"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item
           prop="type"
           label="商品代號 (英文)"
           :label-width="formLabelWidth"
         >
           <el-input
-            v-model="levelOneEditForm.type"
-            autocomplete="off"
             size="mini"
+            v-model="levelTwoEditForm.type"
+            autocomplete="off"
             placeholder="請輸入大寫英文"
           ></el-input>
         </el-form-item>
@@ -134,15 +205,15 @@
           :label-width="formLabelWidth"
         >
           <el-input
-            v-model="levelOneEditForm.name"
-            autocomplete="off"
             size="mini"
+            v-model="levelTwoEditForm.name"
+            autocomplete="off"
             placeholder="請輸入大寫英文"
           ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="levelOneEditDialog = false">取消</el-button>
+        <el-button @click="levelTwoEditDialog = false">取消</el-button>
         <el-button type="primary" @click="onSubmit('editForm')">修改</el-button>
       </div>
     </el-dialog>
@@ -152,26 +223,36 @@
 <script>
 import { MessageBox } from 'element-ui'
 export default {
-  name: 'categories-level-one-dialog',
+  name: 'categories-level-two-dialog',
   props: {
     dialog: Object,
+    groupLevelTwoData: Array,
     groupLevelOneData: Array
+    // formData: Object
   },
   data() {
     return {
       tableData: [],
       formLabelWidth: '',
-      formData: {
-        type: '',
-        name: ''
-      },
-      levelOneEditForm: {
+      levelTwoEditForm: {
         type: '',
         name: '',
         _id: '',
-        level: 1,
-        option: ''
+        level: 2,
+        option: '',
+        level_one_id: '',
+        level_one_name: ''
       },
+      formData: {
+        type: '',
+        name: '',
+        _id: '',
+        level: 2,
+        option: '',
+        level_one_id: '',
+        level_one_name: ''
+      },
+
       // 管理分頁
       my_paginations: {
         page_index: 1, // 位於當前第幾頁
@@ -181,15 +262,13 @@ export default {
         // layouts: 'total, sizes, prev, pager, next, jumper'
       },
       // 這個是驗證 editCategoriesEditForm的表單欄位
-      levelOneEditFormRules: {
+      levelTwoEditFormRules: {
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }]
       },
-      levelOneEditDialog: false,
-      // 下拉選單的 opation
-      format_type_list: ['拉鍊', '五金', '棉花', '側標', '香精', '井字結'],
+      levelTwoEditDialog: false,
       // 驗證表單，form_rules 這個是驗證 addForm 的欄位
-      form_rules: {
+      formDataRules: {
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         describe: [
@@ -202,7 +281,7 @@ export default {
     this.setPaginations()
   },
   watch: {
-    groupLevelOneData() {
+    groupLevelTwoData() {
       // 資料有更新喔
       this.setPaginations()
     }
@@ -213,28 +292,48 @@ export default {
     }
   },
   methods: {
+    editFormSelectChang(id) {
+      const row = {}
+      row.level_one_id = id
+      this.levelTwoEditForm.level_one_id = id
+      this.levelTwoEditForm.level_one_name = this.getLevelOneNameById(row)
+      console.log(this.levelTwoEditForm.level_one_name)
+    },
+    //
+    formDataSelectChang(id) {},
+
+    // 返回選取到的 level one name by id
+    getLevelOneNameById(row) {
+      let levelOneName = ''
+      this.groupLevelOneData.forEach((e) => {
+        if (e._id === row.level_one_id) {
+          levelOneName = e.name
+        }
+      })
+      return levelOneName
+    },
     // 分頁開始
     setPaginations() {
-      this.my_paginations.total = this.groupLevelOneData.length
+      this.my_paginations.total = this.groupLevelTwoData.length
       this.my_paginations.page_index = 1
-      if (localStorage.group_level_one_page_size) {
+      if (localStorage.group_level_two_page_size) {
         this.my_paginations.page_size = Number(
-          localStorage.group_level_one_page_size
+          localStorage.group_level_two_page_size
         )
       } else {
         this.my_paginations.page_size = 5
       }
       // 設置分頁數據
-      this.tableData = this.groupLevelOneData.filter((item, index) => {
+      this.tableData = this.groupLevelTwoData.filter((item, index) => {
         return index < this.my_paginations.page_size
       })
     },
     handleSizeChange(page_size) {
       // 切換每頁有幾條數據
-      localStorage.group_level_one_page_size = page_size
+      localStorage.group_level_two_page_size = page_size
       this.my_paginations.page_index = 1
       this.my_paginations.page_size = page_size
-      this.tableData = this.groupLevelOneData.filter((item, index) => {
+      this.tableData = this.groupLevelTwoData.filter((item, index) => {
         return index < page_size
       })
     },
@@ -246,8 +345,8 @@ export default {
       // 容器
       let tables = []
       for (let i = index; i < nums; i++) {
-        if (this.groupLevelOneData[i]) {
-          tables.push(this.groupLevelOneData[i])
+        if (this.groupLevelTwoData[i]) {
+          tables.push(this.groupLevelTwoData[i])
         }
         this.tableData = tables
       }
@@ -255,17 +354,20 @@ export default {
 
     // 新增、編輯、刪除 第一層的分類
     handleAdd(form) {
-      this.levelOneEditForm.option = 'add'
+      this.levelTwoEditForm.option = 'add'
       this.onSubmit(form)
     },
     handleEdit(row) {
-      // 第一層的資料
-      this.levelOneEditDialog = true
-      this.levelOneEditForm.type = row.type
-      this.levelOneEditForm.name = row.name
-      this.levelOneEditForm._id = row._id
-      this.levelOneEditForm.level = 1
-      this.levelOneEditForm.option = 'edit'
+      // 當左邊區塊按下了編輯鍵
+      this.levelTwoEditDialog = true
+      this.levelTwoEditForm.type = row.type
+      this.levelTwoEditForm.name = row.name
+      this.levelTwoEditForm._id = row._id
+      this.levelTwoEditForm.level = 2
+      this.levelTwoEditForm.option = 'edit'
+      this.levelTwoEditForm.level_one_id = row.level_one_id
+      // 按了 table 裡面的編輯按鈕後 這邊會把 row 裡面的 level_one_id 轉換成為 name 賦值給 this.levelTwoEditForm.level_one_name
+      this.levelTwoEditForm.level_one_name = this.getLevelOneNameById(row)
     },
     handleDelete(row) {
       // 讓全部分類無法刪除
@@ -275,7 +377,7 @@ export default {
       )
         .then(() => {
           this.$axios
-            .delete(`/api/material-group/delete-level-one/${row._id}`)
+            .delete(`/api/material-group/delete-level-two/${row._id}`)
             .then((res) => {
               this.$message('刪除成功！')
               this.$emit('update')
@@ -287,18 +389,18 @@ export default {
     },
     // 新增商品類別代號
     onSubmit(form) {
+      console.log(this.levelTwoEditForm.option)
       const uploadFormData =
-        this.levelOneEditForm.option == 'add'
+        this.levelTwoEditForm.option == 'add'
           ? this.formData
-          : this.levelOneEditForm
+          : this.levelTwoEditForm
 
       this.$refs[form].validate((valid) => {
         if (valid && !uploadFormData.type == '') {
           const url =
-            this.levelOneEditForm.option == 'add'
+            this.levelTwoEditForm.option == 'add'
               ? 'add'
-              : `edit/${this.levelOneEditForm._id}`
-          uploadFormData.level = this.levelOneEditForm.level
+              : `edit/${this.levelTwoEditForm._id}`
           this.$axios
             .post(`/api/material-group/${url}`, uploadFormData)
             .then((res) => {
@@ -309,7 +411,7 @@ export default {
                 type: 'success'
               })
               // 不管怎麼樣都隱藏 edit dialog 的視窗
-              this.levelOneEditDialog = false
+              this.levelTwoEditDialog = false
 
               // 刷新網頁，傳遞給父組件做更新
               this.$emit('update')

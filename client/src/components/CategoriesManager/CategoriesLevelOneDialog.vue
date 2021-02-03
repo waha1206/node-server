@@ -123,6 +123,7 @@
             v-model="categoriesEditForm.type"
             autocomplete="off"
             placeholder="請輸入大寫英文"
+            size="mini"
           ></el-input>
         </el-form-item>
         <el-form-item
@@ -134,6 +135,7 @@
             v-model="categoriesEditForm.name"
             autocomplete="off"
             placeholder="請輸入大寫英文"
+            size="mini"
           ></el-input>
         </el-form-item>
       </el-form>

@@ -30,10 +30,11 @@ router.post(
     // 傳送過來的資料格式先建立起來
     const query = [{ name: req.body.name }, { type: req.body.type }]
 
+    const level = req.body.level
     const materialGroupFields = {}
     let materialGroupLevel = {}
 
-    switch (req.body.level) {
+    switch (level) {
       case 1:
         materialGroupLevel = MaterialGroupOne
         break
@@ -47,9 +48,16 @@ router.post(
         return res.status(400).json('提交資訊出現異常')
     }
 
+    console.log('有索取檔案喔')
     // 傳送過來的資料不見得會跟 schema 會一樣
     if (req.body.type) materialGroupFields.type = req.body.type
     if (req.body.name) materialGroupFields.name = req.body.name
+
+    if (level === 2) {
+      if (req.body.level_one_id) {
+        materialGroupFields.level_one_id = req.body.level_one_id
+      }
+    }
 
     materialGroupLevel
       .findOne({
@@ -117,33 +125,28 @@ router.get(
   }
 )
 
-// // $router get api/categories/three
-// // @desc   獲取所有分類資訊
-// // @access private
-// // 使用 hander 要驗證 token
-// // body 不用放，因為他會獲取所有訊息
-// router.get(
-//   '/three/:id',
-//   passport.authenticate('jwt', { session: false }),
-//   (req, res) => {
-//     // query 選擇的條件
-//     // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
-//     const query = { level_two_id: req.params.id }
-//     const options = {
-//       // imgs: 0
-//     }
-//     CategoriesLevelThree.find(query, options)
-//       .then((categories) => {
-//         if (!categories) {
-//           return res.status(400).json('沒有任何內容')
-//         }
-//         res.json(categories)
-//       })
-//       .catch((err) => {
-//         res.status(404).json(err)
-//       })
-//   }
-// )
+// $router get api/material-group/two
+// @desc   獲取所有分類資訊
+// @access private
+// 使用 hander 要驗證 token
+// body 不用放，因為他會獲取所有訊息
+router.get(
+  '/two',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    MaterialGroupTwo.find()
+      .sort({ type: 1 })
+      .then((materialGroupOne) => {
+        if (!materialGroupOne) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(materialGroupOne)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
 
 // // $router get api/categories/:id
 // // @desc   獲取單個訊息
@@ -177,10 +180,11 @@ router.post(
   '/edit/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
+    const level = req.body.level
     const materialGroupFields = {}
     let materialGroupLevel = {}
 
-    switch (req.body.level) {
+    switch (level) {
       case 1:
         materialGroupLevel = MaterialGroupOne
         break
@@ -194,8 +198,15 @@ router.post(
         return res.status(400).json('提交資訊出現異常')
     }
 
+    if (level === 2) {
+      if (req.body.level_one_id) {
+        materialGroupFields.level_one_id = req.body.level_one_id
+      }
+    }
+
     if (req.body.type) materialGroupFields.type = req.body.type
     if (req.body.name) materialGroupFields.name = req.body.name
+    console.log(materialGroupFields)
 
     const filter = { _id: req.params.id }
     const update = { $set: materialGroupFields }
@@ -220,6 +231,24 @@ router.delete(
     const query = { _id: req.params.id }
 
     MaterialGroupOne.findOneAndRemove(query)
+      .then((materialGroupOne) => res.json(materialGroupOne))
+      .catch((_err) => res.status(404).json('刪除失敗'))
+  }
+)
+
+// $router delete api/material-group/delete-level-two/:id
+// @desc   刪除訊息接口
+// @access private
+// 選擇 delete
+// 使用 hander 要驗證 token
+// body 要放編輯的資料 key:value
+router.delete(
+  '/delete-level-two/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const query = { _id: req.params.id }
+    console.log(req.params)
+    MaterialGroupTwo.findOneAndRemove(query)
       .then((materialGroupOne) => res.json(materialGroupOne))
       .catch((_err) => res.status(404).json('刪除失敗'))
   }

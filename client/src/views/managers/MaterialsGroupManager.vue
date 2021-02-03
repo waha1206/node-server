@@ -67,14 +67,24 @@
         <!-- <el-main>Main</el-main> -->
       </el-container>
     </el-container>
-    <!-- v-if="false" -->
+    <!-- 第一層的 dialog -- group level one -->
     <GroupLevelOneDialog
       v-if="groupLevelOneData[0]"
       :dialog="addLevelOneDialog"
-      :formData="levelOneData"
       :groupLevelOneData="groupLevelOneData"
       @update="getGroupLevelOneData"
     ></GroupLevelOneDialog>
+    <!-- 第二層的 dialog -- group level two -->
+    <!-- :formData="levelOneData" 單筆資料 -->
+    <!-- :groupLevelOneData="groupLevelOneData"  陣列資料
+      :groupLevelTwoData="groupLevelTwoData" 陣列資料 -->
+    <GroupLevelTwoDialog
+      v-if="groupLevelOneData[0]"
+      :dialog="addLevelTwoDialog"
+      :groupLevelOneData="groupLevelOneData"
+      :groupLevelTwoData="groupLevelTwoData"
+      @update="getGroupLevelTwoData"
+    ></GroupLevelTwoDialog>
     <!-- 分頁 -->
     <div class="pagination">
       <el-pagination
@@ -97,6 +107,7 @@
 
 <script>
 import GroupLevelOneDialog from '../../components/MaterialGroupManager/GroupLevelOneDialog'
+import GroupLevelTwoDialog from '../../components/MaterialGroupManager/GroupLevelTwoDialog'
 
 export default {
   name: 'material-group-manager',
@@ -104,12 +115,19 @@ export default {
     return {
       search: '',
       tableData: [],
-      groupLevelOneData: [], // 這個是讀取伺服器傳回來的陣列
+      groupLevelOneData: [], // 這個是讀取伺服器傳回來的陣列 level one
+      groupLevelTwoData: [], // 這個是讀取伺服器傳回來的陣列 level two
 
       // 這個是 form 表單，內建了schema
       levelOneData: {
         type: '',
         name: ''
+      },
+      // 這個是 form 表單，內建了schema
+      levelTwoData: {
+        type: '',
+        name: '',
+        level_one_id: ''
       },
       // 控制分頁
       my_paginations: {
@@ -141,21 +159,35 @@ export default {
   },
   created() {
     this.getGroupLevelOneData()
+    this.getGroupLevelTwoData()
   },
   components: {
-    GroupLevelOneDialog
-    // GroupLevelTwoDialog,
+    GroupLevelOneDialog,
+    GroupLevelTwoDialog
     // GroupLevelThreeDialog
   },
   methods: {
+    // @emit('update) 來這邊取得第一層的資料
     getGroupLevelOneData() {
       this.$axios
         .get('/api/material-group/one/')
         .then((res) => {
           // 把資料庫的數據都先讀出來
           this.groupLevelOneData = res.data
-          console.log(res.data)
-          // 設置分頁數據
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    // @emit('update) 來這邊取得第二層的資料
+    getGroupLevelTwoData() {
+      this.$axios
+        .get('/api/material-group/two/')
+        .then((res) => {
+          // 把資料庫的數據都先讀出來
+          this.groupLevelTwoData = res.data
+          // 設置分頁數據 如果是子組件的話，不需要這邊重新整理更新頁面
+          // 子組件裡面會有一個 watch 去觀察資料，如果有異動了 setPagination 會在那邊觸發
           // this.setPaginations()
         })
         .catch((err) => {
@@ -176,7 +208,8 @@ export default {
       this.addLevelTwoDialog = {
         show: true,
         title: '新增加第二層的商品分類組合',
-        option: 'add'
+        option: 'add',
+        level: 2
       }
     },
     // 新增原物料組合 (這邊是空殼)
