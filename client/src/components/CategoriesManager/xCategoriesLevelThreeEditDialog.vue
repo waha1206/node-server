@@ -20,6 +20,7 @@
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="8"
                 ><div class="grid-content">
+                  <!-- prop 的意思是綁訂 到 valid 規則裡面去做驗證，跟提交的時候使用 -->
                   <el-form-item
                     label="先選擇大分類："
                     size="mini"
@@ -39,7 +40,7 @@
                       <el-option
                         v-for="(item, index) in categoriesLevelOneData"
                         :key="index"
-                        :label="item.name"
+                        :label="item._name"
                         :value="item._id"
                       >
                         <span style="float: left">{{ item.type }}</span>
@@ -492,6 +493,7 @@ export default {
         imgs: [],
         level_one_id: '',
         level_two_id: '',
+        level_two_name: '',
         name: '',
         type: '',
         describe: '',
@@ -513,6 +515,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.levelThreeFormData)
     // console.log(this.allUserNameId)
   },
   computed: {
@@ -535,21 +538,24 @@ export default {
     }
   },
   watch: {
+    updateLevelTwoData() {
+      console.log(this.updateLevelTwoData)
+    },
     'levelThreeFormData.status.activated'() {
       console.log(this.levelThreeFormData.status)
-    },
-    updateLevelTwoData() {
-      console.log('恩，有變動')
     }
   },
   methods: {
+    // 選擇第一層的時候，會把第一層的 id 傳進來，比對第二層的數列，如果裡面有紀錄第一層的 id 就返回，這樣第二層的 select option 就會有數據了
     levelOneChang(id) {
       this.levelThreeFormData.level_two_id = ''
       this.updateLevelTwoData = this.categoriesLevelTwoData.filter((item) => {
         return item.level_one_id === id
       })
     },
-    levelTwoChang() {},
+    levelTwoChang() {
+      console.log('有呼叫到我嗎？')
+    },
     // 提交表單 add / edit
     onSubmit(formName) {
       // add 的時候，如果是 edit 要改

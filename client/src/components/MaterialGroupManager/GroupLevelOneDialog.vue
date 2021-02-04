@@ -11,6 +11,7 @@
         <el-container>
           <el-aside width="50%" class="grid-content bg-purple">
             <div class="table-container">
+              <!-- ***********************  manager 裡面的表單   ***********************-->
               <el-table :data="tableData" style="width: 100%" size="mini">
                 <el-table-column
                   prop="type"
@@ -54,6 +55,7 @@
                   </template>
                 </el-table-column>
               </el-table>
+              <!-- ***********************  manager 裡面的表單 結束   ***********************-->
             </div>
           </el-aside>
 

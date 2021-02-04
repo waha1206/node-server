@@ -260,7 +260,7 @@
     <CategoriesLevelThreeDialog
       v-if="formData.level == 3 || formData._id"
       :dialog="categoriesLevelThreeDialog"
-      :levelThreeFormData="formData"
+      :formData="formData"
       :categoriesLevelOneData="categoriesLevelOneData"
       :categoriesLevelTwoData="categoriesLevelTwoData"
       :allUserNameId="allUserNameId"
@@ -294,7 +294,6 @@ export default {
       categoriesLevelOneData: [], // 開始就先讀取資料庫的數據
       categoriesLevelTwoData: [], // 開始就先讀取資料庫的數據
       categoriesLevelThreeData: [], // 開始就先讀取資料庫的數據
-      formData: {},
       categoriesLevelOneFormData: {
         type: '',
         name: '',
@@ -312,6 +311,7 @@ export default {
         level: 2,
         level_one_id: ''
       },
+      formData: {},
       categoriesLevelThreeFormData: {
         imgs: [],
         level_one_id: '',
@@ -515,6 +515,7 @@ export default {
       }
       // 新增，就把要傳到子元件裡面的資料清空，這邊傳到子元件是 formData
       this.formData = Object.assign({}, this.categoriesLevelThreeFormData)
+      console.log(this.formData)
     },
     // 編輯選中的商品資料
     handleEditCategory(index, row) {

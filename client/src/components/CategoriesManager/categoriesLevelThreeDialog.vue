@@ -9,7 +9,6 @@
       width="1200px"
       ><el-container>
         <!-- :mmodel 綁定的會是 data return 裡面的某個物件 這邊綁定的是 levelOneData -->
-
         <el-form
           ref="levelThreeForm"
           :model="levelThreeFormData"
@@ -53,6 +52,8 @@
                 </div></el-col
               >
               <!-- 第二層的下拉選單 -->
+              <!-- ********************* 兩種做法，1.第二個選擇欄位獨立出去  *********************-->
+              <!-- ********************* 兩種做法，2.v-if 去判斷資料要不要顯示出來  *********************-->
               <el-col :span="8"
                 ><div class="grid-content">
                   <el-form-item
@@ -62,6 +63,7 @@
                     label-width="120px"
                   >
                     <!-- 可複選的 select 要加入這三個屬性 allow-create default-first-option multiple -->
+                    <!-- v-model="levelThreeFormData.level_two_id" -->
                     <el-select
                       v-model="levelThreeFormData.level_two_id"
                       placeholder="請選擇"
@@ -75,8 +77,19 @@
                         :label="citem.name"
                         :value="citem._id"
                       >
-                        <span style="float: left">{{ citem.type }}</span>
                         <span
+                          v-if="
+                            citem.level_one_id ===
+                              levelThreeFormData.level_one_id
+                          "
+                          style="float: left"
+                          >{{ citem.type }}</span
+                        >
+                        <span
+                          v-if="
+                            citem.level_one_id ===
+                              levelThreeFormData.level_one_id
+                          "
                           style="float: right; color: #8492a6; font-size: 13px"
                           >{{ citem.name }}</span
                         >
@@ -469,13 +482,15 @@ export default {
   name: 'categories-level-three-dialog',
   props: {
     dialog: Object,
-    levelThreeFormData: Object,
-    categoriesLevelOneData: Array,
+    // 父元件傳到子元件的屬性，不能編輯他，如果要編輯，要使用 $emit
+    formData: Object,
     allUserNameId: Array,
+    categoriesLevelOneData: Array,
     categoriesLevelTwoData: Array
   },
   data() {
     return {
+      levelThreeFormData: {},
       dontRemove: '5fd54071cbcb7757640a7ee7',
       uploadData: {
         dataType: '0',
@@ -494,7 +509,15 @@ export default {
     }
   },
   created() {
+    this.levelThreeFormData = Object.assign({}, this.formData)
     this.getImgs()
+  },
+  mounted() {
+    // 這一行很重要，當子元件一啟動，就會先執行一次，然後接下來要去 watch 觀察 dialog 的變化，
+    // 要是有資料流進來，就會重新把 updateLevelTwoData
+    this.levelOneChang(this.levelThreeFormData.level_one_id)
+    // 如果是要新增商品，就把 el-upload 裡面的圖片資料清空，這邊做第一次近來的初始化，接下來透過 watch this.dialog 去做監控與更新
+    if (this.dialog.option === 'add') this.files = []
   },
   computed: {
     getDate() {
@@ -519,11 +542,18 @@ export default {
   watch: {
     // 當 props dialog 有新的 資料進來 (這邊是點擊【編輯】 的時候會觸發) 然後更新 Imgs 但是第一次還是要掛載於 created() 裡面喔
     dialog() {
+      // 如果是要新增商品，就把 el-upload 裡面的圖片資料清空，mounted 執行過後，每次監控，透過 watch this.dialog 去做判斷要不要清空 files[]
+      if (this.dialog.option === 'add') {
+        this.files = []
+        this.formData.imgs = []
+      }
+      this.levelThreeFormData = Object.assign({}, this.formData)
+      // 第一次更新 updateLevelTwoData 在 mounted(){} 裡面，這邊是後續每次異動 dialog 都會去更新 updateLevelTwoData
+      this.levelOneChang(this.levelThreeFormData.level_one_id)
+      console.log('watch dialog')
       this.getImgs()
     },
-    'levelThreeFormData.status.activated'() {
-      // console.log(this.levelThreeFormData.status)
-    },
+
     updateLevelTwoData() {
       console.log('恩，有變動')
     }
@@ -554,12 +584,18 @@ export default {
     },
     // 第一層被選中後，就會去更新第二層的資料
     levelOneChang(id) {
-      this.levelThreeFormData.level_two_id = ''
-      this.updateLevelTwoData = this.categoriesLevelTwoData.filter((item) => {
-        return item.level_one_id === id
-      })
+      if (id) {
+        console.log('levelOneChang', id)
+        this.updateLevelTwoData = this.categoriesLevelTwoData.filter((item) => {
+          return item.level_one_id === id
+        })
+      } else {
+        this.updateLevelTwoData = []
+      }
     },
-    levelTwoChang() {},
+    levelTwoChang() {
+      console.log('categoriesThreeDialog第二層選項備呼叫惹')
+    },
     // 提交表單 add / edit
     onSubmit(formName) {
       // add 的時候，如果是 edit 要改

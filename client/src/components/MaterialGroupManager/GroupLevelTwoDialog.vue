@@ -12,6 +12,7 @@
         <el-container>
           <el-aside width="65%" class="grid-content bg-purple">
             <div class="table-container">
+              <!-- *************************** 左邊區塊 *************************** -->
               <!-- *************************** table 區塊 裡面編輯跟刪除 *************************** -->
               <el-table :data="tableData" style="width: 100%" size="mini">
                 <el-table-column
@@ -170,6 +171,7 @@
              其他的值會在傳送資料時 ( onSubmit ) 的函式裡面 把 editForm 的數值陸續搬遷到 uploadFormData 封裝成物件後再丟到服務端去更新資料
 						 -->
         <el-form-item label="大分類：">
+          <!-- v-model="levelTwoEditForm.level_one_name" 因為最後要提交的表單是 levelTwoEditForm 所以理所當然的 v-model 就跟她綁訂了-->
           <el-select
             @change="editFormSelectChang"
             v-model="levelTwoEditForm.level_one_name"
@@ -359,6 +361,7 @@ export default {
     },
     handleEdit(row) {
       // 當左邊區塊按下了編輯鍵
+
       this.levelTwoEditDialog = true
       this.levelTwoEditForm.type = row.type
       this.levelTwoEditForm.name = row.name
@@ -389,7 +392,6 @@ export default {
     },
     // 新增商品類別代號
     onSubmit(form) {
-      console.log(this.levelTwoEditForm.option)
       const uploadFormData =
         this.levelTwoEditForm.option == 'add'
           ? this.formData
