@@ -77,19 +77,8 @@
                         :label="citem.name"
                         :value="citem._id"
                       >
+                        <span style="float: left">{{ citem.type }}</span>
                         <span
-                          v-if="
-                            citem.level_one_id ===
-                              levelThreeFormData.level_one_id
-                          "
-                          style="float: left"
-                          >{{ citem.type }}</span
-                        >
-                        <span
-                          v-if="
-                            citem.level_one_id ===
-                              levelThreeFormData.level_one_id
-                          "
                           style="float: right; color: #8492a6; font-size: 13px"
                           >{{ citem.name }}</span
                         >
