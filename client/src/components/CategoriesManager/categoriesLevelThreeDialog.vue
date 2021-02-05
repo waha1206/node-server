@@ -504,6 +504,7 @@ export default {
   mounted() {
     // 這一行很重要，當子元件一啟動，就會先執行一次，然後接下來要去 watch 觀察 dialog 的變化，
     // 要是有資料流進來，就會重新把 updateLevelTwoData
+    // 嘿嘿
     this.levelOneChang(this.levelThreeFormData.level_one_id)
     // 如果是要新增商品，就把 el-upload 裡面的圖片資料清空，這邊做第一次近來的初始化，接下來透過 watch this.dialog 去做監控與更新
     if (this.dialog.option === 'add') this.files = []
