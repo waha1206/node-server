@@ -272,7 +272,7 @@
 <script>
 import CategoriesLevelOneDialog from '../../components/CategoriesManager/CategoriesLevelOneDialog'
 import CategoriesLevelTwoDialog from '../../components/CategoriesManager/CategoriesLevelTwoDialog'
-import CategoriesLevelThreeDialog from '../../components/CategoriesManager/CategoriesLevelThreeDialog'
+import CategoriesLevelThreeDialog from '../../components/CategoriesManager/CategoriesLevelThreeDialog-1'
 
 export default {
   name: 'categories-manager',
