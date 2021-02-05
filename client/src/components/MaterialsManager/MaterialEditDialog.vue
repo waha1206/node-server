@@ -139,18 +139,18 @@
             </el-col>
             <el-col :span="6">
               <div class="grid-content ">
-                <el-form-item prop="minimum_order_quantity" label="最低訂購：">
+                <el-form-item prop="unit" label="商品單位：">
                   <el-input
                     size="mini"
-                    type="minimum_order_quantity"
-                    v-model="formData.minimum_order_quantity"
+                    type="unit"
+                    v-model="formData.unit"
                   ></el-input>
                 </el-form-item>
               </div>
             </el-col>
           </el-row>
 
-          <!-- 第四列，單位，材質，規格，長度 -->
+          <!-- 第四列，材質，規格，長度，最低訂購 -->
           <el-row :gutter="20" type="flex" class="row-bg">
             <el-col :span="6">
               <div class="grid-content ">
@@ -163,17 +163,7 @@
                 </el-form-item>
               </div>
             </el-col>
-            <el-col :span="6">
-              <div class="grid-content ">
-                <el-form-item prop="unit" label="商品單位：">
-                  <el-input
-                    size="mini"
-                    type="unit"
-                    v-model="formData.unit"
-                  ></el-input>
-                </el-form-item>
-              </div>
-            </el-col>
+
             <el-col :span="6">
               <div class="grid-content ">
                 <el-form-item prop="product_color" label="商品顏色：">
@@ -192,6 +182,17 @@
                     size="mini"
                     type="length"
                     v-model="formData.length"
+                  ></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="grid-content ">
+                <el-form-item prop="minimum_order_quantity" label="最低訂購：">
+                  <el-input
+                    size="mini"
+                    type="minimum_order_quantity"
+                    v-model="formData.minimum_order_quantity"
                   ></el-input>
                 </el-form-item>
               </div>
@@ -249,7 +250,7 @@
             </el-col>
           </el-row>
           <!-- 第五列結束 -->
-          <!-- 第六列，供應商ID -->
+          <!-- 第六列，供應商ID，備註 remark -->
           <el-row :gutter="20" type="flex" class="row-bg">
             <el-col :span="6">
               <div class="grid-content ">
@@ -258,6 +259,17 @@
                     size="mini"
                     type="supplier_id"
                     v-model="formData.supplier_id"
+                  ></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="18">
+              <div class="grid-content ">
+                <el-form-item prop="remark" label="備註：">
+                  <el-input
+                    size="mini"
+                    type="remark"
+                    v-model="formData.remark"
                   ></el-input>
                 </el-form-item>
               </div>
@@ -293,10 +305,10 @@ export default {
       form_rules: {
         product_name: [
           { required: true, message: '此欄位不能為空', trigger: 'blur' }
-        ],
-        retail_price: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
         ]
+        // retail_price: [
+        //   { required: true, message: '此欄位不能為空', trigger: 'blur' }
+        // ]
       }
     }
   },

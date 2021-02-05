@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div class="customer-manager"></div>
     <el-container>
       <el-header>
         <div class="cascader-wrap">
@@ -27,6 +26,20 @@
           >建立組合商品</el-button
         >
       </el-header>
+      <!-- 分頁 -->
+      <div class="pagination">
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page.sync="my_paginations.page_index"
+          :page-size="my_paginations.page_size"
+          :page-sizes="my_paginations.page_sizes"
+          :total="my_paginations.total"
+          layout="total, sizes, prev, pager, next, jumper"
+        >
+        </el-pagination>
+      </div>
       <el-container>
         <el-table
           size="mini"
@@ -49,10 +62,10 @@
           ></el-table-column>
           <!-- 商品名稱 -->
           <el-table-column
-            label="供應商公司抬頭"
+            label="商品名稱"
             prop="name"
             align="left"
-            width="180"
+            width="250"
           ></el-table-column>
           <!-- 商品編號 -->
           <el-table-column
@@ -192,7 +205,7 @@
           >
           </el-table-column>
           <!-- 添加原料 -->
-          <el-table-column label="添加原料" prop="" align="center" width="500">
+          <el-table-column label="添加原料" prop="" align="center" width="420">
           </el-table-column>
           <!-- 搜尋欄位 -->
           <el-table-column align="center" width="150">
@@ -225,20 +238,7 @@
         <!-- <el-main>Main</el-main> -->
       </el-container>
     </el-container>
-    <!-- 分頁 -->
-    <div class="pagination">
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page.sync="my_paginations.page_index"
-        :page-size="my_paginations.page_size"
-        :page-sizes="my_paginations.page_sizes"
-        :total="my_paginations.total"
-        layout="total, sizes, prev, pager, next, jumper"
-      >
-      </el-pagination>
-    </div>
+
     <!-- 新增第一層商品的 dialog -->
     <CategoriesLevelOneDialog
       v-if="categoriesLevelOneData[0]"
