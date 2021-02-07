@@ -391,15 +391,17 @@ export default {
     }
   },
   watch: {
+    // 常用的正則表達式 https://kknews.cc/zh-tw/code/o5e4n55.html
     'materialDataForm.unit_price': function(newValue) {
-      // 帶有兩位小數的正實數
+      // 帶有兩位小數的正實數，傳進來的是 單位售價
       var numReg = /[0-9]+(.[0-9]{2})?/
       if (!numReg.test(newValue)) {
         this.$message('請輸入正整數與小數點後兩位數')
         this.retailPrice = 0
       } else {
         this.retailPrice = this.materialDataForm.retail_price =
-          this.materialDataForm.unit_price * ((100 + Number(newValue)) / 100)
+          newValue *
+          ((100 + Number(this.materialDataForm.product_profit)) / 100)
       }
     },
     // 檢查商品利潤是不是正整數 只能包含 0-9 這邊只有單純的計算數字有使用到，正則運算暫時沒用到
