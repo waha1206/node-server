@@ -20,12 +20,6 @@ router.post(
   '/upload',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    // console.log(req.body);
-    console.log(req.body.length)
-
-    // res.json('msg:chats works');
-    // return;
-
     const materials = new Array(req.body.length)
 
     for (let i = 0; i < req.body.length; i++) {
@@ -137,13 +131,10 @@ router.post(
     // if (req.body.name) materialClassFields.name = req.body.name
     // if (req.body.describe) materialClassFields.describe = req.body.describe
 
-    console.log(req.body)
-
     for (const prop in req.body) {
       materialFields[prop] = req.body[prop]
     }
 
-    console.log(materialFields)
     // res.json('msg:material is works')
 
     Material.findByIdAndUpdate(
@@ -170,8 +161,6 @@ router.post(
         materialFields[prop] = req.body[prop]
       }
     }
-
-    console.log(materialFields)
 
     Material.findOne({ product_name: req.body.product_name }).then(
       (material) => {

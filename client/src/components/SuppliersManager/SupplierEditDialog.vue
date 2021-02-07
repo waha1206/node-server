@@ -86,6 +86,7 @@
                   label="供應商資本額："
                 >
                   <my-currency-input
+                    :isReadyOnly="false"
                     type="registered_capital"
                     v-model="formData.registered_capital"
                   ></my-currency-input>

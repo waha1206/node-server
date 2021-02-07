@@ -304,10 +304,12 @@
       @update="getMaterialClass"
     ></MaterialClassDialog>
     <MaterialEditDialog
+      v-if="materialFormDate"
       :dialog="materialEditDialog"
       :formData="materialFormDate"
       :materialClassData="materialClassData"
       :allUserNameId="allUserNameId"
+      :allSupplierlData="allSupplierlData"
       @update="getMaterials"
     ></MaterialEditDialog>
     <!-- 非常重要的知識點，遠端讀取資料庫後，要等到接收到遠端資料完畢後，才可以掛載子元件
