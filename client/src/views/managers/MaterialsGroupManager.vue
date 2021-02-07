@@ -85,12 +85,21 @@
       :groupLevelTwoData="groupLevelTwoData"
       @update="getGroupLevelTwoData"
     ></GroupLevelTwoDialog>
+    <!-- 第三層的 dialog -->
+    <GroupLevelThreeDialog
+      v-if="groupLevelOneData[0] && groupLevelTwoData[0]"
+      :dialog="addLevelThreeDialog"
+      :groupLevelOneData="groupLevelOneData"
+      :groupLevelTwoData="groupLevelTwoData"
+      @update="getGroupLevelThreeData"
+    ></GroupLevelThreeDialog>
     <!-- 分頁 -->
     <div class="pagination">
       <el-pagination
         background
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
+        :parentLevelThreeFormData="levelThreeTableData"
         :current-page.sync="my_paginations.page_index"
         :page-size="my_paginations.page_size"
         :page-sizes="my_paginations.page_sizes"
@@ -108,6 +117,7 @@
 <script>
 import GroupLevelOneDialog from '../../components/MaterialGroupManager/GroupLevelOneDialog'
 import GroupLevelTwoDialog from '../../components/MaterialGroupManager/GroupLevelTwoDialog'
+import GroupLevelThreeDialog from '../../components/MaterialGroupManager/GroupLevelThreeDialog'
 
 export default {
   name: 'material-group-manager',
@@ -117,17 +127,35 @@ export default {
       tableData: [],
       groupLevelOneData: [], // 這個是讀取伺服器傳回來的陣列 level one
       groupLevelTwoData: [], // 這個是讀取伺服器傳回來的陣列 level two
-
-      // 這個是 form 表單，內建了schema
-      levelOneData: {
-        type: '',
-        name: ''
-      },
-      // 這個是 form 表單，內建了schema
-      levelTwoData: {
+      groupLevelThreeData: [], // 這個是讀取伺服器傳回來的陣列 level three
+      levelThreeTableData: {
         type: '',
         name: '',
-        level_one_id: ''
+        imgs: [],
+        // 原料成員
+        member: [
+          {
+            material_name: '',
+            material_id: ''
+          }
+        ],
+        // 哪個物件使用到這個原料組合
+        tag_me: [
+          {
+            category_name: '',
+            category_id: ''
+          }
+        ],
+        describe: '',
+        date: Date,
+        status: {
+          activated: false,
+          vip: false
+        },
+        level_two_id: '',
+        level_one_id: '',
+        last_edit_person: '',
+        last_modify_date: Date
       },
       // 控制分頁
       my_paginations: {
@@ -160,11 +188,12 @@ export default {
   created() {
     this.getGroupLevelOneData()
     this.getGroupLevelTwoData()
+    // this.getGroupLevelThreeData()
   },
   components: {
     GroupLevelOneDialog,
-    GroupLevelTwoDialog
-    // GroupLevelThreeDialog
+    GroupLevelTwoDialog,
+    GroupLevelThreeDialog
   },
   methods: {
     // @emit('update) 來這邊取得第一層的資料
@@ -194,6 +223,22 @@ export default {
           console.log(err)
         })
     },
+    // 第三層 @emit('update) 來這邊取得第三層的資料
+    getGroupLevelThreeData() {
+      this.$axios
+        .get('/api/material-group/three/')
+        .then((res) => {
+          // 把資料庫的數據都先讀出來
+          this.groupLevelThreeData = res.data
+          // 設置分頁數據 如果是子組件的話，不需要這邊重新整理更新頁面
+          // 子組件裡面會有一個 watch 去觀察資料，如果有異動了 setPagination 會在那邊觸發
+          // this.setPaginations()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+
     // 新增第一層
     addGroupLevelOne() {
       this.addLevelOneDialog = {
@@ -220,12 +265,19 @@ export default {
         option: 'add'
       }
     },
-    // 編輯與刪除 第三層 group member
-    handleEditGroupMember() {},
+    // 編輯與刪除 第三層 group member 把選中的 row 資料傳給子元件
+    handleEditGroupMember(row) {
+      this.addLevelThreeDialog = {
+        show: true,
+        title: '新增加第三層的商品組合',
+        option: 'edit'
+      }
+      this.parentLevelThreeFormData = Object.assign({}, row)
+    },
     handleDeleteGroupMember() {},
     // 分頁設定
     setPaginations() {
-      this.my_paginations.total = this.levelThreeTableData.length
+      this.my_paginations.total = this.groupLevelThreeData.length
       this.my_paginations.page_index = 1
       if (localStorage.material_group_page_size) {
         this.my_paginations.page_size = Number(
@@ -235,7 +287,7 @@ export default {
         this.my_paginations.page_size = 5
       }
       // 設置分頁數據
-      this.tableData = this.levelThreeTableData.filter((item, index) => {
+      this.tableData = this.groupLevelThreeData.filter((item, index) => {
         return index < this.my_paginations.page_size
       })
     },
@@ -244,7 +296,7 @@ export default {
       localStorage.material_group_page_size = page_size
       this.my_paginations.page_index = 1
       this.my_paginations.page_size = page_size
-      this.tableData = this.levelThreeTableData.filter((item, index) => {
+      this.tableData = this.groupLevelThreeData.filter((item, index) => {
         return index < page_size
       })
     },
@@ -256,8 +308,8 @@ export default {
       // 容器
       let tables = []
       for (let i = index; i < nums; i++) {
-        if (this.levelThreeTableData[i]) {
-          tables.push(this.levelThreeTableData[i])
+        if (this.groupLevelThreeData[i]) {
+          tables.push(this.groupLevelThreeData[i])
         }
         this.tableData = tables
       }
