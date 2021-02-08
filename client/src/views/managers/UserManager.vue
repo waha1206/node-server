@@ -8,6 +8,22 @@
         <el-button type="primary" size="small">我只是按鈕</el-button>
       </el-header>
     </el-container>
+    <!-- 分頁 -->
+    <div class="pagination">
+      <el-pagination
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page.sync="my_paginations.page_index"
+        :page-size="my_paginations.page_size"
+        :page-sizes="my_paginations.page_sizes"
+        :total="my_paginations.total"
+        layout="total, sizes, prev, pager, next, jumper"
+      >
+      </el-pagination>
+    </div>
+    <!-- 分頁結束 -->
+
     <!-- 表單 -->
     <el-container>
       <!-- <el-aside width="100%"> -->
@@ -302,21 +318,6 @@
       </el-table>
     </el-container>
     <!-- 表單結束 -->
-    <!-- 分頁 -->
-    <div class="pagination">
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page.sync="my_paginations.page_index"
-        :page-size="my_paginations.page_size"
-        :page-sizes="my_paginations.page_sizes"
-        :total="my_paginations.total"
-        layout="total, sizes, prev, pager, next, jumper"
-      >
-      </el-pagination>
-    </div>
-    <!-- 分頁結束 -->
 
     <!-- UserEditDialog 插件開始 -->
     <!-- v-if="userEditFormData !== undefined && userEditFormData.length > 0" -->
@@ -541,6 +542,6 @@ export default {
 }
 .pagination {
   text-align: left;
-  margin-top: 10px;
+  margin-top: 3px;
 }
 </style>

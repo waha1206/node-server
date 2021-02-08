@@ -28,6 +28,20 @@
         </div>
         <!-- {{ supplierClassName }} -->
       </el-header>
+      <!-- 分頁 -->
+      <div class="pagination">
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page.sync="my_paginations.page_index"
+          :page-size="my_paginations.page_size"
+          :page-sizes="my_paginations.page_sizes"
+          :total="my_paginations.total"
+          layout="total, sizes, prev, pager, next, jumper"
+        >
+        </el-pagination>
+      </div>
       <el-container>
         <!-- <el-aside width="100%"> -->
         <el-table
@@ -208,20 +222,6 @@
         <!-- <el-main>Main</el-main> -->
       </el-container>
     </el-container>
-    <!-- 分頁 -->
-    <div class="pagination">
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page.sync="my_paginations.page_index"
-        :page-size="my_paginations.page_size"
-        :page-sizes="my_paginations.page_sizes"
-        :total="my_paginations.total"
-        layout="total, sizes, prev, pager, next, jumper"
-      >
-      </el-pagination>
-    </div>
     <SupplierClassDialog
       v-if="supplierClassData[0]"
       :dialog="addSupplierClassDialog"
@@ -531,7 +531,7 @@ body > .el-container {
 
 .pagination {
   text-align: left;
-  margin-top: 10px;
+  margin-top: 3px;
 }
 .materal-class-container {
   display: inline-block;

@@ -402,6 +402,7 @@ export default {
         this.retailPrice = this.materialDataForm.retail_price =
           newValue *
           ((100 + Number(this.materialDataForm.product_profit)) / 100)
+        this.setCeil(this.retailPrice)
       }
     },
     // 檢查商品利潤是不是正整數 只能包含 0-9 這邊只有單純的計算數字有使用到，正則運算暫時沒用到
@@ -414,6 +415,7 @@ export default {
       } else {
         this.retailPrice = this.materialDataForm.retail_price =
           this.materialDataForm.unit_price * ((100 + Number(newValue)) / 100)
+        this.setCeil(this.retailPrice)
       }
     },
     // 當父元件 dialog 傳遞 到  子元件的 props dialog 的時候，就去更新一下  此子元件要提交的表單內容 this.updateMaterialFormData()
@@ -426,6 +428,11 @@ export default {
     this.materialDataForm = Object.assign({}, this.formData)
   },
   methods: {
+    // 無條件進位，小數點第三位數會無條件進位
+    setCeil(float) {
+      this.retailPrice = this.materialDataForm.retail_price =
+        Math.ceil(float * 100) / 100
+    },
     // 當 dialog 傳遞近來 add 或是 edit 的時候，會被 watch 的 dialog() 觀察到，然後會呼叫這隻程式更新 editDialog 程式裡的 materialDataForm 表單
     updateMaterialFormData() {
       this.materialDataForm = Object.assign({}, this.formData)
@@ -434,7 +441,6 @@ export default {
       this.materialDataForm.material_class = id
     },
     onSubmit(form) {
-      console.log('有道喔')
       this.$refs[form].validate((valid) => {
         if (valid && !this.materialDataForm.material_class == '') {
           this.materialDataForm.last_edit_person = this.user.id
@@ -446,7 +452,6 @@ export default {
           this.$axios
             .post(`/api/material/${url}`, this.materialDataForm)
             .then((res) => {
-              console.log('資料庫加載成功嚕！')
               // 添加成功
               this.$message({
                 message: '數據添加成功',

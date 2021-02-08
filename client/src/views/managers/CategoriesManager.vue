@@ -634,6 +634,6 @@ body > .el-container {
 }
 .pagination {
   text-align: left;
-  margin-top: 10px;
+  margin-top: 3px;
 }
 </style>
