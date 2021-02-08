@@ -304,12 +304,22 @@
           <el-row :gutter="20" type="flex" class="row-bg">
             <el-col :span="6">
               <div class="grid-content ">
-                <el-form-item prop="" label="測試用：">
-                  <my-percentage-input
-                    :isReadyOnly="false"
-                    type="the_cost"
-                    v-model="test"
-                  ></my-percentage-input>
+                <el-form-item prop="processing_fee_flag" label="加工費用：">
+                  <el-checkbox v-model="materialDataForm.processing_fee_flag"
+                    >有加工費用</el-checkbox
+                  >
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="18">
+              <div class="grid-content ">
+                <el-form-item prop="processing_remark" label="加工備註：">
+                  <el-input
+                    placeholder="這邊的註解是寫給加工媽媽看的"
+                    size="mini"
+                    type="processing_remark"
+                    v-model="materialDataForm.processing_remark"
+                  ></el-input>
                 </el-form-item>
               </div>
             </el-col>

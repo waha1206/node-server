@@ -108,6 +108,13 @@ const MaterialSchema = new Schema({
   },
   material_class: {
     type: String
+  },
+  processing_fee_flag: {
+    type: Boolean,
+    default: true
+  },
+  processing_remark: {
+    type: String
   }
 })
 

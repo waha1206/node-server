@@ -12,6 +12,22 @@
           >新增原物料容器</el-button
         >
       </el-header>
+      <!-- 分頁 -->
+      <div class="pagination">
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :parentLevelThreeFormData="levelThreeTableData"
+          :current-page.sync="my_paginations.page_index"
+          :page-size="my_paginations.page_size"
+          :page-sizes="my_paginations.page_sizes"
+          :total="my_paginations.total"
+          layout="total, sizes, prev, pager, next, jumper"
+        >
+        </el-pagination>
+      </div>
+      <!-- 分頁結束 -->
       <el-container>
         <!-- <el-aside width="100%"> -->
         <el-table
@@ -93,22 +109,7 @@
       :groupLevelTwoData="groupLevelTwoData"
       @update="getGroupLevelThreeData"
     ></GroupLevelThreeDialog>
-    <!-- 分頁 -->
-    <div class="pagination">
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :parentLevelThreeFormData="levelThreeTableData"
-        :current-page.sync="my_paginations.page_index"
-        :page-size="my_paginations.page_size"
-        :page-sizes="my_paginations.page_sizes"
-        :total="my_paginations.total"
-        layout="total, sizes, prev, pager, next, jumper"
-      >
-      </el-pagination>
-    </div>
-    <!-- 分頁結束 -->
+
     <!-- 子元件 -->
     <!-- 子元件結束 -->
   </div>
@@ -358,6 +359,6 @@ body > .el-container {
 
 .pagination {
   text-align: left;
-  margin-top: 10px;
+  margin-top: 3px;
 }
 </style>
