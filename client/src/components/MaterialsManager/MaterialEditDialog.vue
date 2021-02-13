@@ -8,27 +8,27 @@
       :modal-append-to-body="false"
       width="1200px"
     >
-      <div class="form">
-        <!-- style="margin:10px;width:auto" -->
-        <el-form
-          ref="form"
-          :model="materialDataForm"
-          :rules="form_rules"
-          label-width="100px"
-        >
-          <!-- 布局測試 -->
-          <!-- bg-purple  原料分類 8 商品名稱 12 -->
-          <!-- :gutter 欄位間距 -->
-          <!-- el-row 使用 type="flex" 可以啟動自定義的欄位佈局 並可以通過 justify 屬性來指定 start center space-between space-around 其中的值來定義子元素的排版方式 -->
-          <!-- 第一列，原料分類、商品名稱 -->
-          <el-row :gutter="20" type="flex" class="row-bg">
-            <el-col :span="6"
-              ><div class="grid-content ">
+      <!-- style="margin:10px;width:auto" -->
+      <el-form
+        ref="form"
+        :model="materialDataForm"
+        :rules="form_rules"
+        label-width="100px"
+      >
+        <el-container>
+          <el-header>
+            <!-- 布局測試 -->
+            <!-- bg-purple  原料分類 8 商品名稱 12 -->
+            <!-- :gutter 欄位間距 -->
+            <!-- el-row 使用 type="flex" 可以啟動自定義的欄位佈局 並可以通過 justify 屬性來指定 start center space-between space-around 其中的值來定義子元素的排版方式 -->
+            <!-- 第一列，原料分類、商品名稱 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="6">
                 <!-- 下拉選單，這裡是原物料分類 -->
-                <el-form-item label="原料分類：">
+                <el-form-item label="第一層分類：" prop="material_class">
                   <el-select
-                    @change="selectChang"
-                    v-model="dialog.materialClass"
+                    @change="selectOneChang"
+                    v-model="materialDataForm.material_class"
                     placeholder="原料分類"
                     filterable
                     size="mini"
@@ -41,24 +41,41 @@
                       :label="materialClass.name"
                     ></el-option>
                   </el-select>
-                </el-form-item></div
-            ></el-col>
-            <el-col :span="12"
-              ><div class="grid-content ">
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <!-- 下拉選單，這裡是原物料分類 -->
+                <el-form-item label="第二層分類：" prop="level_two_id">
+                  <el-select
+                    @change="selectTwoChang"
+                    v-model="materialDataForm.level_two_id"
+                    placeholder="原料分類"
+                    filterable
+                    size="mini"
+                  >
+                    <!-- :lable 這個是顯示出來的  :value 這個要指定到 _id 因為我要存到資料庫，我需要唯一的一個 key (_id)-->
+                    <el-option
+                      v-for="(materialClass, index) in getLevelTwoData"
+                      :key="index"
+                      :value="materialClass._id"
+                      :label="materialClass.name"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
                 <el-form-item prop="product_name" label="商品名稱：">
                   <el-input
                     class="inline-input"
                     size="mini"
                     type="product_name"
                     v-model="materialDataForm.product_name"
-                  ></el-input>
-                </el-form-item></div
-            ></el-col>
-          </el-row>
-          <!-- 第二列，商品成本、商品售價、商品利潤 ，單位售價-->
-          <el-row :gutter="20" type="flex" class="row-bg">
-            <el-col :span="6"
-              ><div class="grid-content ">
+                  ></el-input> </el-form-item
+              ></el-col>
+            </el-row>
+            <!-- 第二列，商品成本、商品售價、商品利潤 ，單位售價-->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="6">
                 <el-form-item prop="the_cost" label="商品成本：">
                   <my-currency-input
                     :isReadyOnly="false"
@@ -72,10 +89,8 @@
                     v-model="materialDataForm.the_cost"
                   ></el-input> -->
                 </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content ">
+              </el-col>
+              <el-col :span="6">
                 <el-form-item prop="retail_price" label="商品售價：">
                   <my-currency-input
                     :isReadyOnly="true"
@@ -88,10 +103,8 @@
                     v-model="materialDataForm.retail_price"
                   ></el-input> -->
                 </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content ">
+              </el-col>
+              <el-col :span="6">
                 <el-form-item prop="product_profit" label="商品利潤：">
                   <my-percentage-input
                     :isReadyOnly="false"
@@ -106,10 +119,8 @@
                     v-model="materialDataForm.product_profit"
                   ></el-input> -->
                 </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content ">
+              </el-col>
+              <el-col :span="6">
                 <el-form-item prop="unit_price" label="單位售價：">
                   <my-currency-input
                     :isReadyOnly="false"
@@ -122,13 +133,11 @@
                     v-model="materialDataForm.unit_price"
                   ></el-input> -->
                 </el-form-item>
-              </div>
-            </el-col>
-          </el-row>
-          <!-- 第三列，現有庫存，最低庫存 -->
-          <el-row :gutter="20" type="flex" class="row-bg">
-            <el-col :span="6">
-              <div class="grid-content ">
+              </el-col>
+            </el-row>
+            <!-- 第三列，現有庫存，最低庫存 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="6">
                 <el-form-item prop="storage" label="現有庫存：">
                   <el-input
                     size="mini"
@@ -136,10 +145,8 @@
                     v-model="materialDataForm.storage"
                   ></el-input>
                 </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content ">
+              </el-col>
+              <el-col :span="6">
                 <el-form-item prop="stock_alert" label="最低庫存：">
                   <el-input
                     size="mini"
@@ -147,10 +154,8 @@
                     v-model="materialDataForm.stock_alert"
                   ></el-input>
                 </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content ">
+              </el-col>
+              <el-col :span="6">
                 <el-form-item prop="lead_time" label="採購天數：">
                   <el-input
                     size="mini"
@@ -158,10 +163,8 @@
                     v-model="materialDataForm.lead_time"
                   ></el-input>
                 </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content ">
+              </el-col>
+              <el-col :span="6">
                 <el-form-item prop="unit" label="商品單位：">
                   <el-input
                     size="mini"
@@ -169,14 +172,12 @@
                     v-model="materialDataForm.unit"
                   ></el-input>
                 </el-form-item>
-              </div>
-            </el-col>
-          </el-row>
+              </el-col>
+            </el-row>
 
-          <!-- 第四列，材質，規格，長度，最低訂購 -->
-          <el-row :gutter="20" type="flex" class="row-bg">
-            <el-col :span="6">
-              <div class="grid-content ">
+            <!-- 第四列，材質，規格，長度，最低訂購 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="6">
                 <el-form-item prop="raw_material" label="商品材質：">
                   <el-input
                     size="mini"
@@ -184,11 +185,9 @@
                     v-model="materialDataForm.raw_material"
                   ></el-input>
                 </el-form-item>
-              </div>
-            </el-col>
+              </el-col>
 
-            <el-col :span="6">
-              <div class="grid-content ">
+              <el-col :span="6">
                 <el-form-item prop="product_color" label="商品顏色：">
                   <el-input
                     size="mini"
@@ -196,10 +195,8 @@
                     v-model="materialDataForm.product_color"
                   ></el-input>
                 </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content ">
+              </el-col>
+              <el-col :span="6">
                 <el-form-item prop="length" label="商品長度：">
                   <el-input
                     size="mini"
@@ -207,10 +204,8 @@
                     v-model="materialDataForm.length"
                   ></el-input>
                 </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content ">
+              </el-col>
+              <el-col :span="6">
                 <el-form-item prop="minimum_order_quantity" label="最低訂購：">
                   <el-input
                     size="mini"
@@ -218,14 +213,12 @@
                     v-model="materialDataForm.minimum_order_quantity"
                   ></el-input>
                 </el-form-item>
-              </div>
-            </el-col>
-          </el-row>
+              </el-col>
+            </el-row>
 
-          <!-- 第五列，商品舊編號，額外運費，修改時間，修改人員 -->
-          <el-row :gutter="20" type="flex" class="row-bg">
-            <el-col :span="6">
-              <div class="grid-content ">
+            <!-- 第五列，商品舊編號，額外運費，修改時間，修改人員 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="6">
                 <el-form-item prop="old_serial_numbers" label="舊的編號：">
                   <el-input
                     size="mini"
@@ -233,10 +226,8 @@
                     v-model="materialDataForm.old_serial_numbers"
                   ></el-input>
                 </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content ">
+              </el-col>
+              <el-col :span="6">
                 <el-form-item prop="extra_freight" label="額外運費：">
                   <el-input
                     size="mini"
@@ -244,10 +235,8 @@
                     v-model="materialDataForm.extra_freight"
                   ></el-input>
                 </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content ">
+              </el-col>
+              <el-col :span="6">
                 <el-form-item prop="" label="修改時間：">
                   <el-input
                     :disabled="true"
@@ -256,10 +245,8 @@
                     v-model="getDate"
                   ></el-input>
                 </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content ">
+              </el-col>
+              <el-col :span="6">
                 <!-- type 跟 prop不用綁定到表單裡面，因為此 修改人員ID 會在送出儲存的時候，把操作者的ID寫到 formData.last_edit_person -->
                 <el-form-item prop="" label="修改人員：">
                   <el-input
@@ -269,14 +256,12 @@
                     v-model="getUserNameById"
                   ></el-input>
                 </el-form-item>
-              </div>
-            </el-col>
-          </el-row>
-          <!-- 第五列結束 -->
-          <!-- 第六列，供應商ID，備註 remark -->
-          <el-row :gutter="20" type="flex" class="row-bg">
-            <el-col :span="6">
-              <div class="grid-content ">
+              </el-col>
+            </el-row>
+            <!-- 第五列結束 -->
+            <!-- 第六列，供應商ID，備註 remark -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="6">
                 <el-form-item prop="" label="供應商：">
                   <el-input
                     :readonly="true"
@@ -285,10 +270,8 @@
                     v-model="getSupplierNameById"
                   ></el-input>
                 </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="18">
-              <div class="grid-content ">
+              </el-col>
+              <el-col :span="18">
                 <el-form-item prop="remark" label="備註：">
                   <el-input
                     size="mini"
@@ -296,23 +279,19 @@
                     v-model="materialDataForm.remark"
                   ></el-input>
                 </el-form-item>
-              </div>
-            </el-col>
-          </el-row>
-          <!-- 第六列結束 -->
-          <!-- 第七列，測試用 -->
-          <el-row :gutter="20" type="flex" class="row-bg">
-            <el-col :span="6">
-              <div class="grid-content ">
+              </el-col>
+            </el-row>
+            <!-- 第六列結束 -->
+            <!-- 第七列，加工費用，加工備註 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="6">
                 <el-form-item prop="processing_fee_flag" label="加工費用：">
                   <el-checkbox v-model="materialDataForm.processing_fee_flag"
                     >有加工費用</el-checkbox
                   >
                 </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="18">
-              <div class="grid-content ">
+              </el-col>
+              <el-col :span="18">
                 <el-form-item prop="processing_remark" label="加工備註：">
                   <el-input
                     placeholder="這邊的註解是寫給加工媽媽看的"
@@ -321,19 +300,104 @@
                     v-model="materialDataForm.processing_remark"
                   ></el-input>
                 </el-form-item>
-              </div>
-            </el-col>
-          </el-row>
-          <!-- 第七列結束 -->
+              </el-col>
+            </el-row>
+            <!-- 第七列結束 -->
+            <!-- 第八列，編號 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="6">
+                <el-form-item prop="type" label="商品編號：">
+                  <el-input
+                    placeholder="四碼編號：0001：0001"
+                    size="mini"
+                    type="type"
+                    v-model="materialDataForm.type"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- 第七列結束 -->
+          </el-header>
 
-          <el-form-item class="text_right">
-            <el-button type="warning" @click="dialog.show = false"
-              >取消</el-button
-            >
-            <el-button type="primary" @click="onSubmit('form')">提交</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
+          <!-- 第七行開始，圖片上傳 -->
+          <!-- 圖片上傳的教學 https://segmentfault.com/a/1190000013796215 -->
+          <!-- 上傳一張照片的時候隱藏 後面的 + 框框  https://www.twblogs.net/a/5b81a49e2b71772165ad9752 -->
+          <!-- 另外一種做法：https://blog.csdn.net/zaocha321/article/details/103345423 -->
+
+          <el-main>
+            <!-- <div class="image-warp"> -->
+            <el-form-item label="圖片上傳：" size="mini" prop="describe">
+              <el-upload
+                :data="uploadData"
+                action="uploadActionUrl"
+                list-type="picture-card"
+                :auto-upload="false"
+                accept="image/jpeg,image/gif,image/png"
+                multiple
+                :limit="6"
+                :file-list="files"
+                :on-change="onFileChange"
+              >
+                <el-dialog
+                  :visible.sync="dialogVisible"
+                  append-to-body
+                  width="520px"
+                >
+                  <img
+                    width="480px"
+                    height="480px"
+                    fit="contain"
+                    :src="dialogImageUrl"
+                    alt=""
+                  />
+                </el-dialog>
+                <i slot="default" class="el-icon-plus"></i>
+                <div class="image-content" slot="file" slot-scope="{ file }">
+                  <img
+                    class="el-upload-list__item-thumbnail"
+                    :src="file.url"
+                    alt=""
+                  />
+                  <span class="el-upload-list__item-actions">
+                    <span
+                      class="el-upload-list__item-preview"
+                      @click="handlePictureCardPreview(file)"
+                    >
+                      <i class="el-icon-zoom-in"></i>
+                    </span>
+                    <span
+                      v-if="!disabled"
+                      class="el-upload-list__item-download"
+                      @click="handleDownload(file)"
+                    >
+                      <i class="el-icon-download"></i>
+                    </span>
+                    <!-- v-if="!disabled" -->
+                    <span
+                      class="el-upload-list__item-delete"
+                      @click="handleRemove(file, files)"
+                    >
+                      <i class="el-icon-delete"></i>
+                    </span>
+                  </span>
+                </div>
+              </el-upload>
+            </el-form-item>
+            <!-- </div> -->
+          </el-main>
+
+          <el-footer>
+            <el-form-item class="text_right">
+              <el-button type="warning" @click="dialog.show = false"
+                >取消</el-button
+              >
+              <el-button type="primary" @click="onSubmit('form')"
+                >提交</el-button
+              >
+            </el-form-item>
+          </el-footer>
+        </el-container>
+      </el-form>
     </el-dialog>
   </div>
 </template>
@@ -347,18 +411,36 @@ export default {
     materialClassData: Array,
     allSupplierlData: Array,
     allUserNameId: Array,
+    materialLevelTwoClassData: Array,
     dialog: Object,
     formData: Object
   },
   data() {
     return {
+      // 圖片上傳
+      uploadData: {
+        dataType: '0',
+        oldFilePath: ''
+      },
+      files: [],
+      dialogImageUrl: '',
+      dialogVisible: false,
+      disabled: Boolean,
+      updateLevelTwoData: [],
       test: '',
       retailPrice: 0,
       materialDataForm: {},
       // materialDataForm_rules: {
       form_rules: {
+        type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         product_name: [
           { required: true, message: '此欄位不能為空', trigger: 'blur' }
+        ],
+        material_class: [
+          { required: true, message: '請選擇分類', trigger: 'blur' }
+        ],
+        level_two_id: [
+          { required: true, message: '請選擇分類', trigger: 'blur' }
         ],
         retail_price: [
           { required: true, message: '此欄位不能為空', trigger: 'blur' }
@@ -369,7 +451,20 @@ export default {
       }
     }
   },
+  created() {
+    this.getImgs()
+  },
   computed: {
+    // 第二層的資料，根據讀取第一層的資料
+    getLevelTwoData() {
+      let levelTwoData = []
+      this.materialLevelTwoClassData.forEach((item) => {
+        if (item.level_one_id === this.materialDataForm.material_class) {
+          levelTwoData.push(item)
+        }
+      })
+      return levelTwoData
+    },
     // 監聽兩個屬性變化
     ...mapGetters(['user']),
     // 時間轉換
@@ -403,6 +498,7 @@ export default {
   watch: {
     // 常用的正則表達式 https://kknews.cc/zh-tw/code/o5e4n55.html
     'materialDataForm.unit_price': function(newValue) {
+      if (!newValue) return
       // 帶有兩位小數的正實數，傳進來的是 單位售價
       var numReg = /[0-9]+(.[0-9]{2})?/
       if (!numReg.test(newValue)) {
@@ -432,12 +528,96 @@ export default {
     // 此函式會更新 this.MaterialFormData
     dialog: function(newValue, oldValue) {
       this.updateMaterialFormData()
+      this.getImgs()
     }
   },
   created() {
     this.materialDataForm = Object.assign({}, this.formData)
   },
   methods: {
+    // ************************************ 圖片開始 ************************************
+    getImgs() {
+      this.files = []
+      // https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+      // base64toBlob 超強範例！
+      // 編輯商品的時候，要拚接 base64 格式與檔頭，然後 push 到 this.files 裡面會有一個內定的 下面是出處
+      // https://blog.csdn.net/hequhecong10857/article/details/108276022
+      // 秀出圖片
+      // this.dialogImageUrl = obj.url
+      // this.dialogVisible = true
+
+      if (this.materialDataForm.imgs.length > 0) {
+        this.materialDataForm.imgs.forEach((img) => {
+          // params[0] 裡面是檔案格式
+          // params[1] 裡面是 base64
+          const params = img.split(',')
+          let obj = {
+            name: '商品照片',
+            url: 'data:image/jpeg;base64,' + params[1]
+          }
+          this.files.push(obj)
+        })
+      }
+    },
+
+    // 圖片移除的 function
+    handleRemove(file, fileList) {
+      let _index = 0
+      for (let index = 0; index < fileList.length; index++) {
+        if (fileList[index].uid == file.uid) {
+          this.files.splice(index, 1) //移除数组中要删除的图片
+          _index = index
+        }
+      }
+      // 如果是 edit 狀態的話，要把 this.materialDataForm 中的 imgs 也移除掉
+      // if (this.dialog.option !== 'edit') return
+
+      this.materialDataForm.imgs.splice(_index, 1)
+    },
+    // 跳出預覽圖片預覽視窗
+    // https://www.codeleading.com/article/29861991468/
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
+    },
+    handleDownload(file) {
+      console.log(file)
+    },
+    // 過濾跟移除掉超過檔案限制的檔案
+    // https://www.jianshu.com/p/840601098d88
+    onFileChange(file, fileList) {
+      const isIMAGE =
+        file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'
+      // 小於 1M 的檔案是 1024 / 1024  這裡設定小於50k ==> 1024 / 50
+      // const isLt1M = file.size / 1024 / 1024 < 1
+      const isLt50K = file.size / 1024 / 50 < 1
+      if (!isIMAGE) {
+        this.$message.error('只能上傳jpg/png圖片!')
+        return false
+      }
+      if (!isLt50K) {
+        this.$message.error('上傳文件大小不能超過 50KB!')
+        for (let index = 0; index < fileList.length; index++) {
+          if (fileList[index].uid == file.uid) {
+            this.files.splice(index, 1) //移除数组中要删除的图片
+          }
+        }
+        return false
+      }
+
+      let reader = new FileReader()
+      const _this = this
+      reader.onload = function(e) {
+        // 圖片的 base64 存到 materialDataForm.imgs 裡面
+        _this.materialDataForm.imgs.push(e.target.result)
+      }
+      reader.readAsDataURL(file.raw)
+      // 重點，把 file 存到 files 這樣 upload 才有辦法操控元件的移除、下載 等等動作  預覽不用
+      this.files.push(file)
+      // console.log('file', file)
+      // console.log('this.files', this.files)
+    },
+    // ************************************ 圖片結束 ************************************
     // 無條件進位，小數點第三位數會無條件進位
     setCeil(float) {
       this.retailPrice = this.materialDataForm.retail_price =
@@ -447,14 +627,19 @@ export default {
     updateMaterialFormData() {
       this.materialDataForm = Object.assign({}, this.formData)
     },
-    selectChang(id) {
+    selectTwoChang(id) {
+      this.materialDataForm.level_two_id = id
+    },
+    selectOneChang(id) {
       this.materialDataForm.material_class = id
+      this.materialDataForm.level_two_id = ''
     },
     onSubmit(form) {
       this.$refs[form].validate((valid) => {
         if (valid && !this.materialDataForm.material_class == '') {
           this.materialDataForm.last_edit_person = this.user.id
           this.materialDataForm.last_modify_date = new Date()
+          this.materialDataForm.imgs = this.materialDataForm.imgs.join('|')
           const url =
             this.dialog.option == 'add'
               ? 'add'
@@ -506,14 +691,44 @@ export default {
 .bg-purple-light {
   background: #e5e9f2;
 }
-.grid-content {
-  border-radius: 4px;
-  min-height: 36px;
-}
+
 .row-bg {
   padding: 0;
   margin: 0;
   height: 40px;
-  background-color: #f9fafc;
+  /* background-color: #f9fafc; */
 }
+/* 這邊開始是 布局容器 */
+body > .el-container {
+  margin-bottom: 40px;
+}
+
+.el-main {
+  margin: 10px 0 0 0;
+  padding: 0;
+  /* background-color: #e9eef3; */
+  /* color: #333; */
+  text-align: left;
+  /* line-height: 100% !important; */
+  height: 100% !important;
+}
+.el-header,
+.el-footer {
+  margin: 0;
+  padding: 0;
+  /* background-color: #b3c0d1; */
+  /* color: #333; */
+  text-align: left;
+  /* line-height: 100%; */
+  height: 100% !important;
+}
+.el-container:nth-child(5) .el-aside,
+.el-container:nth-child(6) .el-aside {
+  line-height: 100% !important;
+}
+
+.el-container:nth-child(7) .el-aside {
+  line-height: 100% !important;
+}
+/* 布局容器 結束 */
 </style>

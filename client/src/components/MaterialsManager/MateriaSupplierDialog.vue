@@ -230,10 +230,7 @@ export default {
       // 按選擇之後，要把 供應商的 _id 存到 matail 的 supplier_id 的欄位裡面，如果成功就關掉這個 dialog
       // 再來要通知父元件刷新頁面 this.$emit('update')
       // this.dialog.material_id 這個是選擇的 materila 的 id
-      // 這個是 選擇的 supplier id
-      console.log(row._id)
-      // 這個是 material id
-      console.log(this.dialog.material)
+
       let updateSupplierData = {}
       updateSupplierData._id = this.dialog.material
       updateSupplierData.supplier_id = row._id
@@ -244,7 +241,6 @@ export default {
       this.$axios
         .post(`/api/material/${url}`, updateSupplierData)
         .then((res) => {
-          console.log('資料庫加載成功嚕！')
           // 添加成功
           this.$message({
             message: '數據添加成功',
@@ -281,8 +277,6 @@ export default {
     onSubmit(form) {
       const uploadFormData =
         this.dialog.option == 'add' ? this.formData : this.materialClassEditForm
-
-      console.log('準備上傳的資料', uploadFormData)
       this.$refs[form].validate((valid) => {
         if (valid && !uploadFormData.type == '') {
           const url =
@@ -293,7 +287,6 @@ export default {
           this.$axios
             .post(`/api/material-class/${url}`, uploadFormData)
             .then((res) => {
-              console.log('(儲存/修改) 商品分類成功！')
               // 添加成功
               this.$message({
                 message: '數據添加成功',

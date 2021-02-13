@@ -15,7 +15,7 @@ const CategroySchema = new Schema({
     type: String
   },
   imgs: {
-    type: String
+    type: [String]
   },
   describe: {
     type: String
@@ -49,7 +49,7 @@ const CategoryLevelTwoSchema = new Schema({
     type: String
   },
   imgs: {
-    type: String
+    type: [String]
   },
   describe: {
     type: String

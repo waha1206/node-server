@@ -132,10 +132,12 @@ router.post(
     // if (req.body.describe) materialClassFields.describe = req.body.describe
 
     for (const prop in req.body) {
-      materialFields[prop] = req.body[prop]
+      if (prop !== 'imgs') {
+        materialFields[prop] = req.body[prop]
+      } else if (req.body.imgs.length > 0) {
+        materialFields[prop] = req.body.imgs.split('|')
+      }
     }
-
-    // res.json('msg:material is works')
 
     Material.findByIdAndUpdate(
       { _id: req.params.id },
@@ -157,8 +159,10 @@ router.post(
     const materialFields = {}
 
     for (const prop in req.body) {
-      if (req.body[prop] !== '') {
+      if (prop !== 'imgs') {
         materialFields[prop] = req.body[prop]
+      } else if (req.body.imgs.length > 0) {
+        materialFields[prop] = req.body.imgs.split('|')
       }
     }
 

@@ -28,7 +28,7 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     // 傳送過來的資料格式先建立起來
-    const query = [{ name: req.body.name }, { type: req.body.type }]
+    const query = [{ name: req.body.name }]
 
     const level = req.body.level
     const materialGroupFields = {}
@@ -47,8 +47,6 @@ router.post(
       default:
         return res.status(400).json('提交資訊出現異常')
     }
-
-    console.log('有索取檔案喔')
     // 傳送過來的資料不見得會跟 schema 會一樣
     if (req.body.type) materialGroupFields.type = req.body.type
     if (req.body.name) materialGroupFields.name = req.body.name
@@ -59,6 +57,37 @@ router.post(
       }
     }
 
+    if (level === 3) {
+      if (req.body.imgs.length > 0) {
+        materialGroupFields.imgs = req.body.imgs.split('|')
+      }
+      if (req.body.describe) {
+        materialGroupFields.describe = req.body.describe
+      }
+      if (req.body.level_one_id) {
+        materialGroupFields.level_one_id = req.body.level_one_id
+      }
+      if (req.body.level_two_id) {
+        materialGroupFields.level_two_id = req.body.level_two_id
+      }
+      if (req.body.processing_fee) {
+        materialGroupFields.processing_fee = req.body.processing_fee
+      }
+      if (req.body.web_side_name) {
+        materialGroupFields.web_side_name = req.body.web_side_name
+      }
+      if (req.body.last_modify_date) {
+        materialGroupFields.last_modify_date = req.body.last_modify_date
+      }
+      if (req.body.last_edit_person) {
+        materialGroupFields.last_edit_person = req.body.last_edit_person
+      }
+      if (req.body.choiceLevelTwoValue) {
+        materialGroupFields.choiceLevelTwoValue = req.body.choiceLevelTwoValue.map(
+          (x) => x
+        )
+      }
+    }
     materialGroupLevel
       .findOne({
         $or: query
@@ -136,11 +165,37 @@ router.get(
   (req, res) => {
     MaterialGroupTwo.find()
       .sort({ type: 1 })
-      .then((materialGroupOne) => {
-        if (!materialGroupOne) {
+      .then((materialGroupTwo) => {
+        if (!materialGroupTwo) {
           return res.status(400).json('沒有任何內容')
         }
-        res.json(materialGroupOne)
+        res.json(materialGroupTwo)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+// $router get api/material-group/three
+// @desc   獲取所有分類資訊
+// @access private
+// 使用 hander 要驗證 token
+// body 不用放，因為他會獲取所有訊息
+router.get(
+  '/three/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const query = { level_two_id: req.params.id }
+    const options = {
+      // imgs: 0
+    }
+    MaterialGroupMember.find(query, options)
+      .sort({ type: 1 })
+      .then((materialGroupThree) => {
+        if (!materialGroupThree) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(materialGroupThree)
       })
       .catch((err) => {
         res.status(404).json(err)
@@ -206,7 +261,38 @@ router.post(
 
     if (req.body.type) materialGroupFields.type = req.body.type
     if (req.body.name) materialGroupFields.name = req.body.name
-    console.log(materialGroupFields)
+
+    if (level === 3) {
+      if (req.body.imgs.length > 0) {
+        materialGroupFields.imgs = req.body.imgs.split('|')
+      }
+      if (req.body.describe) {
+        materialGroupFields.describe = req.body.describe
+      }
+      if (req.body.level_one_id) {
+        materialGroupFields.level_one_id = req.body.level_one_id
+      }
+      if (req.body.level_two_id) {
+        materialGroupFields.level_two_id = req.body.level_two_id
+      }
+      if (req.body.processing_fee) {
+        materialGroupFields.processing_fee = req.body.processing_fee
+      }
+      if (req.body.web_side_name) {
+        materialGroupFields.web_side_name = req.body.web_side_name
+      }
+      if (req.body.last_modify_date) {
+        materialGroupFields.last_modify_date = req.body.last_modify_date
+      }
+      if (req.body.last_edit_person) {
+        materialGroupFields.last_edit_person = req.body.last_edit_person
+      }
+      if (req.body.choiceLevelTwoValue) {
+        materialGroupFields.choiceLevelTwoValue = req.body.choiceLevelTwoValue.map(
+          (x) => x
+        )
+      }
+    }
 
     const filter = { _id: req.params.id }
     const update = { $set: materialGroupFields }

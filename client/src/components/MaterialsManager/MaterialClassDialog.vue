@@ -84,13 +84,22 @@
             >
               <!-- 這邊開始新增 -->
               <el-form-item prop="type" label="編號(數字)：">
-                <el-input type="type" v-model="formData.type"></el-input>
+                <el-input
+                  type="type"
+                  v-model="formData.type"
+                  size="mini"
+                ></el-input>
               </el-form-item>
               <el-form-item prop="name" label="類型(中文)：">
-                <el-input type="name" v-model="formData.name"></el-input>
+                <el-input
+                  type="name"
+                  v-model="formData.name"
+                  size="mini"
+                ></el-input>
               </el-form-item>
               <el-form-item prop="describe" label="分類說明：">
                 <el-input
+                  size="mini"
                   type="textarea"
                   :autosize="{ minRows: 2, maxRows: 4 }"
                   v-model="formData.describe"
@@ -330,6 +339,8 @@ export default {
       // this.dialog.option = edit 代表要上傳的是 material class 的資料更新
       const uploadFormData =
         this.dialog.option == 'add' ? this.formData : this.materialClassEditForm
+      uploadFormData.level = 1
+      console.log(uploadFormData)
       this.$refs[form].validate((valid) => {
         if (valid && !uploadFormData.type == '') {
           const url =

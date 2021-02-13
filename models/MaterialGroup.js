@@ -71,8 +71,20 @@ const MaterialGroupMemberSchema = new Schema({
     type: String,
     required: true
   },
+  // 存放 第一層與第二層的分類 id [id1, id2]
+  choiceLevelTwoValue: {
+    type: Array
+  },
+  web_side_name: {
+    type: String,
+    required: true
+  },
   imgs: {
     type: [String]
+  },
+  // 加工費用
+  processing_fee: {
+    type: String
   },
   // 原料成員
   member: [
@@ -106,12 +118,10 @@ const MaterialGroupMemberSchema = new Schema({
     }
   },
   level_two_id: {
-    type: String,
-    required: [true, '第二層分類_id必填寫']
+    type: String
   },
   level_one_id: {
-    type: String,
-    required: [true, '第一層分類_id必填寫']
+    type: String
   },
   last_edit_person: {
     type: String

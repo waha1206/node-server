@@ -1,7 +1,18 @@
 <template>
-  <div class="materials-manager">
+  <div>
     <el-container>
       <el-header>
+        <div class="cascader-wrap">
+          <el-cascader
+            @change="onOptionsChange"
+            v-model="choiceLevelTwoValue"
+            :props="{ expandTrigger: 'hover' }"
+            size="mini"
+            placeholder="請選擇第二層分類"
+            :options="levelOneTowOption"
+            filterable
+          ></el-cascader>
+        </div>
         <el-button type="primary" size="small" @click="addGroupLevelOne"
           >新增第一層分類</el-button
         >
@@ -18,7 +29,6 @@
           background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :parentLevelThreeFormData="levelThreeTableData"
           :current-page.sync="my_paginations.page_index"
           :page-size="my_paginations.page_size"
           :page-sizes="my_paginations.page_sizes"
@@ -37,17 +47,97 @@
             tableData.filter(
               (data) =>
                 !search ||
-                data.product_name.toLowerCase().includes(search.toLowerCase())
+                data.name.toLowerCase().includes(search.toLowerCase())
             )
           "
           style="width: 100%"
         >
+          <!-- 表格的往下拓展選單 -->
+          <el-table-column type="expand">
+            <template slot-scope="props">
+              <el-form label-position="left" inline class="demo-table-expand">
+                <el-form-item label="商品名称">
+                  <span>{{ props.row.name }}</span>
+                </el-form-item>
+
+                <el-form-item label="商品描述">
+                  <span>{{ props.row.describe }}</span>
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-table-column>
           <!-- 序號 -->
           <el-table-column
             type="index"
             label="序號"
             align="center"
             width="70"
+          ></el-table-column>
+          <!-- 原物組料名稱 -->
+          <el-table-column
+            label="原物料組名稱"
+            prop="name"
+            align="left"
+            width="200"
+          ></el-table-column>
+          <!-- 編號 -->
+          <el-table-column
+            label="編號"
+            prop="type"
+            align="center"
+            width="70"
+          ></el-table-column>
+          <!-- 加工費 -->
+          <el-table-column
+            label="加工費"
+            prop="processing_fee"
+            align="center"
+            width="70"
+          ></el-table-column>
+          <!-- 加工費 -->
+          <el-table-column
+            label="客戶端顯示"
+            prop="web_side_name"
+            align="center"
+            width="140"
+          ></el-table-column>
+          <!-- 多圖 -->
+          <el-table-column label="縮圖" width="70" align="center">
+            <template slot-scope="scope">
+              <!-- v-for="(item, index) in scope.row.imgs" -->
+              <img
+                v-if="scope.row.imgs[0]"
+                width="50px"
+                height="50px"
+                :src="scope.row.imgs[0]"
+                alt=""
+              />
+            </template>
+          </el-table-column>
+          <!-- 多圖 -->
+          <el-table-column label="大圖" width="70" align="center">
+            <template slot-scope="scope">
+              <el-popover trigger="hover" placement="left">
+                <img
+                  v-for="(item, index) in scope.row.imgs"
+                  width="480px"
+                  height="480px"
+                  :key="index"
+                  :src="item"
+                  alt=""
+                />
+                <div slot="reference" class="name-wrapper">
+                  <el-tag size="mini">多圖</el-tag>
+                </div>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <!-- 備註 -->
+          <el-table-column
+            label="備註"
+            prop="describe"
+            align="left"
+            width="820"
           ></el-table-column>
 
           <!-- 搜尋欄位、編輯與刪除的按扭 -->
@@ -107,6 +197,9 @@
       :dialog="addLevelThreeDialog"
       :groupLevelOneData="groupLevelOneData"
       :groupLevelTwoData="groupLevelTwoData"
+      :emptyLevelThreeFormData="levelThreeTableData"
+      :editFormData="levelThreeEditTableData"
+      :allUserNameId="allUserNameId"
       @update="getGroupLevelThreeData"
     ></GroupLevelThreeDialog>
 
@@ -126,11 +219,16 @@ export default {
     return {
       search: '',
       tableData: [],
+      choiceLevelTwoValue: [], // 一開始選好後，會顯示 table 的資料，要選擇 one / two
+      levelOneTowOption: [], // 所有可選擇的 one / two 層資料
       groupLevelOneData: [], // 這個是讀取伺服器傳回來的陣列 level one
       groupLevelTwoData: [], // 這個是讀取伺服器傳回來的陣列 level two
       groupLevelThreeData: [], // 這個是讀取伺服器傳回來的陣列 level three
+      allUserNameId: [], // 所有使用者
+      levelThreeEditTableData: {}, // 點擊編輯鈕的時候，把資料放到這邊，再送去給子元件
       levelThreeTableData: {
         type: '',
+        choiceLevelTwoValue: [],
         name: '',
         imgs: [],
         // 原料成員
@@ -148,6 +246,8 @@ export default {
           }
         ],
         describe: '',
+        processing_fee: '',
+        web_side_name: '',
         date: Date,
         status: {
           activated: false,
@@ -156,7 +256,7 @@ export default {
         level_two_id: '',
         level_one_id: '',
         last_edit_person: '',
-        last_modify_date: Date
+        last_modify_date: new Date()
       },
       // 控制分頁
       my_paginations: {
@@ -189,14 +289,80 @@ export default {
   created() {
     this.getGroupLevelOneData()
     this.getGroupLevelTwoData()
-    // this.getGroupLevelThreeData()
+    this.getUserInfo()
+    this.setPaginations()
+  },
+  mounted() {
+    this.setCascaderOptions()
   },
   components: {
     GroupLevelOneDialog,
     GroupLevelTwoDialog,
     GroupLevelThreeDialog
   },
+  watch: {
+    // 如果 level one 跟 level two 都有資料的時候，就更動 cascader 的聯集選擇器
+    groupLevelTwoData() {
+      if (this.groupLevelTwoData[0]) {
+        this.levelOneTowOption = []
+        this.groupLevelOneData.forEach((item) => {
+          // console.log(index, item.name, item._id)
+          let obj = {
+            value: '',
+            label: '',
+            children: []
+          }
+          obj.value = item._id
+          obj.label = item.type + ' ' + item.name
+          this.levelOneTowOption.push(obj)
+        })
+
+        for (let i = 0; i < this.levelOneTowOption.length; i++) {
+          const level_one_id = this.levelOneTowOption[i].value
+          this.groupLevelTwoData.forEach((item) => {
+            if (item.level_one_id === level_one_id) {
+              let obj2 = {
+                value: '',
+                label: ''
+              }
+              obj2.value = item._id
+              obj2.label = item.type + ' ' + item.name
+              this.levelOneTowOption[i].children.push(obj2)
+            }
+          })
+        }
+      }
+      this.getGroupLevelThreeData()
+    }
+  },
   methods: {
+    getUserInfo() {
+      this.$axios
+        .get('/api/user/user-info')
+        .then((res) => {
+          this.allUserNameId = res.data
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    setCascaderOptions() {
+      // ，就讀回來上次的紀錄
+      if (
+        localStorage.choiceGroupLevelTwoValue &&
+        localStorage.choiceGroupLevelOneValue
+      ) {
+        this.choiceLevelTwoValue[0] = localStorage.choiceGroupLevelOneValue
+        this.choiceLevelTwoValue[1] = localStorage.choiceGroupLevelTwoValue
+      }
+    },
+    // 當選擇 one / two 時，有變化就會來到這邊
+    onOptionsChange(value) {
+      // 當分類選擇異動的時候，再重新的撈第三層的商品資料
+      localStorage.choiceGroupLevelOneValue = value[0]
+      localStorage.choiceGroupLevelTwoValue = value[1]
+      this.getGroupLevelThreeData()
+    },
     // @emit('update) 來這邊取得第一層的資料
     getGroupLevelOneData() {
       this.$axios
@@ -226,14 +392,15 @@ export default {
     },
     // 第三層 @emit('update) 來這邊取得第三層的資料
     getGroupLevelThreeData() {
+      if (!this.choiceLevelTwoValue[1]) return
       this.$axios
-        .get('/api/material-group/three/')
+        .get(`/api/material-group/three/${this.choiceLevelTwoValue[1]}`)
         .then((res) => {
           // 把資料庫的數據都先讀出來
           this.groupLevelThreeData = res.data
           // 設置分頁數據 如果是子組件的話，不需要這邊重新整理更新頁面
           // 子組件裡面會有一個 watch 去觀察資料，如果有異動了 setPagination 會在那邊觸發
-          // this.setPaginations()
+          this.setPaginations()
         })
         .catch((err) => {
           console.log(err)
@@ -267,16 +434,16 @@ export default {
       }
     },
     // 編輯與刪除 第三層 group member 把選中的 row 資料傳給子元件
-    handleEditGroupMember(row) {
+    handleEditGroupMember(index, row) {
       this.addLevelThreeDialog = {
         show: true,
         title: '新增加第三層的商品組合',
         option: 'edit'
       }
-      this.parentLevelThreeFormData = Object.assign({}, row)
+      this.levelThreeEditTableData = Object.assign({}, row)
     },
     handleDeleteGroupMember() {},
-    // 分頁設定
+    // 分頁設定 ***************************************************************************
     setPaginations() {
       this.my_paginations.total = this.groupLevelThreeData.length
       this.my_paginations.page_index = 1
@@ -315,7 +482,7 @@ export default {
         this.tableData = tables
       }
     }
-    // 分頁設定結束
+    // 分頁設定結束 ***************************************************************************
   }
 }
 </script>
@@ -361,4 +528,17 @@ body > .el-container {
   text-align: left;
   margin-top: 3px;
 }
+.cascader-wrap {
+  float: left;
+  margin: 0 15px 0 0;
+  padding: 0;
+  width: 300px;
+}
+
+/* 直接調整 el-cascader 沒有用，因為外面套了一個 div 該 class 為 .el-cascader--mini */
+.el-cascader--mini {
+  width: 100% !important;
+}
+
+/* 往下拓展表格的 style */
 </style>

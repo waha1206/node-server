@@ -7,6 +7,12 @@ const MaterialSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  imgs: {
+    type: [String]
+  },
+  type: {
+    type: String
+  },
   product_name: {
     type: String
   },
@@ -107,6 +113,9 @@ const MaterialSchema = new Schema({
     type: String
   },
   material_class: {
+    type: String
+  },
+  level_two_id: {
     type: String
   },
   processing_fee_flag: {

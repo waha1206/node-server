@@ -204,8 +204,13 @@
             width="320"
           >
           </el-table-column>
-          <!-- 添加原料 -->
-          <el-table-column label="添加原料" prop="" align="center" width="420">
+          <!-- 添加原料組合 -->
+          <el-table-column
+            label="添加原料組合"
+            prop=""
+            align="center"
+            width="420"
+          >
           </el-table-column>
           <!-- 搜尋欄位 -->
           <el-table-column align="center" width="150">
@@ -258,7 +263,7 @@
     <!-- 新增第三層商品的 dialog -->
     <!-- v-if 判斷很重要，add 的話，原始的 form 裡面會有一個內定的 level = 3 如果是 edit 的話就要判斷有沒有 _id 這個值 -->
     <CategoriesLevelThreeDialog
-      v-if="formData.level == 3 || formData._id"
+      v-if="(formData.level == 3 || formData._id) && allUserNameId[0]"
       :dialog="categoriesLevelThreeDialog"
       :formData="formData"
       :categoriesLevelOneData="categoriesLevelOneData"
@@ -326,7 +331,7 @@ export default {
         salting_on_color_video: { label: '', link: '' }, // 校色影片
         note_one_video: { label: '', link: '' }, // 其它影片(一)
         note_two_video: { label: '', link: '' }, // 其它影片(二)
-        last_modify_date: '',
+        last_modify_date: new Date(),
         last_edit_person: '',
         status: { activated: false, vip: false }, // 啟用？網頁端會看到商品與否，VIP = 客製化商品專屬
         id: '',
@@ -532,7 +537,7 @@ export default {
       this.$message('暫時不提供刪除的功能，請與管理員聯繫！')
       return
     },
-    // 分頁設定
+    // 分頁設定 **********************************************************************
     setPaginations() {
       // 分頁屬性設置
       this.my_paginations.total = this.categoriesLevelThreeData.length
@@ -572,7 +577,7 @@ export default {
         this.tableData = tables
       }
     }
-    // 分頁設定結束
+    // 分頁設定結束 **********************************************************************
   }
 }
 </script>

@@ -171,7 +171,7 @@
                     <el-input
                       type=""
                       v-model="getDate"
-                      :disabled="true"
+                      :readonly="true"
                     ></el-input>
                   </el-form-item>
                 </div>
@@ -187,7 +187,7 @@
                     <el-input
                       type=""
                       v-model="getUserNameById"
-                      :disabled="true"
+                      :readonly="true"
                     ></el-input>
                   </el-form-item>
                 </div>
@@ -481,11 +481,11 @@ export default {
     return {
       levelThreeFormData: {},
       dontRemove: '5fd54071cbcb7757640a7ee7',
+      // 圖片上傳
       uploadData: {
         dataType: '0',
         oldFilePath: ''
       },
-      // 圖片上傳
       files: [],
       dialogImageUrl: '',
       dialogVisible: false,
@@ -517,7 +517,7 @@ export default {
       )
     },
     getUserNameById() {
-      if (!this.levelThreeFormData) return '目前沒有修改過'
+      if (!this.levelThreeFormData.last_edit_person) return '目前沒有修改過'
       let name = ''
       this.allUserNameId.forEach((item, index) => {
         if (item._id == this.levelThreeFormData.last_edit_person)
@@ -540,7 +540,6 @@ export default {
       this.levelThreeFormData = Object.assign({}, this.formData)
       // 第一次更新 updateLevelTwoData 在 mounted(){} 裡面，這邊是後續每次異動 dialog 都會去更新 updateLevelTwoData
       this.levelOneChang(this.levelThreeFormData.level_one_id)
-      console.log('watch dialog')
       this.getImgs()
     },
 
@@ -661,7 +660,7 @@ export default {
       this.levelThreeFormData.imgs = []
       this.levelThreeFormData.status.vip = false
     },
-    // 圖片上傳的 function
+    // 圖片移除的 function
     handleRemove(file, fileList) {
       let _index = 0
       for (let index = 0; index < fileList.length; index++) {
@@ -718,9 +717,6 @@ export default {
       this.files.push(file)
       // console.log('file', file)
       // console.log('this.files', this.files)
-    },
-    onFilePreview(file) {
-      console.log(file)
     }
   }
 }

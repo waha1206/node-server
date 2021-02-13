@@ -2,8 +2,11 @@
   <div class="materials-manager">
     <el-container>
       <el-header>
-        <el-button type="primary" size="small" @click="addMaterialClass"
-          >新增原物料分類</el-button
+        <el-button type="primary" size="small" @click="addMaterialLevelOneClass"
+          >新增第一層分類</el-button
+        >
+        <el-button type="primary" size="small" @click="addMaterialLevelTwoClass"
+          >新增第二層分類</el-button
         >
         <el-button type="primary" size="small" @click="handleAddMaterial"
           >新增原物料</el-button
@@ -69,7 +72,7 @@
             label="原物料名稱"
             prop="product_name"
             align="left"
-            width="400"
+            width="300"
           >
           </el-table-column>
           <!-- 商品說明 -->
@@ -77,7 +80,9 @@
           <el-table-column label="說明" width="70" align="center">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="right">
-                <p>分類：{{ getMaterilaClassNameById(scope.row) }}</p>
+                <p>分類：{{ getMaterilaClassOneNameById(scope.row) }}</p>
+                <p>子類：{{ getMaterilaClassTwoNameById(scope.row) }}</p>
+                <p>編號：{{ scope.row.type }}</p>
                 <p>品名：{{ scope.row.product_name }}</p>
                 <p>成本：{{ scope.row.the_cost }}</p>
                 <p>售價：{{ scope.row.retail_price }}</p>
@@ -93,12 +98,20 @@
               </el-popover>
             </template>
           </el-table-column>
-          <!-- 圖片 -->
-          <el-table-column label="圖片" width="50" align="center">
+          <!-- 多圖 -->
+          <el-table-column label="多圖" width="70" align="center">
             <template slot-scope="scope">
-              <el-popover trigger="hover" placement="right">
+              <el-popover trigger="hover" placement="left">
+                <img
+                  v-for="(item, index) in scope.row.imgs"
+                  width="200px"
+                  height="200px"
+                  :key="index"
+                  :src="item"
+                  alt=""
+                />
                 <div slot="reference" class="name-wrapper">
-                  <el-tag size="mini">圖片</el-tag>
+                  <el-tag size="mini">多圖</el-tag>
                 </div>
               </el-popover>
             </template>
@@ -111,10 +124,12 @@
             width="70"
           >
           </el-table-column>
+          <el-table-column label="編號" prop="type" align="center" width="70">
+          </el-table-column>
           <!-- 原物料分類，從分類ID回傳分類名稱 -->
           <el-table-column label="分類" align="center" width="120">
             <template slot-scope="scope">
-              {{ getMaterilaClassNameById(scope.row) }}
+              {{ getMaterilaClassOneNameById(scope.row) }}
             </template>
           </el-table-column>
           <!-- 售價 -->
@@ -304,11 +319,19 @@
       :materialClassData="materialClassData"
       @update="getMaterialClass"
     ></MaterialClassDialog>
+    <MaterialLevelTwoDialog
+      v-if="materialClassData[0] && materialLevelTwoClassData[0]"
+      :dialog="levelTwoDialog"
+      :materialLevelOneClassData="materialClassData"
+      :materialLevelTwoClassData="materialLevelTwoClassData"
+      @update="getMaterialLevelTwoClass"
+    ></MaterialLevelTwoDialog>
     <MaterialEditDialog
       v-if="materialFormDate"
       :dialog="materialEditDialog"
       :formData="materialFormDate"
       :materialClassData="materialClassData"
+      :materialLevelTwoClassData="materialLevelTwoClassData"
       :allUserNameId="allUserNameId"
       :allSupplierlData="allSupplierlData"
       @update="getMaterials"
@@ -332,6 +355,7 @@
 import MaterialClassDialog from '../../components/MaterialsManager/MaterialClassDialog'
 import MaterialEditDialog from '../../components/MaterialsManager/MaterialEditDialog'
 import MaterialSupplierDialog from '../../components/MaterialsManager/MateriaSupplierDialog'
+import MaterialLevelTwoDialog from '../../components/MaterialsManager/MaterialLevelTwoDialog'
 import { MessageBox } from 'element-ui'
 
 export default {
@@ -341,6 +365,7 @@ export default {
       materialClassName: '',
       tableData: [],
       materialClassData: [],
+      materialLevelTwoClassData: [],
       allMaterialData: [],
       allSupplierlData: [],
       allUserNameId: [],
@@ -349,6 +374,8 @@ export default {
       innerDialog: false,
       materialsData: [], // 開始就先讀取資料庫的數據
       materialFormDate: {
+        type: '',
+        imgs: [],
         old_serial_numbers: '',
         product_name: '',
         unit_price: '',
@@ -362,6 +389,8 @@ export default {
         storage: '',
         product_color: '',
         various_elements: '',
+        material_class: '',
+        level_two_id: '',
         length: '',
         extra_freight: '',
         lead_time: '',
@@ -397,6 +426,11 @@ export default {
         title: '展示一下',
         option: 'edit'
       },
+      levelTwoDialog: {
+        show: false,
+        title: '展示一下',
+        option: 'edit'
+      },
       // 控制 supplier dialog 的物件
       materialSupplierDialog: {
         show: false,
@@ -424,6 +458,7 @@ export default {
   components: {
     MaterialClassDialog,
     MaterialEditDialog,
+    MaterialLevelTwoDialog,
     MaterialSupplierDialog
   },
   beforeRouteEnter(to, from, next) {
@@ -437,6 +472,7 @@ export default {
   created() {
     this.getMaterials()
     this.getMaterialClass()
+    this.getMaterialLevelTwoClass()
     this.getUserInfo()
     this.getSuppliers()
     this.getSupplierClass()
@@ -509,9 +545,13 @@ export default {
         materialClass: ''
       }
       // 把選中的原物料資訊 賦值到 this.materialFormData 裡面去
-      // 先清空
+      // 先清空讓他為預設值
       for (let prop in this.materialFormDate) {
-        this.materialFormDate[prop] = ''
+        if (prop === 'imgs') {
+          this.materialFormDate[prop] = []
+        } else {
+          this.materialFormDate[prop] = ''
+        }
       }
     },
     handleEditSupplier(index, row) {
@@ -528,7 +568,7 @@ export default {
         show: true,
         title: '原物料編輯',
         option: 'edit',
-        materialClass: this.getMaterilaClassNameById(row)
+        materialClass: this.getMaterilaClassOneNameById(row)
       }
       // 把選中的原物料資訊 賦值到 this.materialFormData 裡面去
       // 先清空
@@ -545,10 +585,23 @@ export default {
     },
     getMaterialClass() {
       this.$axios
-        .get('/api/material-class')
+        .get('/api/material-class/one')
         .then((res) => {
           // console.log('views/FundList.vue', res)
           this.materialClassData = res.data
+          // 設置分頁數據
+          // this.setPaginations()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    getMaterialLevelTwoClass() {
+      this.$axios
+        .get('/api/material-class/two')
+        .then((res) => {
+          // console.log('views/FundList.vue', res)
+          this.materialLevelTwoClassData = res.data
           // 設置分頁數據
           // this.setPaginations()
         })
@@ -602,17 +655,34 @@ export default {
       })
     },
     // 添加一筆新的商品分類代號 TD SS GG ... 等等
-    addMaterialClass() {
+    addMaterialLevelOneClass() {
       this.dialog = {
         show: true,
         title: '新增原物料分類',
         option: 'add'
       }
     },
-    getMaterilaClassNameById(row) {
+    addMaterialLevelTwoClass() {
+      this.levelTwoDialog = {
+        show: true,
+        title: '新增第二層分類',
+        option: 'add'
+      }
+      console.log(this.levelTwoDialog)
+    },
+    getMaterilaClassOneNameById(row) {
       let className = ''
       this.materialClassData.forEach((e) => {
         if (e._id === row.material_class) {
+          className = e.name
+        }
+      })
+      return className
+    },
+    getMaterilaClassTwoNameById(row) {
+      let className = ''
+      this.materialLevelTwoClassData.forEach((e) => {
+        if (e._id === row.level_two_id) {
           className = e.name
         }
       })
