@@ -405,8 +405,6 @@ export default {
         level_one_id: this.levelThreeFormData.level_one_id,
         level_two_id: this.levelThreeFormData.level_two_id
       }
-      console.log('this.levelThreeFormData', this.levelThreeFormData)
-      console.log('uploadFormData', uploadFormData)
 
       this.$refs[formName].validate((valid) => {
         if (valid) {

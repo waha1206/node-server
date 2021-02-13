@@ -82,6 +82,37 @@ router.get(
   }
 )
 
+// $router GET api/material/three
+// @desc   取得所有原料的 level one two class name _id
+// @access Private
+router.get(
+  '/three',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // query 選擇的條件
+    // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
+    const query = {}
+    const options = {
+      type: 1,
+      product_name: 1,
+      material_class: 1,
+      level_two_id: 1
+    }
+
+    Material.find(query, options)
+      // .sort({ type: 1 }) 如果需要排序的話
+      .then((materials) => {
+        if (!materials) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(materials)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
 // $router post api/material/get-from-class/:class
 // @desc   編輯訊息接口
 // @access private

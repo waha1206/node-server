@@ -263,8 +263,10 @@ router.post(
     if (req.body.name) materialGroupFields.name = req.body.name
 
     if (level === 3) {
-      if (req.body.imgs.length > 0) {
-        materialGroupFields.imgs = req.body.imgs.split('|')
+      if (req.body.imgs) {
+        if (req.body.imgs.length > 0) {
+          materialGroupFields.imgs = req.body.imgs.split('|')
+        }
       }
       if (req.body.describe) {
         materialGroupFields.describe = req.body.describe
@@ -289,6 +291,11 @@ router.post(
       }
       if (req.body.choiceLevelTwoValue) {
         materialGroupFields.choiceLevelTwoValue = req.body.choiceLevelTwoValue.map(
+          (x) => x
+        )
+      }
+      if (req.body.choice_level_three_material) {
+        materialGroupFields.choice_level_three_material = req.body.choice_level_three_material.map(
           (x) => x
         )
       }

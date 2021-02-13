@@ -71,6 +71,9 @@ const MaterialGroupMemberSchema = new Schema({
     type: String,
     required: true
   },
+  choice_level_three_material: {
+    type: Array
+  },
   // 存放 第一層與第二層的分類 id [id1, id2]
   choiceLevelTwoValue: {
     type: Array

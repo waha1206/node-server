@@ -2,6 +2,7 @@
   <div>
     <el-container>
       <el-header>
+        <!-- *************************** 一開始的下拉選單 cascader ***************************-->
         <div class="cascader-wrap">
           <el-cascader
             @change="onOptionsChange"
@@ -53,15 +54,34 @@
           style="width: 100%"
         >
           <!-- 表格的往下拓展選單 -->
+          <!-- *************************** 表格的商品清單中的下拉選單 cascader ***************************-->
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-form label-position="left" inline class="demo-table-expand">
-                <el-form-item label="商品名称">
-                  <span>{{ props.row.name }}</span>
-                </el-form-item>
-
-                <el-form-item label="商品描述">
-                  <span>{{ props.row.describe }}</span>
+                <el-form-item label="原料選擇：" class="cascader-item">
+                  <div class="block">
+                    <!-- <span class="demonstration">多选可搜索</span> -->
+                    <el-cascader
+                      size="mini"
+                      clearable
+                      v-model="props.row.choice_level_three_material"
+                      placeholder="原料關鍵字"
+                      @change="onMaterialOptionsChange(props.row)"
+                      :options="materialOptions"
+                      :props="{
+                        multiple: true,
+                        expandTrigger: 'hover',
+                        emitPath: false
+                      }"
+                      filterable
+                    ></el-cascader>
+                  </div>
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    @click="handleUpdateGroupMember(props.row)"
+                    >更新原料清單</el-button
+                  >
                 </el-form-item>
               </el-form>
             </template>
@@ -221,9 +241,13 @@ export default {
       tableData: [],
       choiceLevelTwoValue: [], // 一開始選好後，會顯示 table 的資料，要選擇 one / two
       levelOneTowOption: [], // 所有可選擇的 one / two 層資料
+      materialOptions: [], // 所有的原物料 第一層 第二層 第三層 拼湊出來的 cascader options
       groupLevelOneData: [], // 這個是讀取伺服器傳回來的陣列 level one
       groupLevelTwoData: [], // 這個是讀取伺服器傳回來的陣列 level two
       groupLevelThreeData: [], // 這個是讀取伺服器傳回來的陣列 level three
+      materialLevelOneClass: [], // 開始就先讀取資料庫的數據
+      materialLevelTwoClass: [], // 開始就先讀取資料庫的數據
+      materialLevelThreeData: [], // 開始就先讀取資料庫的數據
       allUserNameId: [], // 所有使用者
       levelThreeEditTableData: {}, // 點擊編輯鈕的時候，把資料放到這邊，再送去給子元件
       levelThreeTableData: {
@@ -289,6 +313,9 @@ export default {
   created() {
     this.getGroupLevelOneData()
     this.getGroupLevelTwoData()
+    this.getMaterialLevelOneClass()
+    this.getMaterialLevelTwoClass()
+    this.getMaterialLevelThreeData()
     this.getUserInfo()
     this.setPaginations()
   },
@@ -300,7 +327,58 @@ export default {
     GroupLevelTwoDialog,
     GroupLevelThreeDialog
   },
+
   watch: {
+    // 讀取完 level three data / level one class / level two class
+    materialLevelThreeData() {
+      // console.log('one', this.materialLevelOneClass)
+      // console.log('two', this.materialLevelTwoClass)
+      // console.log('three', this.materialLevelThreeData)
+      if (this.materialLevelTwoClass[0]) {
+        this.materialOptions = []
+        this.materialLevelOneClass.forEach((item) => {
+          // console.log(index, item.name, item._id)
+          let obj = {
+            value: '',
+            label: '',
+            children: []
+          }
+          obj.value = item._id
+          obj.label = item.type + ' ' + item.name
+          this.materialOptions.push(obj)
+        })
+
+        for (let i = 0; i < this.materialOptions.length; i++) {
+          const level_one_id = this.materialOptions[i].value
+          this.materialLevelTwoClass.forEach((item) => {
+            if (item.level_one_id === level_one_id) {
+              let obj2 = {
+                value: '',
+                label: '',
+                children: []
+              }
+              obj2.value = item._id
+              obj2.label = item.type + ' ' + item.name
+              this.materialOptions[i].children.push(obj2)
+            }
+          })
+          for (let j = 0; j < this.materialOptions[i].children.length; j++) {
+            const level_two_id = this.materialOptions[i].children[j].value
+            this.materialLevelThreeData.forEach((item) => {
+              if (item.level_two_id === level_two_id) {
+                let obj3 = {
+                  value: '',
+                  label: ''
+                }
+                obj3.value = item._id
+                obj3.label = item.type + ' ' + item.product_name
+                this.materialOptions[i].children[j].children.push(obj3)
+              }
+            })
+          }
+        }
+      }
+    },
     // 如果 level one 跟 level two 都有資料的時候，就更動 cascader 的聯集選擇器
     groupLevelTwoData() {
       if (this.groupLevelTwoData[0]) {
@@ -404,6 +482,71 @@ export default {
         })
         .catch((err) => {
           console.log(err)
+        })
+    },
+    // ******************************* 讀取原物料 第一層，第二層，第三層  cascader *******************************
+    getMaterialLevelOneClass() {
+      this.$axios
+        .get('/api/material-class/one')
+        .then((res) => {
+          // console.log('views/FundList.vue', res)
+          this.materialLevelOneClass = res.data
+          // 設置分頁數據
+          // this.setPaginations()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    getMaterialLevelTwoClass() {
+      this.$axios
+        .get('/api/material-class/two')
+        .then((res) => {
+          // console.log('views/FundList.vue', res)
+          this.materialLevelTwoClass = res.data
+          // 設置分頁數據
+          // this.setPaginations()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    getMaterialLevelThreeData() {
+      this.$axios
+        .get('/api/material/three')
+        .then((res) => {
+          // console.log('views/FundList.vue', res)
+          this.materialLevelThreeData = res.data
+          // 設置分頁數據
+          // this.setPaginations()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    onMaterialOptionsChange(row) {
+      // console.log(this.choiceLevelThreeMaterial)
+      console.log('onMaterialOptionsChange', row.choice_level_three_material)
+    },
+    // ******************************* 讀取原物料 第一層，第二層，第三層 cascader 結束*******************************
+    // 更新原料清單 - cascader 下面的 更新按鈕
+    handleUpdateGroupMember(row) {
+      const uploadFormData = {
+        level: 3,
+        choice_level_three_material: row.choice_level_three_material
+      }
+      const url = `edit/${row._id}`
+      this.$axios
+        .post(`/api/material-group/${url}`, uploadFormData)
+        .then((res) => {
+          // 添加成功
+          this.$message({
+            message: '更新原料組合成功！',
+            type: 'success'
+          })
+        })
+        .catch((err) => {
+          console.log('axios添加數據失敗==>materialGroupManager==>', err)
         })
     },
 
@@ -541,4 +684,13 @@ body > .el-container {
 }
 
 /* 往下拓展表格的 style */
+.block {
+  width: 1500px;
+}
+.el-table__expanded-cell[class*='cell'] {
+  padding-bottom: 0;
+}
+.cascader-item {
+  margin-bottom: 0px;
+}
 </style>
