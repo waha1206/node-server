@@ -6,6 +6,7 @@
         <div class="cascader-wrap">
           <el-cascader
             @change="onOptionsChange"
+            @focus="onOptionsFocus"
             v-model="choiceLevelTwoValue"
             :props="{ expandTrigger: 'hover' }"
             size="mini"
@@ -311,13 +312,7 @@ export default {
     }
   },
   created() {
-    this.getGroupLevelOneData()
-    this.getGroupLevelTwoData()
-    this.getMaterialLevelOneClass()
-    this.getMaterialLevelTwoClass()
-    this.getMaterialLevelThreeData()
-    this.getUserInfo()
-    this.setPaginations()
+    this.getData()
   },
   mounted() {
     this.setCascaderOptions()
@@ -380,40 +375,65 @@ export default {
       }
     },
     // 如果 level one 跟 level two 都有資料的時候，就更動 cascader 的聯集選擇器
+    // watch 不能同時判讀兩個值的變化，所以兩個值發生變化的時候，就都去判斷兩個值是否都有資料
+    // 當資料都存在的時候，在去運算要得到的結果 這邊是 左上的 cascader option 所需要的兩層資料
+    groupLevelOneData() {
+      if (!this.groupLevelOneData.length && !this.groupLevelTwoData.length)
+        return
+      this.setLevelOneTowOption()
+    },
     groupLevelTwoData() {
-      if (this.groupLevelTwoData[0]) {
-        this.levelOneTowOption = []
-        this.groupLevelOneData.forEach((item) => {
-          // console.log(index, item.name, item._id)
-          let obj = {
-            value: '',
-            label: '',
-            children: []
-          }
-          obj.value = item._id
-          obj.label = item.type + ' ' + item.name
-          this.levelOneTowOption.push(obj)
-        })
-
-        for (let i = 0; i < this.levelOneTowOption.length; i++) {
-          const level_one_id = this.levelOneTowOption[i].value
-          this.groupLevelTwoData.forEach((item) => {
-            if (item.level_one_id === level_one_id) {
-              let obj2 = {
-                value: '',
-                label: ''
-              }
-              obj2.value = item._id
-              obj2.label = item.type + ' ' + item.name
-              this.levelOneTowOption[i].children.push(obj2)
-            }
-          })
-        }
-      }
-      this.getGroupLevelThreeData()
+      if (!this.groupLevelOneData.length && !this.groupLevelTwoData.length)
+        return
+      this.setLevelOneTowOption()
     }
   },
   methods: {
+    // 異步讀取完畢所以資料後，在進行其他動作
+    async getData() {
+      await this.getGroupLevelOneData()
+      await this.getGroupLevelTwoData()
+      await this.getMaterialLevelOneClass()
+      await this.getMaterialLevelTwoClass()
+      await this.getMaterialLevelThreeData()
+      await this.getUserInfo()
+      this.setPaginations()
+    },
+    // 當 group level one / two 的資料都完整後，在來這邊整理資料
+    setLevelOneTowOption() {
+      this.levelOneTowOption = []
+      this.groupLevelOneData.forEach((item) => {
+        // console.log(index, item.name, item._id)
+        let obj = {
+          value: '',
+          label: '',
+          children: []
+        }
+        obj.value = item._id
+        obj.label = item.type + ' ' + item.name
+        this.levelOneTowOption.push(obj)
+      })
+
+      for (let i = 0; i < this.levelOneTowOption.length; i++) {
+        const level_one_id = this.levelOneTowOption[i].value
+        this.groupLevelTwoData.forEach((item) => {
+          if (item.level_one_id === level_one_id) {
+            let obj2 = {
+              value: '',
+              label: ''
+            }
+            obj2.value = item._id
+            obj2.label = item.type + ' ' + item.name
+            this.levelOneTowOption[i].children.push(obj2)
+          }
+        })
+      }
+      this.getGroupLevelThreeData()
+    },
+
+    onOptionsFocus() {
+      console.log('cascader option 被點到了喔')
+    },
     getUserInfo() {
       this.$axios
         .get('/api/user/user-info')

@@ -43,7 +43,11 @@
             <div class="table-container">
               <!-- *************************** 左邊區塊 *************************** -->
               <!-- *************************** table 區塊 裡面編輯跟刪除 *************************** -->
-              <el-table :data="tableData" style="width: 100%" size="mini">
+              <el-table
+                :data="filterTableData.tableData"
+                style="width: 100%"
+                size="mini"
+              >
                 <el-table-column
                   prop="type"
                   label="編號"
