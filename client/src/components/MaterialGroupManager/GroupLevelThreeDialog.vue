@@ -167,7 +167,7 @@
               label="圖片上傳："
               size="mini"
               label-width="120px"
-              prop="describe"
+              prop="imgs"
             >
               <div class="upload-wrap">
                 <el-upload

@@ -22,9 +22,6 @@
         <el-button type="primary" size="small" @click="addLevelThree"
           >新增第三層商品</el-button
         >
-        <el-button type="primary" size="small" @click="addMaterialGroup"
-          >建立組合商品</el-button
-        >
       </el-header>
       <!-- 分頁 -->
       <div class="pagination">
@@ -60,6 +57,47 @@
             align="center"
             width="70"
           ></el-table-column>
+          <!-- 添加原料組合 -->
+          <!-- ******************************* cascader 選擇原料組 開始 *******************************-->
+          <el-table-column
+            label="添加原料組合"
+            width="400"
+            prop=""
+            align="center"
+          >
+            <template slot-scope="props">
+              <!-- <el-form label-position="left" inline class="demo-table-expand">
+                <el-form-item label="" class="cascader-item"> -->
+              <div class="group-btn">
+                <el-button
+                  size="mini"
+                  type="primary"
+                  @click="handleUpdateGroupMember(props.row)"
+                  >更新</el-button
+                >
+              </div>
+              <div class="group-cascader">
+                <!-- <span class="demonstration">多选可搜索</span> -->
+                <el-cascader
+                  size="mini"
+                  clearable
+                  v-model="props.row.material_group"
+                  placeholder="選擇原料組合"
+                  @change="onMaterialGroupOptionsChange(props.row)"
+                  :options="materialGroupOptions"
+                  :props="{
+                    multiple: true,
+                    expandTrigger: 'hover',
+                    emitPath: false
+                  }"
+                  filterable
+                ></el-cascader>
+              </div>
+              <!-- </el-form-item>
+              </el-form> -->
+            </template>
+          </el-table-column>
+          <!-- ******************************* cascader 選擇原料組 結束 *******************************-->
           <!-- 商品名稱 -->
           <el-table-column
             label="商品名稱"
@@ -141,7 +179,7 @@
                   商品狀態：<span v-if="scope.row.status.activated"
                     >已經啟用</span
                   >
-                  <span else>尚未啟用</span>
+                  <span v-else>尚未啟用</span>
                   <span>、</span>
                   <span v-if="scope.row.status.vip">VIP已啟用</span>
                   <span v-else>VIP未啟用</span>
@@ -204,14 +242,7 @@
             width="320"
           >
           </el-table-column>
-          <!-- 添加原料組合 -->
-          <el-table-column
-            label="添加原料組合"
-            prop=""
-            align="center"
-            width="420"
-          >
-          </el-table-column>
+
           <!-- 搜尋欄位 -->
           <el-table-column align="center" width="150">
             <!-- header 代表放到列的說明文字那邊 -->
@@ -299,6 +330,10 @@ export default {
       categoriesLevelOneData: [], // 開始就先讀取資料庫的數據
       categoriesLevelTwoData: [], // 開始就先讀取資料庫的數據
       categoriesLevelThreeData: [], // 開始就先讀取資料庫的數據
+      materialGroupOptions: [], // 所有的原物料組 第一層 第二層 第三層 拼湊出來的 cascader options
+      groupLevelOneData: [],
+      groupLevelTwoData: [],
+      groupLevelThreeData: [],
       categoriesLevelOneFormData: {
         type: '',
         name: '',
@@ -352,12 +387,12 @@ export default {
         show: false,
         title: '展示一下',
         option: 'edit'
-      },
-      addMaterialGroupDialog: {
-        show: false,
-        title: '建立原料組合',
-        option: 'edit'
       }
+      // addMaterialGroupDialog: {
+      //   show: false,
+      //   title: '建立原料組合',
+      //   option: 'edit'
+      // }
     }
   },
   components: {
@@ -367,18 +402,71 @@ export default {
   },
 
   created() {
+    this.getGroupLevelOneData()
+    this.getGroupLevelTwoData()
     this.getCategoriesLevelOneData()
     this.getCategoriesLevelTwoData()
+    this.getGroupLevelThreeData()
     this.getUserInfo()
   },
   mounted() {
     this.setCascaderOptions()
   },
   watch: {
+    // 讀取完 level three data / level one class / level two class
+    groupLevelThreeData() {
+      if (this.groupLevelTwoData[0]) {
+        this.materialGroupOptions = []
+        this.groupLevelOneData.forEach((item) => {
+          // console.log(index, item.name, item._id)
+          let obj = {
+            value: '',
+            label: '',
+            children: []
+          }
+          obj.value = item._id
+          obj.label = item.type + ' ' + item.name
+          this.materialGroupOptions.push(obj)
+        })
+
+        for (let i = 0; i < this.materialGroupOptions.length; i++) {
+          const level_one_id = this.materialGroupOptions[i].value
+          this.groupLevelTwoData.forEach((item) => {
+            if (item.level_one_id === level_one_id) {
+              let obj2 = {
+                value: '',
+                label: '',
+                children: []
+              }
+              obj2.value = item._id
+              obj2.label = item.type + ' ' + item.name
+              this.materialGroupOptions[i].children.push(obj2)
+            }
+          })
+          for (
+            let j = 0;
+            j < this.materialGroupOptions[i].children.length;
+            j++
+          ) {
+            const level_two_id = this.materialGroupOptions[i].children[j].value
+            this.groupLevelThreeData.forEach((item) => {
+              if (item.level_two_id === level_two_id) {
+                let obj3 = {
+                  value: '',
+                  label: ''
+                }
+                obj3.value = item._id
+                obj3.label = item.type + ' ' + item.name
+                this.materialGroupOptions[i].children[j].children.push(obj3)
+              }
+            })
+          }
+        }
+      }
+    },
     // 如果 level one 跟 level two 都有資料的時候，就更動 cascader 的聯集選擇器
     categoriesLevelTwoData() {
       if (this.categoriesLevelTwoData[0]) {
-        console.log('categoriesManage.vue watch', '設定  cascader')
         this.levelOneTowOption = []
         this.categoriesLevelOneData.forEach((item) => {
           // console.log(index, item.name, item._id)
@@ -412,7 +500,74 @@ export default {
   },
 
   methods: {
-    addMaterialGroup() {},
+    // ********************* 讀取 material group *********************
+    getGroupLevelOneData() {
+      this.$axios
+        .get('/api/material-group/one/')
+        .then((res) => {
+          // 把資料庫的數據都先讀出來
+          this.groupLevelOneData = res.data
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    // @emit('update) 來這邊取得第二層的資料
+    getGroupLevelTwoData() {
+      this.$axios
+        .get('/api/material-group/two/')
+        .then((res) => {
+          // 把資料庫的數據都先讀出來
+          this.groupLevelTwoData = res.data
+          // 設置分頁數據 如果是子組件的話，不需要這邊重新整理更新頁面
+          // 子組件裡面會有一個 watch 去觀察資料，如果有異動了 setPagination 會在那邊觸發
+          // this.setPaginations()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    getGroupLevelThreeData() {
+      this.$axios
+        .get('/api/material-group/three/')
+        .then((res) => {
+          // 把資料庫的數據都先讀出來
+          this.groupLevelThreeData = res.data
+          // 設置分頁數據 如果是子組件的話，不需要這邊重新整理更新頁面
+          // 子組件裡面會有一個 watch 去觀察資料，如果有異動了 setPagination 會在那邊觸發
+          // this.setPaginations()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    // ********************* 讀取 material group 結束 *********************
+
+    // 當 material group 選擇的內容產生變化的時候，目前沒什麼用途
+    onMaterialGroupOptionsChange(row) {
+      console.log(row)
+    },
+    // 點擊更新的時候，把原料組合存到資料庫
+    handleUpdateGroupMember(row) {
+      const uploadFormData = {
+        level: 3,
+        material_group: row.material_group
+      }
+      const url = `edit/${row._id}`
+      this.$axios
+        .post(`/api/categories/${url}`, uploadFormData)
+        .then((res) => {
+          // 添加成功
+          this.$message({
+            message: '更新原料組合成功！',
+            type: 'success'
+          })
+        })
+        .catch((err) => {
+          console.log('axios添加數據失敗==>CategoriesManager.vue==>', err)
+        })
+    },
+    // 將使用者的 id 轉換成 name
     getUserNameById(id) {
       if (!id) return
       let name = ''
@@ -520,7 +675,6 @@ export default {
       }
       // 新增，就把要傳到子元件裡面的資料清空，這邊傳到子元件是 formData
       this.formData = Object.assign({}, this.categoriesLevelThreeFormData)
-      console.log(this.formData)
     },
     // 編輯選中的商品資料
     handleEditCategory(index, row) {
@@ -640,5 +794,18 @@ body > .el-container {
 .pagination {
   text-align: left;
   margin-top: 3px;
+}
+
+.group-cascader {
+  float: left;
+  margin: 0;
+  padding: 0;
+  width: 300px;
+}
+.group-btn {
+  float: left;
+  margin-top: 4px;
+  padding: 0;
+  width: 70px;
 }
 </style>

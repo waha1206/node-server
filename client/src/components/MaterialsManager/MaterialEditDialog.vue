@@ -315,6 +315,15 @@
                   ></el-input>
                 </el-form-item>
               </el-col>
+              <el-col :span="12">
+                <el-form-item prop="kind" label="商品種類：">
+                  <el-radio-group v-model="materialDataForm.kind">
+                    <el-radio :label="1">一般原料</el-radio>
+                    <el-radio :label="2">轉印布料</el-radio>
+                    <el-radio :label="3">內裡布料</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
             </el-row>
             <!-- 第七列結束 -->
           </el-header>
@@ -432,6 +441,7 @@ export default {
       materialDataForm: {},
       // materialDataForm_rules: {
       form_rules: {
+        kind: [{ required: true, message: '必選，必須正確', trigger: 'blur' }],
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         product_name: [
           { required: true, message: '此欄位不能為空', trigger: 'blur' }
@@ -662,7 +672,7 @@ export default {
             })
         } else {
           this.$message({
-            message: '請選擇商品分類',
+            message: '有星號的欄位都必須要填寫喔！',
             type: 'error'
           })
         }

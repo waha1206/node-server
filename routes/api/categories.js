@@ -304,6 +304,9 @@ router.post(
           req.body.note_two_video
         )
       }
+      if (req.body.material_group) {
+        categoryFields.material_group = req.body.material_group.map((x) => x)
+      }
     }
     // if (categoryFields.imgs.length) {
     //   console.log(categoryFields.imgs.length)

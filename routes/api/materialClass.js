@@ -29,7 +29,8 @@ router.post(
   (req, res) => {
     const materialClassFields = {}
     const level = req.body.level
-    const query = [{ name: req.body.name }, { name: req.body.type }]
+    // const query = [{ name: req.body.name }, { name: req.body.type }]
+    const query = [{ name: req.body.name }]
 
     let MaterialClassLevel = Object
     MaterialClassLevel = level === 1 ? MaterialClass : MaterialLevelTwoClass
@@ -67,6 +68,7 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     MaterialClass.find()
+      .sort({ type: 1 })
       .then((materialClass) => {
         if (!materialClass) {
           return res.status(400).json('沒有任何內容')
@@ -89,6 +91,7 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     MaterialLevelTwoClass.find()
+      .sort({ type: 1 })
       .then((materialLevelTwoClass) => {
         if (!materialLevelTwoClass) {
           return res.status(400).json('沒有任何內容')

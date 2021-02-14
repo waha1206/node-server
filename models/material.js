@@ -124,6 +124,10 @@ const MaterialSchema = new Schema({
   },
   processing_remark: {
     type: String
+  },
+  // 原料種類 1 一般原物料  2 轉印布料 3 非轉印布料
+  kind: {
+    type: Number
   }
 })
 

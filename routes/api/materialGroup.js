@@ -176,8 +176,41 @@ router.get(
       })
   }
 )
+
 // $router get api/material-group/three
-// @desc   獲取所有分類資訊
+// @desc   獲取所有分類資訊，但是只回傳我要的欄位
+// @access private
+// 使用 hander 要驗證 token
+// body 不用放，因為他會獲取所有訊息
+router.get(
+  '/three',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // query 選擇的條件
+    // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
+    const query = {}
+    const options = {
+      type: 1,
+      name: 1,
+      material_class: 1,
+      level_two_id: 1
+    }
+    MaterialGroupMember.find(query, options)
+      .sort({ type: 1 })
+      .then((materialGroupThree) => {
+        if (!materialGroupThree) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(materialGroupThree)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
+// $router get api/material-group/three/:id
+// @desc   根據第二層的的 id 去讀取相關的 資料
 // @access private
 // 使用 hander 要驗證 token
 // body 不用放，因為他會獲取所有訊息

@@ -8,6 +8,35 @@
       :modal-append-to-body="false"
       width="980px"
     >
+      <el-row>
+        <el-col :span="24"
+          ><div class="el-select-wrap">
+            <el-select
+              @change="filterTableDataChange"
+              v-model="filterTableData.levelOneId"
+              placeholder="欲顯示的大分類"
+              filterable
+              size="mini"
+            >
+              <!-- :lable 這個是顯示出來的  :value 這個要指定到 _id 因為我要存到資料庫，我需要唯一的一個 key (_id)-->
+              <!-- value 這邊綁定的是此 陣列裡面，要傳給 select v-mode 的值 -->
+              <!-- label 就單純的顯示再 input 上面可以看到的文字 -->
+              <el-option
+                <el-option
+                v-for="(levelOneData, index) in groupLevelOneData"
+                :key="index"
+                :value="levelOneData._id"
+                :label="levelOneData.name"
+              >
+                <span style="float: left">{{ levelOneData.type }}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">{{
+                  levelOneData.name
+                }}</span></el-option
+              >
+            </el-select>
+          </div></el-col
+        >
+      </el-row>
       <div class="form">
         <el-container>
           <el-aside width="65%" class="grid-content bg-purple">
@@ -236,6 +265,10 @@ export default {
     return {
       tableData: [],
       formLabelWidth: '',
+      filterTableData: {
+        tableData: [],
+        levelOneId: ''
+      },
       levelTwoEditForm: {
         type: '',
         name: '',
@@ -280,11 +313,13 @@ export default {
     }
   },
   created() {
+    this.initFilterData()
     this.setPaginations()
   },
   watch: {
     groupLevelTwoData() {
-      // 資料有更新喔
+      // 資料有更新喔，送進去選擇的第一層分類ID，去重新讀取資料進來
+      this.filterTableDataChange(this.filterTableData.levelOneId)
       this.setPaginations()
     }
   },
@@ -294,6 +329,26 @@ export default {
     }
   },
   methods: {
+    // 開場先初始化 讀取 localStorage
+    initFilterData() {
+      if (localStorage.material_group_level_one_id) {
+        this.filterTableData.levelOneId =
+          localStorage.material_group_level_one_id
+        this.filterTableDataChange(this.filterTableData.levelOneId)
+      }
+    },
+    // 當第二層點開的時候，左上角的選擇改變的時候，去做變化
+    filterTableDataChange(id) {
+      this.filterTableData.levelOneId = id
+      localStorage.material_group_level_one_id = id
+
+      this.filterTableData.tableData = this.groupLevelTwoData.filter((item) => {
+        return item.level_one_id == this.filterTableData.levelOneId
+      })
+
+      this.setPaginations()
+    },
+    //
     editFormSelectChang(id) {
       const row = {}
       row.level_one_id = id

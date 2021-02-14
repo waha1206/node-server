@@ -146,6 +146,10 @@ const CategoryLevelThreeSchema = new Schema({
   },
   last_modify_date: {
     type: Date
+  },
+  // 存放原料組合
+  material_group: {
+    type: Array
   }
 })
 

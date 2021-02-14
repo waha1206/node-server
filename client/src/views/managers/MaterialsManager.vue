@@ -411,7 +411,9 @@ export default {
         create_date: '',
         last_modify_date: '',
         last_edit_person: '',
-        stock_alert: ''
+        stock_alert: '',
+        processing_fee_flag: false,
+        kind: 1
       },
       // 編輯原物料的分類跳出視窗
       formData: {
@@ -549,6 +551,10 @@ export default {
       for (let prop in this.materialFormDate) {
         if (prop === 'imgs') {
           this.materialFormDate[prop] = []
+        } else if (prop === 'processing_fee_flag') {
+          this.materialFormDate[prop] = false
+        } else if (prop === 'kind') {
+          this.materialFormDate.kind = 1
         } else {
           this.materialFormDate[prop] = ''
         }
