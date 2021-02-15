@@ -165,11 +165,14 @@ router.post(
     for (const prop in req.body) {
       if (prop !== 'imgs') {
         materialFields[prop] = req.body[prop]
-      } else if (req.body.imgs.length > 0) {
-        materialFields[prop] = req.body.imgs.split('|')
+      } else if (prop === 'imgs') {
+        if (req.body[prop].length > 0) {
+          materialFields[prop] = req.body.imgs.split('|')
+        } else {
+          materialFields[prop] = []
+        }
       }
     }
-
     Material.findByIdAndUpdate(
       { _id: req.params.id },
       { $set: materialFields },
@@ -189,11 +192,16 @@ router.post(
   (req, res) => {
     const materialFields = {}
 
+    console.log(req.body)
     for (const prop in req.body) {
       if (prop !== 'imgs') {
         materialFields[prop] = req.body[prop]
-      } else if (req.body.imgs.length > 0) {
-        materialFields[prop] = req.body.imgs.split('|')
+      } else if (prop === 'imgs') {
+        if (req.body[prop].length > 0) {
+          materialFields[prop] = req.body.imgs.split('|')
+        } else {
+          materialFields[prop] = []
+        }
       }
     }
 

@@ -93,8 +93,17 @@ const CategoryLevelThreeSchema = new Schema({
   pattern_no: {
     type: String
   },
+  // 版型下載
   pattern_download: {
     type: String
+  },
+  // 版型高度
+  pattern_height: {
+    type: Number
+  },
+  // 版型寬度
+  pattern_width: {
+    type: Number
   },
   // 校色的影片網址
   salting_on_color_video: {
@@ -150,6 +159,12 @@ const CategoryLevelThreeSchema = new Schema({
   // 存放原料組合
   material_group: {
     type: Array
+  },
+  tailor_fee: {
+    type: String
+  },
+  crop_fee: {
+    type: String
   }
 })
 

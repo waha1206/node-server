@@ -263,7 +263,7 @@
                   <el-tag
                     size="mini"
                     v-if="scope.row.supplier_id"
-                    @click="handleEditSupplier(scope.$index, scope.row)"
+                    @click="handleEditSupplier(scope.row)"
                   >
                     <!-- {{ scope.row.supplier_id }} -->
                     {{ getSupplierNameById(scope.row) }}
@@ -271,7 +271,7 @@
                   <el-tag
                     size="mini"
                     v-else="scope.row.supplier"
-                    @click="handleEditSupplier(scope.$index, scope.row)"
+                    @click="handleEditSupplier(scope.row)"
                     style="background:red; color:yellow"
                     >點擊我選擇供應商</el-tag
                   >
@@ -291,9 +291,7 @@
             </template>
             <!-- slot 崁入兩個按鈕 -->
             <template slot-scope="scope">
-              <el-button
-                size="mini"
-                @click="handleEditMaterial(scope.$index, scope.row)"
+              <el-button size="mini" @click="handleEditMaterial(scope.row)"
                 >編輯</el-button
               >
               <el-button
@@ -327,9 +325,8 @@
       @update="getMaterialLevelTwoClass"
     ></MaterialLevelTwoDialog>
     <MaterialEditDialog
-      v-if="materialFormDate"
       :dialog="materialEditDialog"
-      :formData="materialFormDate"
+      :formData="levelThreeFormDate"
       :materialClassData="materialClassData"
       :materialLevelTwoClassData="materialLevelTwoClassData"
       :allUserNameId="allUserNameId"
@@ -373,7 +370,8 @@ export default {
       search: '',
       innerDialog: false,
       materialsData: [], // 開始就先讀取資料庫的數據
-      materialFormDate: {
+      levelThreeFormDate: {}, // 給 子元件傳遞的第三層資料
+      emptyLevelThreeFormDate: {
         type: '',
         imgs: [],
         old_serial_numbers: '',
@@ -539,51 +537,33 @@ export default {
         this.tableData = tables
       }
     },
-    handleAddMaterial(index, row) {
+    handleAddMaterial() {
       this.materialEditDialog = {
         show: true,
         title: '原物料編輯',
         option: 'add',
         materialClass: ''
       }
-      // 把選中的原物料資訊 賦值到 this.materialFormData 裡面去
-      // 先清空讓他為預設值
-      for (let prop in this.materialFormDate) {
-        if (prop === 'imgs') {
-          this.materialFormDate[prop] = []
-        } else if (prop === 'processing_fee_flag') {
-          this.materialFormDate[prop] = false
-        } else if (prop === 'kind') {
-          this.materialFormDate.kind = 1
-        } else {
-          this.materialFormDate[prop] = ''
-        }
-      }
+      // 這邊要處理 add form
+      this.levelThreeFormDate = Object.assign({}, this.emptyLevelThreeFormDate)
     },
-    handleEditSupplier(index, row) {
-      // 把該原料的 _id 編號傳給子元件，然後在子元件更新資料庫的欄位 supplier_id
-      this.materialSupplierDialog = {
-        show: true,
-        title: '請選擇供應商',
-        option: 'edit',
-        material: row._id
-      }
-    },
-    handleEditMaterial(index, row) {
+    handleEditMaterial(row) {
       this.materialEditDialog = {
         show: true,
         title: '原物料編輯',
         option: 'edit',
         materialClass: this.getMaterilaClassOneNameById(row)
       }
-      // 把選中的原物料資訊 賦值到 this.materialFormData 裡面去
-      // 先清空
-      for (let prop in this.materialFormDate) {
-        this.materialFormDate[prop] = ''
-      }
-      // 再把點擊到的 row 的資料複製過去
-      for (let prop in row) {
-        this.materialFormDate[prop] = row[prop]
+      // 這邊要處理 edit form
+      this.levelThreeFormDate = Object.assign({}, row)
+    },
+    handleEditSupplier(row) {
+      // 把該原料的 _id 編號傳給子元件，然後在子元件更新資料庫的欄位 supplier_id
+      this.materialSupplierDialog = {
+        show: true,
+        title: '請選擇供應商',
+        option: 'edit',
+        material: row._id
       }
     },
     handleDeleteMaterial(index, row) {

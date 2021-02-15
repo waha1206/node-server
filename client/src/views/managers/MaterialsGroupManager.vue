@@ -604,6 +604,8 @@ export default {
         option: 'edit'
       }
       this.levelThreeEditTableData = Object.assign({}, row)
+      if (typeof row.processing_fee === 'undefined')
+        this.levelThreeEditTableData.processing_fee = ''
     },
     handleDeleteGroupMember() {},
     // 分頁設定 ***************************************************************************

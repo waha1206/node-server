@@ -316,7 +316,6 @@ export default {
     },
     // 如果 當 dialog 有變化的時候，去檢查第一層跟第二層有沒有資料，並且組合成 cscader 的 options
     dialog() {
-      console.log('我是 watch - dialog', this.dialog)
       if (this.groupLevelOneData.length && this.groupLevelTwoData.length) {
         this.levelOneTowOption = []
         this.groupLevelOneData.forEach((item) => {
@@ -347,7 +346,6 @@ export default {
         }
       }
       if (this.dialog.option === 'add') {
-        console.log('我是 add')
         this.files = []
         this.processingFee = 0
         this.choiceLevelTwoValue = []
@@ -359,10 +357,14 @@ export default {
         )
       }
       if (this.dialog.option === 'edit') {
-        console.log('我是 edit')
         this.levelThreeFormData = Object.assign({}, this.editFormData)
         this.choiceLevelTwoValue = this.editFormData.choiceLevelTwoValue
-        this.processingFee = this.editFormData.processing_fee
+        // processingFee 因為是自定義元件 所以沒有辦法使用 from 去包覆這個資料，所以要另外處理
+        if (typeof this.editFormData.processing_fee === 'undefined') {
+          this.processingFee = 0
+        } else {
+          this.processingFee = Number(this.editFormData.processing_fee)
+        }
         this.getImgs()
       }
     }
@@ -400,7 +402,7 @@ export default {
         last_modify_date: new Date(),
         last_edit_person: this.user.id,
         web_side_name: this.levelThreeFormData.web_side_name,
-        processing_fee: this.processingFee,
+        processing_fee: String(this.processingFee),
         choiceLevelTwoValue: this.choiceLevelTwoValue,
         level_one_id: this.levelThreeFormData.level_one_id,
         level_two_id: this.levelThreeFormData.level_two_id

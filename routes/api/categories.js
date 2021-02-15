@@ -259,6 +259,8 @@ router.post(
       // 多張圖片
       if (req.body.imgs) {
         categoryFields.imgs = req.body.imgs.split('|')
+      } else {
+        categoryFields.imgs = []
       }
       if (req.body.describe) {
         categoryFields.describe = req.body.describe
@@ -307,7 +309,14 @@ router.post(
       if (req.body.material_group) {
         categoryFields.material_group = req.body.material_group.map((x) => x)
       }
+      if (req.body.tailor_fee) {
+        categoryFields.tailor_fee = req.body.tailor_fee
+      }
+      if (req.body.crop_fee) {
+        categoryFields.crop_fee = req.body.crop_fee
+      }
     }
+
     // if (categoryFields.imgs.length) {
     //   console.log(categoryFields.imgs.length)
     // }

@@ -362,6 +362,8 @@ export default {
         level: 0,
         pattern_no: '', // 版型編號
         pattern_download: '', // 雲端下載連結，存放雲端資料夾的網址
+        pattern_height: 0,
+        pattern_width: 0,
         introduction_video: { label: '', link: '' }, // 商品影片
         salting_on_color_video: { label: '', link: '' }, // 校色影片
         note_one_video: { label: '', link: '' }, // 其它影片(一)
@@ -371,7 +373,9 @@ export default {
         status: { activated: false, vip: false }, // 啟用？網頁端會看到商品與否，VIP = 客製化商品專屬
         id: '',
         level: 3,
-        level_one_id: ''
+        level_one_id: '',
+        tailor_fee: '',
+        crop_fee: ''
       },
       categoriesLevelOneDialog: {
         show: false,
@@ -414,55 +418,32 @@ export default {
   },
   watch: {
     // 讀取完 level three data / level one class / level two class
+    groupLevelOneData() {
+      if (
+        !this.groupLevelOneData.length &&
+        !this.groupLevelTwoData.length &&
+        !this.groupLevelThreeData.length
+      )
+        return
+      this.getMaterialGroupOptions()
+    },
+    groupLevelTwoData() {
+      if (
+        !this.groupLevelOneData.length &&
+        !this.groupLevelTwoData.length &&
+        !this.groupLevelThreeData.length
+      )
+        return
+      this.getMaterialGroupOptions()
+    },
     groupLevelThreeData() {
-      if (this.groupLevelTwoData[0]) {
-        this.materialGroupOptions = []
-        this.groupLevelOneData.forEach((item) => {
-          // console.log(index, item.name, item._id)
-          let obj = {
-            value: '',
-            label: '',
-            children: []
-          }
-          obj.value = item._id
-          obj.label = item.type + ' ' + item.name
-          this.materialGroupOptions.push(obj)
-        })
-
-        for (let i = 0; i < this.materialGroupOptions.length; i++) {
-          const level_one_id = this.materialGroupOptions[i].value
-          this.groupLevelTwoData.forEach((item) => {
-            if (item.level_one_id === level_one_id) {
-              let obj2 = {
-                value: '',
-                label: '',
-                children: []
-              }
-              obj2.value = item._id
-              obj2.label = item.type + ' ' + item.name
-              this.materialGroupOptions[i].children.push(obj2)
-            }
-          })
-          for (
-            let j = 0;
-            j < this.materialGroupOptions[i].children.length;
-            j++
-          ) {
-            const level_two_id = this.materialGroupOptions[i].children[j].value
-            this.groupLevelThreeData.forEach((item) => {
-              if (item.level_two_id === level_two_id) {
-                let obj3 = {
-                  value: '',
-                  label: ''
-                }
-                obj3.value = item._id
-                obj3.label = item.type + ' ' + item.name
-                this.materialGroupOptions[i].children[j].children.push(obj3)
-              }
-            })
-          }
-        }
-      }
+      if (
+        !this.groupLevelOneData.length &&
+        !this.groupLevelTwoData.length &&
+        !this.groupLevelThreeData.length
+      )
+        return
+      this.getMaterialGroupOptions()
     },
     // 如果 level one 跟 level two 都有資料的時候，就更動 cascader 的聯集選擇器
     categoriesLevelTwoData() {
@@ -500,6 +481,53 @@ export default {
   },
 
   methods: {
+    // 取得 group member option ， 當讀取 group one two three 都完成的時候，才取得 cascader option 的資料
+    getMaterialGroupOptions() {
+      console.log('被觸發了')
+      this.materialGroupOptions = []
+      this.groupLevelOneData.forEach((item) => {
+        // console.log(index, item.name, item._id)
+        let obj = {
+          value: '',
+          label: '',
+          children: []
+        }
+        obj.value = item._id
+        obj.label = item.type + ' ' + item.name
+        this.materialGroupOptions.push(obj)
+      })
+
+      for (let i = 0; i < this.materialGroupOptions.length; i++) {
+        const level_one_id = this.materialGroupOptions[i].value
+        this.groupLevelTwoData.forEach((item) => {
+          if (item.level_one_id === level_one_id) {
+            let obj2 = {
+              value: '',
+              label: '',
+              children: []
+            }
+            obj2.value = item._id
+            obj2.label = item.type + ' ' + item.name
+            this.materialGroupOptions[i].children.push(obj2)
+          }
+        })
+        for (let j = 0; j < this.materialGroupOptions[i].children.length; j++) {
+          const level_two_id = this.materialGroupOptions[i].children[j].value
+          this.groupLevelThreeData.forEach((item) => {
+            if (item.level_two_id === level_two_id) {
+              let obj3 = {
+                value: '',
+                label: ''
+              }
+              obj3.value = item._id
+              obj3.label = item.type + ' ' + item.name
+              this.materialGroupOptions[i].children[j].children.push(obj3)
+            }
+          })
+        }
+      }
+    },
+
     // ********************* 讀取 material group *********************
     getGroupLevelOneData() {
       this.$axios
@@ -685,6 +713,8 @@ export default {
       }
       // 把 row 裡面的資料深拷貝一份給 formdata 這是是傳到 子元件裡面所需要的屬性
       this.formData = Object.assign({}, row)
+      if (typeof row.tailor_fee === 'undefined') this.formData.tailor_fee = ''
+      if (typeof row.crop_fee === 'undefined') this.formData.crop_fee = ''
     },
     // 刪除第一層的 class 目前不開放
     handleDeleteCategory() {

@@ -363,7 +363,43 @@
               </el-col>
             </el-row>
           </el-header>
-          <!-- 第七行開始，圖片上傳 -->
+            <!-- 第七行開始，平車費用，裁切費用-->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="平車費用"
+                    size="mini"
+                    label-width="120px"
+                    prop="tailor_fee"
+                  >
+                    <my-currency-input
+                    :isReadyOnly="false"
+                    type="tailor_fee"
+                    v-model="tailorFee"
+                  ></my-currency-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="裁切費用："
+                    size="mini"
+                    label-width="120px"
+                    prop="crop_fee"
+                  >
+                    <my-currency-input
+                    :isReadyOnly="false"
+                    type="crop_fee"
+                    v-model="cropFee"
+                  ></my-currency-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+            </el-row>
+          </el-header>
+          <!-- 第八行開始，圖片上傳 -->
           <!-- 圖片上傳的教學 https://segmentfault.com/a/1190000013796215 -->
           <!-- 上傳一張照片的時候隱藏 後面的 + 框框  https://www.twblogs.net/a/5b81a49e2b71772165ad9752 -->
           <!-- 另外一種做法：https://blog.csdn.net/zaocha321/article/details/103345423 -->
@@ -486,7 +522,9 @@ export default {
         dataType: '0',
         oldFilePath: ''
       },
-      files: [],
+			files: [],
+			tailorFee:0,
+			cropFee:0,
       dialogImageUrl: '',
       dialogVisible: false,
       disabled: Boolean,
@@ -507,7 +545,9 @@ export default {
     // 嘿嘿
     this.levelOneChang(this.levelThreeFormData.level_one_id)
     // 如果是要新增商品，就把 el-upload 裡面的圖片資料清空，這邊做第一次近來的初始化，接下來透過 watch this.dialog 去做監控與更新
-    if (this.dialog.option === 'add') this.files = []
+		if (this.dialog.option === 'add') this.files = []
+		// 舊資料裡面的 tailor_fee 跟 crop_frr 有可能是 undefined 所以在父元件的時候就處理掉 handleEditCategory 裡面去處理
+		this.setFee(this.formData.tailor_fee, this.formData.crop_fee)
   },
   computed: {
     getDate() {
@@ -530,14 +570,26 @@ export default {
     }
   },
   watch: {
+		// 觀察 tailor_fee 跟 crop_fee 當變化的時候就更新到表單裡面 this.levelThreeFormData
+		tailorFee(newValue){
+			this.levelThreeFormData.tailor_fee = String(newValue)
+		},
+		cropFee(newValue){
+			this.levelThreeFormData.crop_fee = String(newValue)
+		},
     // 當 props dialog 有新的 資料進來 (這邊是點擊【編輯】 的時候會觸發) 然後更新 Imgs 但是第一次還是要掛載於 created() 裡面喔
     dialog() {
       // 如果是要新增商品，就把 el-upload 裡面的圖片資料清空，mounted 執行過後，每次監控，透過 watch this.dialog 去做判斷要不要清空 files[]
       if (this.dialog.option === 'add') {
         this.files = []
         this.formData.imgs = []
-      }
-      this.levelThreeFormData = Object.assign({}, this.formData)
+			}
+			// 父元素 就處理好了 formData 如果是 add 就是乾淨的資料，如果是 edit 就是要編輯的資料
+			this.levelThreeFormData = Object.assign({}, this.formData)
+			// 記得要把要編輯的資料裡面的 tailor_fee 跟 crop_fee 存到 tailorFee 跟 cropFee 裡面
+			// 因為這兩個欄位是另外的子元件會需要使用到的欄位，而且有被 watch
+			// 第一次我們要靠 mounted 去觸發 setFee 第二次開始就會從這邊去做設定 setFee
+			this.setFee(this.levelThreeFormData.tailor_fee, this.levelThreeFormData.crop_fee)
       // 第一次更新 updateLevelTwoData 在 mounted(){} 裡面，這邊是後續每次異動 dialog 都會去更新 updateLevelTwoData
       this.levelOneChang(this.levelThreeFormData.level_one_id)
       this.getImgs()
@@ -548,6 +600,12 @@ export default {
     }
   },
   methods: {
+		// 當這個元件被觸發的時候，要更新一些束值
+		setFee(tailorFee, cropFee){
+			// isNaN 判斷這個數值是否可以被轉換成數字
+			if(isNaN(tailorFee)) {this.tailorFee=0} else{this.tailorFee = Number(tailorFee)}
+			if(isNaN(cropFee)) {this.tailorFee=0} else{this.cropFee = Number(cropFee)}
+		},
     // 把從資料庫讀進來的 Imgs (base64) 拼接成 el-upload 的 files 可以接受的格式，這樣就會顯示出來了
     getImgs() {
       this.files = []
@@ -585,9 +643,11 @@ export default {
     levelTwoChang() {
       console.log('categoriesThreeDialog第二層選項備呼叫惹')
     },
-    // 提交表單 add / edit
+		// 提交表單 add / edit
     onSubmit(formName) {
-      // add 的時候，如果是 edit 要改
+			// add 的時候，如果是 edit 要改
+			// dialog 發生變化的時候 (使用 watch 觀察) 就會把 levelThreeFormData 的內容清空或是設定好
+			// 關於 tailor_fee 跟 crop_fee 的數字，也是使用 watch 去觀察跟設定到 levelThreeFoemData 裡面
       const uploadFormData = {
         name: this.levelThreeFormData.name,
         level_one_id: this.levelThreeFormData.level_one_id,
@@ -601,6 +661,8 @@ export default {
         status: Object.assign({}, this.levelThreeFormData.status),
         pattern_no: this.levelThreeFormData.pattern_no,
         pattern_download: this.levelThreeFormData.pattern_download,
+        tailor_fee: this.levelThreeFormData.tailor_fee,
+        crop_fee: this.levelThreeFormData.crop_fee,
         introduction_video: Object.assign(
           {},
           this.levelThreeFormData.introduction_video
@@ -617,7 +679,8 @@ export default {
           {},
           this.levelThreeFormData.note_two_video
         )
-      }
+			}
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 紀錄最後修改的使用者，最後修改的時間放到了 server 端去紀錄
@@ -723,6 +786,7 @@ export default {
 </script>
 
 <style scoped>
+/* eslint-disable */
 .el-row {
   margin-bottom: 20px;
 

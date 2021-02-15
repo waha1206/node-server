@@ -22,9 +22,6 @@ const MaterialSchema = new Schema({
   old_serial_numbers: {
     type: String
   },
-  unit_price: {
-    type: String
-  },
   company_profit: {
     type: String
   },
@@ -34,12 +31,19 @@ const MaterialSchema = new Schema({
   product_category: {
     type: String
   },
+  // 商品成本
   the_cost: {
     type: String
   },
+  // 單位售價
+  unit_price: {
+    type: String
+  },
+  // 商品售價
   retail_price: {
     type: String
   },
+  // 商品利潤
   product_profit: {
     type: String
   },

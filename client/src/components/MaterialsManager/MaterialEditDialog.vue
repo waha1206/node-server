@@ -25,7 +25,7 @@
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
                 <!-- 下拉選單，這裡是原物料分類 -->
-                <el-form-item label="第一層分類：" prop="material_class">
+                <el-form-item label="分類(一)：" prop="material_class">
                   <el-select
                     @change="selectOneChang"
                     v-model="materialDataForm.material_class"
@@ -45,7 +45,7 @@
               </el-col>
               <el-col :span="6">
                 <!-- 下拉選單，這裡是原物料分類 -->
-                <el-form-item label="第二層分類：" prop="level_two_id">
+                <el-form-item label="分類(二)：" prop="level_two_id">
                   <el-select
                     @change="selectTwoChang"
                     v-model="materialDataForm.level_two_id"
@@ -80,7 +80,7 @@
                   <my-currency-input
                     :isReadyOnly="false"
                     type="the_cost"
-                    v-model="materialDataForm.the_cost"
+                    v-model="theCost"
                   ></my-currency-input>
 
                   <!-- <el-input
@@ -109,7 +109,7 @@
                   <my-percentage-input
                     :isReadyOnly="false"
                     type="product_profit"
-                    v-model="materialDataForm.product_profit"
+                    v-model="productProfit"
                   ></my-percentage-input>
 
                   <!-- <el-input
@@ -125,7 +125,7 @@
                   <my-currency-input
                     :isReadyOnly="false"
                     type="unit_price"
-                    v-model="materialDataForm.unit_price"
+                    v-model="unitPrice"
                   ></my-currency-input>
                   <!-- <el-input
                     size="mini"
@@ -437,7 +437,10 @@ export default {
       disabled: Boolean,
       updateLevelTwoData: [],
       test: '',
-      retailPrice: 0,
+      theCost: 0, // 商品進貨成本
+      unitPrice: 0, // 單位成本
+      productProfit: 0, // 商品利潤
+      retailPrice: 0, // 商品售價
       materialDataForm: {},
       // materialDataForm_rules: {
       form_rules: {
@@ -507,7 +510,8 @@ export default {
   },
   watch: {
     // 常用的正則表達式 https://kknews.cc/zh-tw/code/o5e4n55.html
-    'materialDataForm.unit_price': function(newValue) {
+    // 'materialDataForm.unit_price': function(newValue) {
+    unitPrice: function(newValue) {
       if (!newValue) return
       // 帶有兩位小數的正實數，傳進來的是 單位售價
       var numReg = /[0-9]+(.[0-9]{2})?/
@@ -515,30 +519,67 @@ export default {
         this.$message('請輸入正整數與小數點後兩位數')
         this.retailPrice = 0
       } else {
-        this.retailPrice = this.materialDataForm.retail_price =
-          newValue *
-          ((100 + Number(this.materialDataForm.product_profit)) / 100)
+        this.retailPrice = newValue * ((100 + Number(this.productProfit)) / 100)
+        // 取小數點後兩位，無條件進位
         this.setCeil(this.retailPrice)
+        // 存起來，準備存到資料庫
+        this.materialDataForm.unit_price = String(this.unitPrice)
+        this.materialDataForm.retail_price = String(this.retailPrice)
       }
     },
     // 檢查商品利潤是不是正整數 只能包含 0-9 這邊只有單純的計算數字有使用到，正則運算暫時沒用到
     // https://juejin.cn/post/6844904067580297229  按下 enter 會觸發 tab 鍵的文章出處
-    'materialDataForm.product_profit': function(newValue) {
+    // 'materialDataForm.product_profit': function(newValue) {
+    productProfit: function(newValue) {
       var numReg = /^[0-9]*$/
       if (!numReg.test(newValue)) {
         this.$message('請輸入正整數')
         this.retailPrice = 0
       } else {
-        this.retailPrice = this.materialDataForm.retail_price =
-          this.materialDataForm.unit_price * ((100 + Number(newValue)) / 100)
+        this.retailPrice = this.unitPrice * ((100 + Number(newValue)) / 100)
+        // 取小數點後兩位，無條件進位
         this.setCeil(this.retailPrice)
+        // 存起來，準備存到資料庫
+        this.materialDataForm.product_profit = String(this.productProfit)
+        this.materialDataForm.retail_price = String(this.retailPrice)
       }
     },
     // 當父元件 dialog 傳遞 到  子元件的 props dialog 的時候，就去更新一下  此子元件要提交的表單內容 this.updateMaterialFormData()
     // 此函式會更新 this.MaterialFormData
     dialog: function(newValue, oldValue) {
-      this.updateMaterialFormData()
+      this.materialDataForm = Object.assign({}, this.formData)
+      if (newValue.option === 'add') {
+        this.unitPrice = 0
+        this.productProfit = 0
+        this.retailPrice = 0
+        this.theCost = 0
+      } else {
+        if (isNaN(this.materialDataForm.the_cost)) {
+          this.theCost = 0
+        } else {
+          this.theCost = Number(this.materialDataForm.the_cost)
+        }
+        if (isNaN(this.materialDataForm.unit_price)) {
+          this.unitPrice = 0
+        } else {
+          this.unitPrice = Number(this.materialDataForm.unit_price)
+        }
+        if (isNaN(this.materialDataForm.product_profit)) {
+          this.productProfit = 0
+        } else {
+          this.productProfit = Number(this.materialDataForm.product_profit)
+        }
+        if (isNaN(this.materialDataForm.retail_price)) {
+          this.retailPrice = 0
+        } else {
+          this.retailPrice = Number(this.materialDataForm.retail_price)
+        }
+      }
+      // 如果傳遞過來的 prop -> materialDataForm 裡面的 imgs 有資料的話，就把資料抓到 this.files[]
       this.getImgs()
+    },
+    theCost(newValue) {
+      this.materialDataForm.the_cost = String(newValue)
     }
   },
   created() {
@@ -630,12 +671,7 @@ export default {
     // ************************************ 圖片結束 ************************************
     // 無條件進位，小數點第三位數會無條件進位
     setCeil(float) {
-      this.retailPrice = this.materialDataForm.retail_price =
-        Math.ceil(float * 100) / 100
-    },
-    // 當 dialog 傳遞近來 add 或是 edit 的時候，會被 watch 的 dialog() 觀察到，然後會呼叫這隻程式更新 editDialog 程式裡的 materialDataForm 表單
-    updateMaterialFormData() {
-      this.materialDataForm = Object.assign({}, this.formData)
+      this.retailPrice = Math.ceil(float * 100) / 100
     },
     selectTwoChang(id) {
       this.materialDataForm.level_two_id = id
@@ -646,7 +682,7 @@ export default {
     },
     onSubmit(form) {
       this.$refs[form].validate((valid) => {
-        if (valid && !this.materialDataForm.material_class == '') {
+        if (valid) {
           this.materialDataForm.last_edit_person = this.user.id
           this.materialDataForm.last_modify_date = new Date()
           this.materialDataForm.imgs = this.materialDataForm.imgs.join('|')
