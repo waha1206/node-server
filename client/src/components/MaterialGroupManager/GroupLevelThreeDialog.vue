@@ -407,7 +407,6 @@ export default {
         level_one_id: this.levelThreeFormData.level_one_id,
         level_two_id: this.levelThreeFormData.level_two_id
       }
-
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 紀錄最後修改的使用者，最後修改的時間放到了 server 端去紀錄

@@ -300,6 +300,8 @@ router.post(
         if (req.body.imgs.length > 0) {
           materialGroupFields.imgs = req.body.imgs.split('|')
         }
+      } else {
+        materialGroupFields.imgs = []
       }
       if (req.body.describe) {
         materialGroupFields.describe = req.body.describe
