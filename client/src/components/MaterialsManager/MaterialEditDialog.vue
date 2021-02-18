@@ -454,10 +454,8 @@ export default {
         ],
         level_two_id: [
           { required: true, message: '請選擇分類', trigger: 'blur' }
-        ],
-        retail_price: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
         ]
+
         // retail_price: [
         //   { required: true, message: '此欄位不能為空', trigger: 'blur' }
         // ]
@@ -686,6 +684,7 @@ export default {
           this.materialDataForm.last_edit_person = this.user.id
           this.materialDataForm.last_modify_date = new Date()
           this.materialDataForm.imgs = this.materialDataForm.imgs.join('|')
+          console.log(this.materialDataForm)
           const url =
             this.dialog.option == 'add'
               ? 'add'
