@@ -233,6 +233,7 @@
 import GroupLevelOneDialog from '../../components/MaterialGroupManager/GroupLevelOneDialog'
 import GroupLevelTwoDialog from '../../components/MaterialGroupManager/GroupLevelTwoDialog'
 import GroupLevelThreeDialog from '../../components/MaterialGroupManager/GroupLevelThreeDialog'
+import { MessageBox } from 'element-ui'
 
 export default {
   name: 'material-group-manager',
@@ -607,7 +608,23 @@ export default {
       if (typeof row.processing_fee === 'undefined')
         this.levelThreeEditTableData.processing_fee = ''
     },
-    handleDeleteGroupMember() {},
+    handleDeleteGroupMember(index, row) {
+      MessageBox.confirm(
+        '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
+        '嚴重警告！！！'
+      )
+        .then(() => {
+          this.$axios
+            .delete(`/api/material-group/delete/${row._id}`)
+            .then((res) => {
+              this.$message('刪除成功！')
+              this.getGroupLevelThreeData()
+            })
+        })
+        .catch(() => {
+          this.$message('您取消刪除了～鬆一口氣')
+        })
+    },
     // 分頁設定 ***************************************************************************
     setPaginations() {
       this.my_paginations.total = this.groupLevelThreeData.length

@@ -567,7 +567,19 @@ export default {
       }
     },
     handleDeleteMaterial(index, row) {
-      console.log(index, row)
+      MessageBox.confirm(
+        '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
+        '嚴重警告！！！'
+      )
+        .then(() => {
+          this.$axios.delete(`/api/material/delete/${row._id}`).then((res) => {
+            this.$message('刪除成功！')
+            this.getMaterials()
+          })
+        })
+        .catch(() => {
+          this.$message('您取消刪除了～鬆一口氣')
+        })
     },
     getMaterialClass() {
       this.$axios
