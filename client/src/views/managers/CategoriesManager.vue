@@ -309,6 +309,7 @@
 import CategoriesLevelOneDialog from '../../components/CategoriesManager/CategoriesLevelOneDialog'
 import CategoriesLevelTwoDialog from '../../components/CategoriesManager/CategoriesLevelTwoDialog'
 import CategoriesLevelThreeDialog from '../../components/CategoriesManager/CategoriesLevelThreeDialog-1'
+import { MessageBox } from 'element-ui'
 
 export default {
   name: 'categories-manager',
@@ -717,8 +718,23 @@ export default {
       if (typeof row.crop_fee === 'undefined') this.formData.crop_fee = ''
     },
     // 刪除第一層的 class 目前不開放
-    handleDeleteCategory() {
-      this.$message('暫時不提供刪除的功能，請與管理員聯繫！')
+    handleDeleteCategory(index, row) {
+      MessageBox.confirm(
+        '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
+        '嚴重警告！！！'
+      )
+        .then(() => {
+          this.$axios
+            .delete(`/api/categories/delete-level-three/${row._id}`)
+            .then((res) => {
+              this.$message('刪除成功！')
+              this.getCategoriesLevelTwoData()
+              this.setPaginations()
+            })
+        })
+        .catch(() => {
+          this.$message('您取消刪除了～鬆一口氣')
+        })
       return
     },
     // 分頁設定 **********************************************************************
