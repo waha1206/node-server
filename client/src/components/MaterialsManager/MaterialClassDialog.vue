@@ -324,7 +324,7 @@ export default {
       )
         .then(() => {
           this.$axios
-            .delete(`/api/material-class/delete/${row._id}`)
+            .delete(`/api/material-class/delete-level-one/${row._id}`)
             .then((res) => {
               this.$message('刪除成功！')
               this.$emit('update')

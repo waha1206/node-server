@@ -446,8 +446,6 @@ export default {
       this.dialogOption = 'edit'
     },
     handleDelete(row) {
-      // 暫時不開放
-      return
       // 讓全部分類無法刪除
       MessageBox.confirm(
         '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
@@ -455,7 +453,7 @@ export default {
       )
         .then(() => {
           this.$axios
-            .delete(`/api/material-group/delete-level-two/${row._id}`)
+            .delete(`/api/material-class/delete-level-two/${row._id}`)
             .then((res) => {
               this.$message('刪除成功！')
               this.$emit('update')

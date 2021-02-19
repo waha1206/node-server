@@ -177,17 +177,33 @@ router.post(
   }
 )
 
-// $router delete api/material-class/delete/:id
+// $router delete api/material-class/delete-level-one/:id
 // @desc   刪除訊息接口
 // @access private
 // 選擇 delete
 // 使用 hander 要驗證 token
 // body 要放編輯的資料 key:value
 router.delete(
-  '/delete/:id',
+  '/delete-level-one/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     MaterialClass.findOneAndRemove({ _id: req.params.id })
+      .then((materialClass) => res.json(materialClass))
+      .catch((_err) => res.status(404).json('刪除失敗'))
+  }
+)
+
+// $router delete api/material-class/delete-level-two/:id
+// @desc   刪除訊息接口
+// @access private
+// 選擇 delete
+// 使用 hander 要驗證 token
+// body 要放編輯的資料 key:value
+router.delete(
+  '/delete-level-two/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    MaterialLevelTwoClass.findOneAndRemove({ _id: req.params.id })
       .then((materialClass) => res.json(materialClass))
       .catch((_err) => res.status(404).json('刪除失敗'))
   }
