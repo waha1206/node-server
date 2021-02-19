@@ -50,6 +50,21 @@
           "
           style="width: 100%"
         >
+          <el-table-column type="expand">
+            <template slot-scope="props">
+              <el-form label-position="left" inline class="demo-table-expand">
+                <el-form-item label="利潤表格：" class="cascader-item">
+                  <div class="block"></div>
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    @click="handleUpdateProfir(props.row)"
+                    >利潤清單更新</el-button
+                  >
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-table-column>
           <!-- 序號 -->
           <el-table-column
             type="index"
