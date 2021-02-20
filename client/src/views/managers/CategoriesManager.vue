@@ -53,7 +53,7 @@
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-form label-position="left" inline class="demo-table-expand">
-                <el-form-item label="利潤表格：" class="cascader-item">
+                <el-form-item label="" class="cascader-item">
                   <div class="block"></div>
                   <el-button
                     size="mini"
@@ -61,6 +61,35 @@
                     @click="handleUpdateProfir(props.row)"
                     >利潤清單更新</el-button
                   >
+                </el-form-item>
+                <el-form-item label="利潤表格：" class="cascader-item">
+                  <el-container>
+                    <el-header class="profit-btn-wrap">
+                      <el-button
+                        size="mini"
+                        type="primary"
+                        @click="handleAddProfit(props.row)"
+                        >新增欄位</el-button
+                      >
+                    </el-header>
+                    <el-main>
+                      <template slot-scope="props" v-for="item in props.row">
+                        <div class="profit-wrap">
+                          <!-- {{ item }} -->
+                          <el-input
+                            v-for="(citem, index) in item"
+                            v-model="citem.quantity"
+                            @change="quityChange(citem)"
+                          ></el-input>
+                        </div>
+                      </template>
+                    </el-main>
+                  </el-container>
+                  <!-- <el-input
+                    v-model="temporary.title"
+                    placeholder="輸入商品數量"
+                    @keyup.enter.native="handleAddProfit"
+                  ></el-input> -->
                 </el-form-item>
               </el-form>
             </template>
@@ -330,6 +359,9 @@ export default {
   name: 'categories-manager',
   data() {
     return {
+      // 增加利潤與數量使用的資料
+      temporary: {},
+
       // 管理分頁的物件
       my_paginations: {
         page_index: 1, // 位於當前第幾頁
@@ -391,7 +423,8 @@ export default {
         level: 3,
         level_one_id: '',
         tailor_fee: '',
-        crop_fee: ''
+        crop_fee: '',
+        quantity_profit: []
       },
       categoriesLevelOneDialog: {
         show: false,
@@ -497,6 +530,56 @@ export default {
   },
 
   methods: {
+    //
+    quityChange(value) {
+      console.log(value)
+    },
+    // 增加數量與利潤
+    handleAddProfit(row) {
+      if (row.quantity_profit.length > 9) return
+      const obj = {
+        quantity: '100',
+        profit: '25'
+      }
+      row.quantity_profit.push(obj)
+      const uploadFormData = {
+        level: 3,
+        quantity_profit: row.quantity_profit
+      }
+      const url = `edit/${row._id}`
+      this.$axios
+        .post(`/api/categories/${url}`, uploadFormData)
+        .then((res) => {
+          // 添加成功
+          this.$message({
+            message: '更新數量與利潤成功！',
+            type: 'success'
+          })
+        })
+        .catch((err) => {
+          console.log('axios添加數據失敗==>CategoriesManager.vue==>', err)
+        })
+    },
+    // 更新增加數量與利潤到資料庫裏面
+    handleUpdateProfir(row) {
+      const uploadFormData = {
+        level: 3
+        // material_group: row.material_group
+      }
+      const url = `edit/${row._id}`
+      this.$axios
+        .post(`/api/categories/${url}`, uploadFormData)
+        .then((res) => {
+          // 添加成功
+          this.$message({
+            message: '更新數量與利潤成功！',
+            type: 'success'
+          })
+        })
+        .catch((err) => {
+          console.log('axios添加數據失敗==>CategoriesManager.vue==>', err)
+        })
+    },
     // 取得 group member option ， 當讀取 group one two three 都完成的時候，才取得 cascader option 的資料
     getMaterialGroupOptions() {
       console.log('被觸發了')
@@ -868,5 +951,11 @@ body > .el-container {
   margin-top: 4px;
   padding: 0;
   width: 70px;
+}
+.el-header.profit-btn-wrap {
+  margin: 0;
+  padding: 0;
+  height: 28px !important;
+  line-height: 28px;
 }
 </style>

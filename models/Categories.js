@@ -165,6 +165,9 @@ const CategoryLevelThreeSchema = new Schema({
   },
   crop_fee: {
     type: String
+  },
+  quantity_profit: {
+    type: [{ quantity: { type: String }, profit: { type: String } }]
   }
 })
 

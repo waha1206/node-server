@@ -315,6 +315,9 @@ router.post(
       if (req.body.crop_fee) {
         categoryFields.crop_fee = req.body.crop_fee
       }
+      if (req.body.quantity_profit) {
+        categoryFields.quantity_profit = req.body.quantity_profit
+      }
     }
 
     // if (categoryFields.imgs.length) {
