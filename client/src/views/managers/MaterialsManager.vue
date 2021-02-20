@@ -12,14 +12,22 @@
           >新增原物料</el-button
         >
         <div class="materal-class-container">
-          <el-select
+          <el-cascader
+            @change="onOptionsChange"
+            v-model="choiceLevelTwoValue"
+            :props="{ expandTrigger: 'hover' }"
+            size="mini"
+            placeholder="請選擇第二層分類"
+            :options="levelOneTowOption"
+            filterable
+          ></el-cascader>
+          <!-- <el-select
             v-model="materialClassName"
             @change="handleMaterialClassChange"
             filterable
             size="mini"
             placeholder="可以透過關鍵字搜尋"
           >
-            <!-- 我的理解 option 裡面的 :value 所綁定的值，會往上傳遞到 el-select 裡面的 v-model="data return 裡面設定的變數名稱" -->
             <el-option
               v-for="(item, index) in materialClassData"
               :key="index"
@@ -27,8 +35,9 @@
               :value="item._id"
             >
             </el-option>
-          </el-select>
+          </el-select> -->
         </div>
+        <div class="cascader-wrap"></div>
         <!-- {{ materialClassName }} -->
       </el-header>
       <!-- 分頁 -->
@@ -359,6 +368,8 @@ export default {
   name: 'materials-manager',
   data() {
     return {
+      choiceLevelTwoValue: [], // 一開始選好後，會顯示 table 的資料，要選擇 one / two
+      levelOneTowOption: [], // 所有可選擇的 one / two 層資料
       materialClassName: '',
       tableData: [],
       materialClassData: [],
@@ -477,7 +488,78 @@ export default {
     this.getSuppliers()
     this.getSupplierClass()
   },
+  mounted() {
+    this.setCascaderOptions()
+  },
+  watch: {
+    materialClassData() {
+      if (
+        !this.materialClassData.length &&
+        !this.materialLevelTwoClassData.length
+      )
+        return
+      this.setLevelOneTowOption()
+    },
+    materialLevelTwoClassData() {
+      if (
+        !this.materialClassData.length &&
+        !this.materialLevelTwoClassData.length
+      )
+        return
+      this.setLevelOneTowOption()
+    }
+  },
   methods: {
+    setCascaderOptions() {
+      // ，就讀回來上次的紀錄
+      if (
+        localStorage.MaterialLevelOneValue &&
+        localStorage.MaterialLevelTwoValue
+      ) {
+        this.choiceLevelTwoValue[0] = localStorage.MaterialLevelOneValue
+        this.choiceLevelTwoValue[1] = localStorage.MaterialLevelTwoValue
+      }
+    },
+    // 當選擇 one / two 時，有變化就會來到這邊
+    onOptionsChange(value) {
+      // 當分類選擇異動的時候，再重新的撈第三層的商品資料
+      localStorage.MaterialLevelOneValue = value[0]
+      localStorage.MaterialLevelTwoValue = value[1]
+      // localStorage.material_class = value
+      this.getMaterials()
+    },
+    // 當 group level one / two 的資料都完整後，在來這邊整理資料
+    setLevelOneTowOption() {
+      this.levelOneTowOption = []
+      // this.materialClassData
+      this.materialClassData.forEach((item) => {
+        // console.log(index, item.name, item._id)
+        let obj = {
+          value: '',
+          label: '',
+          children: []
+        }
+        obj.value = item._id
+        obj.label = item.type + ' ' + item.name
+        this.levelOneTowOption.push(obj)
+      })
+
+      for (let i = 0; i < this.levelOneTowOption.length; i++) {
+        const level_one_id = this.levelOneTowOption[i].value
+        this.materialLevelTwoClassData.forEach((item) => {
+          if (item.level_one_id === level_one_id) {
+            let obj2 = {
+              value: '',
+              label: ''
+            }
+            obj2.value = item._id
+            obj2.label = item.type + ' ' + item.name
+            this.levelOneTowOption[i].children.push(obj2)
+          }
+        })
+      }
+      this.getMaterials()
+    },
     getSupplierById(row) {
       let supplier = {}
       this.allSupplierlData.forEach((e) => {
@@ -509,10 +591,10 @@ export default {
           console.log(err)
         })
     },
-    handleMaterialClassChange(value) {
-      localStorage.material_class = value
-      this.getMaterials()
-    },
+    // handleMaterialClassChange(value) {
+    //   localStorage.material_class = value
+    //   this.getMaterials()
+    // },
     handleSizeChange(page_size) {
       // 切換每頁有幾條數據
 
@@ -610,33 +692,17 @@ export default {
     getMaterials() {
       // 	第一次進來，要是沒有找到 localStorage.material_class 就會全讀資料庫
       // 如果有紀錄的話，就會只讀紀錄部分的分類商品
-      if (localStorage.material_class) {
-        // 如果一進來這個 元件 的時候發現有紀錄 原料分類，就先把它放進去 select 中
-        this.materialClassName = localStorage.material_class
-        // const url = `get-from-class/${this.localStorage.material_class}`
-        this.$axios
-          .get(`/api/material/get-from-class/${localStorage.material_class}`)
-          .then((res) => {
-            this.allMaterialData = res.data
-            this.setPaginations()
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      } else {
-        // 撈整個資料庫所有的原物料資料
-        this.$axios
-          .get('/api/material')
-          .then((res) => {
-            // console.log('views/FundList.vue', res)
-            this.allMaterialData = res.data
-            // 設置分頁數據
-            this.setPaginations()
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      }
+
+      if (!this.choiceLevelTwoValue[1]) return
+      this.$axios
+        .get(`/api/material/get-from-class/${this.choiceLevelTwoValue[1]}`)
+        .then((res) => {
+          this.allMaterialData = res.data
+          this.setPaginations()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     setPaginations() {
       // 分頁屬性設置

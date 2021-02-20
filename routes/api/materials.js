@@ -125,7 +125,7 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     if (req.params.id !== '5fec461dd3bbbc0ca84cb458') {
-      Material.find({ material_class: req.params.id }, null, {}).then(
+      Material.find({ level_two_id: req.params.id }, null, {}).then(
         (materials) => {
           // Material.find().then((materials) => {
           if (!materials) {

@@ -50,6 +50,10 @@
           "
           style="width: 100%"
         >
+          <!-- type = "expand" 這個就會把 expand 裡面的 所有值 帶入到 props 裡面 所以可以在裡面找到 quantity_profit 的值，再利用
+					第一次的 v-for 在 template 他會把 tableData 下面的 expand 裡面的 item 先拿出來
+					第二次的 v-for 把 quantity_profit[0] [1] [2] ... 依序的 pop 出來使用
+				  -->
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-form label-position="left" inline class="demo-table-expand">
@@ -73,9 +77,10 @@
                       >
                     </el-header>
                     <el-main>
+                      <!-- 先取出第 tableData 每一個 row 的值 -->
                       <template slot-scope="props" v-for="item in props.row">
                         <div class="profit-wrap">
-                          <!-- {{ item }} -->
+                          <!-- 這邊在把 row 下面的 quantity_profit 裡面的值 依序的吐出來 [0] [1] .... 以此類推 -->
                           <el-input
                             v-for="(citem, index) in item"
                             v-model="citem.quantity"
