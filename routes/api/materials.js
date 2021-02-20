@@ -124,7 +124,7 @@ router.get(
   '/get-from-class/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    if (req.params.id !== '5fec461dd3bbbc0ca84cb458') {
+    if (req.params.id !== '6030d6473ef72612c87842b4') {
       Material.find({ level_two_id: req.params.id }, null, {}).then(
         (materials) => {
           // Material.find().then((materials) => {
