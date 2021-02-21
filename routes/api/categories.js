@@ -259,9 +259,10 @@ router.post(
       // 多張圖片
       if (req.body.imgs) {
         categoryFields.imgs = req.body.imgs.split('|')
-      } else {
-        categoryFields.imgs = []
       }
+      // else {
+      //   categoryFields.imgs = []
+      // }
       if (req.body.describe) {
         categoryFields.describe = req.body.describe
       }

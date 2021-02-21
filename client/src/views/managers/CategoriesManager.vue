@@ -57,15 +57,10 @@
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-form label-position="left" inline class="demo-table-expand">
-                <el-form-item label="" class="cascader-item">
+                <!-- <el-form-item label="" class="cascader-item">
                   <div class="block"></div>
-                  <el-button
-                    size="mini"
-                    type="primary"
-                    @click="handleUpdateProfir(props.row)"
-                    >利潤清單更新</el-button
-                  >
-                </el-form-item>
+
+                </el-form-item> -->
                 <el-form-item label="利潤表格：" class="cascader-item">
                   <el-container>
                     <el-header class="profit-btn-wrap">
@@ -75,13 +70,22 @@
                         @click="handleAddProfit(props.row)"
                         >新增欄位</el-button
                       >
+                      <el-button
+                        size="mini"
+                        type="primary"
+                        @click="handleUpdateProfir(props.row)"
+                        >利潤清單更新</el-button
+                      >
                     </el-header>
                     <el-main>
                       <!-- 先取出第 tableData 每一個 row 的值 -->
                       <template v-slot="props" v-for="item in props.row">
                         <div class="profit-wrap" v-for="(citem, index) in item">
                           <!-- 這邊在把 row 下面的 quantity_profit 裡面的值 依序的吐出來 [0] [1] .... 以此類推 -->
-                          <el-input v-model="citem.quantity"></el-input>
+                          <el-input
+                            class="my-input"
+                            v-model="citem.quantity"
+                          ></el-input>
                           <my-percentage-input
                             :width="52"
                             :height="28"
@@ -293,7 +297,7 @@
             label="商品說明"
             prop="describe"
             align="center"
-            width="320"
+            width="310"
           >
           </el-table-column>
 
@@ -702,6 +706,7 @@ export default {
         level: 3,
         material_group: row.material_group
       }
+      console.log(uploadFormData)
       const url = `edit/${row._id}`
       this.$axios
         .post(`/api/categories/${url}`, uploadFormData)
@@ -1005,7 +1010,7 @@ body > .el-container {
   float: left;
 }
 
-.el-input {
+.my-input {
   height: 40px;
   width: 72px;
   line-height: 40px;
@@ -1015,6 +1020,7 @@ body > .el-container {
 
 .el-input__inner {
   height: 28px;
+  text-align: center;
 }
 
 .profit-btn {
