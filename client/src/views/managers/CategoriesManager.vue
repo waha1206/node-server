@@ -78,23 +78,27 @@
                     </el-header>
                     <el-main>
                       <!-- 先取出第 tableData 每一個 row 的值 -->
-                      <template slot-scope="props" v-for="item in props.row">
-                        <div class="profit-wrap">
+                      <template v-slot="props" v-for="item in props.row">
+                        <div class="profit-wrap" v-for="(citem, index) in item">
                           <!-- 這邊在把 row 下面的 quantity_profit 裡面的值 依序的吐出來 [0] [1] .... 以此類推 -->
-                          <el-input
-                            v-for="(citem, index) in item"
-                            v-model="citem.quantity"
-                            @change="quityChange(citem)"
-                          ></el-input>
+                          <el-input v-model="citem.quantity"></el-input>
+                          <my-percentage-input
+                            :width="52"
+                            :height="28"
+                            :isReadyOnly="false"
+                            v-model="citem.profit"
+                          ></my-percentage-input>
+                          <el-button
+                            class="profit-btn"
+                            size="mini"
+                            type="danger"
+                            @click="handleDeleteProfit(index, item)"
+                            >刪除</el-button
+                          >
                         </div>
                       </template>
                     </el-main>
                   </el-container>
-                  <!-- <el-input
-                    v-model="temporary.title"
-                    placeholder="輸入商品數量"
-                    @keyup.enter.native="handleAddProfit"
-                  ></el-input> -->
                 </el-form-item>
               </el-form>
             </template>
@@ -130,6 +134,7 @@
                 <el-cascader
                   size="mini"
                   clearable
+                  :show-all-levels="false"
                   v-model="props.row.material_group"
                   placeholder="選擇原料組合"
                   @change="onMaterialGroupOptionsChange(props.row)"
@@ -535,13 +540,23 @@ export default {
   },
 
   methods: {
+    // 刪除 數量 / 利潤 的欄位
+    handleDeleteProfit(index, item) {
+      item.splice(index, 1)
+    },
     //
-    quityChange(value) {
+    quantityProfitChange(value) {
       console.log(value)
     },
     // 增加數量與利潤
     handleAddProfit(row) {
-      if (row.quantity_profit.length > 9) return
+      if (row.quantity_profit.length > 11) {
+        this.$message({
+          message: '最多只能有12個！',
+          type: 'success'
+        })
+        return
+      }
       const obj = {
         quantity: '100',
         profit: '25'
@@ -552,6 +567,8 @@ export default {
         quantity_profit: row.quantity_profit
       }
       const url = `edit/${row._id}`
+      console.log(row.quantity_profit)
+
       this.$axios
         .post(`/api/categories/${url}`, uploadFormData)
         .then((res) => {
@@ -568,8 +585,8 @@ export default {
     // 更新增加數量與利潤到資料庫裏面
     handleUpdateProfir(row) {
       const uploadFormData = {
-        level: 3
-        // material_group: row.material_group
+        level: 3,
+        quantity_profit: row.quantity_profit
       }
       const url = `edit/${row._id}`
       this.$axios
@@ -959,8 +976,52 @@ body > .el-container {
 }
 .el-header.profit-btn-wrap {
   margin: 0;
+  padding: 5px;
+  height: 33px !important;
+  line-height: 28px;
+  background-color: rgb(239, 236, 250);
+}
+
+.my-percentage-div {
+  margin: 0;
   padding: 0;
   height: 28px !important;
   line-height: 28px;
+  float: left;
+  width: 52px;
+}
+
+.el-main {
+  width: 1000px;
+  height: 128px;
+  padding: 5px;
+  margin: 0;
+  background-color: rgb(239, 236, 250);
+}
+
+.profit-wrap {
+  width: 80px;
+  height: 128;
+  float: left;
+}
+
+.el-input {
+  height: 40px;
+  width: 72px;
+  line-height: 40px;
+  float: left;
+  margin-bottom: 6px;
+}
+
+.el-input__inner {
+  height: 28px;
+}
+
+.profit-btn {
+  float: left;
+  margin-left: 1px;
+  margin-top: 10px;
+  width: 70px;
+  height: 28px;
 }
 </style>

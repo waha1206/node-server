@@ -108,6 +108,8 @@
                 <el-form-item prop="product_profit" label="商品利潤：">
                   <my-percentage-input
                     :isReadyOnly="false"
+                    :width="156"
+                    :height="24"
                     type="product_profit"
                     v-model="productProfit"
                   ></my-percentage-input>

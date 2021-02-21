@@ -108,10 +108,11 @@ Vue.component('my-currency-input', {
 // 使用方式 <my-currency-input type="registered_capital" v-model="formData.registered_capital" ></my-currency-input>
 // 20210206 新增了一個功能是 readyOnly :isReadyOnly="false" 可輸入  :isReadyOnly="true" 只允許讀取
 Vue.component('my-percentage-input', {
-  props: ['value', 'isReadyOnly'],
+  props: ['value', 'isReadyOnly', 'width', 'height'],
   template: `
-			<div>
+			<div class="my-percentage-div">
 					<input
+						v-bind:style="styleObject"
 						class="my-percentage-input"
 						v-if="isReadyOnly"
 					  type="text"
@@ -122,6 +123,7 @@ Vue.component('my-percentage-input', {
 						readonly
 						/>
 					<input
+						v-bind:style="styleObject"
 						class="my-percentage-input"
 						@enter="isInputActive = true"
 						v-else
@@ -140,6 +142,15 @@ Vue.component('my-percentage-input', {
   },
   methods: {},
   computed: {
+    styleObject: {
+      get: function() {
+        const styleObject = {
+          width: this.width + 'px',
+          height: this.height + 'px'
+        }
+        return styleObject
+      }
+    },
     displayValue: {
       get: function() {
         // 當游標在 input 裡面的時候，給使用者看到的是 未經過格式化的字串 例如 2.86

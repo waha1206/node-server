@@ -70,6 +70,14 @@ const router = new VueRouter({
           }
         },
         {
+          path: '/quotation-manager', // 報價單管理
+          name: 'quotation-manager',
+          component: () => import('../views/managers/QuotationManager.vue'),
+          meta: {
+            permission: ['quotation_authority_r']
+          }
+        },
+        {
           path: '/categories-manager', // 商品建構管理
           name: 'categories-manager',
           component: () => import('../views/managers/CategoriesManager.vue'),

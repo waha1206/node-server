@@ -82,6 +82,13 @@ export default {
               }
             },
             {
+              path: 'quotation-manager',
+              name: '報價單管理',
+              meta: {
+                permission: ['quotation_authority_r']
+              }
+            },
+            {
               path: 'categories-manager',
               name: '商品建構管理',
               meta: {
