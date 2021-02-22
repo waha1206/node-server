@@ -192,7 +192,6 @@ router.post(
   (req, res) => {
     const materialFields = {}
 
-    console.log(req.body)
     for (const prop in req.body) {
       if (prop !== 'imgs') {
         materialFields[prop] = req.body[prop]

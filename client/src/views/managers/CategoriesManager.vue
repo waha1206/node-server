@@ -55,7 +55,7 @@
 					第二次的 v-for 把 quantity_profit[0] [1] [2] ... 依序的 pop 出來使用
 				  -->
           <el-table-column type="expand">
-            <template slot-scope="props">
+            <template v-slot="props">
               <el-form label-position="left" inline class="demo-table-expand">
                 <!-- <el-form-item label="" class="cascader-item">
                   <div class="block"></div>
@@ -63,6 +63,7 @@
                 </el-form-item> -->
                 <el-form-item label="利潤表格：" class="cascader-item">
                   <el-container>
+                    <!-- header 兩個按紐 新增欄位，利潤清單更新 -->
                     <el-header class="profit-btn-wrap">
                       <el-button
                         size="mini"
@@ -78,29 +79,32 @@
                       >
                     </el-header>
                     <el-main>
-                      <!-- 先取出第 tableData 每一個 row 的值 -->
-                      <template v-slot="props" v-for="item in props.row">
-                        <div class="profit-wrap" v-for="(citem, index) in item">
-                          <!-- 這邊在把 row 下面的 quantity_profit 裡面的值 依序的吐出來 [0] [1] .... 以此類推 -->
-                          <el-input
-                            class="my-input"
-                            v-model="citem.quantity"
-                          ></el-input>
-                          <my-percentage-input
-                            :width="52"
-                            :height="28"
-                            :isReadyOnly="false"
-                            v-model="citem.profit"
-                          ></my-percentage-input>
-                          <el-button
-                            class="profit-btn"
-                            size="mini"
-                            type="danger"
-                            @click="handleDeleteProfit(index, item)"
-                            >刪除</el-button
-                          >
-                        </div>
-                      </template>
+                      <!-- 這邊會秀出欄位名稱 數量，利潤，刪除按紐 -->
+                      <div
+                        class="profit-wrap"
+                        v-for="(citem, index) in props.row.quantity_profit"
+                        :key="index"
+                      >
+                        <el-input
+                          class="my-input"
+                          v-model="citem.quantity"
+                        ></el-input>
+                        <my-percentage-input
+                          :width="52"
+                          :height="28"
+                          :isReadyOnly="false"
+                          v-model="citem.profit"
+                        ></my-percentage-input>
+                        <el-button
+                          class="profit-btn"
+                          size="mini"
+                          type="danger"
+                          @click="
+                            handleDeleteProfit(index, props.row.quantity_profit)
+                          "
+                          >刪除</el-button
+                        >
+                      </div>
                     </el-main>
                   </el-container>
                 </el-form-item>
@@ -546,6 +550,7 @@ export default {
   methods: {
     // 刪除 數量 / 利潤 的欄位
     handleDeleteProfit(index, item) {
+      console.log(index, item)
       item.splice(index, 1)
     },
     //
@@ -562,8 +567,8 @@ export default {
         return
       }
       const obj = {
-        quantity: '100',
-        profit: '25'
+        quantity: '1000',
+        profit: '40'
       }
       row.quantity_profit.push(obj)
       const uploadFormData = {

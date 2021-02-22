@@ -65,6 +65,7 @@
                     <el-cascader
                       size="mini"
                       clearable
+                      :show-all-levels="false"
                       v-model="props.row.choice_level_three_material"
                       placeholder="原料關鍵字"
                       @change="onMaterialOptionsChange(props.row)"
