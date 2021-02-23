@@ -12,49 +12,8 @@
           >新增原物料容器</el-button
         >
       </el-header>
-      <el-container>
-        <!-- <el-aside width="100%"> -->
-        <el-table
-          size="mini"
-          :stripe="true"
-          :data="
-            tableData.filter(
-              (data) =>
-                !search ||
-                data.product_name.toLowerCase().includes(search.toLowerCase())
-            )
-          "
-          style="width: 100%"
-        >
-          <!-- 序號 -->
-          <el-table-column
-            type="index"
-            label="序號"
-            align="center"
-            width="70"
-          ></el-table-column>
-        </el-table>
-
-        <!-- </el-aside> -->
-
-        <!-- <el-main>Main</el-main> -->
-      </el-container>
     </el-container>
-    <!-- 分頁 -->
-    <div class="pagination">
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page.sync="my_paginations.page_index"
-        :page-size="my_paginations.page_size"
-        :page-sizes="my_paginations.page_sizes"
-        :total="my_paginations.total"
-        layout="total, sizes, prev, pager, next, jumper"
-      >
-      </el-pagination>
-    </div>
-    <!-- 分頁結束 -->
+
     <!-- 子元件 -->
     <!-- 子元件結束 -->
   </div>
@@ -121,47 +80,7 @@ export default {
         title: '新增加第三層的商品組合',
         option: 'add'
       }
-    },
-    // 分頁設定
-    setPaginations() {
-      this.my_paginations.total = this.levelThreeTableData.length
-      this.my_paginations.page_index = 1
-      if (localStorage.material_group_page_size) {
-        this.my_paginations.page_size = Number(
-          localStorage.material_group_page_size
-        )
-      } else {
-        this.my_paginations.page_size = 5
-      }
-      // 設置分頁數據
-      this.tableData = this.levelThreeTableData.filter((item, index) => {
-        return index < this.my_paginations.page_size
-      })
-    },
-    handleSizeChange(page_size) {
-      // 切換每頁有幾條數據
-      localStorage.material_group_page_size = page_size
-      this.my_paginations.page_index = 1
-      this.my_paginations.page_size = page_size
-      this.tableData = this.levelThreeTableData.filter((item, index) => {
-        return index < page_size
-      })
-    },
-    handleCurrentChange(page) {
-      // 獲取當前頁面
-      let index = this.my_paginations.page_size * (page - 1)
-      // 數據的總數
-      let nums = this.my_paginations.page_size * page
-      // 容器
-      let tables = []
-      for (let i = index; i < nums; i++) {
-        if (this.levelThreeTableData[i]) {
-          tables.push(this.levelThreeTableData[i])
-        }
-        this.tableData = tables
-      }
     }
-    // 分頁設定結束
   }
 }
 </script>

@@ -12,7 +12,7 @@
           >新增原物料容器</el-button
         >
       </el-header>
-      <el-container>
+      <el-main>
         <!-- <el-aside width="100%"> -->
         <el-table
           size="mini"
@@ -38,7 +38,7 @@
         <!-- </el-aside> -->
 
         <!-- <el-main>Main</el-main> -->
-      </el-container>
+      </el-main>
     </el-container>
     <!-- 分頁 -->
     <div class="pagination">
