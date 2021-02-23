@@ -43,11 +43,7 @@
             <div class="table-container">
               <!-- *************************** 左邊區塊 *************************** -->
               <!-- *************************** table 區塊 裡面編輯跟刪除 *************************** -->
-              <el-table
-                :data="filterTableData.tableData"
-                style="width: 100%"
-                size="mini"
-              >
+              <el-table :data="tableData" style="width: 100%" size="mini">
                 <el-table-column
                   prop="type"
                   label="編號"
@@ -375,7 +371,7 @@ export default {
     },
     // 分頁開始
     setPaginations() {
-      this.my_paginations.total = this.groupLevelTwoData.length
+      this.my_paginations.total = this.filterTableData.tableData.length
       this.my_paginations.page_index = 1
       if (localStorage.group_level_two_page_size) {
         this.my_paginations.page_size = Number(
@@ -385,7 +381,7 @@ export default {
         this.my_paginations.page_size = 5
       }
       // 設置分頁數據
-      this.tableData = this.groupLevelTwoData.filter((item, index) => {
+      this.tableData = this.filterTableData.tableData.filter((item, index) => {
         return index < this.my_paginations.page_size
       })
     },
@@ -394,7 +390,7 @@ export default {
       localStorage.group_level_two_page_size = page_size
       this.my_paginations.page_index = 1
       this.my_paginations.page_size = page_size
-      this.tableData = this.groupLevelTwoData.filter((item, index) => {
+      this.tableData = this.filterTableData.tableData.filter((item, index) => {
         return index < page_size
       })
     },
@@ -406,8 +402,8 @@ export default {
       // 容器
       let tables = []
       for (let i = index; i < nums; i++) {
-        if (this.groupLevelTwoData[i]) {
-          tables.push(this.groupLevelTwoData[i])
+        if (this.filterTableData.tableData[i]) {
+          tables.push(this.filterTableData.tableData[i])
         }
         this.tableData = tables
       }
