@@ -6,7 +6,7 @@
       :close-on-click-model="false"
       :close-on-press-escape="false"
       :modal-append-to-body="false"
-      width="1030px"
+      width="1150px"
     >
       <el-row>
         <el-col :span="24"
@@ -61,6 +61,19 @@
                 <el-table-column label="大分類" align="center" width="180">
                   <template slot-scope="scope">
                     {{ getLevelOneNameById(scope.row) }}
+                  </template>
+                </el-table-column>
+
+                <el-table-column label="單圖" width="70" align="center">
+                  <template slot-scope="scope">
+                    <!-- v-for="(item, index) in scope.row.imgs" -->
+                    <img
+                      v-if="scope.row.imgs[0]"
+                      width="50px"
+                      height="50px"
+                      :src="scope.row.imgs[0]"
+                      alt=""
+                    />
                   </template>
                 </el-table-column>
 
@@ -228,6 +241,75 @@
             placeholder="請輸入大寫英文"
           ></el-input>
         </el-form-item>
+        <el-main>
+          <!-- <div class="image-warp"> -->
+          <el-form-item
+            label="圖片上傳："
+            size="mini"
+            label-width="120px"
+            prop="describe"
+          >
+            <!-- :class="{ uoloadSty: showBtnImg, disUoloadSty: noneBtnImg }" -->
+            <div class="upload-wrap">
+              <el-upload
+                :data="uploadData"
+                action="uploadActionUrl"
+                list-type="picture-card"
+                :auto-upload="false"
+                accept="image/jpeg,image/gif,image/png"
+                multiple
+                :limit="limitCountImg"
+                :file-list="files"
+                :on-change="onFileChange"
+              >
+                <el-dialog
+                  :visible.sync="dialogVisible"
+                  append-to-body
+                  width="520px"
+                >
+                  <img
+                    width="480px"
+                    height="480px"
+                    fit="contain"
+                    :src="dialogImageUrl"
+                    alt=""
+                  />
+                </el-dialog>
+                <i slot="default" class="el-icon-plus"></i>
+                <div class="image-content" slot="file" slot-scope="{ file }">
+                  <img
+                    class="el-upload-list__item-thumbnail"
+                    :src="file.url"
+                    alt=""
+                  />
+                  <span class="el-upload-list__item-actions">
+                    <span
+                      class="el-upload-list__item-preview"
+                      @click="handlePictureCardPreview(file)"
+                    >
+                      <i class="el-icon-zoom-in"></i>
+                    </span>
+                    <span
+                      v-if="!disabled"
+                      class="el-upload-list__item-download"
+                      @click="handleDownload(file)"
+                    >
+                      <i class="el-icon-download"></i>
+                    </span>
+                    <!-- v-if="!disabled" -->
+                    <span
+                      class="el-upload-list__item-delete"
+                      @click="handleRemove(file, files)"
+                    >
+                      <i class="el-icon-delete"></i>
+                    </span>
+                  </span>
+                </div>
+              </el-upload>
+            </div>
+          </el-form-item>
+          <!-- </div> -->
+        </el-main>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="categoriesEditDialog = false">取消</el-button>
@@ -259,16 +341,30 @@ export default {
       categoriesEditForm: {
         type: '',
         name: '',
+        imgs: [],
         level_one_id: '',
         _id: '',
         level_one_name: ''
       },
+      // 圖片上傳
+      uploadData: {
+        dataType: '0',
+        oldFilePath: ''
+      },
+      files: [],
+      dialogImageUrl: '',
+      dialogVisible: false,
+      disabled: Boolean,
+      limitCountImg: 1, // 圖片隱藏需要
+      showBtnImg: true, // 圖片隱藏需要
+      noneBtnImg: false, // 圖片隱藏需要
+      // 圖片上傳結束
       // 管理分頁
       my_paginations: {
         page_index: 1, // 位於當前第幾頁
         total: 0, // 總數
         page_size: 10, // 每一頁顯示幾條數據
-        page_sizes: [5, 10, 12] // 選擇一頁要顯示多少條
+        page_sizes: [5, 7, 10, 12] // 選擇一頁要顯示多少條
         // layouts: 'total, sizes, prev, pager, next, jumper'
       },
       // 這個是驗證 editCategoriesEditForm的表單欄位
@@ -392,6 +488,10 @@ export default {
       this.categoriesEditForm.name = row.name
       this.categoriesEditForm._id = row._id
       this.categoriesEditForm.level_one_name = this.getLevelOneNameById(row)
+      if (row.imgs) {
+        this.categoriesEditForm.imgs = row.imgs
+        this.getImgs()
+      }
       this.dialog.option = 'edit'
     },
     handleDelete(row) {
@@ -415,6 +515,7 @@ export default {
     onSubmit(form) {
       const uploadFormData =
         this.dialog.option == 'add' ? this.formData : this.categoriesEditForm
+      uploadFormData.imgs = this.categoriesEditForm.imgs.join('|')
 
       this.$refs[form].validate((valid) => {
         if (valid && !uploadFormData.type == '') {
@@ -447,12 +548,96 @@ export default {
             })
         }
       })
+    },
+    // ************************************* 圖片上傳 **********************************
+    // 圖片移除的 function
+    handleRemove(file, fileList) {
+      let _index = 0
+      for (let index = 0; index < fileList.length; index++) {
+        if (fileList[index].uid == file.uid) {
+          this.files.splice(index, 1) //移除数组中要删除的图片
+          _index = index
+        }
+      }
+      // 如果是 edit 狀態的話，要把 this.categoriesEditForm 中的 imgs 也移除掉
+      // if (this.dialog.option !== 'edit') return
+      this.noneBtnImg = fileList.length >= this.limitCountImg
+      this.categoriesEditForm.imgs.splice(_index, 1)
+    },
+    // 跳出預覽圖片預覽視窗
+    // https://www.codeleading.com/article/29861991468/
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
+    },
+    handleDownload(file) {
+      console.log(file)
+    },
+    // 過濾跟移除掉超過檔案限制的檔案
+    // https://www.jianshu.com/p/840601098d88
+    onFileChange(file, fileList) {
+      const isIMAGE =
+        file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'
+      // 小於 1M 的檔案是 1024 / 1024  這裡設定小於50k ==> 1024 / 50
+      // const isLt1M = file.size / 1024 / 1024 < 1
+      const isLt50K = file.size / 1024 / 50 < 1
+
+      this.noneBtnImg = fileList.length >= this.limitCountImg
+      if (!isIMAGE) {
+        this.$message.error('只能上傳jpg/png圖片!')
+        return false
+      }
+      if (!isLt50K) {
+        this.$message.error('上傳文件大小不能超過 50KB!')
+        for (let index = 0; index < fileList.length; index++) {
+          if (fileList[index].uid == file.uid) {
+            this.files.splice(index, 1) //移除数组中要删除的图片
+          }
+        }
+        return false
+      }
+
+      let reader = new FileReader()
+      const _this = this
+
+      reader.onload = function(e) {
+        // 圖片的 base64 存到 categoriesEditForm.imgs 裡面
+        _this.categoriesEditForm.imgs.push(e.target.result)
+      }
+      reader.readAsDataURL(file.raw)
+      // 重點，把 file 存到 files 這樣 upload 才有辦法操控元件的移除、下載 等等動作  預覽不用
+      this.files.push(file)
+      // console.log('file', file)
+      // console.log('this.files', this.files)
+    },
+    getImgs() {
+      this.files = []
+      // https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+      // base64toBlob 超強範例！
+      // 編輯商品的時候，要拚接 base64 格式與檔頭，然後 push 到 this.files 裡面會有一個內定的 下面是出處
+      // https://blog.csdn.net/hequhecong10857/article/details/108276022
+      // 秀出圖片
+      // this.dialogImageUrl = obj.url
+      // this.dialogVisible = true
+      if (this.categoriesEditForm.imgs.length > 0) {
+        this.categoriesEditForm.imgs.forEach((img) => {
+          // params[0] 裡面是檔案格式
+          // params[1] 裡面是 base64
+          const params = img.split(',')
+          let obj = {
+            name: '商品照片',
+            url: 'data:image/jpeg;base64,' + params[1]
+          }
+          this.files.push(obj)
+        })
+      }
     }
+    // ************************************* 圖片上傳結束 **********************************
   }
 }
 </script>
 
-<style scoped>
+<style>
 .my-select {
   margin-left: 10px;
   margin-bottom: 10px;
@@ -481,4 +666,13 @@ export default {
   text-align: left;
   margin-top: 10px;
 }
+.uoloadSty .el-upload--picture-card {
+  width: 146px;
+  height: 146px;
+  line-height: 146px;
+}
+/* 上传按钮隐藏 */
+/* .disUoloadSty .el-upload--picture-card {
+  display: none;
+} */
 </style>

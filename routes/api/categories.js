@@ -246,6 +246,10 @@ router.post(
       default:
         return res.status(400).json('提交資訊出現異常')
     }
+    // 多張圖片
+    if (req.body.imgs) {
+      categoryFields.imgs = req.body.imgs.split('|')
+    }
 
     if (req.body.type) categoryFields.type = req.body.type
     if (req.body.name) categoryFields.name = req.body.name
@@ -256,10 +260,7 @@ router.post(
       if (req.body.level_two_id) {
         categoryFields.level_two_id = req.body.level_two_id
       }
-      // 多張圖片
-      if (req.body.imgs) {
-        categoryFields.imgs = req.body.imgs.split('|')
-      }
+
       // else {
       //   categoryFields.imgs = []
       // }

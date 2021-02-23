@@ -12,6 +12,26 @@
           >新增原物料容器</el-button
         >
       </el-header>
+      <el-main>
+        <el-row>
+          <el-col
+            :span="4"
+            v-for="(o, index) in categoriesLevelOneData"
+            :key="index"
+          >
+            <el-card :body-style="{ padding: '0px', margin: '0px' }">
+              <img :src="o.imgs[0]" class="image" />
+              <div class="info-wrap">
+                <span>{{ o.name }}</span>
+                <div class="bottom clearfix">
+                  <time class="time">{{ currentDate }}</time>
+                  <el-button type="text" class="button">操作按钮</el-button>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+      </el-main>
     </el-container>
 
     <!-- 子元件 -->
@@ -24,31 +44,11 @@ export default {
   name: 'quotation-manager',
   data() {
     return {
-      tableData: [],
-      levelThreeTableData: [],
-      // 控制分頁
-      my_paginations: {
-        page_index: 1, // 位於當前第幾頁
-        total: 0, // 總數
-        page_size: 10, // 每一頁顯示幾條數據
-        page_sizes: [5, 10, 15] // 選擇一頁要顯示多少條
-        // layouts: 'total, sizes, prev, pager, next, jumper'
-      },
-      addLevelOneDialog: {
-        show: false,
-        title: '建立原料組合',
-        option: 'edit'
-      },
-      addLevelTwoDialog: {
-        show: false,
-        title: '建立原料組合',
-        option: 'edit'
-      },
-      addLevelThreeDialog: {
-        show: false,
-        title: '建立原料組合',
-        option: 'edit'
-      }
+      // currentDate: new Date(),
+      currentDate: '2021-2-23',
+      categoriesLevelOneData: [], // 開始就先讀取資料庫的數據
+      categoriesLevelTwoData: [], // 開始就先讀取資料庫的數據
+      categoriesLevelThreeData: [] // 開始就先讀取資料庫的數據
     }
   },
   components: {
@@ -56,7 +56,56 @@ export default {
     // GroupLevelTwoDialog,
     // GroupLevelThreeDialog
   },
+  created() {
+    this.getCategoriesLevelOneData()
+    this.getCategoriesLevelTwoData()
+    this.getCategoriesLevelThreeData()
+  },
   methods: {
+    // **********************************************  讀取資料開始 **********************************************
+    // 一開始就取得 商品分類代號資訊
+    getCategoriesLevelOneData() {
+      this.$axios
+        .get('/api/categories')
+        .then((res) => {
+          // 把資料庫的數據都先讀出來
+          this.categoriesLevelOneData = res.data
+          // 設置分頁數據
+          // this.setPaginations()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    getCategoriesLevelTwoData() {
+      this.$axios
+        .get('/api/categories/two')
+        .then((res) => {
+          // 把資料庫的數據都先讀出來
+          this.categoriesLevelTwoData = res.data
+          // 設置分頁數據
+          // this.setPaginations()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    // 取得第三層的商品資訊，使用選擇到的第二層分類 id ，回傳值忽略掉 imgs 欄位，有需要再另外取得
+    getCategoriesLevelThreeData() {
+      // if (!this.choiceLevelTwoValue[1]) return
+      // this.$axios
+      //   .get(`/api/categories/three/${this.choiceLevelTwoValue[1]}`)
+      //   .then((res) => {
+      //     // 把資料庫的數據都先讀出來
+      //     this.categoriesLevelThreeData = [...res.data]
+      //     // 設置分頁數據
+      //     // this.setPaginations()
+      //   })
+      //   .catch((err) => {
+      //     console.log(err)
+      //   })
+    },
+    // **********************************************  讀取資料結束 **********************************************
     // 新增第一層
     addGroupLevelOne() {
       this.addLevelOneDialog = {
@@ -107,6 +156,8 @@ export default {
   color: #333;
   text-align: center;
   line-height: 160px;
+  width: 1700px;
+  height: 1200px;
 }
 
 body > .el-container {
@@ -125,5 +176,42 @@ body > .el-container {
 .pagination {
   text-align: left;
   margin-top: 10px;
+}
+
+.time {
+  font-size: 13px;
+  color: #999;
+}
+
+.bottom {
+  margin-top: 13px;
+  line-height: 12px;
+}
+
+.button {
+  padding: 0;
+  float: right;
+}
+
+.image {
+  width: 280px;
+  display: block;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: '';
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+.info-wrap {
+  padding: 14px;
+  /* height: 120px; */
+  /* height: 10px; */
+  line-height: 100%;
 }
 </style>
