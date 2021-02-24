@@ -8,7 +8,7 @@
             <span>{{ item.name }}</span>
             <div class="bottom clearfix">
               <time class="time">{{ currentDate }}</time>
-              <el-button type="text" class="button">操作按钮</el-button>
+              <el-button type="text" class="button">點我看分類</el-button>
             </div>
           </div>
         </el-card>
@@ -193,8 +193,11 @@ body > .el-container {
 
 .image {
   width: 280px;
+  height: 280px;
   display: block;
   cursor: pointer;
+  border: 0px;
+  overflow: hidden;
 }
 
 .clearfix:before,

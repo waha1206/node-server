@@ -7,13 +7,13 @@
         :key="index"
       >
         <el-card :body-style="{ padding: '0px', margin: '0px' }">
-          <img :src="item.imgs[0]" class="image" @click="updatePath()" />
+          <img :src="item.imgs[0]" class="image" @click="updatePath(item)" />
           <div class="info-wrap">
             <span>{{ item.name }}</span>
             <div class="bottom clearfix">
               <time class="time">{{ currentDate }}</time>
               <el-button type="text" class="button" @click="updatePath(item)"
-                >去下一頁</el-button
+                >點我看分類</el-button
               >
             </div>
           </div>
