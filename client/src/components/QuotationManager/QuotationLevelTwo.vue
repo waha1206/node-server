@@ -1,40 +1,19 @@
 <template>
-  <div class="quotatuin-manager">
-    <el-container>
-      <el-header>
-        <el-button type="primary" size="small" @click="addGroupLevelOne"
-          >新增第一層分類</el-button
-        >
-        <el-button type="primary" size="small" @click="addGroupLevelTwo"
-          >新增第二層分類</el-button
-        >
-        <el-button type="primary" size="small" @click="addGroupLevelThree"
-          >新增原物料容器</el-button
-        >
-      </el-header>
-      <el-main>
-        <router-view></router-view>
-
-        <!-- <el-row>
-          <el-col
-            :span="4"
-            v-for="(item, index) in categoriesLevelOneData"
-            :key="index"
-          >
-            <el-card :body-style="{ padding: '0px', margin: '0px' }">
-              <img :src="item.imgs[0]" class="image" />
-              <div class="info-wrap">
-                <span>{{ item.name }}</span>
-                <div class="bottom clearfix">
-                  <time class="time">{{ currentDate }}</time>
-                  <el-button type="text" class="button">操作按钮</el-button>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row> -->
-      </el-main>
-    </el-container>
+  <div class="quotatuin-level-two">
+    <el-row>
+      <el-col :span="4" v-for="(item, index) in getLevelTwoData" :key="index">
+        <el-card :body-style="{ padding: '0px', margin: '0px' }">
+          <img :src="item.imgs[0]" class="image" />
+          <div class="info-wrap">
+            <span>{{ item.name }}</span>
+            <div class="bottom clearfix">
+              <time class="time">{{ currentDate }}</time>
+              <el-button type="text" class="button">操作按钮</el-button>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
 
     <!-- 子元件 -->
     <!-- 子元件結束 -->
@@ -43,13 +22,14 @@
 
 <script>
 export default {
-  name: 'quotation-manager',
+  name: 'quotation-level-two',
   data() {
     return {
+      item: this.$route.params.item,
       // currentDate: new Date(),
-      // currentDate: '2021-2-23',
+      currentDate: '2021-2-23',
       // categoriesLevelOneData: [], // 開始就先讀取資料庫的數據
-      // categoriesLevelTwoData: [], // 開始就先讀取資料庫的數據
+      categoriesLevelTwoData: [] // 開始就先讀取資料庫的數據
       // categoriesLevelThreeData: [] // 開始就先讀取資料庫的數據
     }
   },
@@ -59,10 +39,24 @@ export default {
     // GroupLevelThreeDialog
   },
   created() {
-    // this.$router.replace('/quotation-manager/quotation-level-one')
     // this.getCategoriesLevelOneData()
-    // this.getCategoriesLevelTwoData()
+    this.getCategoriesLevelTwoData()
     // this.getCategoriesLevelThreeData()
+  },
+  mounted() {
+    console.log('這個是從 Quotation 傳遞過來的 item 內容', this.item)
+  },
+  computed: {
+    getLevelTwoData() {
+      let levelTwoData = []
+      this.categoriesLevelTwoData.forEach((item) => {
+        if (item.level_one_id == this.item._id) levelTwoData.push(item)
+      })
+
+      console.log('this.item._id', this.item._id)
+      console.log('levelTwoData', levelTwoData)
+      return levelTwoData
+    }
   },
   methods: {
     // **********************************************  讀取資料開始 **********************************************
@@ -75,6 +69,7 @@ export default {
           this.categoriesLevelOneData = res.data
           // 設置分頁數據
           // this.setPaginations()
+          this.getLevelTwoData()
         })
         .catch((err) => {
           console.log(err)

@@ -17,6 +17,7 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes: [
     {
+      // 預設首頁要使用'/' 或 redirect指令，不然網頁會空白
       path: '/',
       redirect: '/index'
       // component:""
@@ -65,17 +66,38 @@ const router = new VueRouter({
           path: '/suppliers-manager', // 供應商管理
           name: 'suppliers-manager',
           component: () => import('../views/managers/SuppliersManager.vue'),
+
           meta: {
             permission: ['supplier_authority_r']
           }
         },
         {
           path: '/quotation-manager', // 報價單管理
-          name: 'quotation-manager',
+          // name: 'quotation-manager',
           component: () => import('../views/managers/QuotationManager.vue'),
           meta: {
             permission: ['quotation_authority_r']
-          }
+          },
+          children: [
+            {
+              path: '',
+              name: 'quotation-level-one',
+              component: () =>
+                import('../components/QuotationManager/QuotationLevelOne.vue'),
+              meta: {
+                permission: ['quotation_authority_r']
+              }
+            },
+            {
+              path: '/quotation-level-two/:id',
+              name: 'quotation-level-two',
+              component: () =>
+                import('../components/QuotationManager/QuotationLevelTwo.vue'),
+              meta: {
+                permission: ['quotation_authority_r']
+              }
+            }
+          ]
         },
         {
           path: '/categories-manager', // 商品建構管理
