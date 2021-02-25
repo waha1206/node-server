@@ -75,6 +75,7 @@ const router = new VueRouter({
           path: '/quotation-manager', // 報價單管理
           // name: 'quotation-manager',
           component: () => import('../views/managers/QuotationManager.vue'),
+
           meta: {
             permission: ['quotation_authority_r']
           },
@@ -85,6 +86,8 @@ const router = new VueRouter({
               component: () =>
                 import('../components/QuotationManager/QuotationLevelOne.vue'),
               meta: {
+                title: '第一層分類',
+
                 permission: ['quotation_authority_r']
               }
             },
@@ -94,6 +97,19 @@ const router = new VueRouter({
               component: () =>
                 import('../components/QuotationManager/QuotationLevelTwo.vue'),
               meta: {
+                title: '第二層分類',
+                permission: ['quotation_authority_r']
+              }
+            },
+            {
+              path: '/quotation-level-three/:id',
+              name: 'quotation-level-three',
+              component: () =>
+                import(
+                  '../components/QuotationManager/QuotationLevelThree.vue'
+                ),
+              meta: {
+                title: '第三層分類',
                 permission: ['quotation_authority_r']
               }
             }

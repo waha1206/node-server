@@ -1,20 +1,25 @@
 <template>
-  <div class="quotatuin-level-two">
-    <el-row>
-      <el-col :span="4" v-for="(item, index) in getLevelTwoData" :key="index">
+  <div class="quotatuin-level-three">
+    <el-row v-if="categoriesLevelThreeData.length > 0">
+      <el-col
+        :span="4"
+        v-for="(item, index) in categoriesLevelThreeData"
+        :key="index"
+      >
         <el-card :body-style="{ padding: '0px', margin: '0px' }">
-          <img :src="item.imgs[0]" class="image" @click="updatePath(item)" />
+          <img :src="item.imgs[0]" class="image" />
           <div class="info-wrap">
             <span>{{ item.name }}</span>
             <div class="bottom clearfix">
               <time class="time">{{ currentDate }}</time>
-              <el-button type="text" class="button" @click="updatePath(item)"
-                >點我看分類</el-button
-              >
+              <el-button type="text" class="button">點我看分類</el-button>
             </div>
           </div>
         </el-card>
       </el-col>
+    </el-row>
+    <el-row v-else>
+      <h1>此分類尚未建立任何資料</h1>
     </el-row>
 
     <!-- 子元件 -->
@@ -24,14 +29,14 @@
 
 <script>
 export default {
-  name: 'quotation-level-two',
+  name: 'quotation-level-three',
   data() {
     return {
       item: this.$route.params.item,
       // currentDate: new Date(),
       currentDate: '2021-2-23',
       // categoriesLevelOneData: [], // 開始就先讀取資料庫的數據
-      categoriesLevelTwoData: [] // 開始就先讀取資料庫的數據
+      categoriesLevelThreeData: [] // 開始就先讀取資料庫的數據
       // categoriesLevelThreeData: [] // 開始就先讀取資料庫的數據
     }
   },
@@ -50,69 +55,31 @@ export default {
     next()
   },
   mounted() {
-    this.getCategoriesLevelTwoData(this.item._id)
+    window.scrollTo(0, 0)
+    this.getCategoriesLevelThreeData(this.item._id)
   },
   computed: {
-    getLevelTwoData() {
-      let levelTwoData = []
-      this.categoriesLevelTwoData.forEach((item) => {
-        if (item.level_one_id == this.item._id) levelTwoData.push(item)
-      })
-      return levelTwoData
-    }
+    // getLevelThreeData() {
+    //   let levelThreeData = []
+    //   this.categoriesLevelThreeData.forEach((item) => {
+    //     if (item.level_two_id == this.item._id) levelThreeData.push(item)
+    //   })
+    //   return levelThreeData
+    // }
   },
   methods: {
-    // 跳到第三層
-    updatePath(item) {
-      console.log('跳到第三層的item', item)
-      this.$router.push({
-        name: 'quotation-level-three',
-        params: { item }
-      })
-    },
     // **********************************************  讀取資料開始 **********************************************
-    // 一開始就取得 商品分類代號資訊
-    // getCategoriesLevelOneData() {
-    //   this.$axios
-    //     .get('/api/categories')
-    //     .then((res) => {
-    //       // 把資料庫的數據都先讀出來
-    //       this.categoriesLevelOneData = res.data
-    //       // 設置分頁數據
-    //       // this.setPaginations()
-    //       this.getLevelTwoData()
-    //     })
-    //     .catch((err) => {
-    //       console.log(err)
-    //     })
-    // },
-    getCategoriesLevelTwoData(id) {
+    // 取得第三層的商品資訊，使用選擇到的第二層分類 id ，回傳值忽略掉 imgs 欄位，有需要再另外取得
+    getCategoriesLevelThreeData(id) {
       this.$axios
-        .get(`/api/categories/two/${id}`)
+        .get(`/api/categories/three/${id}`)
         .then((res) => {
           // 把資料庫的數據都先讀出來
-          this.categoriesLevelTwoData = res.data
-          // 設置分頁數據
-          // this.setPaginations()
+          this.categoriesLevelThreeData = res.data
         })
         .catch((err) => {
           console.log(err)
         })
-    },
-    // 取得第三層的商品資訊，使用選擇到的第二層分類 id ，回傳值忽略掉 imgs 欄位，有需要再另外取得
-    getCategoriesLevelThreeData() {
-      // if (!this.choiceLevelTwoValue[1]) return
-      // this.$axios
-      //   .get(`/api/categories/three/${this.choiceLevelTwoValue[1]}`)
-      //   .then((res) => {
-      //     // 把資料庫的數據都先讀出來
-      //     this.categoriesLevelThreeData = [...res.data]
-      //     // 設置分頁數據
-      //     // this.setPaginations()
-      //   })
-      //   .catch((err) => {
-      //     console.log(err)
-      //   })
     }
     // **********************************************  讀取資料結束 **********************************************
   }

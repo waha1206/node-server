@@ -2,38 +2,31 @@
   <div class="quotatuin-manager">
     <el-container>
       <el-header>
-        <el-button type="primary" size="small" @click="addGroupLevelOne"
+        <el-button type="primary" size="small" @click=""
           >新增第一層分類</el-button
         >
-        <el-button type="primary" size="small" @click="addGroupLevelTwo"
+        <el-button type="primary" size="small" @click=""
           >新增第二層分類</el-button
         >
-        <el-button type="primary" size="small" @click="addGroupLevelThree"
+        <el-button type="primary" size="small" @click=""
           >新增原物料容器</el-button
         >
       </el-header>
       <el-main>
-        <router-view></router-view>
-
-        <!-- <el-row>
-          <el-col
-            :span="4"
-            v-for="(item, index) in categoriesLevelOneData"
-            :key="index"
+        <el-breadcrumb class="breadcrumb" separator=">">
+          <el-breadcrumb-item :to="{ path: 'quotation-manager' }"
+            >回到首頁</el-breadcrumb-item
           >
-            <el-card :body-style="{ padding: '0px', margin: '0px' }">
-              <img :src="item.imgs[0]" class="image" />
-              <div class="info-wrap">
-                <span>{{ item.name }}</span>
-                <div class="bottom clearfix">
-                  <time class="time">{{ currentDate }}</time>
-                  <el-button type="text" class="button">操作按钮</el-button>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row> -->
+          <el-breadcrumb-item v-for="(item, index) in breadList" :key="index">
+            {{ item.meta.title }}
+            <!-- <router-link v-if="item.url" :to="item.url">{{
+              item.name
+            }}</router-link> -->
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+        <router-view></router-view>
       </el-main>
+      <el-footer></el-footer>
     </el-container>
 
     <!-- 子元件 -->
@@ -46,91 +39,32 @@ export default {
   name: 'quotation-manager',
   data() {
     return {
-      // currentDate: new Date(),
-      // currentDate: '2021-2-23',
-      // categoriesLevelOneData: [], // 開始就先讀取資料庫的數據
-      // categoriesLevelTwoData: [], // 開始就先讀取資料庫的數據
-      // categoriesLevelThreeData: [] // 開始就先讀取資料庫的數據
+      breadList: []
     }
   },
-  components: {
-    // GroupLevelOneDialog,
-    // GroupLevelTwoDialog,
-    // GroupLevelThreeDialog
+  components: {},
+  watch: {
+    $route(val) {
+      console.log('manager watch $route', val)
+      this.getBreadList(val)
+
+      // this.getBreadcrumb()
+    }
   },
   created() {
-    // this.$router.replace('/quotation-manager/quotation-level-one')
-    // this.getCategoriesLevelOneData()
-    // this.getCategoriesLevelTwoData()
-    // this.getCategoriesLevelThreeData()
+    // this.getBreadcrumb()
+  },
+  beforeRouteEnter(to, from, next) {
+    // console.log('元件內的 beforeRouterEnter，不能使用this,因為此時尚未創建成功')
+    console.log('Quotation beforeRouteEnter')
+
+    next()
   },
   methods: {
-    // **********************************************  讀取資料開始 **********************************************
-    // 一開始就取得 商品分類代號資訊
-    getCategoriesLevelOneData() {
-      this.$axios
-        .get('/api/categories')
-        .then((res) => {
-          // 把資料庫的數據都先讀出來
-          this.categoriesLevelOneData = res.data
-          // 設置分頁數據
-          // this.setPaginations()
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-    getCategoriesLevelTwoData() {
-      this.$axios
-        .get('/api/categories/two')
-        .then((res) => {
-          // 把資料庫的數據都先讀出來
-          this.categoriesLevelTwoData = res.data
-          // 設置分頁數據
-          // this.setPaginations()
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-    // 取得第三層的商品資訊，使用選擇到的第二層分類 id ，回傳值忽略掉 imgs 欄位，有需要再另外取得
-    getCategoriesLevelThreeData() {
-      // if (!this.choiceLevelTwoValue[1]) return
-      // this.$axios
-      //   .get(`/api/categories/three/${this.choiceLevelTwoValue[1]}`)
-      //   .then((res) => {
-      //     // 把資料庫的數據都先讀出來
-      //     this.categoriesLevelThreeData = [...res.data]
-      //     // 設置分頁數據
-      //     // this.setPaginations()
-      //   })
-      //   .catch((err) => {
-      //     console.log(err)
-      //   })
-    },
-    // **********************************************  讀取資料結束 **********************************************
-    // 新增第一層
-    addGroupLevelOne() {
-      this.addLevelOneDialog = {
-        show: true,
-        title: '新增加第一層的商品分類組合',
-        option: 'add'
-      }
-    },
-    // 新增第二層
-    addGroupLevelTwo() {
-      this.addLevelTwoDialog = {
-        show: true,
-        title: '新增加第二層的商品分類組合',
-        option: 'add'
-      }
-    },
-    // 新增原物料組合 (這邊是空殼)
-    addGroupLevelThree() {
-      this.addLevelThreeDialog = {
-        show: true,
-        title: '新增加第三層的商品組合',
-        option: 'add'
+    getBreadList(val) {
+      if (val.matched) {
+        let matched = val.matched.filter((item) => item.meta && item.meta.title)
+        this.breadList = matched
       }
     }
   }
@@ -138,14 +72,15 @@ export default {
 </script>
 
 <style scoped>
-.el-header,
-.el-footer {
+.el-header {
   background-color: #b3c0d1;
   color: #333;
   text-align: left;
   line-height: 60px;
 }
-
+.el-footer {
+  background-color: #fff;
+}
 .el-aside {
   background-color: #d3dce6;
   color: #333;
@@ -155,12 +90,12 @@ export default {
 }
 
 .el-main {
-  background-color: #e9eef3;
+  /* background-color: #e9eef3; */
   color: #333;
   text-align: center;
   line-height: 160px;
   width: 1700px;
-  height: 1200px;
+  height: 100%;
 }
 
 body > .el-container {
@@ -217,5 +152,10 @@ body > .el-container {
   /* height: 120px; */
   /* height: 10px; */
   line-height: 100%;
+}
+
+.breadcrumb {
+  margin-bottom: 10px;
+  font-size: 18px;
 }
 </style>
