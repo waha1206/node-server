@@ -61,77 +61,77 @@ export default {
           path: 'fund',
           children: [
             {
-              path: 'fundlist',
+              path: '/fundlist',
               name: 'DEMO表單使用',
               meta: {
                 permission: ['']
               }
             },
             {
-              path: 'customer-manager',
+              path: '/customer-manager',
               name: '客戶資料管理',
               meta: {
                 permission: ['customer_authority_r']
               }
             },
             {
-              path: 'suppliers-manager',
+              path: '/suppliers-manager',
               name: '供應商管理',
               meta: {
                 permission: ['supplier_authority_r']
               }
             },
             {
-              path: 'quotation-manager',
+              path: '/quotation-manager',
               name: '報價單管理',
               meta: {
                 permission: ['quotation_authority_r']
               }
             },
             {
-              path: 'categories-manager',
+              path: '/categories-manager',
               name: '商品建構管理',
               meta: {
                 permission: ['product_authority_r']
               }
             },
             {
-              path: 'user-manager',
+              path: '/user-manager',
               name: '使用者管理',
               meta: {
                 permission: ['user_authority_r']
               }
             },
             {
-              path: 'materials-manager',
+              path: '/materials-manager',
               name: '原物料管理',
               meta: {
                 permission: ['material_authority_r']
               }
             },
             {
-              path: 'materials-group-manager',
+              path: '/materials-group-manager',
               name: '原物料組管理',
               meta: {
                 permission: ['material_authority_r']
               }
             },
             {
-              path: 'process-manager',
+              path: '/process-manager',
               name: '加工費用管理',
               meta: {
                 permission: ['']
               }
             },
             {
-              path: 'product-template-manager',
+              path: '/product-template-manager',
               name: '公版商品管理',
               meta: {
                 permission: ['']
               }
             },
             {
-              path: 'product-profit-manager',
+              path: '/product-profit-manager',
               name: '商品利潤管理',
               meta: {
                 permission: ['']
@@ -142,7 +142,7 @@ export default {
         {
           icon: 'fa-asterisk',
           name: '權限管理',
-          path: 'info',
+          path: '/info',
           children: [
             {
               path: 'infoshow',
@@ -163,7 +163,7 @@ export default {
         {
           icon: 'fa-asterisk',
           name: '程式測試區',
-          path: 'b',
+          path: '/b',
           children: [
             {
               path: 'c',

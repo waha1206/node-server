@@ -7,12 +7,14 @@
         :key="index"
       >
         <el-card :body-style="{ padding: '0px', margin: '0px' }">
-          <img :src="item.imgs[0]" class="image" />
+          <img :src="item.imgs[0]" class="image" @click="updatePath(item)" />
           <div class="info-wrap">
             <span>{{ item.name }}</span>
             <div class="bottom clearfix">
               <time class="time">{{ currentDate }}</time>
-              <el-button type="text" class="button">點我看分類</el-button>
+              <el-button type="text" class="button" @click="updatePath(item)"
+                >點我看分類</el-button
+              >
             </div>
           </div>
         </el-card>
@@ -32,7 +34,7 @@ export default {
   name: 'quotation-level-three',
   data() {
     return {
-      item: this.$route.params.item,
+      id: this.$route.params.id,
       // currentDate: new Date(),
       currentDate: '2021-2-23',
       // categoriesLevelOneData: [], // 開始就先讀取資料庫的數據
@@ -51,12 +53,12 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     // console.log('元件內的 beforeRouterEnter，不能使用this,因為此時尚未創建成功')
-
+    console.log('Quotation 第三層 beforeRouteEnter')
     next()
   },
   mounted() {
     window.scrollTo(0, 0)
-    this.getCategoriesLevelThreeData(this.item._id)
+    this.getCategoriesLevelThreeData(this.id)
   },
   computed: {
     // getLevelThreeData() {
@@ -68,6 +70,12 @@ export default {
     // }
   },
   methods: {
+    updatePath(item) {
+      this.$router.push({
+        name: 'quotation-level-four',
+        params: { id: item._id, name: item.name }
+      })
+    },
     // **********************************************  讀取資料開始 **********************************************
     // 取得第三層的商品資訊，使用選擇到的第二層分類 id ，回傳值忽略掉 imgs 欄位，有需要再另外取得
     getCategoriesLevelThreeData(id) {

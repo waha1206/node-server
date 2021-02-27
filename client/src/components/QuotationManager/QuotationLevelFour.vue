@@ -1,24 +1,25 @@
 <template>
-  <div class="quotatuin-level-one">
-    <el-row>
+  <div class="quotatuin-level-four">
+    <el-row v-if="categoryItem">
       <el-col
         :span="4"
-        v-for="(item, index) in categoriesLevelOneData"
+        v-for="(item, index) in categoriesLevelThreeData"
         :key="index"
       >
         <el-card :body-style="{ padding: '0px', margin: '0px' }">
-          <img :src="item.imgs[0]" class="image" @click="updatePath(item)" />
+          <img :src="item.imgs[0]" class="image" />
           <div class="info-wrap">
             <span>{{ item.name }}</span>
             <div class="bottom clearfix">
               <time class="time">{{ currentDate }}</time>
-              <el-button type="text" class="button" @click="updatePath(item)"
-                >點我看分類</el-button
-              >
+              <el-button type="text" class="button">點我看分類</el-button>
             </div>
           </div>
         </el-card>
       </el-col>
+    </el-row>
+    <el-row v-else>
+      <h1>此分類尚未建立任何資料</h1>
     </el-row>
 
     <!-- 子元件 -->
@@ -28,14 +29,12 @@
 
 <script>
 export default {
-  name: 'quotation-level-one',
+  name: 'quotation-level-four',
   data() {
     return {
+      // 這個是 最後被選中的資料，從 level three 那邊傳過來的
+      categoryItem: this.$route.params.item
       // currentDate: new Date(),
-      currentDate: '2021-2-23',
-      categoriesLevelOneData: [], // 開始就先讀取資料庫的數據
-      categoriesLevelTwoData: [], // 開始就先讀取資料庫的數據
-      categoriesLevelThreeData: [] // 開始就先讀取資料庫的數據
     }
   },
   components: {
@@ -43,65 +42,34 @@ export default {
     // GroupLevelTwoDialog,
     // GroupLevelThreeDialog
   },
+  created() {
+    // this.getCategoriesLevelOneData()
+    // this.getCategoriesLevelThreeData()
+  },
   beforeRouteEnter(to, from, next) {
     // console.log('元件內的 beforeRouterEnter，不能使用this,因為此時尚未創建成功')
-    console.log('Quotation 第一層 beforeRouteEnter')
+    console.log('Quotation 第四層 beforeRouteEnter')
     next()
   },
-  created() {},
   mounted() {
-    this.getCategoriesLevelOneData()
+    window.scrollTo(0, 0)
+    console.log(this.$route.params)
+
+    // 這邊要開始抓 這個 item 裡面需要的所有 原物料組 跟 原物料組裡面的原料
+  },
+  computed: {
+    // getLevelThreeData() {
+    //   let levelThreeData = []
+    //   this.categoriesLevelThreeData.forEach((item) => {
+    //     if (item.level_two_id == this.item._id) levelThreeData.push(item)
+    //   })
+    //   return levelThreeData
+    // }
   },
   methods: {
-    // 這邊會傳遞過來 第一層 的分類資訊 > item 裡面有 imgs _id ... 各種資訊，我們最主要的是取得 _id 去第二層的時候找到該 _id 所屬的子分類
-    updatePath(item) {
-      console.log('item', item)
-      this.$router.push({
-        name: 'quotation-level-two',
-        params: { id: item._id, name: item.name }
-      })
-    },
     // **********************************************  讀取資料開始 **********************************************
-    // 一開始就取得 商品分類代號資訊
-    getCategoriesLevelOneData() {
-      this.$axios
-        .get('/api/categories')
-        .then((res) => {
-          // 把資料庫的數據都先讀出來
-          this.categoriesLevelOneData = res.data
-          // 設置分頁數據
-          // this.setPaginations()
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-
+    //
     // **********************************************  讀取資料結束 **********************************************
-    // 新增第一層
-    addGroupLevelOne() {
-      this.addLevelOneDialog = {
-        show: true,
-        title: '新增加第一層的商品分類組合',
-        option: 'add'
-      }
-    },
-    // 新增第二層
-    addGroupLevelTwo() {
-      this.addLevelTwoDialog = {
-        show: true,
-        title: '新增加第二層的商品分類組合',
-        option: 'add'
-      }
-    },
-    // 新增原物料組合 (這邊是空殼)
-    addGroupLevelThree() {
-      this.addLevelThreeDialog = {
-        show: true,
-        title: '新增加第三層的商品組合',
-        option: 'add'
-      }
-    }
   }
 }
 </script>
@@ -167,8 +135,11 @@ body > .el-container {
 
 .image {
   width: 280px;
+  height: 280px;
   display: block;
   cursor: pointer;
+  border: 0px;
+  overflow: hidden;
 }
 
 .clearfix:before,

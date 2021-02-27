@@ -10,6 +10,12 @@ import FundList from '../views/FundList.vue'
 import store from '../store'
 import { includePermission } from '../utils/permission'
 
+// 阻止重複觸發同一個路由 出處為 https://blog.csdn.net/luer_LJS/article/details/108362563
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch((err) => err)
+} // 阻止重複觸發同一個路由結束
+
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -81,13 +87,13 @@ const router = new VueRouter({
           },
           children: [
             {
-              path: '',
+              path: '/',
               name: 'quotation-level-one',
               component: () =>
                 import('../components/QuotationManager/QuotationLevelOne.vue'),
               meta: {
                 title: '第一層分類',
-
+                class: 'quotation',
                 permission: ['quotation_authority_r']
               }
             },
@@ -98,6 +104,7 @@ const router = new VueRouter({
                 import('../components/QuotationManager/QuotationLevelTwo.vue'),
               meta: {
                 title: '第二層分類',
+                class: 'quotation',
                 permission: ['quotation_authority_r']
               }
             },
@@ -110,6 +117,18 @@ const router = new VueRouter({
                 ),
               meta: {
                 title: '第三層分類',
+                class: 'quotation',
+                permission: ['quotation_authority_r']
+              }
+            },
+            {
+              path: '/quotation-level-four',
+              name: 'quotation-level-four',
+              component: () =>
+                import('../components/QuotationManager/QuotationLevelFour.vue'),
+              meta: {
+                title: '選中的商品',
+                class: 'quotation',
                 permission: ['quotation_authority_r']
               }
             }

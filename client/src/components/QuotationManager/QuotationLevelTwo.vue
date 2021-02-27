@@ -27,7 +27,7 @@ export default {
   name: 'quotation-level-two',
   data() {
     return {
-      item: this.$route.params.item,
+      id: this.$route.params.id,
       // currentDate: new Date(),
       currentDate: '2021-2-23',
       // categoriesLevelOneData: [], // 開始就先讀取資料庫的數據
@@ -35,57 +35,35 @@ export default {
       // categoriesLevelThreeData: [] // 開始就先讀取資料庫的數據
     }
   },
-  components: {
-    // GroupLevelOneDialog,
-    // GroupLevelTwoDialog,
-    // GroupLevelThreeDialog
-  },
-  created() {
-    // this.getCategoriesLevelOneData()
-    // this.getCategoriesLevelThreeData()
-  },
+  components: {},
+  created() {},
   beforeRouteEnter(to, from, next) {
     // console.log('元件內的 beforeRouterEnter，不能使用this,因為此時尚未創建成功')
-
+    console.log('Quotation 第二層 beforeRouteEnter')
     next()
   },
   mounted() {
-    this.getCategoriesLevelTwoData(this.item._id)
+    this.getCategoriesLevelTwoData(this.id)
   },
   computed: {
     getLevelTwoData() {
       let levelTwoData = []
       this.categoriesLevelTwoData.forEach((item) => {
-        if (item.level_one_id == this.item._id) levelTwoData.push(item)
+        if (item.level_one_id == this.id) levelTwoData.push(item)
       })
       return levelTwoData
     }
   },
+
   methods: {
-    // 跳到第三層
+    // 跳到第三層，並且把參數帶過去，這邊的參數是第二層選到的 item
     updatePath(item) {
-      console.log('跳到第三層的item', item)
       this.$router.push({
         name: 'quotation-level-three',
-        params: { item }
+        params: { id: item._id, name: item.name }
       })
     },
     // **********************************************  讀取資料開始 **********************************************
-    // 一開始就取得 商品分類代號資訊
-    // getCategoriesLevelOneData() {
-    //   this.$axios
-    //     .get('/api/categories')
-    //     .then((res) => {
-    //       // 把資料庫的數據都先讀出來
-    //       this.categoriesLevelOneData = res.data
-    //       // 設置分頁數據
-    //       // this.setPaginations()
-    //       this.getLevelTwoData()
-    //     })
-    //     .catch((err) => {
-    //       console.log(err)
-    //     })
-    // },
     getCategoriesLevelTwoData(id) {
       this.$axios
         .get(`/api/categories/two/${id}`)
@@ -98,21 +76,6 @@ export default {
         .catch((err) => {
           console.log(err)
         })
-    },
-    // 取得第三層的商品資訊，使用選擇到的第二層分類 id ，回傳值忽略掉 imgs 欄位，有需要再另外取得
-    getCategoriesLevelThreeData() {
-      // if (!this.choiceLevelTwoValue[1]) return
-      // this.$axios
-      //   .get(`/api/categories/three/${this.choiceLevelTwoValue[1]}`)
-      //   .then((res) => {
-      //     // 把資料庫的數據都先讀出來
-      //     this.categoriesLevelThreeData = [...res.data]
-      //     // 設置分頁數據
-      //     // this.setPaginations()
-      //   })
-      //   .catch((err) => {
-      //     console.log(err)
-      //   })
     }
     // **********************************************  讀取資料結束 **********************************************
   }
