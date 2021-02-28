@@ -1,25 +1,37 @@
 <template>
   <div class="quotatuin-level-four">
-    <el-row v-if="categoryItem">
-      <el-col
-        :span="4"
-        v-for="(item, index) in categoriesLevelThreeData"
-        :key="index"
-      >
-        <el-card :body-style="{ padding: '0px', margin: '0px' }">
-          <img :src="item.imgs[0]" class="image" />
-          <div class="info-wrap">
-            <span>{{ item.name }}</span>
-            <div class="bottom clearfix">
-              <time class="time">{{ currentDate }}</time>
-              <el-button type="text" class="button">點我看分類</el-button>
-            </div>
-          </div>
-        </el-card>
+    <el-row v-if="categoryData">
+      <el-col :span="8">
+        <!-- 如果要支援輪播視頻的話 https://blog.csdn.net/zongmaomx/article/details/108749682 -->
+        <!-- indicator-position="outside" -->
+        <el-carousel
+          class="category-carousel"
+          height="480px"
+          :autoplay="false"
+          v-if="categoryData[0]"
+        >
+          <el-carousel-item
+            v-for="(item, index) in categoryData[0].imgs"
+            :key="index"
+          >
+            <img :src="item" alt="" />
+          </el-carousel-item>
+        </el-carousel>
       </el-col>
-    </el-row>
-    <el-row v-else>
-      <h1>此分類尚未建立任何資料</h1>
+      <el-col :span="8">
+        <div
+          class="material-group-wrap "
+          v-for="(item, index) in materialGroup"
+        >
+          <el-image
+            :key="index"
+            style="width: 100px; height: 100px"
+            :src="item.imgs[0]"
+            :preview-src-list="item.imgs"
+          >
+          </el-image>
+        </div>
+      </el-col>
     </el-row>
 
     <!-- 子元件 -->
@@ -33,7 +45,10 @@ export default {
   data() {
     return {
       // 這個是 最後被選中的資料，從 level three 那邊傳過來的
-      categoryItem: this.$route.params.item
+      categoryItem: this.$route.params.item,
+      categoryData: [],
+      materialGroup: []
+
       // currentDate: new Date(),
     }
   },
@@ -54,7 +69,7 @@ export default {
   mounted() {
     window.scrollTo(0, 0)
     console.log(this.$route.params)
-
+    this.getCategoryData(this.$route.params.id)
     // 這邊要開始抓 這個 item 裡面需要的所有 原物料組 跟 原物料組裡面的原料
   },
   computed: {
@@ -68,7 +83,36 @@ export default {
   },
   methods: {
     // **********************************************  讀取資料開始 **********************************************
-    //
+    getCategoryData(id) {
+      this.$axios
+        .get(`/api/categories/get-category-by-id/${id}`)
+        .then((res) => {
+          // 把資料庫的數據都先讀出來
+          this.categoryData = [...res.data]
+          console.log(this.categoryData)
+          this.getMaterialGroupData(this.categoryData[0].material_group)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    getMaterialGroupData(groupId) {
+      console.log(groupId)
+      this.$axios
+        .post('/api/material-group/many', groupId)
+        .then((res) => {
+          // 獲取成功
+          this.$message({
+            message: '讀取 material group 資料完成',
+            type: 'success'
+          })
+          this.materialGroup = res.data
+          console.log('this.materialGroup', this.materialGroup)
+        })
+        .catch((err) => {
+          console.log('axios添加數據失敗==>MyDialog.vue==>', err)
+        })
+    }
     // **********************************************  讀取資料結束 **********************************************
   }
 }
@@ -157,5 +201,13 @@ body > .el-container {
   /* height: 120px; */
   /* height: 10px; */
   line-height: 100%;
+}
+/* .category-carousel {
+  height: 480px;
+} */
+.material-group-wrap {
+  height: 100px;
+  margin-bottom: 2px;
+  text-align: left;
 }
 </style>

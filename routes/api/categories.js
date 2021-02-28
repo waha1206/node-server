@@ -221,6 +221,34 @@ router.get(
       })
   }
 )
+// $router get api/categories/get-category-by-id/:id
+// @desc   根據ID取得單一商品的所有完整資料
+// @access private
+// 使用 hander 要驗證 token
+// body 不用放，因為他會獲取所有訊息
+router.get(
+  '/get-category-by-id/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // query 選擇的條件
+    // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
+    const query = { _id: req.params.id }
+    const options = {
+      // imgs: 0
+    }
+    CategoriesLevelThree.find(query, options)
+      .sort({ type: 1 })
+      .then((categories) => {
+        if (!categories) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(categories)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
 
 // $router get api/categories/:id
 // @desc   獲取單個訊息

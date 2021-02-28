@@ -52,10 +52,10 @@ export default {
     // 路由傳遞一個或多個參數
     // https://blog.csdn.net/weixin_40297452/article/details/90704936
     $route(val) {
-      console.log(' --------------- manager watch $route --------------- ', val)
+      // console.log(' --------------- manager watch $route --------------- ', val)
       const { id, name } = this.$route.params
-      console.log(val.path)
-      console.log(id, name)
+      // console.log(val.path)
+      // console.log(id, name)
       this.getBreadList(val)
 
       // this.getBreadcrumb()

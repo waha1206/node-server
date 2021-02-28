@@ -154,6 +154,31 @@ router.get(
   }
 )
 
+// $router get api/material-group/many
+// @desc   透過 _id 取得很多資料
+// @access private
+// 使用 hander 要驗證 token
+// body 不用放，因為他會獲取所有訊息
+router.post(
+  '/many',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    console.log(req.body)
+
+    MaterialGroupMember.find({ _id: { $in: req.body } })
+      .sort({ type: 1 })
+      .then((materialGroupOne) => {
+        if (!materialGroupOne) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(materialGroupOne)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
 // $router get api/material-group/two
 // @desc   獲取所有分類資訊
 // @access private
@@ -297,11 +322,9 @@ router.post(
 
     if (level === 3) {
       if (req.body.imgs) {
-        if (req.body.imgs.length > 0) {
+        if (req.body.imgs.length) {
           materialGroupFields.imgs = req.body.imgs.split('|')
         }
-      } else {
-        materialGroupFields.imgs = []
       }
       if (req.body.describe) {
         materialGroupFields.describe = req.body.describe
