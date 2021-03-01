@@ -7,7 +7,7 @@
         <el-carousel
           class="category-carousel"
           height="480px"
-          :autoplay="false"
+          :autoplay="true"
           v-if="categoryData[0]"
         >
           <el-carousel-item
@@ -24,10 +24,27 @@
           v-for="(item, index) in materialGroup"
         >
           <el-image
+            v-if="item.imgs[0]"
             :key="index"
-            style="width: 100px; height: 100px"
+            style="width: 80px; height: 80px"
             :src="item.imgs[0]"
             :preview-src-list="item.imgs"
+          >
+          </el-image>
+
+          <el-image
+            v-else
+            :key="index"
+            style="width: 80px; height: 80px"
+            :src="lostImg"
+            :preview-src-list="item.imgs"
+          >
+          </el-image>
+          <el-image
+            class="img-pointer"
+            style="width: 320px; height: 80px"
+            :src="src"
+            @click="selectMaterial(item, index)"
           >
           </el-image>
         </div>
@@ -36,23 +53,43 @@
 
     <!-- 子元件 -->
     <!-- 子元件結束 -->
+    <!-- 這邊為跳出選擇 material 的 dialog -->
+    <QuotationMaterialDialog
+      v-if="quotationMaterialDialog"
+      :dialog="quotationMaterialDialog"
+      @update="updataMaterial"
+      @reportError="reportError"
+    >
+    </QuotationMaterialDialog>
   </div>
 </template>
 
 <script>
+import QuotationMaterialDialog from '../../components/QuotationManager/QuotationMaterialDialog.vue'
+
 export default {
   name: 'quotation-level-four',
   data() {
     return {
+      // 控制 quotatuin material dialog 的物件
+      quotationMaterialDialog: {
+        show: false,
+        title: '請選擇商品規格',
+        index: 0,
+        materialGroup: {}
+      },
       // 這個是 最後被選中的資料，從 level three 那邊傳過來的
       categoryItem: this.$route.params.item,
       categoryData: [],
-      materialGroup: []
+      materialGroup: [],
+      lostImg: '../../../images/缺圖.jpg',
+      src: '../../../images/點擊選擇規格.jpg'
 
       // currentDate: new Date(),
     }
   },
   components: {
+    QuotationMaterialDialog
     // GroupLevelOneDialog,
     // GroupLevelTwoDialog,
     // GroupLevelThreeDialog
@@ -112,8 +149,22 @@ export default {
         .catch((err) => {
           console.log('axios添加數據失敗==>MyDialog.vue==>', err)
         })
-    }
+    },
     // **********************************************  讀取資料結束 **********************************************
+    selectMaterial(item, index) {
+      this.quotationMaterialDialog = {
+        show: true,
+        title: item.name,
+        index: index,
+        materialGroup: item.choice_level_three_material
+      }
+    },
+    updataMaterial() {
+      // 當子元件更新後，來這邊把選擇的原料放進來，參數應該會有 index 第幾個原料組，跟選擇的原料 _id
+    },
+    reportError() {
+      this.quotationMaterialDialog.show = false
+    }
   }
 }
 </script>
@@ -140,7 +191,7 @@ export default {
   color: #333;
   text-align: center;
   line-height: 160px;
-  width: 1700px;
+  width: 100%;
   height: 1200px;
 }
 
@@ -177,6 +228,10 @@ body > .el-container {
   float: right;
 }
 
+.img-pointer {
+  cursor: pointer;
+}
+
 .image {
   width: 280px;
   height: 280px;
@@ -206,7 +261,7 @@ body > .el-container {
   height: 480px;
 } */
 .material-group-wrap {
-  height: 100px;
+  height: 80px;
   margin-bottom: 2px;
   text-align: left;
 }

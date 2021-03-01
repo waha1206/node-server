@@ -136,7 +136,7 @@
 <script>
 import { MessageBox } from 'element-ui'
 export default {
-  name: 'material_supplier_dialog',
+  name: 'material-supplier-dialog',
   props: {
     dialog: Object,
     supplier: Array,

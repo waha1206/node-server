@@ -82,6 +82,31 @@ router.get(
   }
 )
 
+// $router get api/material/many
+// @desc   透過 _id 取得很多資料
+// @access private
+// 使用 hander 要驗證 token
+// body 不用放，因為他會獲取所有訊息
+router.post(
+  '/many',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    console.log(req.body)
+
+    Material.find({ _id: { $in: req.body } })
+      .sort({ type: 1 })
+      .then((materials) => {
+        if (!materials) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(materials)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
 // $router GET api/material/three
 // @desc   取得所有原料的 level one two class name _id
 // @access Private

@@ -147,6 +147,7 @@ Vue.component('my-percentage-input', {
         const styleObject = {
           width: this.width + 'px',
           height: this.height + 'px'
+          // textAlign:'center'
         }
         return styleObject
       }
