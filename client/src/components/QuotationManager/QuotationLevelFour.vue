@@ -19,34 +19,40 @@
         </el-carousel>
       </el-col>
       <el-col :span="8">
-        <div
-          class="material-group-wrap "
-          v-for="(item, index) in materialGroup"
-        >
-          <el-image
-            v-if="item.imgs[0]"
-            :key="index"
-            style="width: 80px; height: 80px"
-            :src="item.imgs[0]"
-            :preview-src-list="item.imgs"
-          >
-          </el-image>
+        <div class="material-group-wrap" v-for="(item, index) in materialGroup">
+          <div class="material-wrap-left">
+            <!-- style="width: 80px; height: 80px" -->
+            <el-image
+              class="material-wrap-left-image"
+              v-if="item.imgs[0]"
+              :key="index"
+              :src="item.imgs[0]"
+              :preview-src-list="item.imgs"
+            >
+            </el-image>
 
-          <el-image
-            v-else
-            :key="index"
-            style="width: 80px; height: 80px"
-            :src="lostImg"
-            :preview-src-list="item.imgs"
-          >
-          </el-image>
-          <el-image
+            <el-image
+              v-else
+              :key="index"
+              :src="lostImg"
+              :preview-src-list="item.imgs"
+            >
+            </el-image>
+          </div>
+
+          <div class="material-wrap-right" @click="selectMaterial(item, index)">
+            <p>點我選擇</p>
+            <p style="font-weight:bold; color:blue">{{ item.web_side_name }}</p>
+            <p>此選項共有：{{ item.choice_level_three_material.length }} 項</p>
+          </div>
+
+          <!-- <el-image
             class="img-pointer"
             style="width: 320px; height: 80px"
             :src="src"
             @click="selectMaterial(item, index)"
           >
-          </el-image>
+          </el-image> -->
         </div>
       </el-col>
     </el-row>
@@ -232,14 +238,14 @@ body > .el-container {
   cursor: pointer;
 }
 
-.image {
+/* .image {
   width: 280px;
   height: 280px;
   display: block;
   cursor: pointer;
   border: 0px;
   overflow: hidden;
-}
+} */
 
 .clearfix:before,
 .clearfix:after {
@@ -261,8 +267,38 @@ body > .el-container {
   height: 480px;
 } */
 .material-group-wrap {
+  float: left;
   height: 80px;
   margin-bottom: 2px;
   text-align: left;
+}
+
+.material-wrap-left {
+  height: 80px;
+  width: 80px;
+  float: left;
+}
+.material-wrap-left-image {
+  height: 100%;
+  width: 100%;
+  float: left;
+}
+
+.material-wrap-right {
+  width: 320px;
+  height: 80px;
+  line-height: 80px;
+  background-color: rgb(248, 240, 240);
+  float: right;
+  margin-left: 5px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.material-wrap-right p {
+  height: 26px;
+  line-height: 26px;
+  width: auto;
+  vertical-align: text-top;
+  text-align: center;
 }
 </style>

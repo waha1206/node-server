@@ -78,6 +78,7 @@ const MaterialGroupMemberSchema = new Schema({
   choiceLevelTwoValue: {
     type: Array
   },
+  // 客戶端，客戶會看到的顯示名稱
   web_side_name: {
     type: String,
     required: true
