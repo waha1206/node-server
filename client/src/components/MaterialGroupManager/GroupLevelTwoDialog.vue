@@ -385,6 +385,7 @@ export default {
         return index < this.my_paginations.page_size
       })
     },
+    // 分頁的 function
     handleSizeChange(page_size) {
       // 切換每頁有幾條數據
       localStorage.group_level_two_page_size = page_size
