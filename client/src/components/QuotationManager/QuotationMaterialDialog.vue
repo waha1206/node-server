@@ -83,14 +83,12 @@ export default {
   },
   watch: {
     dialog() {
-      console.log('material dialog', this.dialog)
       this.getMaterialGroupData(this.dialog.materialGroup)
     }
   },
   methods: {
     // **********************************************  讀取資料開始 **********************************************
     getMaterialGroupData(materialsId) {
-      console.log(materialsId)
       this.$axios
         .post('/api/material/many', materialsId)
         .then((res) => {
@@ -100,8 +98,6 @@ export default {
             type: 'success'
           })
           this.materialGroupData = res.data
-
-          console.log('this.materialGroupData', this.materialGroupData)
         })
         .catch((err) => {
           console.log('axios添加數據失敗==>MyDialog.vue==>', err)
@@ -117,6 +113,8 @@ export default {
     },
     updateMaterial(material) {
       // 選擇完物件後 $emit 到父元件
+      console.log(material, this.dialog)
+      this.$emit('update', material, this.dialog.index)
     },
     // 時間轉換
     getDate(dt) {

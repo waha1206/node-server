@@ -40,17 +40,40 @@
             </el-image>
           </div>
 
-          <div class="material-wrap-right" @click="selectMaterial(item, index)">
-            <p>點我選擇</p>
+          <div
+            v-if="!selectMaterial[index]"
+            class="material-wrap-right"
+            @click="handleSelectMaterial(item, index)"
+          >
+            <p>點我選擇配件</p>
             <p style="font-weight:bold; color:blue">{{ item.web_side_name }}</p>
             <p>此選項共有：{{ item.choice_level_three_material.length }} 項</p>
+            <span style="display:none">{{ num }}</span>
+          </div>
+          <div
+            v-else
+            class="material-wrap-right"
+            @click="handleSelectMaterial(item, index)"
+          >
+            <el-image
+              :key="index"
+              :src="selectMaterial[index].imgs[0]"
+              style="width:80px;height:80px;float:left"
+            >
+            </el-image>
+            <p>您選擇了以下的配件</p>
+            <p style="font-weight:bold; color:blue">
+              {{ selectMaterial[index].product_name }}
+            </p>
+
+            <span style="display:none">{{ num }}</span>
           </div>
 
           <!-- <el-image
             class="img-pointer"
             style="width: 320px; height: 80px"
             :src="src"
-            @click="selectMaterial(item, index)"
+            @click="handleSelectMaterial(item, index)"
           >
           </el-image> -->
         </div>
@@ -63,7 +86,7 @@
     <QuotationMaterialDialog
       v-if="quotationMaterialDialog"
       :dialog="quotationMaterialDialog"
-      @update="updataMaterial"
+      @update="updateMaterial"
       @reportError="reportError"
     >
     </QuotationMaterialDialog>
@@ -77,6 +100,8 @@ export default {
   name: 'quotation-level-four',
   data() {
     return {
+      // 用來更新 element 重新渲染
+      num: 0,
       // 控制 quotatuin material dialog 的物件
       quotationMaterialDialog: {
         show: false,
@@ -88,6 +113,8 @@ export default {
       categoryItem: this.$route.params.item,
       categoryData: [],
       materialGroup: [],
+      selectMaterial: [],
+
       lostImg: '../../../images/缺圖.jpg',
       src: '../../../images/點擊選擇規格.jpg'
 
@@ -124,6 +151,12 @@ export default {
     //   return levelThreeData
     // }
   },
+  watch: {
+    num() {
+      console.log(this.selectMaterial)
+      return this.num
+    }
+  },
   methods: {
     // **********************************************  讀取資料開始 **********************************************
     getCategoryData(id) {
@@ -132,7 +165,6 @@ export default {
         .then((res) => {
           // 把資料庫的數據都先讀出來
           this.categoryData = [...res.data]
-          console.log(this.categoryData)
           this.getMaterialGroupData(this.categoryData[0].material_group)
         })
         .catch((err) => {
@@ -140,7 +172,6 @@ export default {
         })
     },
     getMaterialGroupData(groupId) {
-      console.log(groupId)
       this.$axios
         .post('/api/material-group/many', groupId)
         .then((res) => {
@@ -150,14 +181,13 @@ export default {
             type: 'success'
           })
           this.materialGroup = res.data
-          console.log('this.materialGroup', this.materialGroup)
         })
         .catch((err) => {
           console.log('axios添加數據失敗==>MyDialog.vue==>', err)
         })
     },
     // **********************************************  讀取資料結束 **********************************************
-    selectMaterial(item, index) {
+    handleSelectMaterial(item, index) {
       this.quotationMaterialDialog = {
         show: true,
         title: item.name,
@@ -165,8 +195,12 @@ export default {
         materialGroup: item.choice_level_three_material
       }
     },
-    updataMaterial() {
+    updateMaterial(material, index) {
       // 當子元件更新後，來這邊把選擇的原料放進來，參數應該會有 index 第幾個原料組，跟選擇的原料 _id
+      this.quotationMaterialDialog.show = false
+      console.log('emit and index', material, index)
+      this.selectMaterial[index] = material
+      this.num += 1
     },
     reportError() {
       this.quotationMaterialDialog.show = false
