@@ -18,8 +18,10 @@
           </el-carousel-item>
         </el-carousel>
       </el-col>
-      <el-col :span="8">
+      <!-- 原物料的選擇 -->
+      <el-col :span="6">
         <div class="material-group-wrap" v-for="(item, index) in materialGroup">
+          <!-- ************************************** 最左側的 ICON **************************************-->
           <div class="material-wrap-left">
             <!-- style="width: 80px; height: 80px" -->
             <!-- 這邊把左邊的圖片放上去，這裡是提醒客戶要選擇的商品圖片提示 -->
@@ -42,7 +44,7 @@
               </el-image>
             </div>
           </div>
-
+          <!-- ************************************** 右側的 ICON **************************************-->
           <div
             v-if="!selectMaterial[index]"
             class="material-wrap-right"
@@ -85,17 +87,70 @@
 
             <span style="display:none">{{ num }}</span>
           </div>
+        </div>
+      </el-col>
+      <!-- 原物料選擇結束 -->
 
-          <!-- <el-image
-            class="img-pointer"
-            style="width: 320px; height: 80px"
-            :src="src"
-            @click="handleSelectMaterial(item, index)"
-          >
-          </el-image> -->
+      <!-- 最右側的選項，包含了 數量等等 -->
+      <el-col :span="6">
+        <!-- 父容器，只決定高度 -->
+        <!-- ************************************** 最右側的 ICON **************************************-->
+        <div class="other-wrap">
+          <div class="other-wrap-left">
+            <el-image
+              class="other-wrap-left-image"
+              :src="numberImage"
+              @click="showImage($event, '請選擇訂購數量', numberImage)"
+            >
+            </el-image>
+          </div>
+          <div class="other-wrap-right" v-if="options">
+            <el-select
+              v-model="value"
+              clearable
+              placeholder="請選擇訂購數量"
+              size="large"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </div>
+        </div>
+        <div class="other-wrap">
+          <div class="other-wrap-left">
+            <el-image
+              class="other-wrap-left-image"
+              :src="proofingImage"
+              @click="showImage($event, '請選擇打樣幾款', proofingImage)"
+            >
+            </el-image>
+          </div>
+          <div class="other-wrap-right" v-if="proofingOptions">
+            <el-select
+              v-model="proofingValue"
+              clearable
+              placeholder="請選擇打樣幾款"
+              size="large"
+            >
+              <el-option
+                v-for="item in proofingOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </div>
         </div>
       </el-col>
     </el-row>
+
+    <!-- ************************************** 這邊是共用的圖片 ************************************** -->
     <el-dialog
       :title="dialogTitle"
       :visible.sync="dialogVisible"
@@ -132,6 +187,11 @@ export default {
   name: 'quotation-level-four',
   data() {
     return {
+      // 選擇要訂購的商品數量
+      options: [],
+      value: '',
+      proofingOptions: [],
+      proofingValue: '',
       // 用來更新 element 重新渲染
       num: 0,
       // 控制 quotatuin material dialog 的物件
@@ -146,12 +206,16 @@ export default {
       categoryData: [],
       materialGroup: [],
       selectMaterial: [],
+      // 顯示 dialog image 共用的
       dialogVisible: false,
       dialogImgUrl: '',
       dialogTitle: '',
+      // 使用到的圖片
       selectIcon: '../../../images/select.png',
       lostImg: '../../../images/缺圖.jpg',
-      src: '../../../images/點擊選擇規格.jpg'
+      src: '../../../images/點擊選擇規格.jpg',
+      numberImage: '../../../images/number.jpg',
+      proofingImage: '../../../images/proofing.jpg'
 
       // currentDate: new Date(),
     }
@@ -165,6 +229,7 @@ export default {
   created() {
     // this.getCategoriesLevelOneData()
     // this.getCategoriesLevelThreeData()
+    this.getProofingOptions()
   },
   beforeRouteEnter(to, from, next) {
     // console.log('元件內的 beforeRouterEnter，不能使用this,因為此時尚未創建成功')
@@ -200,6 +265,11 @@ export default {
         .then((res) => {
           // 把資料庫的數據都先讀出來
           this.categoryData = [...res.data]
+          // 把訂購數量塞到 options 裡面 value 跟 table 的數值會是一樣的
+          this.categoryData[0].quantity_profit.forEach((item) => {
+            let obj = { value: item.quantity, label: item.quantity + '個' }
+            this.options.push(obj)
+          })
           this.getMaterialGroupData(this.categoryData[0].material_group)
         })
         .catch((err) => {
@@ -245,6 +315,15 @@ export default {
       this.dialogImgUrl = img
       this.dialogVisible = true
       e.stopPropagation()
+    },
+    getProofingOptions() {
+      for (let i = 0; i < 21; i++) {
+        let obj = { value: i, label: i + '款' }
+        if (i == 0) {
+          obj.label = '不需要打樣直接生產'
+        }
+        this.proofingOptions.push(obj)
+      }
     }
   }
 }
@@ -347,6 +426,12 @@ body > .el-container {
   margin-bottom: 2px;
   text-align: left;
 }
+.other-wrap {
+  float: left;
+  height: 80px;
+  margin-bottom: 2px;
+  text-align: left;
+}
 
 .material-wrap-left {
   height: 80px;
@@ -358,6 +443,29 @@ body > .el-container {
   width: 100%;
   float: left;
   cursor: pointer;
+}
+.other-wrap-left {
+  height: 80px;
+  width: 80px;
+  float: left;
+}
+.other-wrap-left-image {
+  height: 100%;
+  width: 100%;
+  float: left;
+  cursor: pointer;
+}
+
+.other-wrap-right {
+  width: 320px;
+  height: 80px;
+  line-height: 80px;
+  background-color: rgb(248, 240, 240);
+  float: right;
+  margin-left: 5px;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: center;
 }
 
 .material-wrap-right {
