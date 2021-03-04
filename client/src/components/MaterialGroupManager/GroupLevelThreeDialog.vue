@@ -81,6 +81,8 @@
                   prop="processing_fee"
                 >
                   <my-currency-input
+                    :width="132"
+                    :height="24"
                     :isReadyOnly="false"
                     type="processing_fee"
                     v-model="processingFee"

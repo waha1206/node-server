@@ -56,14 +56,16 @@ Vue.directive('permission', {
 // 使用方式 <my-currency-input type="registered_capital" v-model="formData.registered_capital" ></my-currency-input>
 // 20210206 新增了一個功能是 readyOnly :isReadyOnly="false" 可輸入  :isReadyOnly="true" 只允許讀取
 Vue.component('my-currency-input', {
-  props: ['value', 'isReadyOnly'],
+  props: ['value', 'isReadyOnly', 'width', 'height'],
   template: `
 			<div>
 					<input
 					class="my-currency-input"
+					v-bind:style="styleObject"
 					v-if="isReadyOnly" type="text" v-model="displayValue" @blur="isInputActive = false" @focus="isInputActive = true" readonly/>
 					<input
 					class="my-currency-input"
+					v-bind:style="styleObject"
 					v-else type="text" v-model="displayValue" @blur="isInputActive = false" @focus="isInputActive = true"/>
 			</div>`,
   data: function() {
@@ -72,6 +74,16 @@ Vue.component('my-currency-input', {
     }
   },
   computed: {
+    styleObject: {
+      get: function() {
+        const styleObject = {
+          width: this.width + 'px',
+          height: this.height + 'px'
+          // textAlign:'center'
+        }
+        return styleObject
+      }
+    },
     displayValue: {
       get: function() {
         if (this.isInputActive) {

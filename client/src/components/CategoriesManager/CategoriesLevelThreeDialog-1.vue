@@ -374,6 +374,8 @@
                     prop="tailor_fee"
                   >
                     <my-currency-input
+										:height="24"
+                    :width="130"
                     :isReadyOnly="false"
                     type="tailor_fee"
                     v-model="tailorFee"
@@ -390,10 +392,44 @@
                     prop="crop_fee"
                   >
                     <my-currency-input
+										:height="24"
+                    :width="130"
                     :isReadyOnly="false"
                     type="crop_fee"
                     v-model="cropFee"
                   ></my-currency-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="拆圖數量："
+                    size="mini"
+                    label-width="120px"
+                    prop="split_quantity"
+                  >
+                    <el-input
+                      type="type"
+                      placeholder="可拆圖的最低數量"
+                      v-model="levelThreeFormData.split_quantity"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="最低訂量："
+                    size="mini"
+                    label-width="120px"
+                    prop="mini_order"
+                  >
+                   <el-input
+                      type="type"
+                      placeholder="商品的最低訂購量"
+                      v-model="levelThreeFormData.mini_order"
+                    ></el-input>
                   </el-form-item>
                 </div>
               </el-col>
@@ -663,6 +699,8 @@ export default {
         pattern_download: this.levelThreeFormData.pattern_download,
         tailor_fee: this.levelThreeFormData.tailor_fee,
         crop_fee: this.levelThreeFormData.crop_fee,
+				split_quantity:this.levelThreeFormData.split_quantity,
+				mini_order:this.levelThreeFormData.mini_order,
         introduction_video: Object.assign(
           {},
           this.levelThreeFormData.introduction_video

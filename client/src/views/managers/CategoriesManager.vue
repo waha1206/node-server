@@ -442,7 +442,9 @@ export default {
         level_one_id: '',
         tailor_fee: '',
         crop_fee: '',
-        quantity_profit: []
+        quantity_profit: [],
+        split_quantity: '',
+        mini_order: ''
       },
       categoriesLevelOneDialog: {
         show: false,

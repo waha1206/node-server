@@ -79,6 +79,8 @@
                 <el-form-item prop="the_cost" label="商品成本：">
                   <my-currency-input
                     :isReadyOnly="false"
+                    :height="24"
+                    :width="156"
                     type="the_cost"
                     v-model="theCost"
                   ></my-currency-input>
@@ -94,6 +96,8 @@
                 <el-form-item prop="retail_price" label="商品售價：">
                   <my-currency-input
                     :isReadyOnly="true"
+                    :height="24"
+                    :width="156"
                     type="retail_price"
                     v-model="retailPrice"
                   ></my-currency-input>
@@ -125,6 +129,8 @@
               <el-col :span="6">
                 <el-form-item prop="unit_price" label="單位售價：">
                   <my-currency-input
+                    :height="24"
+                    :width="156"
                     :isReadyOnly="false"
                     type="unit_price"
                     v-model="unitPrice"

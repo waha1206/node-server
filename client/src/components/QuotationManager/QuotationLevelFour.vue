@@ -155,7 +155,7 @@
       :title="dialogTitle"
       :visible.sync="dialogVisible"
       append-to-body
-      width="520px"
+      width="530px"
       center
     >
       <img

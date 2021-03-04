@@ -168,6 +168,13 @@ const CategoryLevelThreeSchema = new Schema({
   },
   quantity_profit: {
     type: [{ quantity: { type: String }, profit: { type: String } }]
+  },
+  // 可以拆圖的數量
+  split_quantity: {
+    type: String
+  },
+  mini_order: {
+    type: String
   }
 })
 

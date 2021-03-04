@@ -55,6 +55,12 @@ router.post(
       if (req.body.level_two_id) {
         categoriesFields.level_two_id = req.body.level_two_id
       }
+      if (req.body.split_quantity) {
+        categoriesFields.split_quantity = req.body.split_quantity
+      }
+      if (req.body.mini_order) {
+        categoriesFields.mini_order = req.body.mini_order
+      }
       // 多張圖片
       if (req.body.imgs) {
         categoriesFields.imgs = req.body.imgs.split('|')
@@ -315,7 +321,12 @@ router.post(
       if (req.body.level_two_id) {
         categoryFields.level_two_id = req.body.level_two_id
       }
-
+      if (req.body.split_quantity) {
+        categoryFields.split_quantity = req.body.split_quantity
+      }
+      if (req.body.mini_order) {
+        categoryFields.mini_order = req.body.mini_order
+      }
       // else {
       //   categoryFields.imgs = []
       // }
