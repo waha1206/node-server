@@ -22,22 +22,25 @@
         <div class="material-group-wrap" v-for="(item, index) in materialGroup">
           <div class="material-wrap-left">
             <!-- style="width: 80px; height: 80px" -->
-            <el-image
-              class="material-wrap-left-image"
-              v-if="item.imgs[0]"
-              :key="index"
-              :src="item.imgs[0]"
-              :preview-src-list="item.imgs"
-            >
-            </el-image>
-
-            <el-image
-              v-else
-              :key="index"
-              :src="lostImg"
-              :preview-src-list="item.imgs"
-            >
-            </el-image>
+            <!-- 這邊把左邊的圖片放上去，這裡是提醒客戶要選擇的商品圖片提示 -->
+            <div v-if="item.imgs[0]">
+              <el-image
+                class="material-wrap-left-image"
+                :key="index"
+                :src="item.imgs[0]"
+                @click="showImage($event, item.web_side_name, item.imgs[0])"
+              >
+                <!-- :preview-src-list="item.imgs" -->
+              </el-image>
+            </div>
+            <div v-else>
+              <el-image
+                :key="index"
+                :src="lostImg"
+                :preview-src-list="item.imgs"
+              >
+              </el-image>
+            </div>
           </div>
 
           <div
@@ -45,6 +48,12 @@
             class="material-wrap-right"
             @click="handleSelectMaterial(item, index)"
           >
+            <el-image
+              :key="index"
+              :src="selectIcon"
+              style="width:80px;height:80px;float:left"
+            >
+            </el-image>
             <p>點我選擇配件</p>
             <p style="font-weight:bold; color:blue">{{ item.web_side_name }}</p>
             <p>此選項共有：{{ item.choice_level_three_material.length }} 項</p>
@@ -59,8 +68,16 @@
               :key="index"
               :src="selectMaterial[index].imgs[0]"
               style="width:80px;height:80px;float:left"
+              @click="
+                showImage(
+                  $event,
+                  `您選擇的【${item.web_side_name}】是【${selectMaterial[index].product_name}】`,
+                  selectMaterial[index].imgs[0]
+                )
+              "
             >
             </el-image>
+
             <p>您選擇了以下的配件</p>
             <p style="font-weight:bold; color:blue">
               {{ selectMaterial[index].product_name }}
@@ -79,6 +96,21 @@
         </div>
       </el-col>
     </el-row>
+    <el-dialog
+      :title="dialogTitle"
+      :visible.sync="dialogVisible"
+      append-to-body
+      width="520px"
+      center
+    >
+      <img
+        width="480px"
+        height="480px"
+        fit="contain"
+        :src="dialogImgUrl"
+        alt=""
+      />
+    </el-dialog>
 
     <!-- 子元件 -->
     <!-- 子元件結束 -->
@@ -114,7 +146,10 @@ export default {
       categoryData: [],
       materialGroup: [],
       selectMaterial: [],
-
+      dialogVisible: false,
+      dialogImgUrl: '',
+      dialogTitle: '',
+      selectIcon: '../../../images/select.png',
       lostImg: '../../../images/缺圖.jpg',
       src: '../../../images/點擊選擇規格.jpg'
 
@@ -204,6 +239,12 @@ export default {
     },
     reportError() {
       this.quotationMaterialDialog.show = false
+    },
+    showImage: function(e, title, img) {
+      this.dialogTitle = title
+      this.dialogImgUrl = img
+      this.dialogVisible = true
+      e.stopPropagation()
     }
   }
 }
@@ -316,6 +357,7 @@ body > .el-container {
   height: 100%;
   width: 100%;
   float: left;
+  cursor: pointer;
 }
 
 .material-wrap-right {
