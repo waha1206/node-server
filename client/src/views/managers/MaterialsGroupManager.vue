@@ -283,7 +283,8 @@ export default {
         level_two_id: '',
         level_one_id: '',
         last_edit_person: '',
-        last_modify_date: new Date()
+        last_modify_date: new Date(),
+        kind: 1
       },
       // 控制分頁
       my_paginations: {

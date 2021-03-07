@@ -175,6 +175,22 @@ const CategoryLevelThreeSchema = new Schema({
   },
   mini_order: {
     type: String
+  },
+  // 表布版型寬度
+  outside_layout_width: {
+    type: String
+  },
+  // 表布版型高度
+  outside_layout_height: {
+    type: String
+  },
+  // 內裡版型寬度
+  inside_layout_width: {
+    type: String
+  },
+  // 內裡版型高度
+  inside_layout_height: {
+    type: String
   }
 })
 

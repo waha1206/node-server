@@ -1,5 +1,6 @@
 <template>
   <div class="quotatuin-level-four">
+    <!-- <el-row v-if="categoryData" style="background-color:black"> -->
     <el-row v-if="categoryData">
       <el-col :span="8">
         <!-- 如果要支援輪播視頻的話 https://blog.csdn.net/zongmaomx/article/details/108749682 -->
@@ -25,7 +26,7 @@
           <div class="material-wrap-left">
             <!-- style="width: 80px; height: 80px" -->
             <!-- 這邊把左邊的圖片放上去，這裡是提醒客戶要選擇的商品圖片提示 -->
-            <div v-if="item.imgs[0]">
+            <div v-if="item.imgs[0]" style="border-radius:8px;overflow:hidden">
               <el-image
                 class="material-wrap-left-image"
                 :key="index"
@@ -35,8 +36,9 @@
                 <!-- :preview-src-list="item.imgs" -->
               </el-image>
             </div>
-            <div v-else>
+            <div v-else style="border-radius:8px;overflow:hidden">
               <el-image
+                class="material-wrap-left-image"
                 :key="index"
                 :src="lostImg"
                 :preview-src-list="item.imgs"
@@ -49,6 +51,7 @@
             v-if="!selectMaterial[index]"
             class="material-wrap-right"
             @click="handleSelectMaterial(item, index)"
+            style="position:relative;border-radius:8px"
           >
             <el-image
               :key="index"
@@ -96,6 +99,7 @@
         <!-- 父容器，只決定高度 -->
         <!-- ************************************** 最右側的 ICON **************************************-->
         <div class="other-wrap">
+          <!-- 左邊的 icon -->
           <div class="other-wrap-left">
             <el-image
               class="other-wrap-left-image"
@@ -104,25 +108,58 @@
             >
             </el-image>
           </div>
-          <div class="other-wrap-right" v-if="options">
-            <el-select
-              v-model="value"
-              clearable
-              placeholder="請選擇訂購數量"
-              size="large"
+          <!-- 右邊的容器，最低數量 -->
+          <div
+            class="other-wrap-right"
+            v-if="options"
+            style="position:relative;border-radius:8px"
+          >
+            <!-- style="position:relative;border-radius:8px" -->
+            <!-- 右上角的 help 子絕父相 -->
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="如果沒有找到適合的數量，請聯繫業務"
+              placement="right"
             >
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+              <el-badge
+                value="help"
+                class="item"
+                style="margin-top: 0px;margin-right: 0px;position:absolute;top:-28px;right:2px"
               >
-              </el-option>
-            </el-select>
+              </el-badge>
+            </el-tooltip>
+
+            <div
+              style="float:left;height:30px;line-height:30px;text-align:center;width:100%"
+            >
+              <span v-if="categoryData[0].mini_order">
+                最低訂購量：{{ categoryData[0].mini_order + ' ' + '個' }}</span
+              >
+            </div>
+            <div style="float:left;width:100%;height:43px">
+              <el-select
+                style="float:center;height:42px;line-height:42px;overflow:hidden"
+                v-model="value"
+                clearable
+                placeholder="請選擇訂購數量"
+                size="large"
+              >
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </div>
           </div>
         </div>
+        <!-- 第二行 -->
         <div class="other-wrap">
           <div class="other-wrap-left">
+            <!-- 左側的 icon -->
             <el-image
               class="other-wrap-left-image"
               :src="proofingImage"
@@ -130,21 +167,52 @@
             >
             </el-image>
           </div>
-          <div class="other-wrap-right" v-if="proofingOptions">
-            <el-select
-              v-model="proofingValue"
-              clearable
-              placeholder="請選擇打樣幾款"
-              size="large"
+          <!-- 右邊的容器，最低數量，選擇打樣款式 -->
+          <div
+            class="other-wrap-right"
+            v-if="proofingOptions"
+            style="position:relative;border-radius:8px"
+          >
+            <!-- 右上角的 help 子絕父相 -->
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="注意，打樣款式乘上最低拆圖數不可大於訂購數量"
+              placement="right"
             >
-              <el-option
-                v-for="item in proofingOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+              <el-badge
+                value="help"
+                class="item"
+                style="margin-top: 0px;margin-right: 0px;position:absolute;top:-28px;right:2px"
               >
-              </el-option>
-            </el-select>
+              </el-badge>
+            </el-tooltip>
+            <div
+              style="float:left;height:30px;line-height:30px;text-align:center;width:100%"
+            >
+              <span v-if="categoryData[0].split_quantity">
+                最低可拆圖數：{{
+                  categoryData[0].split_quantity + ' ' + '個'
+                }}</span
+              >
+            </div>
+            <div style="float:left;width:100%;height:43px">
+              <el-select
+                style="float:center;height:42px;line-height:42px;overflow:hidden"
+                v-model="proofingValue"
+                clearable
+                placeholder="請選擇打樣幾款"
+                size="large"
+              >
+                <el-option
+                  v-for="item in proofingOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </div>
           </div>
         </div>
       </el-col>
@@ -230,6 +298,7 @@ export default {
     // this.getCategoriesLevelOneData()
     // this.getCategoriesLevelThreeData()
     this.getProofingOptions()
+    this.initData()
   },
   beforeRouteEnter(to, from, next) {
     // console.log('元件內的 beforeRouterEnter，不能使用this,因為此時尚未創建成功')
@@ -259,6 +328,7 @@ export default {
   },
   methods: {
     // **********************************************  讀取資料開始 **********************************************
+    // 先取得 商品的資料
     getCategoryData(id) {
       this.$axios
         .get(`/api/categories/get-category-by-id/${id}`)
@@ -276,6 +346,7 @@ export default {
           console.log(err)
         })
     },
+    // 再根據取得的商品資料裡的 material group id 去找到 group ， 這些 group 裡面會帶有完整的 跟組合完整的 material _id
     getMaterialGroupData(groupId) {
       this.$axios
         .post('/api/material-group/many', groupId)
@@ -324,6 +395,13 @@ export default {
         }
         this.proofingOptions.push(obj)
       }
+    },
+    // 先賦值給 element 裡 v-if 等判斷式會用到的值，不然會抱錯
+    initData() {
+      let obj = {}
+      obj.mini_order = '0'
+      obj.split_quantity = '0'
+      this.categoryData.push(obj)
     }
   }
 }
@@ -352,7 +430,7 @@ export default {
   text-align: center;
   line-height: 160px;
   width: 100%;
-  height: 1200px;
+  height: 1300px;
 }
 
 body > .el-container {
@@ -439,8 +517,8 @@ body > .el-container {
   float: left;
 }
 .material-wrap-left-image {
-  height: 100%;
-  width: 100%;
+  height: 80px;
+  width: 80px;
   float: left;
   cursor: pointer;
 }
@@ -464,7 +542,7 @@ body > .el-container {
   float: right;
   margin-left: 5px;
   overflow: hidden;
-  cursor: pointer;
+  /* cursor: pointer; */
   text-align: center;
 }
 

@@ -50,6 +50,7 @@ const MaterialSchema = new Schema({
   product_description: {
     type: String
   },
+  // 現有庫存 數量
   storage: {
     type: String
   },
@@ -122,6 +123,7 @@ const MaterialSchema = new Schema({
   level_two_id: {
     type: String
   },
+  // 加工費用是否要計算
   processing_fee_flag: {
     type: Boolean,
     default: true
@@ -132,6 +134,29 @@ const MaterialSchema = new Schema({
   // 原料種類 1 一般原物料  2 轉印布料 3 非轉印布料
   kind: {
     type: Number
+  },
+  cloth_width: {
+    type: String
+  },
+  // 版型寬 - 配件用的
+  layout_width: {
+    type: String
+  },
+  // 版型高 - 配件用的
+  layout_height: {
+    type: String
+  },
+  // 裁切費用 - 配件用的
+  crop_fee: {
+    type: String
+  },
+  // 平車費用 - 配件用的
+  tailor_fee: {
+    type: String
+  },
+  // 配件布料的 _id
+  accessory_cloth_id: {
+    type: String
   }
 })
 

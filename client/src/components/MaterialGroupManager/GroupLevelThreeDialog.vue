@@ -158,8 +158,21 @@
               </div>
             </el-col>
           </el-row>
+          <!-- 第四列 原物料組分類-->
+          <el-row :gutter="20" type="flex" class="row-bg">
+            <el-col :span="24">
+              <el-form-item prop="kind" label="原料組分類：">
+                <el-radio-group v-model="levelThreeFormData.kind">
+                  <el-radio :label="1">表布專用</el-radio>
+                  <el-radio :label="2">裡布專用</el-radio>
+                  <el-radio :label="3">一般原料、配件專用</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!-- 第四列結束 -->
 
-          <!-- 第七行開始，圖片上傳 -->
+          <!-- 第五行開始，圖片上傳 -->
           <!-- 圖片上傳的教學 https://segmentfault.com/a/1190000013796215 -->
           <!-- 上傳一張照片的時候隱藏 後面的 + 框框  https://www.twblogs.net/a/5b81a49e2b71772165ad9752 -->
           <!-- 另外一種做法：https://blog.csdn.net/zaocha321/article/details/103345423 -->
@@ -293,6 +306,7 @@ export default {
       disabled: Boolean,
       updateLevelTwoData: [],
       form_rules: {
+        kind: [{ required: true, message: '必選，必須正確', trigger: 'blur' }],
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         web_side_name: [
@@ -396,6 +410,7 @@ export default {
     onSubmit(formName) {
       // add 的時候，如果是 edit 要改
       const uploadFormData = {
+        kind: this.levelThreeFormData.kind,
         name: this.levelThreeFormData.name,
         describe: this.levelThreeFormData.describe,
         type: this.levelThreeFormData.type,

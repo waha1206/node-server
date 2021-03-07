@@ -422,7 +422,13 @@ export default {
         last_edit_person: '',
         stock_alert: '',
         processing_fee_flag: false,
-        kind: 1
+        kind: 1,
+        cloth_width: '',
+        crop_fee: '',
+        tailor_fee: '',
+        layout_height: '',
+        layout_width: '',
+        accessory_cloth_id: ''
       },
       // 編輯原物料的分類跳出視窗
       formData: {

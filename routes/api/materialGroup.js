@@ -61,6 +61,9 @@ router.post(
       if (req.body.imgs.length > 0) {
         materialGroupFields.imgs = req.body.imgs.split('|')
       }
+      if (req.body.kind) {
+        materialGroupFields.kind = req.body.kind
+      }
       if (req.body.describe) {
         materialGroupFields.describe = req.body.describe
       }
@@ -325,6 +328,9 @@ router.post(
         if (req.body.imgs.length) {
           materialGroupFields.imgs = req.body.imgs.split('|')
         }
+      }
+      if (req.body.kind) {
+        materialGroupFields.kind = req.body.kind
       }
       if (req.body.describe) {
         materialGroupFields.describe = req.body.describe

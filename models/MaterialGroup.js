@@ -132,6 +132,10 @@ const MaterialGroupMemberSchema = new Schema({
   },
   last_modify_date: {
     type: Date
+  },
+  // 原物料組分類，很重要
+  kind: {
+    type: Number
   }
 })
 

@@ -52,6 +52,18 @@ router.post(
     }
 
     if (req.body.level === 3) {
+      if (req.body.outside_layout_width) {
+        categoriesFields.outside_layout_width = req.body.outside_layout_width
+      }
+      if (req.body.outside_layout_height) {
+        categoriesFields.outside_layout_height = req.body.outside_layout_height
+      }
+      if (req.body.inside_layout_width) {
+        categoriesFields.inside_layout_width = req.body.inside_layout_width
+      }
+      if (req.body.inside_layout_height) {
+        categoriesFields.inside_layout_height = req.body.inside_layout_height
+      }
       if (req.body.level_two_id) {
         categoriesFields.level_two_id = req.body.level_two_id
       }
@@ -318,6 +330,18 @@ router.post(
       categoryFields.level_one_id = req.body.level_one_id
     }
     if (req.body.level === 3) {
+      if (req.body.outside_layout_width) {
+        categoryFields.outside_layout_width = req.body.outside_layout_width
+      }
+      if (req.body.outside_layout_height) {
+        categoryFields.outside_layout_height = req.body.outside_layout_height
+      }
+      if (req.body.inside_layout_width) {
+        categoryFields.inside_layout_width = req.body.inside_layout_width
+      }
+      if (req.body.inside_layout_height) {
+        categoryFields.inside_layout_height = req.body.inside_layout_height
+      }
       if (req.body.level_two_id) {
         categoryFields.level_two_id = req.body.level_two_id
       }

@@ -30,7 +30,7 @@
         <span slot="title" class="dialog-title">{{ dialog.title }}</span>
 
         <el-main class="quotation-main">
-          <el-row v-if="materialGroupData.length">
+          <el-row v-if="materialClothData.length">
             <el-col :span="4" v-for="(item, index) in tableData" :key="index">
               <el-card>
                 <img
@@ -103,7 +103,7 @@
 <script>
 import { MessageBox } from 'element-ui'
 export default {
-  name: 'quotatio-material-dialog',
+  name: 'material-cloth-dialog',
   props: {
     dialog: Object
   },
@@ -111,7 +111,7 @@ export default {
     return {
       lostImg: '../../../images/缺圖.jpg',
       currentDate: '2021-2-23',
-      materialGroupData: [],
+      materialClothData: [],
       tableData: [],
       // 管理分頁
       my_paginations: {
@@ -136,21 +136,21 @@ export default {
   },
   watch: {
     dialog() {
-      this.getMaterialGroupData(this.dialog.materialGroup)
+      this.getAccessoryClothData()
     }
   },
   methods: {
     // **********************************************  讀取資料開始 **********************************************
-    getMaterialGroupData(materialsId) {
+    getAccessoryClothData() {
       this.$axios
-        .post('/api/material/many', materialsId)
+        .get('/api/material/cloth')
         .then((res) => {
           // 獲取成功
           this.$message({
-            message: '讀取 material 資料完成',
+            message: '讀取 material cloth 資料完成',
             type: 'success'
           })
-          this.materialGroupData = res.data
+          this.materialClothData = res.data
           this.setPaginations()
         })
         .catch((err) => {
@@ -160,7 +160,7 @@ export default {
     // **********************************************  讀取資料結束 **********************************************
     // **********************************************  分頁開始 **********************************************
     setPaginations() {
-      this.my_paginations.total = this.materialGroupData.length
+      this.my_paginations.total = this.materialClothData.length
       this.my_paginations.page_index = 1
       this.my_paginations.page_size = 12
       // if (localStorage.group_level_two_page_size) {
@@ -171,7 +171,7 @@ export default {
       //   this.my_paginations.page_size = 5
       // }
       // 設置分頁數據
-      this.tableData = this.materialGroupData.filter((item, index) => {
+      this.tableData = this.materialClothData.filter((item, index) => {
         return index < this.my_paginations.page_size
       })
     },
@@ -181,7 +181,7 @@ export default {
       localStorage.group_level_two_page_size = page_size
       this.my_paginations.page_index = 1
       this.my_paginations.page_size = page_size
-      this.tableData = this.materialGroupData.filter((item, index) => {
+      this.tableData = this.materialClothData.filter((item, index) => {
         return index < page_size
       })
     },
@@ -193,8 +193,8 @@ export default {
       // 容器
       let tables = []
       for (let i = index; i < nums; i++) {
-        if (this.materialGroupData[i]) {
-          tables.push(this.materialGroupData[i])
+        if (this.materialClothData[i]) {
+          tables.push(this.materialClothData[i])
         }
         this.tableData = tables
       }
@@ -209,8 +209,7 @@ export default {
     },
     updateMaterial(material) {
       // 選擇完物件後 $emit 到父元件
-      console.log(material, this.dialog)
-      this.$emit('update', material, this.dialog.index)
+      this.$emit('update', material)
     },
     // 時間轉換
     getDate(dt) {

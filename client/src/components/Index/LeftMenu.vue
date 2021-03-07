@@ -82,6 +82,13 @@ export default {
               }
             },
             {
+              path: '/user-manager',
+              name: '使用者管理',
+              meta: {
+                permission: ['user_authority_r']
+              }
+            },
+            {
               path: '/quotation-manager',
               name: '報價單管理',
               meta: {
@@ -96,22 +103,15 @@ export default {
               }
             },
             {
-              path: '/user-manager',
-              name: '使用者管理',
-              meta: {
-                permission: ['user_authority_r']
-              }
-            },
-            {
-              path: '/materials-manager',
-              name: '原物料管理',
+              path: '/materials-group-manager',
+              name: '原物料組管理',
               meta: {
                 permission: ['material_authority_r']
               }
             },
             {
-              path: '/materials-group-manager',
-              name: '原物料組管理',
+              path: '/materials-manager',
+              name: '原物料管理',
               meta: {
                 permission: ['material_authority_r']
               }

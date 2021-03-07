@@ -92,7 +92,6 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     console.log(req.body)
-
     Material.find({ _id: { $in: req.body } })
       .sort({ type: 1 })
       .then((materials) => {
@@ -137,7 +136,58 @@ router.get(
       })
   }
 )
+// $router GET api/material/cloth
+// @desc   取得所有原料中的布料，轉印與非轉印類的
+// @access Private
+router.get(
+  '/cloth',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // query 選擇的條件
+    // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
+    // const query = {}
+    // const options = {}
 
+    Material.find({ kind: { $in: ['2', '3'] } })
+      // .sort({ type: 1 }) 如果需要排序的話
+      .then((materials) => {
+        if (!materials) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(materials)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
+// $router post api/material/get-cloth-name-by-id/:id
+// @desc   透過 _id 取得商品名稱
+// @access private
+// 使用 hander 要驗證 token
+// 有看到 post 就代表他會使用到 body 傳遞 數據 {}
+// 有看到 /:id 就代表要從 params 接收一個 id 進來
+// 這個接口是根據 _id 返回 該原料的 product_name
+router.get(
+  '/get-cloth-name-by-id/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // query 選擇的條件
+    // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
+    console.log(req.params)
+    const query = { _id: req.params.id }
+    const options = { product_name: 1 }
+
+    Material.findOne(query, options).then((materials) => {
+      // Material.find().then((materials) => {
+      if (!materials) {
+        return res.status(400).json('沒有任何原物料資訊')
+      }
+      res.json(materials)
+    })
+  }
+)
 // $router post api/material/get-from-class/:class
 // @desc   編輯訊息接口
 // @access private

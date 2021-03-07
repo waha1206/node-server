@@ -444,7 +444,11 @@ export default {
         crop_fee: '',
         quantity_profit: [],
         split_quantity: '',
-        mini_order: ''
+        mini_order: '',
+        outside_layout_width: '',
+        outside_layout_height: '',
+        inside_layout_width: '',
+        inside_layout_height: ''
       },
       categoriesLevelOneDialog: {
         show: false,

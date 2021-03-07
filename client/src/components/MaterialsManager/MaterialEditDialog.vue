@@ -7,6 +7,7 @@
       :close-on-press-escape="false"
       :modal-append-to-body="false"
       width="1200px"
+      style="margin-top:-40px"
     >
       <!-- style="margin:10px;width:auto" -->
       <el-form
@@ -126,7 +127,22 @@
                   ></el-input> -->
                 </el-form-item>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="6" style="position:realative">
+                <!-- style="position:relative;border-radius:8px" -->
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="如果是貼襯布料，要加總兩種布料價錢喔"
+                  placement="right"
+                  style="z-index:2000"
+                >
+                  <el-badge
+                    value="help"
+                    class="item"
+                    style="margin-top: 0px;margin-right: 0px;position:absolute;top:10px;right:15px"
+                  >
+                  </el-badge>
+                </el-tooltip>
                 <el-form-item prop="unit_price" label="單位售價：">
                   <my-currency-input
                     :height="24"
@@ -209,6 +225,7 @@
                   <el-input
                     size="mini"
                     type="length"
+                    placeholder="一般原料專用欄位"
                     v-model="materialDataForm.length"
                   ></el-input>
                 </el-form-item>
@@ -292,7 +309,23 @@
             <!-- 第六列結束 -->
             <!-- 第七列，加工費用，加工備註 -->
             <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="6">
+              <el-col :span="6" style="position:relative">
+                <!-- style="position:relative;border-radius:8px" -->
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="【一般原料】才會有加工費用，有些【一般原料】不會有加工費用，例如：不需要OPP袋"
+                  placement="right"
+                  style="z-index:2000"
+                >
+                  <el-badge
+                    value="help"
+                    class="item"
+                    style="margin-top: 0px;margin-right: 0px;position:absolute;top:10px;right:40px"
+                  >
+                  </el-badge>
+                </el-tooltip>
+
                 <el-form-item prop="processing_fee_flag" label="加工費用：">
                   <el-checkbox v-model="materialDataForm.processing_fee_flag"
                     >有加工費用</el-checkbox
@@ -323,17 +356,134 @@
                   ></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+
+              <el-col :span="6" style="position:relative">
+                <!-- style="position:relative;border-radius:8px" -->
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="【轉印布料】與【內裡布料】此欄位才需填寫"
+                  placement="right"
+                  style="z-index:2000"
+                >
+                  <el-badge
+                    value="help"
+                    class="item"
+                    style="margin-top: 0px;margin-right: 0px;position:absolute;top:10px;right:15px"
+                  >
+                  </el-badge>
+                </el-tooltip>
+                <el-form-item prop="cloth_width" label="布料幅寬：">
+                  <el-input
+                    placeholder="轉印布料專用欄位"
+                    size="mini"
+                    type="type"
+                    v-model="materialDataForm.cloth_width"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- 第八列結束 -->
+
+            <!-- 第九列 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="24">
                 <el-form-item prop="kind" label="商品種類：">
                   <el-radio-group v-model="materialDataForm.kind">
                     <el-radio :label="1">一般原料</el-radio>
                     <el-radio :label="2">轉印布料</el-radio>
-                    <el-radio :label="3">內裡布料</el-radio>
+                    <el-radio :label="3">現成布料</el-radio>
+                    <el-radio :label="4"
+                      >配件專用，需要帶版型寬度，版型高度，布料種類，平車費用，裁切費用</el-radio
+                    >
                   </el-radio-group>
                 </el-form-item>
               </el-col>
             </el-row>
-            <!-- 第七列結束 -->
+            <!-- 第九列結束 -->
+            <!-- 第十列 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="4">
+                <el-form-item prop="layout_width" label="版型寬度：">
+                  <el-input
+                    placeholder="版型寬度"
+                    size="mini"
+                    type="type"
+                    v-model="materialDataForm.layout_width"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item prop="layout_height" label="版型高度：">
+                  <el-input
+                    placeholder="版型高度"
+                    size="mini"
+                    type="type"
+                    v-model="materialDataForm.layout_height"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item prop="tailor_fee" label="平車費用：">
+                  <my-currency-input
+                    :isReadyOnly="false"
+                    :height="24"
+                    :width="56"
+                    type="tailorFee"
+                    v-model="tailorFee"
+                  ></my-currency-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item prop="crop_fee" label="裁切費用：">
+                  <my-currency-input
+                    :isReadyOnly="false"
+                    :height="24"
+                    :width="56"
+                    type="cropFee"
+                    v-model="cropFee"
+                  ></my-currency-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8" style="position:relative">
+                <!-- style="position:relative;border-radius:8px" -->
+                <div @click="handleClearAccessoryCloth">
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="點擊我清除配件布料的內容"
+                    placement="right"
+                    style="z-index:2000"
+                  >
+                    <el-badge
+                      value="clear"
+                      class="item"
+                      style="margin-top: 0px;margin-right: 0px;position:absolute;top:10px;right:30px"
+                    >
+                    </el-badge>
+                  </el-tooltip>
+                </div>
+                <el-form-item prop="accessory_cloth_id" label="配件布料：">
+                  <el-button
+                    v-if="materialDataForm.accessory_cloth_id"
+                    type="primary"
+                    size="mini"
+                    class="button"
+                    @click="handleSelectAccessoryCloth"
+                    >{{ accessoryClothName }}</el-button
+                  >
+                  <el-button
+                    v-else
+                    type="primary"
+                    size="mini"
+                    class="button"
+                    @click="handleSelectAccessoryCloth"
+                    >點我選擇配件布料</el-button
+                  >
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- 第十列結束 -->
           </el-header>
 
           <!-- 第七行開始，圖片上傳 -->
@@ -416,11 +566,20 @@
         </el-container>
       </el-form>
     </el-dialog>
+    <!-- 這邊為跳出選擇 material cloth 的 dialog -->
+    <MaterialClothDialog
+      v-if="materialClothDialog"
+      :dialog="materialClothDialog"
+      @update="updateAccessiryCloth"
+      @reportError="reportError"
+    >
+    </MaterialClothDialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import MaterialClothDialog from '../../components/MaterialsManager/MaterialClothDialog'
 
 export default {
   name: 'material-edit-dialog',
@@ -432,8 +591,16 @@ export default {
     dialog: Object,
     formData: Object
   },
+  components: {
+    MaterialClothDialog
+  },
   data() {
     return {
+      // 控制 material cloth dialog 的物件
+      materialClothDialog: {
+        show: false,
+        title: '選擇配件所使用的布料'
+      },
       // 圖片上傳
       uploadData: {
         dataType: '0',
@@ -449,6 +616,9 @@ export default {
       unitPrice: 0, // 單位成本
       productProfit: 0, // 商品利潤
       retailPrice: 0, // 商品售價
+      tailorFee: 0, // 平車費用
+      cropFee: 0, // 裁切費用
+      accessoryClothName: '',
       materialDataForm: {},
       // materialDataForm_rules: {
       form_rules: {
@@ -515,6 +685,12 @@ export default {
     }
   },
   watch: {
+    cropFee(newValue) {
+      this.materialDataForm.crop_fee = String(newValue)
+    },
+    tailorFee(newValue) {
+      this.materialDataForm.tailor_fee = String(newValue)
+    },
     // 常用的正則表達式 https://kknews.cc/zh-tw/code/o5e4n55.html
     // 'materialDataForm.unit_price': function(newValue) {
     unitPrice: function(newValue) {
@@ -559,6 +735,8 @@ export default {
         this.productProfit = 0
         this.retailPrice = 0
         this.theCost = 0
+        this.cropFee = 0
+        this.tailorFee = 0
       } else {
         if (isNaN(this.materialDataForm.the_cost)) {
           this.theCost = 0
@@ -579,6 +757,21 @@ export default {
           this.retailPrice = 0
         } else {
           this.retailPrice = Number(this.materialDataForm.retail_price)
+        }
+        if (isNaN(this.materialDataForm.tailor_fee)) {
+          this.tailorFee = 0
+        } else {
+          this.tailorFee = Number(this.materialDataForm.tailor_fee)
+        }
+        if (isNaN(this.materialDataForm.crop_fee)) {
+          this.cropFee = 0
+        } else {
+          this.cropFee = Number(this.materialDataForm.crop_fee)
+        }
+        if (this.materialDataForm.accessory_cloth_id) {
+          this.getClothNameById()
+        } else {
+          this.accessoryClothName = ''
         }
       }
       // 如果傳遞過來的 prop -> materialDataForm 裡面的 imgs 有資料的話，就把資料抓到 this.files[]
@@ -692,7 +885,6 @@ export default {
           this.materialDataForm.last_edit_person = this.user.id
           this.materialDataForm.last_modify_date = new Date()
           this.materialDataForm.imgs = this.materialDataForm.imgs.join('|')
-          console.log(this.materialDataForm)
           const url =
             this.dialog.option == 'add'
               ? 'add'
@@ -720,6 +912,38 @@ export default {
           })
         }
       })
+    },
+    reportError() {
+      this.$message({
+        message: '感謝您協助回報錯誤！',
+        type: 'success'
+      })
+      this.$emit('reportError')
+    },
+    handleSelectAccessoryCloth() {
+      this.materialClothDialog = {
+        show: true,
+        title: '選擇配件所使用的布料'
+      }
+    },
+    updateAccessiryCloth(material) {
+      this.materialDataForm.accessory_cloth_id = material._id
+      this.materialClothDialog.show = false
+      this.getClothNameById()
+    },
+    handleClearAccessoryCloth() {
+      this.materialDataForm.accessory_cloth_id = ''
+    },
+    getClothNameById() {
+      const id = this.materialDataForm.accessory_cloth_id
+      this.$axios
+        .get(`/api/material/get-cloth-name-by-id/${id}`)
+        .then((res) => {
+          this.accessoryClothName = res.data.product_name
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   }
 }

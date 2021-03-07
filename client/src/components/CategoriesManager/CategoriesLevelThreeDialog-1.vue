@@ -434,8 +434,51 @@
                 </div>
               </el-col>
             </el-row>
+						<!-- 第八行開始，外表布寬，高，內裡布寬，高 -->
+						<el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="4">
+                <el-form-item prop="outside_layout_width" label="外表布寬：">
+                  <el-input
+                    placeholder="寬度"
+                    size="mini"
+                    type="type"
+                    v-model="levelThreeFormData.outside_layout_width"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item prop="outside_layout_height" label="外表布高：">
+                  <el-input
+                    placeholder="高度"
+                    size="mini"
+                    type="type"
+                    v-model="levelThreeFormData.outside_layout_height"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item prop="inside_layout_width" label="內裡布寬：">
+                  <el-input
+                    placeholder="寬度"
+                    size="mini"
+                    type="type"
+                    v-model="levelThreeFormData.inside_layout_width"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item prop="inside_layout_height" label="內裡布高：">
+                  <el-input
+                    placeholder="高度"
+                    size="mini"
+                    type="type"
+                    v-model="levelThreeFormData.inside_layout_height"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
           </el-header>
-          <!-- 第八行開始，圖片上傳 -->
+          <!-- 第九行開始，圖片上傳 -->
           <!-- 圖片上傳的教學 https://segmentfault.com/a/1190000013796215 -->
           <!-- 上傳一張照片的時候隱藏 後面的 + 框框  https://www.twblogs.net/a/5b81a49e2b71772165ad9752 -->
           <!-- 另外一種做法：https://blog.csdn.net/zaocha321/article/details/103345423 -->
@@ -685,6 +728,10 @@ export default {
 			// dialog 發生變化的時候 (使用 watch 觀察) 就會把 levelThreeFormData 的內容清空或是設定好
 			// 關於 tailor_fee 跟 crop_fee 的數字，也是使用 watch 去觀察跟設定到 levelThreeFoemData 裡面
       const uploadFormData = {
+				outside_layout_width:this.levelThreeFormData.outside_layout_width,
+				outside_layout_height:this.levelThreeFormData.outside_layout_height,
+				inside_layout_width:this.levelThreeFormData.inside_layout_width,
+				inside_layout_height:this.levelThreeFormData.inside_layout_height,
         name: this.levelThreeFormData.name,
         level_one_id: this.levelThreeFormData.level_one_id,
         level_two_id: this.levelThreeFormData.level_two_id,
@@ -718,7 +765,7 @@ export default {
           this.levelThreeFormData.note_two_video
         )
 			}
-
+console.log(uploadFormData)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 紀錄最後修改的使用者，最後修改的時間放到了 server 端去紀錄
