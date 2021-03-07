@@ -344,7 +344,7 @@
               </el-col>
             </el-row>
             <!-- 第七列結束 -->
-            <!-- 第八列，編號 -->
+            <!-- 第八列，編號，布料幅寬，版型位置 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
                 <el-form-item prop="type" label="商品編號：">
@@ -357,7 +357,7 @@
                 </el-form-item>
               </el-col>
 
-              <el-col :span="6" style="position:relative">
+              <el-col :span="4" style="position:relative">
                 <!-- style="position:relative;border-radius:8px" -->
                 <el-tooltip
                   class="item"
@@ -369,7 +369,7 @@
                   <el-badge
                     value="help"
                     class="item"
-                    style="margin-top: 0px;margin-right: 0px;position:absolute;top:10px;right:15px"
+                    style="margin-top: 0px;margin-right: 0px;position:absolute;top:10px;right:-26px"
                   >
                   </el-badge>
                 </el-tooltip>
@@ -379,6 +379,26 @@
                     size="mini"
                     type="type"
                     v-model="materialDataForm.cloth_width"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item prop="pattern_no" label="版型編號：">
+                  <el-input
+                    placeholder="版型編號"
+                    size="mini"
+                    type="type"
+                    v-model="materialDataForm.pattern_no"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item prop="pattern_download" label="版型位置：">
+                  <el-input
+                    placeholder="google 雲端的版型網址"
+                    size="mini"
+                    type="type"
+                    v-model="materialDataForm.pattern_download"
                   ></el-input>
                 </el-form-item>
               </el-col>

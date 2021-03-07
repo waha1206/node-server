@@ -101,6 +101,14 @@
                 <p>材質：{{ scope.row.raw_material }}</p>
                 <p>單位：{{ scope.row.unit }}</p>
                 <p>供應商：{{ scope.row.supplier }}</p>
+                <p>版型編號：{{ scope.row.pattern_no }}</p>
+                <p>
+                  版型連結：<a
+                    :href="scope.row.pattern_download"
+                    target="_blank"
+                    >{{ scope.row.pattern_download }}</a
+                  >
+                </p>
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="mini">完整說明</el-tag>
                 </div>
@@ -428,7 +436,9 @@ export default {
         tailor_fee: '',
         layout_height: '',
         layout_width: '',
-        accessory_cloth_id: ''
+        accessory_cloth_id: '',
+        pattern_download: '',
+        pattern_no: ''
       },
       // 編輯原物料的分類跳出視窗
       formData: {

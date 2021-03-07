@@ -157,6 +157,14 @@ const MaterialSchema = new Schema({
   // 配件布料的 _id
   accessory_cloth_id: {
     type: String
+  },
+  // 版型編號
+  pattern_no: {
+    type: String
+  },
+  // 版型下載位置
+  pattern_download: {
+    type: String
   }
 })
 
