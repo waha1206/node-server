@@ -184,6 +184,10 @@ const CategoryLevelThreeSchema = new Schema({
   outside_layout_height: {
     type: String
   },
+  // 表布耗損
+  outside_cloth_loss: {
+    type: String
+  },
   // 內裡版型寬度
   inside_layout_width: {
     type: String
@@ -191,6 +195,10 @@ const CategoryLevelThreeSchema = new Schema({
   // 內裡版型高度
   inside_layout_height: {
     type: String
+  },
+  // 裡布耗損
+  inside_cloth_loss: {
+    tyoe: String
   }
 })
 

@@ -447,8 +447,10 @@ export default {
         mini_order: '',
         outside_layout_width: '',
         outside_layout_height: '',
+        outside_cloth_loss: '',
         inside_layout_width: '',
-        inside_layout_height: ''
+        inside_layout_height: '',
+        inside_cloth_loss: ''
       },
       categoriesLevelOneDialog: {
         show: false,

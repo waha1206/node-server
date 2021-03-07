@@ -456,6 +456,17 @@
                   ></el-input>
                 </el-form-item>
               </el-col>
+							<el-col :span="4">
+                <el-form-item prop="product_profit" label="表布耗損：">
+                  <my-percentage-input
+                    :isReadyOnly="false"
+                    :width="34"
+                    :height="24"
+                    type="outside_cloth_loss"
+                    v-model="outsideClothLoss"
+                  ></my-percentage-input>
+                </el-form-item>
+              </el-col>
               <el-col :span="4">
                 <el-form-item prop="inside_layout_width" label="內裡布寬：">
                   <el-input
@@ -474,6 +485,17 @@
                     type="type"
                     v-model="levelThreeFormData.inside_layout_height"
                   ></el-input>
+                </el-form-item>
+              </el-col>
+							<el-col :span="4">
+                <el-form-item prop="product_profit" label="裡布耗損：">
+                  <my-percentage-input
+                    :isReadyOnly="false"
+                    :width="34"
+                    :height="24"
+                    type="inside_cloth_loss"
+                    v-model="insideClothLoss"
+                  ></my-percentage-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -608,6 +630,8 @@ export default {
       dialogVisible: false,
       disabled: Boolean,
       updateLevelTwoData: [],
+			outsideClothLoss:0,
+			insideClothLoss:0,
       form_rules: {
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }]
@@ -668,7 +692,11 @@ export default {
 			// 記得要把要編輯的資料裡面的 tailor_fee 跟 crop_fee 存到 tailorFee 跟 cropFee 裡面
 			// 因為這兩個欄位是另外的子元件會需要使用到的欄位，而且有被 watch
 			// 第一次我們要靠 mounted 去觸發 setFee 第二次開始就會從這邊去做設定 setFee
-			this.setFee(this.levelThreeFormData.tailor_fee, this.levelThreeFormData.crop_fee)
+			this.setFee(
+				this.levelThreeFormData.tailor_fee,
+				this.levelThreeFormData.crop_fee,
+				this.levelThreeFormData.outside_cloth_loss,
+				this.levelThreeFormData.inside_cloth_loss)
       // 第一次更新 updateLevelTwoData 在 mounted(){} 裡面，這邊是後續每次異動 dialog 都會去更新 updateLevelTwoData
       this.levelOneChang(this.levelThreeFormData.level_one_id)
       this.getImgs()
@@ -680,10 +708,12 @@ export default {
   },
   methods: {
 		// 當這個元件被觸發的時候，要更新一些束值
-		setFee(tailorFee, cropFee){
+		setFee(tailorFee, cropFee, outsideClothLoss, insideClothLoss){
 			// isNaN 判斷這個數值是否可以被轉換成數字
 			if(isNaN(tailorFee)) {this.tailorFee=0} else{this.tailorFee = Number(tailorFee)}
 			if(isNaN(cropFee)) {this.tailorFee=0} else{this.cropFee = Number(cropFee)}
+			if(isNaN(outsideClothLoss)) {this.outsideClothLoss=0} else{this.outsideClothLoss = Number(outsideClothLoss)}
+			if(isNaN(insideClothLoss)) {this.insideClothLoss=0} else{this.insideClothLoss = Number(insideClothLoss)}
 		},
     // 把從資料庫讀進來的 Imgs (base64) 拼接成 el-upload 的 files 可以接受的格式，這樣就會顯示出來了
     getImgs() {
@@ -728,8 +758,10 @@ export default {
 			// dialog 發生變化的時候 (使用 watch 觀察) 就會把 levelThreeFormData 的內容清空或是設定好
 			// 關於 tailor_fee 跟 crop_fee 的數字，也是使用 watch 去觀察跟設定到 levelThreeFoemData 裡面
       const uploadFormData = {
+				outside_cloth_loss:String(this.outsideClothLoss),
 				outside_layout_width:this.levelThreeFormData.outside_layout_width,
 				outside_layout_height:this.levelThreeFormData.outside_layout_height,
+				inside_cloth_loss:String(this.insideClothLoss),
 				inside_layout_width:this.levelThreeFormData.inside_layout_width,
 				inside_layout_height:this.levelThreeFormData.inside_layout_height,
         name: this.levelThreeFormData.name,
