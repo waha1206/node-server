@@ -736,6 +736,8 @@ export default {
   },
   created() {
     this.levelThreeFormData = Object.assign({}, this.formData)
+		if(this.levelThreeFormData.paper_id) this.getMaterialNameById(this.levelThreeFormData.paper_id, 'paper')
+		if(this.levelThreeFormData.ink_id) this.getMaterialNameById(this.levelThreeFormData.ink_id, 'ink')
     this.getImgs()
   },
   mounted() {
@@ -799,6 +801,7 @@ export default {
 			// 先清空 ink 跟 paper 欄位   如果傳遞過來的資料有 墨水 id、轉印紙 id 的話，就讀取他的 _id 轉換成 name
 			this.ink =''
 			this.paper = ''
+			console.log('第一次有執行嗎？')
 			if(this.levelThreeFormData.paper_id) this.getMaterialNameById(this.levelThreeFormData.paper_id, 'paper')
 			if(this.levelThreeFormData.ink_id) this.getMaterialNameById(this.levelThreeFormData.ink_id, 'ink')
       this.getImgs()
