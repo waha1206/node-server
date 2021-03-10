@@ -78,6 +78,22 @@ const router = new VueRouter({
           }
         },
         {
+          path: '/user-manager', // 使用者管理
+          name: 'user-manager',
+          component: () => import('../views/managers/UserManager.vue'),
+          meta: {
+            permission: ['user_authority_r']
+          }
+        },
+        {
+          path: '/setting', // 使用者管理
+          name: 'setting',
+          component: () => import('../views/managers/Setting.vue'),
+          meta: {
+            permission: ['user_authority_r']
+          }
+        },
+        {
           path: '/quotation-manager', // 報價單管理
           // name: 'quotation-manager',
           component: () => import('../views/managers/QuotationManager.vue'),
@@ -143,26 +159,18 @@ const router = new VueRouter({
           }
         },
         {
-          path: '/user-manager', // 使用者管理
-          name: 'user-manager',
-          component: () => import('../views/managers/UserManager.vue'),
+          path: '/materials-group-manager', // 原物料組管理
+          name: 'materials-manager',
+          component: () =>
+            import('../views/managers/MaterialsGroupManager.vue'),
           meta: {
-            permission: ['user_authority_r']
+            permission: ['material_authority_r']
           }
         },
         {
           path: '/materials-manager', // 原物料管理
           name: 'materials-manager',
           component: () => import('../views/managers/MaterialsManager.vue'),
-          meta: {
-            permission: ['material_authority_r']
-          }
-        },
-        {
-          path: '/materials-group-manager', // 原物料組管理
-          name: 'materials-manager',
-          component: () =>
-            import('../views/managers/MaterialsGroupManager.vue'),
           meta: {
             permission: ['material_authority_r']
           }

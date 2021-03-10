@@ -161,8 +161,58 @@ router.get(
       })
   }
 )
+// $router GET api/material/paper
+// @desc   取得所有原料中的紙類原物料
+// @access Private
+router.get(
+  '/paper',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // query 選擇的條件
+    // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
+    // const query = {}
+    // const options = {}
 
-// $router post api/material/get-cloth-name-by-id/:id
+    Material.find({ kind: '5' })
+      // .sort({ type: 1 }) 如果需要排序的話
+      .then((materials) => {
+        if (!materials) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(materials)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+// $router GET api/material/ink
+// @desc   取得所有原料中的墨水類原物料
+// @access Private
+router.get(
+  '/ink',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // query 選擇的條件
+    // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
+    // const query = {}
+    // const options = {}
+
+    Material.find({ kind: ['6'] })
+      // .sort({ type: 1 }) 如果需要排序的話
+      .then((materials) => {
+        if (!materials) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(materials)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
+// $router post api/material/get-material-name-by-id/:id
 // @desc   透過 _id 取得商品名稱
 // @access private
 // 使用 hander 要驗證 token
@@ -170,7 +220,7 @@ router.get(
 // 有看到 /:id 就代表要從 params 接收一個 id 進來
 // 這個接口是根據 _id 返回 該原料的 product_name
 router.get(
-  '/get-cloth-name-by-id/:id',
+  '/get-material-name-by-id/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     // query 選擇的條件
@@ -188,6 +238,7 @@ router.get(
     })
   }
 )
+
 // $router post api/material/get-from-class/:class
 // @desc   編輯訊息接口
 // @access private

@@ -198,7 +198,14 @@ const CategoryLevelThreeSchema = new Schema({
   },
   // 裡布耗損
   inside_cloth_loss: {
-    tyoe: String
+    type: String
+  },
+  // 使用的墨水
+  ink_id: {
+    type: String
+  },
+  paper_id: {
+    type: String
   }
 })
 

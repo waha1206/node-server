@@ -450,7 +450,9 @@ export default {
         outside_cloth_loss: '',
         inside_layout_width: '',
         inside_layout_height: '',
-        inside_cloth_loss: ''
+        inside_cloth_loss: '',
+        paper_id: '',
+        ink_id: ''
       },
       categoriesLevelOneDialog: {
         show: false,

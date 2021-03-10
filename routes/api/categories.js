@@ -52,6 +52,12 @@ router.post(
     }
 
     if (req.body.level === 3) {
+      if (req.body.ink_id) {
+        categoriesFields.ink_id = req.body.ink_id
+      }
+      if (req.body.paper_id) {
+        categoriesFields.paper_id = req.body.paper_id
+      }
       if (req.body.inside_cloth_loss) {
         categoriesFields.inside_cloth_loss = req.body.inside_cloth_loss
       }
@@ -336,6 +342,12 @@ router.post(
       categoryFields.level_one_id = req.body.level_one_id
     }
     if (req.body.level === 3) {
+      if (req.body.ink_id) {
+        categoryFields.ink_id = req.body.ink_id
+      }
+      if (req.body.paper_id) {
+        categoryFields.paper_id = req.body.paper_id
+      }
       if (req.body.inside_cloth_loss) {
         categoryFields.inside_cloth_loss = req.body.inside_cloth_loss
       }

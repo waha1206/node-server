@@ -416,6 +416,8 @@
                     <el-radio :label="4"
                       >配件專用，需要帶版型寬度，版型高度，布料種類，平車費用，裁切費用</el-radio
                     >
+                    <el-radio :label="5">紙</el-radio>
+                    <el-radio :label="6">墨</el-radio>
                   </el-radio-group>
                 </el-form-item>
               </el-col>
@@ -957,7 +959,7 @@ export default {
     getClothNameById() {
       const id = this.materialDataForm.accessory_cloth_id
       this.$axios
-        .get(`/api/material/get-cloth-name-by-id/${id}`)
+        .get(`/api/material/get-material-name-by-id/${id}`)
         .then((res) => {
           this.accessoryClothName = res.data.product_name
         })
