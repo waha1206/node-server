@@ -88,13 +88,13 @@ export default {
                 permission: ['user_authority_r']
               }
             },
-            {
-              path: '/setting',
-              name: '設定',
-              meta: {
-                permission: ['user_authority_r']
-              }
-            },
+            // {
+            //   path: '/setting',
+            //   name: '設定',
+            //   meta: {
+            //     permission: ['user_authority_r']
+            //   }
+            // },
             {
               path: '/quotation-manager',
               name: '報價單管理',

@@ -362,7 +362,7 @@
                 </div>
               </el-col>
             </el-row>
-          </el-header>
+
             <!-- 第七行開始，平車費用，裁切費用-->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
@@ -374,12 +374,12 @@
                     prop="tailor_fee"
                   >
                     <my-currency-input
-										:height="24"
-                    :width="130"
-                    :isReadyOnly="false"
-                    type="tailor_fee"
-                    v-model="tailorFee"
-                  ></my-currency-input>
+                      :height="24"
+                      :width="130"
+                      :isReadyOnly="false"
+                      type="tailor_fee"
+                      v-model="tailorFee"
+                    ></my-currency-input>
                   </el-form-item>
                 </div>
               </el-col>
@@ -392,12 +392,12 @@
                     prop="crop_fee"
                   >
                     <my-currency-input
-										:height="24"
-                    :width="130"
-                    :isReadyOnly="false"
-                    type="crop_fee"
-                    v-model="cropFee"
-                  ></my-currency-input>
+                      :height="24"
+                      :width="130"
+                      :isReadyOnly="false"
+                      type="crop_fee"
+                      v-model="cropFee"
+                    ></my-currency-input>
                   </el-form-item>
                 </div>
               </el-col>
@@ -425,7 +425,7 @@
                     label-width="120px"
                     prop="mini_order"
                   >
-                   <el-input
+                    <el-input
                       type="type"
                       placeholder="商品的最低訂購量"
                       v-model="levelThreeFormData.mini_order"
@@ -434,8 +434,8 @@
                 </div>
               </el-col>
             </el-row>
-						<!-- 第八行開始，外表布寬，高，內裡布寬，高 -->
-						<el-row :gutter="20" type="flex" class="row-bg">
+            <!-- 第八行開始，外表布寬，高，內裡布寬，高 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="4">
                 <el-form-item prop="outside_layout_width" label="外表布寬：">
                   <el-input
@@ -456,7 +456,7 @@
                   ></el-input>
                 </el-form-item>
               </el-col>
-							<el-col :span="4">
+              <el-col :span="4">
                 <el-form-item prop="product_profit" label="表布耗損：">
                   <my-percentage-input
                     :isReadyOnly="false"
@@ -487,7 +487,7 @@
                   ></el-input>
                 </el-form-item>
               </el-col>
-							<el-col :span="4">
+              <el-col :span="4">
                 <el-form-item prop="product_profit" label="裡布耗損：">
                   <my-percentage-input
                     :isReadyOnly="false"
@@ -499,24 +499,24 @@
                 </el-form-item>
               </el-col>
             </el-row>
-						<!-- 第八行結束 -->
+            <!-- 第八行結束 -->
 
-						<!-- 第九行 -->
+            <!-- 第九行 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="8" style="position:relative">
                 <!-- style="position:relative;border-radius:8px" -->
-                <div @click="handleClearPaperOrInk('paper')">
+                <div>
                   <el-tooltip
                     class="item"
                     effect="dark"
-                    content="點擊我清除選擇的轉印紙品項"
+                    content="轉印紙為必選欄位"
                     placement="right"
                     style="z-index:2000"
                   >
                     <el-badge
-                      value="clear"
+                      value="help"
                       class="item"
-                      style="margin-top: 0px;margin-right: 0px;position:absolute;top:10px;right:30px"
+                      style="margin-top: 0px;margin-right: 0px;position:absolute;top:0px;right:30px"
                     >
                     </el-badge>
                   </el-tooltip>
@@ -542,18 +542,18 @@
               </el-col>
               <el-col :span="8" style="position:relative">
                 <!-- style="position:relative;border-radius:8px" -->
-                <div @click="handleClearPaperOrInk('ink')">
+                <div>
                   <el-tooltip
                     class="item"
                     effect="dark"
-                    content="點擊我清除選擇的墨水品項"
+                    content="墨水為必選欄位"
                     placement="right"
                     style="z-index:2000"
                   >
                     <el-badge
-                      value="clear"
+                      value="help"
                       class="item"
-                      style="margin-top: 0px;margin-right: 0px;position:absolute;top:10px;right:30px"
+                      style="margin-top: 0px;margin-right: 0px;position:absolute;top:0px;right:30px"
                     >
                     </el-badge>
                   </el-tooltip>
@@ -579,7 +579,6 @@
               </el-col>
             </el-row>
             <!-- 第九行結束 -->
-
           </el-header>
           <!-- 第十行開始，圖片上傳 -->
           <!-- 圖片上傳的教學 https://segmentfault.com/a/1190000013796215 -->
@@ -681,11 +680,8 @@
         <!-- 表單結束 -->
       </el-container>
     </el-dialog>
-		<PaperAndInk
-			:dialog="paperAndInkDialog"
-			@update="updatePaperAndInk"
-		>
-		</PaperAndInk>
+    <PaperAndInk :dialog="paperAndInkDialog" @update="updatePaperAndInk">
+    </PaperAndInk>
   </div>
 </template>
 
@@ -702,14 +698,14 @@ export default {
     categoriesLevelOneData: Array,
     categoriesLevelTwoData: Array
   },
-	components:{PaperAndInk},
+  components: { PaperAndInk },
   data() {
     return {
-			paperAndInkDialog:{
-				show:false,
-				title:'選擇轉印紙或墨水',
-				option:'' // paper 是紙類  ink 是墨水類
-			},
+      paperAndInkDialog: {
+        show: false,
+        title: '選擇轉印紙或墨水',
+        option: '' // paper 是紙類  ink 是墨水類
+      },
       levelThreeFormData: {},
       dontRemove: '5fd54071cbcb7757640a7ee7',
       // 圖片上傳
@@ -717,18 +713,24 @@ export default {
         dataType: '0',
         oldFilePath: ''
       },
-			files: [],
-			tailorFee:0,
-			cropFee:0,
+      files: [],
+      tailorFee: 0,
+      cropFee: 0,
       dialogImageUrl: '',
       dialogVisible: false,
       disabled: Boolean,
       updateLevelTwoData: [],
-			outsideClothLoss:0,
-			insideClothLoss:0,
-			paper:'', // 選擇的 轉印紙
-			ink:'', // 選擇的 墨水
+      outsideClothLoss: 0,
+      insideClothLoss: 0,
+      paper: '', // 選擇的 轉印紙
+      ink: '', // 選擇的 墨水
       form_rules: {
+        ink_id: [
+          { required: true, message: '此欄位不能為空', trigger: 'blur' }
+        ],
+        paper_id: [
+          { required: true, message: '此欄位不能為空', trigger: 'blur' }
+        ],
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }]
       }
@@ -736,8 +738,12 @@ export default {
   },
   created() {
     this.levelThreeFormData = Object.assign({}, this.formData)
-		if(this.levelThreeFormData.paper_id) this.getMaterialNameById(this.levelThreeFormData.paper_id, 'paper')
-		if(this.levelThreeFormData.ink_id) this.getMaterialNameById(this.levelThreeFormData.ink_id, 'ink')
+    if (this.levelThreeFormData.paper_id) {
+      this.getMaterialNameById(this.levelThreeFormData.paper_id, 'paper')
+    }
+    if (this.levelThreeFormData.ink_id) {
+      this.getMaterialNameById(this.levelThreeFormData.ink_id, 'ink')
+    }
     this.getImgs()
   },
   mounted() {
@@ -746,9 +752,9 @@ export default {
     // 嘿嘿
     this.levelOneChang(this.levelThreeFormData.level_one_id)
     // 如果是要新增商品，就把 el-upload 裡面的圖片資料清空，這邊做第一次近來的初始化，接下來透過 watch this.dialog 去做監控與更新
-		if (this.dialog.option === 'add') this.files = []
-		// 舊資料裡面的 tailor_fee 跟 crop_frr 有可能是 undefined 所以在父元件的時候就處理掉 handleEditCategory 裡面去處理
-		this.setFee(this.formData.tailor_fee, this.formData.crop_fee)
+    if (this.dialog.option === 'add') this.files = []
+    // 舊資料裡面的 tailor_fee 跟 crop_frr 有可能是 undefined 所以在父元件的時候就處理掉 handleEditCategory 裡面去處理
+    this.setFee(this.formData.tailor_fee, this.formData.crop_fee)
   },
   computed: {
     getDate() {
@@ -771,97 +777,109 @@ export default {
     }
   },
   watch: {
-		// 觀察 tailor_fee 跟 crop_fee 當變化的時候就更新到表單裡面 this.levelThreeFormData
-		tailorFee(newValue){
-			this.levelThreeFormData.tailor_fee = String(newValue)
-		},
-		cropFee(newValue){
-			this.levelThreeFormData.crop_fee = String(newValue)
-		},
+    // 觀察 tailor_fee 跟 crop_fee 當變化的時候就更新到表單裡面 this.levelThreeFormData
+    tailorFee(newValue) {
+      this.levelThreeFormData.tailor_fee = String(newValue)
+    },
+    cropFee(newValue) {
+      this.levelThreeFormData.crop_fee = String(newValue)
+    },
     // 當 props dialog 有新的 資料進來 (這邊是點擊【編輯】 的時候會觸發) 然後更新 Imgs 但是第一次還是要掛載於 created() 裡面喔
     dialog() {
       // 如果是要新增商品，就把 el-upload 裡面的圖片資料清空，mounted 執行過後，每次監控，透過 watch this.dialog 去做判斷要不要清空 files[]
       if (this.dialog.option === 'add') {
         this.files = []
         this.formData.imgs = []
-			}
+      }
 
-			// 父元素 就處理好了 formData 如果是 add 就是乾淨的資料，如果是 edit 就是要編輯的資料
-			this.levelThreeFormData = Object.assign({}, this.formData)
-			// 記得要把要編輯的資料裡面的 tailor_fee 跟 crop_fee 存到 tailorFee 跟 cropFee 裡面
-			// 因為這兩個欄位是另外的子元件會需要使用到的欄位，而且有被 watch
-			// 第一次我們要靠 mounted 去觸發 setFee 第二次開始就會從這邊去做設定 setFee
-			this.setFee(
-				this.levelThreeFormData.tailor_fee,
-				this.levelThreeFormData.crop_fee,
-				this.levelThreeFormData.outside_cloth_loss,
-				this.levelThreeFormData.inside_cloth_loss)
+      // 父元素 就處理好了 formData 如果是 add 就是乾淨的資料，如果是 edit 就是要編輯的資料
+      this.levelThreeFormData = Object.assign({}, this.formData)
+      // 記得要把要編輯的資料裡面的 tailor_fee 跟 crop_fee 存到 tailorFee 跟 cropFee 裡面
+      // 因為這兩個欄位是另外的子元件會需要使用到的欄位，而且有被 watch
+      // 第一次我們要靠 mounted 去觸發 setFee 第二次開始就會從這邊去做設定 setFee
+      this.setFee(
+        this.levelThreeFormData.tailor_fee,
+        this.levelThreeFormData.crop_fee,
+        this.levelThreeFormData.outside_cloth_loss,
+        this.levelThreeFormData.inside_cloth_loss
+      )
       // 第一次更新 updateLevelTwoData 在 mounted(){} 裡面，這邊是後續每次異動 dialog 都會去更新 updateLevelTwoData
       this.levelOneChang(this.levelThreeFormData.level_one_id)
-			// 先清空 ink 跟 paper 欄位   如果傳遞過來的資料有 墨水 id、轉印紙 id 的話，就讀取他的 _id 轉換成 name
-			this.ink =''
-			this.paper = ''
-			console.log('第一次有執行嗎？')
-			if(this.levelThreeFormData.paper_id) this.getMaterialNameById(this.levelThreeFormData.paper_id, 'paper')
-			if(this.levelThreeFormData.ink_id) this.getMaterialNameById(this.levelThreeFormData.ink_id, 'ink')
+      // 先清空 ink 跟 paper 欄位   如果傳遞過來的資料有 墨水 id、轉印紙 id 的話，就讀取他的 _id 轉換成 name
+      this.ink = ''
+      this.paper = ''
+      if (this.levelThreeFormData.paper_id) {
+        this.getMaterialNameById(this.levelThreeFormData.paper_id, 'paper')
+      }
+      if (this.levelThreeFormData.ink_id) {
+        this.getMaterialNameById(this.levelThreeFormData.ink_id, 'ink')
+      }
       this.getImgs()
-
     },
     updateLevelTwoData() {
       console.log('恩，有變動')
     }
   },
   methods: {
-		// 子元件選擇了哪種 paper or ink  option 會傳回選擇的種類
-		updatePaperAndInk(item, option){
-			this.paperAndInkDialog.show=false
-			if(option == 'paper'){
-				this.levelThreeFormData.paper_id = item._id
-				this.getMaterialNameById(item._id, option)
-
-			}else if(option =='ink'){
-				this.levelThreeFormData.ink_id = item._id
-				this.getMaterialNameById(item._id, option)
-			}
-		},
-		// 取得墨水的中文品名
-		getMaterialNameById(id, option) {
+    // 子元件選擇了哪種 paper or ink  option 會傳回選擇的種類
+    updatePaperAndInk(item, option) {
+      this.paperAndInkDialog.show = false
+      if (option == 'paper') {
+        this.levelThreeFormData.paper_id = item._id
+        this.getMaterialNameById(item._id, option)
+      } else if (option == 'ink') {
+        this.levelThreeFormData.ink_id = item._id
+        this.getMaterialNameById(item._id, option)
+      }
+    },
+    // 取得墨水的中文品名
+    getMaterialNameById(id, option) {
       this.$axios
         .get(`/api/material/get-material-name-by-id/${id}`)
         .then((res) => {
-					if(option == 'paper')
-						this.paper = res.data.product_name
-					else if(option == 'ink')
-						this.ink = res.data.product_name
+          if (option == 'paper') {
+            this.paper = res.data.product_name
+          } else if (option == 'ink') {
+            this.ink = res.data.product_name
+          }
         })
         .catch((err) => {
           console.log(err)
         })
     },
-		// 選擇轉印紙
-		handleSelectPaperOrInk(option){
-			let title = (option == 'paper') ? '請選擇轉印紙' : '請選擇轉印墨水'
-			this.paperAndInkDialog = {
-				show:true,
-				title:title,
-				option:option
-			}
-		},
-		// 清除選擇的轉印紙
-		handleClearPaperOrInk(option){
-			if(option == 'paper')
-			this.levelThreeFormData.paper = ''
-			else this.levelThreeFormData.ink = ''
-		},
-
-		// 當這個元件被觸發的時候，要更新一些束值
-		setFee(tailorFee, cropFee, outsideClothLoss, insideClothLoss){
-			// isNaN 判斷這個數值是否可以被轉換成數字
-			if(isNaN(tailorFee)) {this.tailorFee=0} else{this.tailorFee = Number(tailorFee)}
-			if(isNaN(cropFee)) {this.tailorFee=0} else{this.cropFee = Number(cropFee)}
-			if(isNaN(outsideClothLoss)) {this.outsideClothLoss=0} else{this.outsideClothLoss = Number(outsideClothLoss)}
-			if(isNaN(insideClothLoss)) {this.insideClothLoss=0} else{this.insideClothLoss = Number(insideClothLoss)}
-		},
+    // 選擇轉印紙
+    handleSelectPaperOrInk(option) {
+      let title = option == 'paper' ? '請選擇轉印紙' : '請選擇轉印墨水'
+      this.paperAndInkDialog = {
+        show: true,
+        title: title,
+        option: option
+      }
+    },
+    // 當這個元件被觸發的時候，要更新一些束值
+    setFee(tailorFee, cropFee, outsideClothLoss, insideClothLoss) {
+      // isNaN 判斷這個數值是否可以被轉換成數字
+      if (isNaN(tailorFee)) {
+        this.tailorFee = 0
+      } else {
+        this.tailorFee = Number(tailorFee)
+      }
+      if (isNaN(cropFee)) {
+        this.tailorFee = 0
+      } else {
+        this.cropFee = Number(cropFee)
+      }
+      if (isNaN(outsideClothLoss)) {
+        this.outsideClothLoss = 0
+      } else {
+        this.outsideClothLoss = Number(outsideClothLoss)
+      }
+      if (isNaN(insideClothLoss)) {
+        this.insideClothLoss = 0
+      } else {
+        this.insideClothLoss = Number(insideClothLoss)
+      }
+    },
     // 把從資料庫讀進來的 Imgs (base64) 拼接成 el-upload 的 files 可以接受的格式，這樣就會顯示出來了
     getImgs() {
       this.files = []
@@ -898,20 +916,20 @@ export default {
     levelTwoChang() {
       console.log('categoriesThreeDialog第二層選項備呼叫惹')
     },
-		// 提交表單 add / edit
+    // 提交表單 add / edit
     onSubmit(formName) {
-			// add 的時候，如果是 edit 要改
-			// dialog 發生變化的時候 (使用 watch 觀察) 就會把 levelThreeFormData 的內容清空或是設定好
-			// 關於 tailor_fee 跟 crop_fee 的數字，也是使用 watch 去觀察跟設定到 levelThreeFoemData 裡面
+      // add 的時候，如果是 edit 要改
+      // dialog 發生變化的時候 (使用 watch 觀察) 就會把 levelThreeFormData 的內容清空或是設定好
+      // 關於 tailor_fee 跟 crop_fee 的數字，也是使用 watch 去觀察跟設定到 levelThreeFoemData 裡面
       const uploadFormData = {
-				ink_id:this.levelThreeFormData.ink_id,
-				paper_id:this.levelThreeFormData.paper_id,
-				outside_cloth_loss:String(this.outsideClothLoss),
-				outside_layout_width:this.levelThreeFormData.outside_layout_width,
-				outside_layout_height:this.levelThreeFormData.outside_layout_height,
-				inside_cloth_loss:String(this.insideClothLoss),
-				inside_layout_width:this.levelThreeFormData.inside_layout_width,
-				inside_layout_height:this.levelThreeFormData.inside_layout_height,
+        ink_id: this.levelThreeFormData.ink_id,
+        paper_id: this.levelThreeFormData.paper_id,
+        outside_cloth_loss: String(this.outsideClothLoss),
+        outside_layout_width: this.levelThreeFormData.outside_layout_width,
+        outside_layout_height: this.levelThreeFormData.outside_layout_height,
+        inside_cloth_loss: String(this.insideClothLoss),
+        inside_layout_width: this.levelThreeFormData.inside_layout_width,
+        inside_layout_height: this.levelThreeFormData.inside_layout_height,
         name: this.levelThreeFormData.name,
         level_one_id: this.levelThreeFormData.level_one_id,
         level_two_id: this.levelThreeFormData.level_two_id,
@@ -926,8 +944,8 @@ export default {
         pattern_download: this.levelThreeFormData.pattern_download,
         tailor_fee: this.levelThreeFormData.tailor_fee,
         crop_fee: this.levelThreeFormData.crop_fee,
-				split_quantity:this.levelThreeFormData.split_quantity,
-				mini_order:this.levelThreeFormData.mini_order,
+        split_quantity: this.levelThreeFormData.split_quantity,
+        mini_order: this.levelThreeFormData.mini_order,
         introduction_video: Object.assign(
           {},
           this.levelThreeFormData.introduction_video
@@ -944,8 +962,9 @@ export default {
           {},
           this.levelThreeFormData.note_two_video
         )
-			}
-			console.log(uploadFormData)
+      }
+      console.log(uploadFormData)
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 紀錄最後修改的使用者，最後修改的時間放到了 server 端去紀錄
@@ -1052,13 +1071,12 @@ export default {
 
 <style scoped>
 /* eslint-disable */
-.el-row {
+/* .el-row {
   margin-bottom: 20px;
-
   &:last-child {
     margin-bottom: 0;
   }
-}
+} */
 .el-col {
   border-radius: 4px;
   background-color: #fff;
@@ -1104,7 +1122,7 @@ export default {
   color: #333;
   padding: 0;
   margin: 0;
-	margin-top: 10px;
+  margin-top: 10px;
   /* line-height: 400px; */
   /* position: relative; */
 }
