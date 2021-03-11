@@ -54,15 +54,24 @@
     </div>
     <!-- 分頁結束 -->
     <!-- 子元件 -->
+    <CustomerClassDialog
+      :dialog="addLevelOneDialog"
+      :customerClassData="customerClassData"
+      @update="getCustomerClassData"
+    ></CustomerClassDialog>
     <!-- 子元件結束 -->
   </div>
 </template>
 
 <script>
+import CustomerClassDialog from '../../components/CustomerManager/CustomerClassDialog'
+
 export default {
   name: 'customer-manager',
   data() {
     return {
+      // 客戶分類資料
+      customerClassData: [],
       tableData: [],
       levelThreeTableData: [],
       // 控制分頁
@@ -77,7 +86,7 @@ export default {
       addLevelOneDialog: {
         show: false,
         title: '新增客戶類型',
-        option: 'edit'
+        option: 'class'
       },
       addLevelTwoDialog: {
         show: false,
@@ -91,8 +100,11 @@ export default {
       }
     }
   },
+  created() {
+    this.getCustomerClassData()
+  },
   components: {
-    // GroupLevelOneDialog,
+    CustomerClassDialog
     // GroupLevelTwoDialog,
     // GroupLevelThreeDialog
   },
@@ -159,8 +171,24 @@ export default {
         }
         this.tableData = tables
       }
-    }
+    },
     // 分頁設定結束
+    // ****************************************** axios 的部分
+    getCustomerClassData() {
+      this.$axios
+        .get('/api/customer/class')
+        .then((res) => {
+          // 添加成功
+          this.$message({
+            message: '讀取客戶分類名稱',
+            type: 'success'
+          })
+          this.customerClassData = res.data
+        })
+        .catch((err) => {
+          console.log('axios添加數據失敗==>MyDialog.vue==>', err)
+        })
+    }
   }
 }
 </script>

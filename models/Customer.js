@@ -1,6 +1,19 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+const CustomerClassSchema = new Schema({
+  create_date: {
+    type: Date,
+    default: Date.now
+  },
+  type: {
+    type: String
+  },
+  name: {
+    type: String
+  }
+})
+
 // Creat Schema
 const CustomerSchema = new Schema({
   create_date: {
@@ -82,4 +95,7 @@ const CustomerSchema = new Schema({
 })
 
 // eslint-disable-next-line no-undef
-module.exports = Customer = mongoose.model('customers', CustomerSchema)
+module.exports = {
+  Customer: mongoose.model('customers', CustomerSchema),
+  CustomerClass: mongoose.model('customer_classes', CustomerClassSchema)
+}
