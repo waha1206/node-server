@@ -69,6 +69,7 @@ export default {
       levelThreeTableData: [],
       // 控制分頁
       my_paginations: {
+        localStorage_page_size: 'customer_manager_page_size',
         page_index: 1, // 位於當前第幾頁
         total: 0, // 總數
         page_size: 10, // 每一頁顯示幾條數據
@@ -126,9 +127,9 @@ export default {
     setPaginations() {
       this.my_paginations.total = this.levelThreeTableData.length
       this.my_paginations.page_index = 1
-      if (localStorage.material_group_page_size) {
+      if (localStorage[this.my_paginations.localStorage_page_size]) {
         this.my_paginations.page_size = Number(
-          localStorage.material_group_page_size
+          localStorage[this.my_paginations.localStorage_page_size]
         )
       } else {
         this.my_paginations.page_size = 5
@@ -140,7 +141,7 @@ export default {
     },
     handleSizeChange(page_size) {
       // 切換每頁有幾條數據
-      localStorage.material_group_page_size = page_size
+      localStorage[this.my_paginations.localStorage_page_size] = page_size
       this.my_paginations.page_index = 1
       this.my_paginations.page_size = page_size
       this.tableData = this.levelThreeTableData.filter((item, index) => {

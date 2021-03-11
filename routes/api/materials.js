@@ -91,7 +91,6 @@ router.post(
   '/many',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    console.log(req.body)
     Material.find({ _id: { $in: req.body } })
       .sort({ type: 1 })
       .then((materials) => {
@@ -225,7 +224,6 @@ router.get(
   (req, res) => {
     // query 選擇的條件
     // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
-    console.log(req.params)
     const query = { _id: req.params.id }
     const options = { product_name: 1 }
 

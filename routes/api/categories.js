@@ -52,6 +52,9 @@ router.post(
     }
 
     if (req.body.level === 3) {
+      if (req.body.processing_describe) {
+        categoriesFields.processing_describe = req.body.processing_describe
+      }
       if (req.body.ink_id) {
         categoriesFields.ink_id = req.body.ink_id
       }
@@ -342,6 +345,9 @@ router.post(
       categoryFields.level_one_id = req.body.level_one_id
     }
     if (req.body.level === 3) {
+      if (req.body.processing_describe) {
+        categoryFields.processing_describe = req.body.processing_describe
+      }
       if (req.body.ink_id) {
         categoryFields.ink_id = req.body.ink_id
       }

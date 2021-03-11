@@ -452,7 +452,8 @@ export default {
         inside_layout_height: '',
         inside_cloth_loss: '',
         paper_id: '',
-        ink_id: ''
+        ink_id: '',
+        processing_describe: ''
       },
       categoriesLevelOneDialog: {
         show: false,

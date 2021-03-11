@@ -467,6 +467,20 @@
                   ></my-currency-input>
                 </el-form-item>
               </el-col>
+              <el-col :span="4">
+                <el-form-item prop="processing_fee" label="加工費用：">
+                  <my-currency-input
+                    :isReadyOnly="false"
+                    :height="24"
+                    :width="56"
+                    type="processingFee"
+                    v-model="processingFee"
+                  ></my-currency-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- 第十一列結束 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="8" style="position:relative">
                 <!-- style="position:relative;border-radius:8px" -->
                 <div @click="handleClearAccessoryCloth">
@@ -505,7 +519,6 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <!-- 第十列結束 -->
           </el-header>
 
           <!-- 第七行開始，圖片上傳 -->
@@ -639,6 +652,7 @@ export default {
       productProfit: 0, // 商品利潤
       retailPrice: 0, // 商品售價
       tailorFee: 0, // 平車費用
+      processingFee: 0, // 加工費用
       cropFee: 0, // 裁切費用
       accessoryClothName: '',
       materialDataForm: {},
@@ -707,6 +721,9 @@ export default {
     }
   },
   watch: {
+    processingFee(newValue) {
+      this.materialDataForm.processing_fee = String(newValue)
+    },
     cropFee(newValue) {
       this.materialDataForm.crop_fee = String(newValue)
     },
@@ -759,7 +776,13 @@ export default {
         this.theCost = 0
         this.cropFee = 0
         this.tailorFee = 0
+        this.processingFee = 0
       } else {
+        if (isNaN(this.materialDataForm.processing_fee)) {
+          this.processingFee = 0
+        } else {
+          this.processingFee = Number(this.materialDataForm.processing_fee)
+        }
         if (isNaN(this.materialDataForm.the_cost)) {
           this.theCost = 0
         } else {

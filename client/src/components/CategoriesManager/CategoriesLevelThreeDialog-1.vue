@@ -111,7 +111,7 @@
               <el-col :span="24">
                 <div class="grid-content">
                   <el-form-item
-                    label="商品說明："
+                    label="備註說明："
                     size="mini"
                     label-width="120px"
                     prop="describe"
@@ -125,7 +125,26 @@
                 </div>
               </el-col>
             </el-row>
-            <!-- 第三行開始，商品編號，商品狀態 啟用/VIP ，最後修改時間，最後修改人員-->
+            <!-- 第三行開始，加工說明 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="24">
+                <div class="grid-content">
+                  <el-form-item
+                    label="加工說明："
+                    size="mini"
+                    label-width="120px"
+                    prop="processing_describe"
+                  >
+                    <el-input
+                      placeholder="給自己人看的加工說明"
+                      type="name"
+                      v-model="levelThreeFormData.processing_describe"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+            </el-row>
+            <!-- 第四行開始，商品編號，商品狀態 啟用/VIP ，最後修改時間，最後修改人員-->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
                 <div class="grid-content">
@@ -193,7 +212,7 @@
                 </div>
               </el-col>
             </el-row>
-            <!-- 第四行開始，商品介紹影片，校色影片-->
+            <!-- 第五行開始，商品介紹影片，校色影片-->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
                 <div class="grid-content">
@@ -260,7 +279,7 @@
                 </div>
               </el-col>
             </el-row>
-            <!-- 第五行開始，其他影片(一)，其他影片(二)-->
+            <!-- 第六行開始，其他影片(一)，其他影片(二)-->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
                 <div class="grid-content">
@@ -327,7 +346,7 @@
                 </div>
               </el-col>
             </el-row>
-            <!-- 第六行開始，版型編號-->
+            <!-- 第七行開始，版型編號-->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="12">
                 <div class="grid-content">
@@ -363,7 +382,7 @@
               </el-col>
             </el-row>
 
-            <!-- 第七行開始，平車費用，裁切費用-->
+            <!-- 第八行開始，平車費用，裁切費用-->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
                 <div class="grid-content">
@@ -434,7 +453,7 @@
                 </div>
               </el-col>
             </el-row>
-            <!-- 第八行開始，外表布寬，高，內裡布寬，高 -->
+            <!-- 第九行開始，外表布寬，高，內裡布寬，高 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="4">
                 <el-form-item prop="outside_layout_width" label="外表布寬：">
@@ -499,9 +518,9 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <!-- 第八行結束 -->
+            <!-- 第九行結束 -->
 
-            <!-- 第九行 -->
+            <!-- 第十行 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="8" style="position:relative">
                 <!-- style="position:relative;border-radius:8px" -->
@@ -578,7 +597,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <!-- 第九行結束 -->
+            <!-- 第十行結束 -->
           </el-header>
           <!-- 第十行開始，圖片上傳 -->
           <!-- 圖片上傳的教學 https://segmentfault.com/a/1190000013796215 -->
@@ -922,6 +941,7 @@ export default {
       // dialog 發生變化的時候 (使用 watch 觀察) 就會把 levelThreeFormData 的內容清空或是設定好
       // 關於 tailor_fee 跟 crop_fee 的數字，也是使用 watch 去觀察跟設定到 levelThreeFoemData 裡面
       const uploadFormData = {
+        processing_describe: this.levelThreeFormData.processing_describe,
         ink_id: this.levelThreeFormData.ink_id,
         paper_id: this.levelThreeFormData.paper_id,
         outside_cloth_loss: String(this.outsideClothLoss),

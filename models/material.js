@@ -165,6 +165,10 @@ const MaterialSchema = new Schema({
   // 版型下載位置
   pattern_download: {
     type: String
+  },
+  // 加工費用
+  processing_fee: {
+    type: String
   }
 })
 

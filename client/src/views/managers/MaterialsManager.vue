@@ -438,7 +438,8 @@ export default {
         layout_width: '',
         accessory_cloth_id: '',
         pattern_download: '',
-        pattern_no: ''
+        pattern_no: '',
+        processing_fee: ''
       },
       // 編輯原物料的分類跳出視窗
       formData: {
