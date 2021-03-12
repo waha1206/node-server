@@ -373,7 +373,7 @@
                   >
                   </el-badge>
                 </el-tooltip>
-                <el-form-item prop="cloth_width" label="布料幅寬：">
+                <el-form-item prop="cloth_width" label="可印幅寬：">
                   <el-input
                     placeholder="轉印布料專用欄位"
                     size="mini"
@@ -733,7 +733,7 @@ export default {
     // 常用的正則表達式 https://kknews.cc/zh-tw/code/o5e4n55.html
     // 'materialDataForm.unit_price': function(newValue) {
     unitPrice: function(newValue) {
-      if (!newValue) return
+      // if (!newValue) return
       // 帶有兩位小數的正實數，傳進來的是 單位售價
       var numReg = /[0-9]+(.[0-9]{2})?/
       if (!numReg.test(newValue)) {
