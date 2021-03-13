@@ -15,14 +15,14 @@
               <el-table :data="tableData" style="width: 100%" size="mini">
                 <el-table-column
                   prop="type"
-                  label="第一層編號"
+                  label="編號"
                   width="120px"
                   align="center"
                 >
                 </el-table-column>
                 <el-table-column
                   prop="name"
-                  label="第一層中文"
+                  label="職務名稱"
                   width="180"
                   align="center"
                 >
@@ -113,7 +113,7 @@
     >
       <el-form
         ref="editForm"
-        :model="cutomerClassForm"
+        :model="cutomerTitleForm"
         :rules="cutomerClassFormRules"
         label-width="120px"
         style="margin:10px;width:auto"
@@ -124,7 +124,7 @@
           :label-width="formLabelWidth"
         >
           <el-input
-            v-model="cutomerClassForm.type"
+            v-model="cutomerTitleForm.type"
             autocomplete="off"
             size="mini"
             placeholder="請輸入大寫英文"
@@ -136,7 +136,7 @@
           :label-width="formLabelWidth"
         >
           <el-input
-            v-model="cutomerClassForm.name"
+            v-model="cutomerTitleForm.name"
             autocomplete="off"
             size="mini"
             placeholder="請輸入大寫英文"
@@ -157,7 +157,7 @@ export default {
   name: 'customer-class-dialog',
   props: {
     dialog: Object,
-    customerClassData: Array
+    customerTitleData: Array
   },
   data() {
     return {
@@ -167,7 +167,7 @@ export default {
         type: '',
         name: ''
       },
-      cutomerClassForm: {
+      cutomerTitleForm: {
         type: '',
         name: '',
         _id: '',
@@ -176,7 +176,7 @@ export default {
       },
       // 管理分頁
       my_paginations: {
-        localStorage_page_size: 'customer_class_page_size',
+        localStorage_page_size: 'customer_title_page_size',
         page_index: 1, // 位於當前第幾頁
         total: 0, // 總數
         page_size: 10, // 每一頁顯示幾條數據
@@ -189,8 +189,6 @@ export default {
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }]
       },
       levelOneEditDialog: false,
-      // 下拉選單的 opation
-      format_type_list: ['拉鍊', '五金', '棉花', '側標', '香精', '井字結'],
       // 驗證表單，form_rules 這個是驗證 addForm 的欄位
       form_rules: {
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
@@ -205,7 +203,7 @@ export default {
     this.setPaginations()
   },
   watch: {
-    customerClassData() {
+    customerTitleData() {
       // 資料有更新喔
       this.setPaginations()
     }
@@ -218,7 +216,7 @@ export default {
   methods: {
     // 分頁開始
     setPaginations() {
-      this.my_paginations.total = this.customerClassData.length
+      this.my_paginations.total = this.customerTitleData.length
       this.my_paginations.page_index = 1
       if (localStorage[this.my_paginations.localStorage_page_size]) {
         this.my_paginations.page_size = Number(
@@ -228,7 +226,7 @@ export default {
         this.my_paginations.page_size = 5
       }
       // 設置分頁數據
-      this.tableData = this.customerClassData.filter((item, index) => {
+      this.tableData = this.customerTitleData.filter((item, index) => {
         return index < this.my_paginations.page_size
       })
     },
@@ -237,7 +235,7 @@ export default {
       localStorage[this.my_paginations.localStorage_page_size] = page_size
       this.my_paginations.page_index = 1
       this.my_paginations.page_size = page_size
-      this.tableData = this.customerClassData.filter((item, index) => {
+      this.tableData = this.customerTitleData.filter((item, index) => {
         return index < page_size
       })
     },
@@ -249,8 +247,8 @@ export default {
       // 容器
       let tables = []
       for (let i = index; i < nums; i++) {
-        if (this.customerClassData[i]) {
-          tables.push(this.customerClassData[i])
+        if (this.customerTitleData[i]) {
+          tables.push(this.customerTitleData[i])
         }
         this.tableData = tables
       }
@@ -258,17 +256,17 @@ export default {
 
     // 新增、編輯、刪除 第一層的分類
     handleAdd(form) {
-      this.cutomerClassForm.option = 'add'
+      this.cutomerTitleForm.option = 'add'
       this.onSubmit(form)
     },
     handleEdit(row) {
       // 第一層的資料
       this.levelOneEditDialog = true
-      this.cutomerClassForm.type = row.type
-      this.cutomerClassForm.name = row.name
-      this.cutomerClassForm._id = row._id
-      this.cutomerClassForm.level = 1
-      this.cutomerClassForm.option = 'edit'
+      this.cutomerTitleForm.type = row.type
+      this.cutomerTitleForm.name = row.name
+      this.cutomerTitleForm._id = row._id
+      this.cutomerTitleForm.level = 1
+      this.cutomerTitleForm.option = 'edit'
     },
     handleDelete(row) {
       // 讓全部分類無法刪除
@@ -278,7 +276,7 @@ export default {
       )
         .then(() => {
           this.$axios
-            .delete(`/api/customer/class/delete/${row._id}`)
+            .delete(`/api/customer/title/delete/${row._id}`)
             .then((res) => {
               this.$message('刪除成功！')
               this.$emit('update')
@@ -291,19 +289,20 @@ export default {
     // 新增商品類別代號
     onSubmit(form) {
       const uploadFormData =
-        this.cutomerClassForm.option == 'add'
+        this.cutomerTitleForm.option == 'add'
           ? this.formData
-          : this.cutomerClassForm
+          : this.cutomerTitleForm
 
       this.$refs[form].validate((valid) => {
         if (valid && !uploadFormData.type == '') {
           const url =
-            this.cutomerClassForm.option == 'add'
+            this.cutomerTitleForm.option == 'add'
               ? 'add'
-              : `edit/${this.cutomerClassForm._id}`
-          uploadFormData.level = this.cutomerClassForm.level
+              : `edit/${this.cutomerTitleForm._id}`
+          uploadFormData.level = this.cutomerTitleForm.level
+
           this.$axios
-            .post(`/api/customer/class/${url}`, uploadFormData)
+            .post(`/api/customer/title/${url}`, uploadFormData)
             .then((res) => {
               console.log('(儲存/修改) 原料組合第一層分類成功！')
               // 添加成功

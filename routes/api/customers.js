@@ -4,7 +4,11 @@ const router = express.Router()
 const passport = require('passport')
 
 // 引入 User 才可以做查詢
-const { Customer, CustomerClass } = require('../../models/Customer')
+const {
+  Customer,
+  CustomerClass,
+  CustomerTitle
+} = require('../../models/Customer')
 
 // $router GET api/customer/test
 // @desc   返回的請求的 json 數據
@@ -72,7 +76,7 @@ router.post(
     })
   }
 )
-
+// ***************************************** class 的 api *****************************************
 // $router post api/cistomer/class/add
 // @desc   創建訊息接口
 // @access private
@@ -166,5 +170,103 @@ router.delete(
       .catch((_err) => res.status(404).json('刪除失敗'))
   }
 )
+// ***************************************** class 的 api 結束 *****************************************
+
+// ***************************************** title 的 api *****************************************
+// $router post api/cistomer/title/add
+// @desc   創建訊息接口
+// @access private
+// 使用 hander 要驗證 token
+// 使用 body 要放創建的資料 type name
+router.post(
+  '/title/add',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const customerTitleFields = {}
+
+    // 傳送過來的資料不見得會跟 schema 會一樣
+    if (req.body.type) customerTitleFields.type = req.body.type
+    if (req.body.name) customerTitleFields.name = req.body.name
+
+    // console.log(categoriesFields)
+    CustomerTitle.findOne({ name: req.body.name }).then((customerTitle) => {
+      if (customerTitle) {
+        return res.status(400).json('此客戶分類已經存在')
+      } else {
+        new CustomerTitle(customerTitleFields)
+          .save()
+          .then((customerTitle) => {
+            res.json(customerTitle)
+          })
+          .catch((err) => {
+            res.status(404).json(err)
+          })
+      }
+    })
+  }
+)
+
+// $router get api/cistomer/title
+// @desc   取得所有的 cumtomerClass 的資料
+// @access private
+// 使用 hander 要驗證 token
+router.get(
+  '/title',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    CustomerTitle.find()
+      .sort({ type: 1 })
+      .then((customerTitles) => {
+        if (!customerTitles) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(customerTitles)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
+// $router post api/customer/title/edit/:id
+// @desc   編輯訊息接口
+// @access private
+// 使用 hander 要驗證 token
+// 有看到 post 就代表他會使用到 body 傳遞 數據 {}
+// 有看到 /:id 就代表要從 params 接收一個 id 進來
+router.post(
+  '/title/edit/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const customerTitleFields = {}
+    console.log(req.params)
+    if (req.body.type) customerTitleFields.type = req.body.type
+    if (req.body.name) customerTitleFields.name = req.body.name
+
+    CustomerTitle.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $set: customerTitleFields },
+      { new: false }
+    ).then((customerTitles) => res.json(customerTitles))
+  }
+)
+
+// $router delete api/customer/title/delete/:id
+// @desc   刪除訊息接口
+// @access private
+// 選擇 delete
+// 使用 hander 要驗證 token
+// body 要放編輯的資料 key:value
+router.delete(
+  '/title/delete/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    CustomerTitle.findOneAndRemove({ _id: req.params.id })
+      .then((customerTitle) => res.json(customerTitle))
+      .catch((_err) => res.status(404).json('刪除失敗'))
+  }
+)
+
+// ***************************************** title 的 api 結束 *****************************************
 
 module.exports = router

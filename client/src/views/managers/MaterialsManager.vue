@@ -138,13 +138,13 @@
             label="顏色"
             prop="product_color"
             align="center"
-            width="70"
+            width="160"
           >
           </el-table-column>
           <el-table-column label="編號" prop="type" align="center" width="70">
           </el-table-column>
           <!-- 原物料分類，從分類ID回傳分類名稱 -->
-          <el-table-column label="分類" align="center" width="120">
+          <el-table-column label="分類" align="center" width="80">
             <template slot-scope="scope">
               {{ getMaterilaClassOneNameById(scope.row) }}
             </template>
@@ -165,29 +165,44 @@
             width="70"
           >
           </el-table-column>
-          <!-- 目前庫存 -->
+
+          <!-- 平車費用 -->
           <el-table-column
-            label="目前庫存"
-            prop="storage"
+            label="平車費用"
+            prop="tailor_fee"
             align="center"
-            width="80"
+            width="70"
           >
           </el-table-column>
-          <!-- 最低庫存 -->
+          <!-- 裁切費用 -->
           <el-table-column
-            label="最低庫存"
-            prop="stock_alert"
+            label="裁切費用"
+            prop="crop_fee"
             align="center"
-            width="80"
+            width="70"
           >
           </el-table-column>
-          <!-- 訂購天數 -->
+          <!-- 加工費用 -->
           <el-table-column
-            label="訂購天數"
-            prop="lead_time"
+            label="加工費用"
+            prop="processing_fee"
             align="center"
-            width="140"
+            width="70"
           >
+            <template slot-scope="scope">
+              <div v-if="scope.row.processing_fee">
+                <span>$ </span>{{ scope.row.processing_fee }}<span> 元</span>
+              </div>
+            </template>
+          </el-table-column>
+          <!-- 多圖 -->
+          <el-table-column label="加工費" width="70" align="center">
+            <template slot-scope="scope">
+              <el-checkbox
+                v-model="scope.row.processing_fee_flag"
+                @change="checkboxChange(scope.row)"
+              ></el-checkbox>
+            </template>
           </el-table-column>
           <!-- 商品材質 -->
           <el-table-column
@@ -198,7 +213,7 @@
           >
           </el-table-column>
           <!-- 供應商資料 -->
-          <el-table-column label="供應商" width="200" align="center">
+          <el-table-column label="供應商" width="180" align="center">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="left">
                 <div v-if="scope.row.supplier_id">
@@ -371,6 +386,7 @@ import MaterialEditDialog from '../../components/MaterialsManager/MaterialEditDi
 import MaterialSupplierDialog from '../../components/MaterialsManager/MateriaSupplierDialog'
 import MaterialLevelTwoDialog from '../../components/MaterialsManager/MaterialLevelTwoDialog'
 import { MessageBox } from 'element-ui'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'materials-manager',
@@ -482,6 +498,9 @@ export default {
         // layouts: 'total, sizes, prev, pager, next, jumper'
       }
     }
+  },
+  computed: {
+    ...mapGetters(['user'])
   },
   components: {
     MaterialClassDialog,
@@ -664,6 +683,35 @@ export default {
         option: 'edit',
         material: row._id
       }
+    },
+    // 直接修改 checkbox 加工費用 flag
+    checkboxChange(material) {
+      let uploadForm = {}
+      uploadForm = Object.assign({}, material)
+      uploadForm.last_edit_person = this.user.id
+      uploadForm.last_modify_date = new Date()
+      // 把 array 轉換成字串 +上 | 符號上傳，到了 server 端，再使用 split('|') 還原成 array [0, 1, 2] 再塞到資料庫
+      // 因為再使用 axios 傳送資料的時候，只能使用字串，不能使用 [<String 1>, <String 2>, ....]
+      if (uploadForm.imgs.length > 0) {
+        uploadForm.imgs = uploadForm.imgs.join('|')
+      }
+
+      const url = `edit/${material._id}`
+      this.$axios
+        .post(`/api/material/${url}`, uploadForm)
+        .then((res) => {
+          // 添加成功
+          this.$message({
+            message: '修改加工費 flag',
+            type: 'success'
+          })
+        })
+        .catch((err) => {
+          console.log(
+            'axios添加數據失敗==>MaterialManage.vue 修改加工費的 flag 失敗！==>',
+            err
+          )
+        })
     },
     handleDeleteMaterial(index, row) {
       MessageBox.confirm(

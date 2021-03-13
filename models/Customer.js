@@ -14,11 +14,27 @@ const CustomerClassSchema = new Schema({
   }
 })
 
+const CustomerTitleSchema = new Schema({
+  create_date: {
+    type: Date,
+    default: Date.now
+  },
+  type: {
+    type: String
+  },
+  name: {
+    type: String
+  }
+})
+
 // Creat Schema
 const CustomerSchema = new Schema({
   create_date: {
     type: Date,
     default: Date.now
+  },
+  customer_class: {
+    type: String
   },
   customer_type: {
     type: String
@@ -30,6 +46,9 @@ const CustomerSchema = new Schema({
     type: String
   },
   contact_person_name: {
+    type: String
+  },
+  contact_person_title: {
     type: String
   },
   contact_person_cell_phone: {
@@ -97,5 +116,6 @@ const CustomerSchema = new Schema({
 // eslint-disable-next-line no-undef
 module.exports = {
   Customer: mongoose.model('customers', CustomerSchema),
-  CustomerClass: mongoose.model('customer_classes', CustomerClassSchema)
+  CustomerClass: mongoose.model('customer_classes', CustomerClassSchema),
+  CustomerTitle: mongoose.model('customer_titles', CustomerTitleSchema)
 }
