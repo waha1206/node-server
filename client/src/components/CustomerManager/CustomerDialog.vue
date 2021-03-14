@@ -882,7 +882,7 @@
               </el-col>
               <el-col :span="4">
                 <el-form-item prop="delivery_charge" label="運費：">
-                  <el-radio-group v-model="customerFormData.activated">
+                  <el-radio-group v-model="customerFormData.delivery_charge">
                     <el-radio :label="1">正常</el-radio>
                     <el-radio :label="2">加收</el-radio>
                   </el-radio-group>
