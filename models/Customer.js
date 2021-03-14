@@ -183,6 +183,12 @@ const CustomerSchema = new Schema({
   goods_delivery: {
     type: Number
   },
+  delivery_charge: {
+    type: Number
+  },
+  delivery_charge_fee: {
+    type: String
+  },
   remarks: {
     type: String
   },
@@ -202,7 +208,7 @@ const CustomerSchema = new Schema({
     type: String
   },
   level: {
-    type: String
+    type: Number
   },
   area: {
     type: String

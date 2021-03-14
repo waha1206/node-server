@@ -27,7 +27,7 @@ router.post(
     console.log(req.body)
     console.log(req.body.length)
 
-    const customers = new Array()
+    const customers = new Array(req.body.length)
 
     for (let i = 0; i < req.body.length; i++) {
       const customer = new Customer({

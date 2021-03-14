@@ -71,7 +71,7 @@
             <el-table-column
               prop="company"
               label="客戶名稱"
-              align="center"
+              align="left"
               width="250"
             ></el-table-column>
             <!-- 客戶名稱 -->
@@ -82,12 +82,170 @@
               width="100"
             ></el-table-column>
             <!-- 完整資料 -->
+            <el-table-column label="說明" align="center" width="80">
+              <template slot-scope="scope">
+                <el-popover trigger="hover" placement="right">
+                  <p>客戶名稱：{{ scope.row.company }}</p>
+                  <p>統一編號：{{ scope.row.tax_id_number }}</p>
+                  <p>
+                    發票地址：{{ scope.row.invoice_postal
+                    }}{{ scope.row.invoice_address }}
+                  </p>
+                  <p>
+                    樣品地址：{{ scope.row.sample_postal
+                    }}{{ scope.row.sample_address }}
+                  </p>
+                  <p>
+                    倉庫地址：{{ scope.row.goods_postal
+                    }}{{ scope.row.goods_address }}
+                  </p>
+                  <p>聯絡人姓名：{{ scope.row.contact_person_name }}</p>
+                  <p>聯絡人市電：{{ scope.row.contact_person_telephone }}</p>
+                  <p>聯絡人手機：{{ scope.row.contact_person_cell_phone }}</p>
+                  <p>聯絡人信箱：{{ scope.row.contact_person_email }}</p>
+                  <p>
+                    聯絡人職務：{{
+                      getCustomerTitle(scope.row.contact_person_title)
+                    }}
+                  </p>
+                  <p>
+                    官方網址<a :href="scope.row.website" target="_blank">{{
+                      scope.row.website
+                    }}</a>
+                  </p>
+                  <p>
+                    facebook：<a :href="scope.row.facebook" target="_blank">{{
+                      scope.row.facebook
+                    }}</a>
+                  </p>
+                  <p>
+                    pinkoi：<a :href="scope.row.pinkoi" target="_blank">{{
+                      scope.row.pinkoi
+                    }}</a>
+                  </p>
+                  <div slot="reference" class="name-wrapper">
+                    <el-tag size="mini">完整說明</el-tag>
+                  </div>
+                </el-popover>
+              </template>
+            </el-table-column>
+            <!-- 啟用或禁用 -->
+            <el-table-column prop="" label="啟用？" align="center" width="80">
+              <template slot-scope="scope">
+                <span
+                  v-if="scope.row.activated == 1"
+                  style="background:blue;color:yellow;line-height:20px;height:20px;width:40px;display:inline-block"
+                  >啟用</span
+                >
+                <span
+                  v-else
+                  style="background:red;color:yellow;line-height:20px;height:20px;width:40px;display:inline-block"
+                  >禁用</span
+                >
+              </template>
+            </el-table-column>
+            <!-- 發票類型 -->
+            <el-table-column prop="" label="發票" align="center" width="80">
+              <template slot-scope="scope">
+                <el-tag size="mini" v-if="scope.row.invoice_type">{{
+                  getInvoiceType(scope.row.invoice_type)
+                }}</el-tag>
+                <span v-else></span>
+              </template>
+            </el-table-column>
+            <!-- 款項票期 -->
             <el-table-column
               prop=""
-              label="資料"
+              label="款項票期"
               align="center"
-              width="80"
-            ></el-table-column>
+              width="145"
+            >
+              <template slot-scope="scope">
+                <el-tag size="mini" v-if="scope.row.payment_date">{{
+                  getPaymentDate(scope.row.payment_date)
+                }}</el-tag>
+                <span v-else></span>
+              </template>
+            </el-table-column>
+            <!-- 付款方式 -->
+            <el-table-column prop="" label="付款方式" align="center" width="90">
+              <template slot-scope="scope">
+                <el-tag size="mini" v-if="scope.row.payment">
+                  {{ getPayment(scope.row.payment) }}
+                </el-tag>
+                <span v-else></span>
+              </template>
+            </el-table-column>
+            <!-- 樣品配送 -->
+            <el-table-column prop="" label="樣品配送" align="center" width="90">
+              <template slot-scope="scope">
+                <el-tag size="mini" v-if="scope.row.sample_delivery">
+                  {{ getDelivery(scope.row.sample_delivery) }}
+                </el-tag>
+                <span v-else></span>
+              </template>
+            </el-table-column>
+            <!-- 大貨配送 -->
+            <el-table-column prop="" label="大貨配送" align="center" width="90">
+              <template slot-scope="scope">
+                <el-tag size="mini" v-if="scope.row.goods_delivery">
+                  {{ getDelivery(scope.row.goods_delivery) }}
+                </el-tag>
+                <span v-else></span>
+              </template>
+            </el-table-column>
+            <!-- 每件加收 -->
+            <el-table-column prop="" label="每件加收" align="center" width="90">
+              <template slot-scope="scope">
+                <el-tag size="mini" v-if="scope.row.goods_delivery">
+                  {{ scope.row.delivery_charge_fee }} 元
+                </el-tag>
+                <span v-else></span>
+              </template>
+            </el-table-column>
+            <!-- 客戶等級 -->
+            <el-table-column prop="" label="客戶等級" align="center" width="90">
+              <template slot-scope="scope">
+                <el-tag size="mini" v-if="scope.row.level">
+                  {{ getCustomerLevel(scope.row.level) }}
+                </el-tag>
+                <span v-else></span>
+              </template>
+            </el-table-column>
+            <!-- 平均每月業績 -->
+            <el-table-column
+              prop=""
+              label="平均每月業績"
+              align="center"
+              width="110"
+            >
+              <template slot-scope="scope">
+                <span>每個月平均下單</span>
+              </template>
+            </el-table-column>
+            <!-- 累積訂購金額 -->
+            <el-table-column
+              prop=""
+              label="累積訂購金額"
+              align="center"
+              width="110"
+            >
+              <template slot-scope="scope">
+                <span>1,000,000</span>
+              </template>
+            </el-table-column>
+            <!-- 最近一筆訂單 -->
+            <el-table-column
+              prop=""
+              label="最近一筆訂單"
+              align="center"
+              width="110"
+            >
+              <template slot-scope="scope">
+                <span>20210315A0001</span>
+              </template>
+            </el-table-column>
+
             <!-- 搜尋欄位 -->
             <el-table-column align="center" width="150">
               <!-- header 代表放到列的說明文字那邊 -->
@@ -207,6 +365,57 @@ export default {
     // GroupLevelThreeDialog
   },
   methods: {
+    // 客戶等級
+    getCustomerLevel(level) {
+      if (level === 'undefined') return
+      const customerLevel = ['VIP', '潛力', '正常', '觀察名單', '拒絕往來']
+      return customerLevel[Number(level) - 1]
+    },
+    // 貨運方式
+    getDelivery(type) {
+      if (type === 'undefined') return
+      const deliveryClass = ['郵局', '新航', '順豐', '全家', '7-11', '自取']
+      return deliveryClass[Number(type) - 1]
+    },
+    // 付款方式
+    getPayment(type) {
+      if (type === 'undefined') return
+      const paymentClass = ['現金', '國內轉帳', 'paypal', '載具支付', '支票']
+      return paymentClass[Number(type) - 1]
+    },
+    // 款項票期
+    getPaymentDate(type) {
+      if (type === 'undefined') return
+      const paymentDateClass = [
+        '30%訂金，出貨前結清',
+        '貨到付款',
+        '月結30天',
+        '月結45天',
+        '其它'
+      ]
+      return paymentDateClass[Number(type) - 1]
+    },
+    // 取得發票的類型
+    getInvoiceType(type) {
+      if (type === 'undefined') return
+      const invoiceClass = [
+        '二聯發票',
+        '三聯發票',
+        '電子發票',
+        '其它',
+        '國外地區'
+      ]
+      return invoiceClass[Number(type) - 1]
+    },
+    // 取得職務名稱
+    getCustomerTitle(titleId) {
+      if (titleId === 'undefined') return
+      let name = ''
+      this.customerTitleData.forEach((item) => {
+        if (item._id == titleId) name = item.name
+      })
+      return name
+    },
     // 當選擇客戶類別的元件變動時
     customerClassChange(customerClass) {
       localStorage[this.setLocalStorage.customerClass] = customerClass
@@ -359,6 +568,7 @@ export default {
   background-color: #e9eef3;
   color: #333;
   text-align: center;
+  padding: 0px;
 }
 
 body > .el-container {
