@@ -42,7 +42,7 @@ const CustomerSchema = new Schema({
   company: {
     type: String
   },
-  tax_ID_number: {
+  tax_id_number: {
     type: String
   },
   contact_person_name: {
@@ -52,6 +52,57 @@ const CustomerSchema = new Schema({
     type: String
   },
   contact_person_cell_phone: {
+    type: String
+  },
+  // 聯絡人被注事項
+  contact_person_memo: {
+    type: String
+  },
+  // 聯絡人信箱
+  contact_person_email: {
+    type: String
+  },
+  // 聯絡人市電
+  contact_person_telephone: {
+    type: String
+  },
+  accounting_person_name: {
+    type: String
+  },
+  accounting_person_title: {
+    type: String
+  },
+  accounting_person_cell_phone: {
+    type: String
+  },
+  // 聯絡人被注事項
+  accounting_person_memo: {
+    type: String
+  },
+  // 聯絡人信箱
+  accounting_person_email: {
+    type: String
+  },
+  // 聯絡人市電
+  accounting_person_telephone: {
+    type: String
+  },
+  other_person_name: {
+    type: String
+  },
+  other_person_title: {
+    type: String
+  },
+  other_person_cell_phone: {
+    type: String
+  },
+  other_person_memo: {
+    type: String
+  },
+  other_person_email: {
+    type: String
+  },
+  other_person_telephone: {
     type: String
   },
   company_telephone: {
@@ -69,11 +120,68 @@ const CustomerSchema = new Schema({
   invoice_address: {
     type: String
   },
+  invoice_postal: {
+    type: String
+  },
+  invoice_name: {
+    type: String
+  },
+  invoice_cell_phone: {
+    type: String
+  },
+  invoice_telephone: {
+    type: String
+  },
+  invoice_memo: {
+    type: String
+  },
+  payment: {
+    type: Number
+  },
+  payment_date: {
+    type: Number
+  },
   sample_address: {
     type: String
   },
-  payment_terms: {
+  sample_postal: {
     type: String
+  },
+  sample_name: {
+    type: String
+  },
+  sample_cell_phone: {
+    type: String
+  },
+  sample_telephone: {
+    type: String
+  },
+  sample_memo: {
+    type: String
+  },
+  sample_delivery: {
+    type: Number
+  },
+  goods_address: {
+    type: String
+  },
+  goods_postal: {
+    type: String
+  },
+  goods_name: {
+    type: String
+  },
+  goods_cell_phone: {
+    type: String
+  },
+  goods_telephone: {
+    type: String
+  },
+  goods_memo: {
+    type: String
+  },
+  goods_delivery: {
+    type: Number
   },
   remarks: {
     type: String
@@ -88,7 +196,7 @@ const CustomerSchema = new Schema({
     type: String
   },
   invoice_type: {
-    type: String
+    type: Number
   },
   order: {
     type: String
@@ -110,6 +218,9 @@ const CustomerSchema = new Schema({
   },
   pinkoi: {
     type: String
+  },
+  activated: {
+    type: Number
   }
 })
 

@@ -59,11 +59,11 @@
               <el-col :span="4">
                 <el-form-item
                   label="公司統編："
-                  prop="tax_ID_number"
+                  prop="tax_id_number"
                   label-width="120px"
                 >
                   <el-input
-                    v-model="customerFormData.tax_ID_number"
+                    v-model="customerFormData.tax_id_number"
                     placeholder="沒有就開二聯發票"
                     size="mini"
                   ></el-input>
@@ -161,7 +161,7 @@
                 >
                   <el-input
                     v-model="customerFormData.contact_person_name"
-                    placeholder="聯絡人姓名"
+                    placeholder="楊大大"
                     size="mini"
                   ></el-input>
                 </el-form-item>
@@ -175,7 +175,7 @@
                   <el-select
                     @change="customerTitleChange"
                     v-model="customerFormData.contact_person_title"
-                    placeholder="聯絡人職務："
+                    placeholder="創作者本人"
                     filterable
                     size="mini"
                   >
@@ -189,39 +189,704 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-            </el-row>
-            <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="6">
+              <el-col :span="4">
                 <el-form-item
-                  label="客戶網站："
-                  prop="website"
+                  label="聯絡人手機："
+                  prop="contact_person_cell_phone"
                   label-width="120px"
                 >
                   <el-input
-                    v-model="customerFormData.website"
-                    placeholder="官方網頁"
+                    v-model="customerFormData.contact_person_cell_phone"
+                    placeholder="0918-700586"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item
+                  label="聯絡人市話："
+                  prop="contact_person_telephone"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.contact_person_telephone"
+                    placeholder="02-89116396#80"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item
+                  label="聯絡人信箱："
+                  prop="contact_person_email"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.contact_person_email"
+                    placeholder="waha1206@gmail.com"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item
+                  label="備註："
+                  prop="contact_person_memo"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.contact_person_memo"
+                    placeholder="早上不要聯繫"
                     size="mini"
                   ></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
+            <!-- 第四列，會計姓名，會計手機，會計市電，會計mail，會計職務，備註 -->
             <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="6">
+              <el-col :span="4">
                 <el-form-item
-                  label="客戶網站："
-                  prop="website"
+                  label="會計姓名："
+                  prop="accounting_person_name"
                   label-width="120px"
                 >
                   <el-input
-                    v-model="customerFormData.website"
-                    placeholder="官方網頁"
+                    v-model="customerFormData.accounting_person_name"
+                    placeholder="楊小小"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4"
+                ><el-form-item
+                  label="選擇職務："
+                  prop="accounting_person_title"
+                  label-width="120px"
+                >
+                  <el-select
+                    @change="customerTitleChange"
+                    v-model="customerFormData.accounting_person_title"
+                    placeholder="請選擇職務"
+                    filterable
+                    size="mini"
+                  >
+                    <!-- :lable 這個是顯示出來的  :value 這個要指定到 _id 因為我要存到資料庫，我需要唯一的一個 key (_id)-->
+                    <el-option
+                      v-for="(itemTitle, index) in customerTitleData"
+                      :key="index"
+                      :value="itemTitle._id"
+                      :label="itemTitle.name"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item
+                  label="會計手機："
+                  prop="accounting_person_cell_phone"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.accounting_person_cell_phone"
+                    placeholder="0918-700586"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item
+                  label="會計市話："
+                  prop="accounting_person_telephone"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.accounting_person_telephone"
+                    placeholder="02-89116396#80"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item
+                  label="會計信箱："
+                  prop="accounting_person_email"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.accounting_person_email"
+                    placeholder="waha1206@gmail.com"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item
+                  label="備註："
+                  prop="accounting_person_memo"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.accounting_person_memo"
+                    placeholder="早上不要聯繫"
                     size="mini"
                   ></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
-          </el-header>
+            <!-- 第五列，其一姓名，其一手機，其一市電，其一mail，其一職務，其一備註 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="4">
+                <el-form-item
+                  label="其一姓名："
+                  prop="other_person_name"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.other_person_name"
+                    placeholder="楊小小"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4"
+                ><el-form-item
+                  label="其一職務："
+                  prop="other_person_title"
+                  label-width="120px"
+                >
+                  <el-select
+                    @change="customerTitleChange"
+                    v-model="customerFormData.other_person_title"
+                    placeholder="請選擇職務"
+                    filterable
+                    size="mini"
+                  >
+                    <!-- :lable 這個是顯示出來的  :value 這個要指定到 _id 因為我要存到資料庫，我需要唯一的一個 key (_id)-->
+                    <el-option
+                      v-for="(itemTitle, index) in customerTitleData"
+                      :key="index"
+                      :value="itemTitle._id"
+                      :label="itemTitle.name"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item
+                  label="其一手機："
+                  prop="other_person_cell_phone"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.other_person_cell_phone"
+                    placeholder="0918-700586"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item
+                  label="其一市話："
+                  prop="other_person_telephone"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.other_person_telephone"
+                    placeholder="02-89116396#80"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item
+                  label="其一信箱："
+                  prop="other_person_email"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.other_person_email"
+                    placeholder="waha1206@gmail.com"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item
+                  label="備註："
+                  prop="other_person_memo"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.other_person_memo"
+                    placeholder="收件請下午之類"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- 第六列，發票收件人，發票收件人地址，發票收件人電話，發票收件人手機 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="4">
+                <el-form-item
+                  label="發票收件人："
+                  prop="invoice_name"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.invoice_name"
+                    placeholder="楊小小"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
 
+              <el-col :span="4">
+                <el-form-item
+                  label="手機："
+                  prop="invoice_cell_phone"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.invoice_cell_phone"
+                    placeholder="0918-700586"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item
+                  label="市話："
+                  prop="invoice_telephone"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.invoice_telephone"
+                    placeholder="02-89116396#80"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4" style="position:relative">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  placement="right"
+                  style="z-index:2000"
+                >
+                  <el-badge
+                    value="help"
+                    class="item"
+                    style="margin-top: 0px;margin-right: 0px;position:absolute;top:10px;right:26px"
+                  >
+                  </el-badge>
+                  <div slot="content">
+                    <a
+                      href="http://zipcode.mosky.tw/"
+                      target="_blank"
+                      style="color:#fff"
+                      >點我查詢區碼</a
+                    >
+                  </div>
+                </el-tooltip>
+                <el-form-item
+                  label="區碼："
+                  prop="invoice_postal "
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.invoice_postal"
+                    placeholder="23145"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="地址："
+                  prop="invoice_address"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.invoice_address"
+                    placeholder="新北市新店區寶興路45巷9弄3號3樓 (警衛室可代收)"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- 第七列，發票備註 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="12">
+                <el-form-item
+                  label="發票備註："
+                  prop="invoice_memo"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.invoice_memo"
+                    placeholder="每個月的2月25號前發票要寄送，超過25號的發票就算到隔月"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+							<el-col :span="12">
+                <el-form-item prop="invoice_type " label="發票類型：">
+                  <el-radio-group v-model="customerFormData.invoice_type ">
+                    <el-radio :label="1">二聯發票</el-radio>
+                    <el-radio :label="2">三聯發票</el-radio>
+                    <el-radio :label="3">電子發票</el-radio>
+                    <el-radio :label="4">其他，不要問</el-radio>
+                    <el-radio :label="5">國外地區</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- 第八列，發票備註 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="12">
+                <el-form-item prop="payment_date" label="款項票期：">
+                  <el-radio-group v-model="customerFormData.payment_date">
+                    <el-radio :label="1">30%訂金，出貨前結清</el-radio>
+                    <el-radio :label="2">貨到付款</el-radio>
+                    <el-radio :label="3">月結30天</el-radio>
+                    <el-radio :label="4">月結45天</el-radio>
+                    <el-radio :label="6">其他</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+								<el-tooltip
+                  class="item"
+                  effect="dark"
+                  placement="right"
+                  style="z-index:2000"
+                >
+                  <el-badge
+                    value="help"
+                    class="item"
+                    style="margin-top: 0px;margin-right: 0px;position:absolute;top:-5px;right:500px"
+                  >
+                  </el-badge>
+                  <div slot="content">
+                    <span>匯款資料：</span></br>
+                    <span>匯款戶名：麥歐有限公司</span></br>
+                    <span>匯款銀行：台灣企銀新店分行(代碼050)</span></br>
+                    <span>匯款帳號：02512120000</span>
+                  </div>
+                </el-tooltip>
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  placement="right"
+                  style="z-index:2000"
+                >
+                  <el-badge
+                    value="help"
+                    class="item"
+                    style="margin-top: 0px;margin-right: 0px;position:absolute;top:-5px;right:400px"
+                  >
+                  </el-badge>
+                  <div slot="content">
+                    <span>paypal 的支付帳號為：</span></br>
+                    <span>lp31paula@gmail.com</span>
+                  </div>
+                </el-tooltip>
+                <el-form-item
+                  prop="payment"
+                  label="付款方式："
+                  style="position:relative"
+                >
+                  <el-radio-group v-model="customerFormData.payment">
+                    <el-radio :label="1">現金</el-radio>
+                    <el-radio :label="2">國內轉帳</el-radio>
+                    <el-radio :label="3">paypal</el-radio>
+                    <el-radio :label="4">信用卡支付</el-radio>
+                    <el-radio :label="5">載具支付</el-radio>
+                    <el-radio :label="6">支票</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+            </el-row>
+						<!-- 第九列，樣品收件人，樣品收件人地址，樣品收件人電話，樣品收件人手機 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="4">
+                <el-form-item
+                  label="樣品收件人："
+                  prop="sample_name"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.sample_name"
+                    placeholder="楊小小"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="4">
+                <el-form-item
+                  label="手機："
+                  prop="sample_cell_phone"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.sample_cell_phone"
+                    placeholder="0918-700586"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item
+                  label="市話："
+                  prop="sample_telephone"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.sample_telephone"
+                    placeholder="02-89116396#80"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4" style="position:relative">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  placement="right"
+                  style="z-index:2000"
+                >
+                  <el-badge
+                    value="help"
+                    class="item"
+                    style="margin-top: 0px;margin-right: 0px;position:absolute;top:10px;right:26px"
+                  >
+                  </el-badge>
+                  <div slot="content">
+                    <a
+                      href="http://zipcode.mosky.tw/"
+                      target="_blank"
+                      style="color:#fff"
+                      >點我查詢區碼</a
+                    >
+                  </div>
+                </el-tooltip>
+                <el-form-item
+                  label="區碼："
+                  prop="sample_postal  "
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.sample_postal "
+                    placeholder="23145"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="地址："
+                  prop="invoice_address"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.invoice_address"
+                    placeholder="新北市新店區寶興路45巷9弄3號3樓 (警衛室可代收)"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+						    <!-- 第十列，收件備註 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="12">
+                <el-form-item
+                  label="樣品備註："
+                  prop="sample_memo"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.sample_memo"
+                    placeholder="警衛室有代收，所以配送的時候可以寫在配送單上面"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+							<el-col :span="12">
+								<el-tooltip
+                  class="item"
+                  effect="dark"
+                  placement="right"
+                  style="z-index:2000"
+                >
+                  <el-badge
+                    value="查件"
+                    class="item"
+                    style="margin-top: 0px;margin-right: 0px;position:absolute;top:-5px;right:500px"
+                  >
+                  </el-badge>
+                  <div slot="content">
+                    <a
+                      href="http://www.hiyes.com.tw/?flag=no"
+                      target="_blank"
+                      style="color:#fff"
+                      >點我查詢貨運單號</a
+                    >
+                  </div>
+                </el-tooltip>
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  placement="right"
+                  style="z-index:2000"
+                >
+                  <el-badge
+                    value="查件"
+                    class="item"
+                    style="margin-top: 0px;margin-right: 0px;position:absolute;top:-5px;right:400px"
+                  >
+                  </el-badge>
+                <div slot="content">
+                    <a
+                      href="https://htm.sf-express.com/tw/tc/dynamic_function/waybill/"
+                      target="_blank"
+                      style="color:#fff"
+                      >點我查詢貨運單號</a
+                    >
+                  </div>
+                </el-tooltip>
+                <el-form-item
+                  prop="sample_delivery"
+                  label="樣品配送："
+                  style="position:relative"
+                >
+                  <el-radio-group v-model="customerFormData.sample_delivery">
+                    <el-radio :label="1">郵局</el-radio>
+                    <el-radio :label="2">新航快遞</el-radio>
+                    <el-radio :label="3">順豐快遞</el-radio>
+                    <el-radio :label="4">全家</el-radio>
+                    <el-radio :label="5">7-11</el-radio>
+                    <el-radio :label="6">自取</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+            </el-row>
+						<!-- 第十一列，大貨收件人，大貨收件人地址，大貨收件人電話，大貨收件人手機 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="4">
+                <el-form-item
+                  label="大貨收件人："
+                  prop="goods_name"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.goods_name"
+                    placeholder="楊小小"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="4">
+                <el-form-item
+                  label="手機："
+                  prop="goods_cell_phone"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.goods_cell_phone"
+                    placeholder="0918-700586"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item
+                  label="市話："
+                  prop="goods_telephone"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.goods_telephone"
+                    placeholder="02-89116396#80"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item
+                  label="區碼："
+                  prop="goods_postal"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.goods_postal"
+                    placeholder="23145"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  label="地址："
+                  prop="goods_address"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.goods_address"
+                    placeholder="新北市新店區寶興路45巷9弄3號3樓 (警衛室可代收)"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+						<!-- 第十二列，大貨備註 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="12">
+                <el-form-item
+                  label="大貨備註："
+                  prop="goods_memo"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.goods_memo"
+                    placeholder="警衛室有代收，所以配送的時候可以寫在配送單上面"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+							<el-col :span="12">
+                <el-form-item
+                  prop="goods_delivery"
+                  label="大貨配送："
+                >
+                  <el-radio-group v-model="customerFormData.goods_delivery">
+                    <el-radio :label="1">郵局</el-radio>
+                    <el-radio :label="2">新航快遞</el-radio>
+                    <el-radio :label="3">順豐快遞</el-radio>
+                    <el-radio :label="4">全家</el-radio>
+                    <el-radio :label="5">7-11</el-radio>
+                    <el-radio :label="6">自取</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+            </el-row>
+						<!-- 第十三列，啟用 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+							<el-col :span="4">
+                <el-form-item
+                  prop="activated"
+                  label="啟用："
+                >
+                  <el-radio-group v-model="customerFormData.activated">
+                    <el-radio :label="1">啟用</el-radio>
+                    <el-radio :label="2">禁用</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-header
+					>
           <el-main> </el-main>
 
           <el-footer>
@@ -300,10 +965,9 @@ export default {
   },
   watch: {
     dialog: function(newValue, oldValue) {
-      console.log('dialog', newValue, oldValue)
+      console.log('CustomerDialog.vue - watch - dialog', newValue, oldValue)
       // 當 dialog.option == 'add' 的時候就把表格都清空  另外我準備了一個 editData = {} 準備承接 edit 狀態下的 scope.row 資料
-      if (newValue.option == 'add')
-        this.customerFormData = Object.assign({}, {})
+      this.customerFormData = Object.assign({}, newValue.data)
     }
   },
   created() {
@@ -322,10 +986,10 @@ export default {
             this.dialog.option == 'add'
               ? 'add'
               : `edit/${this.customerFormData._id}`
-          console.log(this.customerFormData)
-          return
+          console.log(url,this.customerFormData)
+
           this.$axios
-            .post(`/api/material/${url}`, this.customerFormData)
+            .post(`/api/customer/${url}`, this.customerFormData)
             .then((res) => {
               // 添加成功
               this.$message({

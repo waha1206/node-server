@@ -266,7 +266,89 @@ router.delete(
       .catch((_err) => res.status(404).json('刪除失敗'))
   }
 )
-
 // ***************************************** title 的 api 結束 *****************************************
+
+// ***************************************** customer 的 api *****************************************
+// $router post api/customer/add
+// @desc   創建訊息接口
+// @access private
+// 使用 hander 要驗證 token
+// 使用 body 要放創建的資料 key:value
+router.post(
+  '/add',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const customerFields = {}
+
+    for (const prop in req.body) {
+      if (prop !== 'imgs') {
+        customerFields[prop] = req.body[prop]
+      } else if (prop === 'imgs') {
+        if (req.body[prop].length > 0) {
+          customerFields[prop] = req.body.imgs.split('|')
+        } else {
+          customerFields[prop] = []
+        }
+      }
+    }
+
+    Customer.findOne({ company: req.body.company }).then((customer) => {
+      if (customer) {
+        return res.status(400).json('此原物料的名稱已經存在')
+      } else {
+        new Customer(customerFields).save().then((customer) => {
+          res.json(customer)
+        })
+      }
+    })
+  }
+)
+
+// $router get api/cistomer/customer
+// @desc   取得所有的 cumtomer 的資料
+// @access private
+// 使用 hander 要驗證 token
+router.get(
+  '/customer',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Customer.find()
+      .sort({ type: 1 })
+      .then((customers) => {
+        if (!customers) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(customers)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
+// $router post api/customer/customer/edit/:id
+// @desc   編輯訊息接口
+// @access private
+// 使用 hander 要驗證 token
+// 有看到 post 就代表他會使用到 body 傳遞 數據 {}
+// 有看到 /:id 就代表要從 params 接收一個 id 進來
+router.post(
+  '/edit/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const customerFields = {}
+    for (const prop in req.body) {
+      customerFields[prop] = req.body[prop]
+    }
+    console.log('/edit/:id', req.body)
+
+    Customer.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $set: customerFields },
+      { new: false }
+    ).then((customer) => res.json(customer))
+  }
+)
+// ***************************************** customer 的 api 結束 *****************************************
 
 module.exports = router

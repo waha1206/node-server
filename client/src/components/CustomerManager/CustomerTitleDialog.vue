@@ -279,7 +279,7 @@ export default {
             .delete(`/api/customer/title/delete/${row._id}`)
             .then((res) => {
               this.$message('刪除成功！')
-              this.$emit('update')
+              this.$emit('update', this.dialog.dataType)
             })
         })
         .catch(() => {
