@@ -124,8 +124,9 @@ export default {
   color: #333;
   text-align: center;
   line-height: 160px;
-  width: 1700px;
+  width: 1750px;
   height: 100%;
+  padding: 5px;
 }
 
 body > .el-container {

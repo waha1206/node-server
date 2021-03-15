@@ -1,14 +1,13 @@
 <template>
   <div class="quotatuin-level-four">
     <!-- <el-row v-if="categoryData" style="background-color:black"> -->
-    <el-row v-if="categoryData" :gutter="5">
+    <el-row v-if="categoryData">
       <el-col :span="6">
         <!-- 如果要支援輪播視頻的話 https://blog.csdn.net/zongmaomx/article/details/108749682 -->
         <!-- indicator-position="outside" -->
         <el-carousel
           class="category-carousel"
           height="360px"
-          width="360px"
           :autoplay="true"
           v-if="categoryData[0]"
         >
@@ -600,8 +599,6 @@ body > .el-container {
   height: 80px;
   margin-bottom: 2px;
   text-align: left;
-  margin-left: 10px;
-  margin-right: 10px;
 }
 .other-wrap {
   float: left;

@@ -32,17 +32,17 @@ router.post(
 
     const level = req.body.level
     const materialGroupFields = {}
-    let materialGroupLevel = {}
+    let MaterialGroupLevel = {}
 
     switch (level) {
       case 1:
-        materialGroupLevel = MaterialGroupOne
+        MaterialGroupLevel = MaterialGroupOne
         break
       case 2:
-        materialGroupLevel = MaterialGroupTwo
+        MaterialGroupLevel = MaterialGroupTwo
         break
       case 3:
-        materialGroupLevel = MaterialGroupMember
+        MaterialGroupLevel = MaterialGroupMember
         break
       default:
         return res.status(400).json('提交資訊出現異常')
@@ -91,24 +91,22 @@ router.post(
         )
       }
     }
-    materialGroupLevel
-      .findOne({
-        $or: query
-      })
-      .then((materialGroup) => {
-        if (materialGroup) {
-          return res.status(400).json('此商品類型(英文)已經存在')
-        } else {
-          new materialGroupLevel(materialGroupFields)
-            .save()
-            .then((materialGroup) => {
-              res.json(materialGroup)
-            })
-            .catch((err) => {
-              res.status(404).json(err)
-            })
-        }
-      })
+    MaterialGroupLevel.findOne({
+      $or: query
+    }).then((materialGroup) => {
+      if (materialGroup) {
+        return res.status(400).json('此商品類型(英文)已經存在')
+      } else {
+        new MaterialGroupLevel(materialGroupFields)
+          .save()
+          .then((materialGroup) => {
+            res.json(materialGroup)
+          })
+          .catch((err) => {
+            res.status(404).json(err)
+          })
+      }
+    })
   }
 )
 
@@ -296,17 +294,17 @@ router.post(
   (req, res) => {
     const level = req.body.level
     const materialGroupFields = {}
-    let materialGroupLevel = {}
+    let MaterialGroupLevel = {}
 
     switch (level) {
       case 1:
-        materialGroupLevel = MaterialGroupOne
+        MaterialGroupLevel = MaterialGroupOne
         break
       case 2:
-        materialGroupLevel = MaterialGroupTwo
+        MaterialGroupLevel = MaterialGroupTwo
         break
       case 3:
-        materialGroupLevel = MaterialGroupMember
+        MaterialGroupLevel = MaterialGroupMember
         break
       default:
         return res.status(400).json('提交資訊出現異常')
@@ -367,9 +365,11 @@ router.post(
     const update = { $set: materialGroupFields }
     const action = { new: false }
 
-    materialGroupLevel
-      .findByIdAndUpdate(filter, update, action)
-      .then((materialGroupOne) => res.json(materialGroupOne))
+    MaterialGroupLevel.findByIdAndUpdate(
+      filter,
+      update,
+      action
+    ).then((materialGroupOne) => res.json(materialGroupOne))
   }
 )
 
@@ -402,7 +402,7 @@ router.delete(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     const query = { _id: req.params.id }
-    console.log(req.params)
+
     MaterialGroupTwo.findOneAndRemove(query)
       .then((materialGroupOne) => res.json(materialGroupOne))
       .catch((_err) => res.status(404).json('刪除失敗'))

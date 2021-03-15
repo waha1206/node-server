@@ -542,7 +542,7 @@
               </el-col>
             </el-row>
             <!-- 第八列，款項票期與付款方式 -->
-						<el-row :gutter="20" type="flex" class="row-bg">
+            <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="12">
                 <el-form-item prop="payment_date" label="款項票期：">
                   <el-radio-group v-model="customerFormData.payment_date">
@@ -555,53 +555,52 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item
-                  prop="payment"
-                  label="付款方式："
-                >
+                <el-form-item prop="payment" label="付款方式：">
                   <el-radio-group v-model="customerFormData.payment">
                     <el-radio :label="1">現金</el-radio>
-                    <el-radio :label="2" style="position:relative">國內轉帳
-											<el-tooltip
-                  class="item"
-                  effect="dark"
-                  placement="right"
-                  style="z-index:2000"
-                >
-                  <el-badge
-                    value="help"
-                    class="item"
-                    style="margin-top: 0px;margin-right: 0px;position:absolute;top:-18px;right:-20px"
-                  >
-                  </el-badge>
-                  <div slot="content">
-                    <span>匯款資料：</span></br>
-                    <span>匯款戶名：麥歐有限公司</span></br>
-                    <span>匯款銀行：台灣企銀新店分行(代碼050)</span></br>
-                    <span>匯款帳號：02512120000</span>
-                  </div>
-                </el-tooltip>
-										</el-radio>
-                    <el-radio :label="3" style="position:relative">paypal
+                    <el-radio :label="2" style="position:relative"
+                      >國內轉帳
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        placement="right"
+                        style="z-index:2000"
+                      >
+                        <el-badge
+                          value="help"
+                          class="item"
+                          style="margin-top: 0px;margin-right: 0px;position:absolute;top:-18px;right:-20px"
+                        >
+                        </el-badge>
+                        <div slot="content">
+                          <span>匯款資料：</span><br />
+                          <span>匯款戶名：麥歐有限公司</span><br />
+                          <span>匯款銀行：台灣企銀新店分行(代碼050)</span><br />
+                          <span>匯款帳號：02512120000</span>
+                        </div>
+                      </el-tooltip>
+                    </el-radio>
+                    <el-radio :label="3" style="position:relative"
+                      >paypal
 
-											<el-tooltip
-                  class="item"
-                  effect="dark"
-                  placement="right"
-                  style="z-index:2000"
-                >
-                  <el-badge
-                    value="help"
-                    class="item"
-                    style="margin-top: 0px;margin-right: 0px;position:absolute;top:-18px;right:-20px"
-                  >
-                  </el-badge>
-                  <div slot="content">
-                    <span>paypal 的支付帳號為：</span></br>
-                    <span>paula@hbw.com.tw</span>
-                  </div>
-                </el-tooltip>
-										</el-radio>
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        placement="right"
+                        style="z-index:2000"
+                      >
+                        <el-badge
+                          value="help"
+                          class="item"
+                          style="margin-top: 0px;margin-right: 0px;position:absolute;top:-18px;right:-20px"
+                        >
+                        </el-badge>
+                        <div slot="content">
+                          <span>paypal 的支付帳號為：</span><br />
+                          <span>paula@hbw.com.tw</span>
+                        </div>
+                      </el-tooltip>
+                    </el-radio>
                     <el-radio :label="4">信用卡支付</el-radio>
                     <el-radio :label="5">載具支付</el-radio>
                     <el-radio :label="6">支票</el-radio>
@@ -899,7 +898,7 @@
                   ></my-currency-input>
                 </el-form-item>
               </el-col>
-							<el-col :span="12">
+              <el-col :span="12">
                 <el-form-item prop="level" label="客戶等級：">
                   <el-radio-group v-model="customerFormData.level">
                     <el-radio :label="1">VIP</el-radio>

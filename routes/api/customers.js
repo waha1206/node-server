@@ -349,6 +349,33 @@ router.post(
     ).then((customer) => res.json(customer))
   }
 )
+
+// $router get api/cistomer/customer-name-and-id
+// @desc   取得所有的 cumtomer 的資料
+// @access private
+// 使用 hander 要驗證 token
+router.get(
+  '/name-and-id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const query = {}
+    const options = {
+      _id: 1,
+      company: 1
+    }
+    Customer.find(query, options)
+      // .sort({ type: 1 })
+      .then((customers) => {
+        if (!customers) {
+          return res.status(400).json('沒有任何客戶資料')
+        }
+        res.json(customers)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
 // ***************************************** customer 的 api 結束 *****************************************
 
 module.exports = router
