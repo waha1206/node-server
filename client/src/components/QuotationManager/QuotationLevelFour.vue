@@ -284,12 +284,19 @@
             @click="handleSelectMaterial(item, index)"
             style="position:relative;border-radius:8px"
           >
-            <el-image
+            <!-- <el-image
               :key="index"
               :src="selectIcon"
               style="width:80px;height:80px;float:left"
             >
-            </el-image>
+            </el-image> -->
+            <!-- style="width:80px;height:80px;line-height:80px;font-size:26px" -->
+            <div style="float:left;width:80px;position: relative;">
+              <i
+                class="el-icon-loading"
+                style="font-size:26px;position:absolute;top:22px;left:30px"
+              ></i>
+            </div>
             <p>點我選擇配件</p>
             <p style="font-weight:bold; color:blue">{{ item.web_side_name }}</p>
             <p>此選項共有：{{ item.choice_level_three_material.length }} 項</p>
