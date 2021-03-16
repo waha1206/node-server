@@ -562,10 +562,12 @@ export default {
     handleCheckField(option) {
       // customerValue proofingOptions checkFlag: true,  orderValue
       // this.selectMaterial 選到的配件放這邊    this.materialGroup  要選擇的資料有這幾個
+      // !this.selectMaterial.includes(undefined) 確保 array 裡面沒有空的值 例如 array['1','2', '','4'] 裡面會有空值
       if (option === 'orderQuantity') this.getProofingOptions(this.orderValue)
       this.customerValue &&
       this.proofingValue != 0 &&
       this.orderValue > 0 &&
+      !this.selectMaterial.includes(undefined) &&
       this.selectMaterial.length === this.materialGroup.length
         ? (this.checkFlag = false)
         : (this.checkFlag = true)
