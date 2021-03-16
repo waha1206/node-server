@@ -209,7 +209,7 @@ export default {
     },
     updateMaterial(material) {
       // 選擇完物件後 $emit 到父元件
-      console.log(material, this.dialog)
+      // console.log(material, this.dialog)
       this.$emit('update', material, this.dialog.index)
     },
     // 時間轉換

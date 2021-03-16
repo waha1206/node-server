@@ -16,11 +16,240 @@
             v-for="(item, index) in categoryData[0].imgs"
             :key="index"
           >
-            <img :src="item" alt="" />
+            <img style="width:360px; height:360px" :src="item" alt="" />
           </el-carousel-item>
         </el-carousel>
       </el-col>
+      <el-col :span="6">
+        <!-- 父容器，只決定高度 -->
+        <!-- ************************************** 最右側的 ICON **************************************-->
+        <div class="other-wrap">
+          <!-- 左邊的 icon -->
+          <div class="other-wrap-left">
+            <el-image
+              class="other-wrap-left-image"
+              :src="numberImage"
+              @click="showImage($event, '請選擇訂購數量', numberImage)"
+            >
+            </el-image>
+          </div>
+          <!-- 右邊的容器，最低數量 -->
+          <div
+            class="other-wrap-right"
+            v-if="orderOptions"
+            style="position:relative;border-radius:8px"
+          >
+            <!-- style="position:relative;border-radius:8px" -->
+            <!-- 右上角的 help 子絕父相 -->
+            <el-tooltip class="item" effect="dark" placement="top">
+              <el-badge
+                value="最低訂購量"
+                class="item"
+                style="margin-top: 0px;margin-right: 0px;position:absolute;top:-32px;right:0px"
+              >
+              </el-badge>
+              <div slot="content">
+                <span
+                  >此商品最低訂購數量為：{{
+                    categoryData[0].mini_order + ' ' + '個'
+                  }}</span
+                ><br />
+                <span>如果沒有您要的規格請與業務聯繫</span><br />
+                <span>LINE：leopharmanex</span><br />
+                <span>手機：0918-700586 找 Leo</span><br />
+              </div>
+            </el-tooltip>
 
+            <div style="float:left;width:100%;">
+              <i
+                v-if="orderValue"
+                class="el-icon-circle-check"
+                style="float:left;width:60px;height:80px;line-height:80px;font-size:26px"
+              ></i>
+              <i
+                v-else
+                class="el-icon-loading"
+                style="float:left;width:60px;height:80px;line-height:80px;font-size:26px"
+              ></i>
+              <el-select
+                style="float:left;height:80px;line-height:80px;overflow:hidden"
+                v-model="orderValue"
+                clearable
+                placeholder="請選擇訂購數量"
+                size="large"
+                @change="handleCheckField"
+              >
+                <el-option
+                  v-for="item in orderOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </div>
+          </div>
+        </div>
+        <!-- 第二行 請選擇打樣幾款-->
+        <div class="other-wrap">
+          <div class="other-wrap-left">
+            <!-- 左側的 icon -->
+            <el-image
+              class="other-wrap-left-image"
+              :src="proofingImage"
+              @click="showImage($event, '請選擇打樣幾款', proofingImage)"
+            >
+            </el-image>
+          </div>
+          <!-- 右邊的容器，最低數量，選擇打樣款式 -->
+          <div
+            class="other-wrap-right"
+            v-if="proofingOptions"
+            style="position:relative;border-radius:8px"
+          >
+            <!-- 右上角的 help 子絕父相 -->
+            <el-tooltip class="item" effect="dark" placement="top">
+              <div slot="content">
+                <span
+                  >此商品最低可拆圖數為：{{
+                    categoryData[0].split_quantity + ' ' + '個'
+                  }}</span
+                ><br />
+                <span
+                  >{{ '訂購' + ' ' + categoryData[0].mini_order + ' ' + '個，'
+                  }}{{
+                    '可拆圖數為 ' +
+                      categoryData[0].mini_order /
+                        categoryData[0].split_quantity +
+                      ' ' +
+                      '圖，以此類推'
+                  }}</span
+                >
+              </div>
+              <el-badge
+                value="最多可拆圖數"
+                class="item"
+                style="margin-top: 0px;margin-right: 0px;position:absolute;top:-32px;right:0px"
+              >
+              </el-badge>
+            </el-tooltip>
+            <div style="float:left;width:100%">
+              <i
+                v-if="proofingValue"
+                class="el-icon-circle-check"
+                style="float:left;width:60px;height:80px;line-height:80px;font-size:26px"
+              ></i>
+              <i
+                v-else
+                class="el-icon-loading"
+                style="float:left;width:60px;height:80px;line-height:80px;font-size:26px"
+              ></i>
+              <el-select
+                style="float:left;height:80px;line-height:80px;overflow:hidden"
+                v-model="proofingValue"
+                clearable
+                placeholder="請選擇打樣幾款"
+                size="large"
+                @change="handleCheckField"
+              >
+                <el-option
+                  v-for="item in proofingOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </div>
+          </div>
+        </div>
+        <!-- 請輸入客戶名稱 -->
+        <div class="other-wrap">
+          <div class="other-wrap-left">
+            <!-- 左側的 icon -->
+            <el-image
+              class="other-wrap-left-image"
+              :src="customerImage"
+              @click="showImage($event, '請選擇客戶', customerImage)"
+            >
+            </el-image>
+          </div>
+          <!-- 右邊的容器，最低數量，選擇打樣款式 -->
+          <div
+            class="other-wrap-right"
+            v-if="proofingOptions"
+            style="position:relative;border-radius:8px"
+          >
+            <div style="float:left;width:100%">
+              <i
+                v-if="customerValue"
+                class="el-icon-circle-check"
+                style="float:left;width:60px;height:80px;line-height:80px;font-size:26px"
+              ></i>
+              <i
+                v-else
+                class="el-icon-loading"
+                style="float:left;width:60px;height:80px;line-height:80px;font-size:26px"
+              ></i>
+              <el-select
+                style="float:left;height:80px;line-height:80px;overflow:hidden"
+                v-model="customerValue"
+                clearable
+                filterable
+                placeholder="請輸入客戶名稱"
+                size="large"
+                @change="handleCheckField"
+              >
+                <el-option
+                  v-for="item in customerOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </div>
+          </div>
+        </div>
+        <div class="other-wrap">
+          <div class="other-wrap-left">
+            <!-- 進行報價單檢查 -->
+            <!-- 左側的 icon -->
+            <el-image
+              class="other-wrap-left-image"
+              :src="checkImage"
+              @click="showImage($event, '檢查報價單是否有錯誤', checkImage)"
+            >
+            </el-image>
+          </div>
+          <!-- 右邊的容器，進行報價單檢查的按鈕 -->
+          <div
+            class="other-wrap-right"
+            v-if="proofingOptions"
+            style="position:relative;border-radius:8px"
+          >
+            <div style="float:left;width:100%">
+              <i
+                v-if="!checkFlag"
+                class="el-icon-circle-check"
+                style="float:left;width:60px;height:80px;line-height:80px;font-size:26px"
+              ></i>
+              <i
+                v-else
+                class="el-icon-loading"
+                style="float:left;width:60px;height:80px;line-height:80px;font-size:26px"
+              ></i>
+              <el-button
+                type="primary"
+                class="check-btn"
+                :disabled="checkFlag"
+                @click="handleCheckQuotation"
+                >進行報價單檢查</el-button
+              >
+            </div>
+          </div>
+        </div>
+      </el-col>
       <!-- 原物料的選擇 -->
       <el-col :span="12">
         <div class="material-group-wrap" v-for="(item, index) in materialGroup">
@@ -97,194 +326,6 @@
       <!-- 原物料選擇結束 -->
 
       <!-- 最右側的選項，包含了 數量等等 -->
-      <el-col :span="6">
-        <!-- 父容器，只決定高度 -->
-        <!-- ************************************** 最右側的 ICON **************************************-->
-        <div class="other-wrap">
-          <!-- 左邊的 icon -->
-          <div class="other-wrap-left">
-            <el-image
-              class="other-wrap-left-image"
-              :src="numberImage"
-              @click="showImage($event, '請選擇訂購數量', numberImage)"
-            >
-            </el-image>
-          </div>
-          <!-- 右邊的容器，最低數量 -->
-          <div
-            class="other-wrap-right"
-            v-if="options"
-            style="position:relative;border-radius:8px"
-          >
-            <!-- style="position:relative;border-radius:8px" -->
-            <!-- 右上角的 help 子絕父相 -->
-            <el-tooltip class="item" effect="dark" placement="top">
-              <el-badge
-                value="最低訂購量"
-                class="item"
-                style="margin-top: 0px;margin-right: 0px;position:absolute;top:-32px;right:0px"
-              >
-              </el-badge>
-              <div slot="content">
-                <span
-                  >此商品最低訂購數量為：{{
-                    categoryData[0].mini_order + ' ' + '個'
-                  }}</span
-                ><br />
-                <span>如果沒有您要的規格請與業務聯繫</span><br />
-                <span>LINE：leopharmanex</span><br />
-                <span>手機：0918-700586 找 Leo</span><br />
-              </div>
-            </el-tooltip>
-
-            <div style="float:left;width:100%;">
-              <i
-                v-if="value"
-                class="el-icon-circle-check"
-                style="float:left;width:60px;height:80px;line-height:80px;font-size:26px"
-              ></i>
-              <i
-                v-else
-                class="el-icon-loading"
-                style="float:left;width:60px;height:80px;line-height:80px;font-size:26px"
-              ></i>
-              <el-select
-                style="float:left;height:80px;line-height:80px;overflow:hidden"
-                v-model="value"
-                clearable
-                placeholder="請選擇訂購數量"
-                size="large"
-              >
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
-            </div>
-          </div>
-        </div>
-        <!-- 第二行 -->
-        <div class="other-wrap">
-          <div class="other-wrap-left">
-            <!-- 左側的 icon -->
-            <el-image
-              class="other-wrap-left-image"
-              :src="proofingImage"
-              @click="showImage($event, '請選擇打樣幾款', proofingImage)"
-            >
-            </el-image>
-          </div>
-          <!-- 右邊的容器，最低數量，選擇打樣款式 -->
-          <div
-            class="other-wrap-right"
-            v-if="proofingOptions"
-            style="position:relative;border-radius:8px"
-          >
-            <!-- 右上角的 help 子絕父相 -->
-            <el-tooltip class="item" effect="dark" placement="top">
-              <div slot="content">
-                <span
-                  >此商品最低可拆圖數為：{{
-                    categoryData[0].split_quantity + ' ' + '個'
-                  }}</span
-                ><br />
-                <span
-                  >{{ '訂購' + ' ' + categoryData[0].mini_order + ' ' + '個，'
-                  }}{{
-                    '可拆圖數為 ' +
-                      categoryData[0].mini_order /
-                        categoryData[0].split_quantity +
-                      ' ' +
-                      '圖，以此類推'
-                  }}</span
-                >
-              </div>
-              <el-badge
-                value="最多可拆圖數"
-                class="item"
-                style="margin-top: 0px;margin-right: 0px;position:absolute;top:-32px;right:0px"
-              >
-              </el-badge>
-            </el-tooltip>
-            <div style="float:left;width:100%">
-              <i
-                v-if="proofingValue"
-                class="el-icon-circle-check"
-                style="float:left;width:60px;height:80px;line-height:80px;font-size:26px"
-              ></i>
-              <i
-                v-else
-                class="el-icon-loading"
-                style="float:left;width:60px;height:80px;line-height:80px;font-size:26px"
-              ></i>
-              <el-select
-                style="float:left;height:80px;line-height:80px;overflow:hidden"
-                v-model="proofingValue"
-                clearable
-                placeholder="請選擇打樣幾款"
-                size="large"
-              >
-                <el-option
-                  v-for="item in proofingOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
-            </div>
-          </div>
-        </div>
-        <div class="other-wrap">
-          <div class="other-wrap-left">
-            <!-- 左側的 icon -->
-            <el-image
-              class="other-wrap-left-image"
-              :src="customerImage"
-              @click="showImage($event, '請選擇客戶', customerImage)"
-            >
-            </el-image>
-          </div>
-          <!-- 右邊的容器，最低數量，選擇打樣款式 -->
-          <div
-            class="other-wrap-right"
-            v-if="proofingOptions"
-            style="position:relative;border-radius:8px"
-          >
-            <div style="float:left;width:100%">
-              <i
-                v-if="customerValue"
-                class="el-icon-circle-check"
-                style="float:left;width:60px;height:80px;line-height:80px;font-size:26px"
-              ></i>
-              <i
-                v-else
-                class="el-icon-loading"
-                style="float:left;width:60px;height:80px;line-height:80px;font-size:26px"
-              ></i>
-              <el-select
-                style="float:left;height:80px;line-height:80px;overflow:hidden"
-                v-model="customerValue"
-                clearable
-                filterable
-                placeholder="請輸入客戶名稱"
-                size="large"
-              >
-                <el-option
-                  v-for="item in customerOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
-            </div>
-          </div>
-        </div>
-      </el-col>
     </el-row>
 
     <!-- ************************************** 這邊是共用的圖片 ************************************** -->
@@ -324,15 +365,17 @@ export default {
   name: 'quotation-level-four',
   data() {
     return {
+      // 該選擇的是否都選擇完畢，選完後就可以開始進行檢查了
+      checkFlag: true,
       // 取得 customer name and id
       customerNameAndId: [],
       // 選擇客戶的 company 然後把 _id 放到 customerValue 裡面
       customerOptions: [],
       customerValue: '',
-      // 訂購的數量 options 跟選擇多少數量的 value (放結果)
-      options: [],
-      value: '',
-      // 打樣的 options 跟 打樣幾款的 value (放結果)
+      // 訂購的數量 orderOptions 跟選擇多少數量的 orderValue (放結果)
+      orderOptions: [],
+      orderValue: '',
+      // 打樣的 orderOptions 跟 打樣幾款的 value (放結果)
       proofingOptions: [],
       proofingValue: '',
       // 用來更新 element 重新渲染
@@ -359,6 +402,7 @@ export default {
       src: '../../../images/點擊選擇規格.jpg',
       numberImage: '../../../images/number.jpg',
       proofingImage: '../../../images/proofing.jpg',
+      checkImage: '../../../images/check.png',
       customerImage: '../../../images/customer.png'
 
       // currentDate: new Date(),
@@ -379,12 +423,12 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     // console.log('元件內的 beforeRouterEnter，不能使用this,因為此時尚未創建成功')
-    console.log('Quotation 第四層 beforeRouteEnter')
+    // console.log('Quotation 第四層 beforeRouteEnter')
     next()
   },
   mounted() {
     window.scrollTo(0, 0)
-    console.log(this.$route.params)
+    // console.log(this.$route.params)
     this.getCategoryData(this.$route.params.id)
     // 這邊要開始抓 這個 item 裡面需要的所有 原物料組 跟 原物料組裡面的原料
   },
@@ -399,7 +443,7 @@ export default {
   },
   watch: {
     num() {
-      console.log(this.selectMaterial)
+      // console.log(this.selectMaterial)
       return this.num
     }
   },
@@ -412,10 +456,10 @@ export default {
         .then((res) => {
           // 把資料庫的數據都先讀出來
           this.categoryData = [...res.data]
-          // 把訂購數量塞到 options 裡面 value 跟 table 的數值會是一樣的
+          // 把訂購數量塞到 orderOptions 裡面 value 跟 table 的數值會是一樣的
           this.categoryData[0].quantity_profit.forEach((item) => {
             let obj = { value: item.quantity, label: item.quantity + '個' }
-            this.options.push(obj)
+            this.orderOptions.push(obj)
           })
           this.getMaterialGroupData(this.categoryData[0].material_group)
         })
@@ -471,9 +515,12 @@ export default {
     updateMaterial(material, index) {
       // 當子元件更新後，來這邊把選擇的原料放進來，參數應該會有 index 第幾個原料組，跟選擇的原料 _id
       this.quotationMaterialDialog.show = false
-      console.log('emit and index', material, index)
+      // console.log('emit and index', material, index)
       this.selectMaterial[index] = material
+      // 很重要的一行，讓元件重新渲染
       this.num += 1
+      // 檢查是不是所有欄位都有填寫資料了
+      this.handleCheckField()
     },
     reportError() {
       this.quotationMaterialDialog.show = false
@@ -489,6 +536,7 @@ export default {
         let obj = { value: i, label: i + '款' }
         if (i == 0) {
           obj.label = '不需要打樣直接生產'
+          obj.value = -1
         }
         this.proofingOptions.push(obj)
       }
@@ -499,6 +547,20 @@ export default {
       obj.mini_order = '0'
       obj.split_quantity = '0'
       this.categoryData.push(obj)
+    },
+    // 表單是否都有填寫資料了呢？
+    handleCheckField() {
+      // customerValue proofingOptions checkFlag: true,  orderValue
+      // this.selectMaterial 選到的配件放這邊    this.materialGroup  要選擇的資料有這幾個
+      this.customerValue &&
+      this.proofingValue != 0 &&
+      this.orderValue > 0 &&
+      this.selectMaterial.length === this.materialGroup.length
+        ? (this.checkFlag = false)
+        : (this.checkFlag = true)
+    },
+    handleCheckQuotation() {
+      // 檢查報價單，重頭戲來了
     }
   }
 }
@@ -608,6 +670,14 @@ body > .el-container {
   height: 80px;
   margin-bottom: 2px;
   text-align: left;
+}
+
+.check-btn {
+  font-size: 18px;
+  position: absolute;
+  top: 16px;
+  left: 60px;
+  width: 216px;
 }
 
 .material-wrap-left {
