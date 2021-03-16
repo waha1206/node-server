@@ -77,11 +77,11 @@
                 clearable
                 placeholder="請選擇訂購數量"
                 size="large"
-                @change="handleCheckField"
+                @change="handleCheckField('orderQuantity')"
               >
                 <el-option
-                  v-for="item in orderOptions"
-                  :key="item.value"
+                  v-for="(item, index) in orderOptions"
+                  :key="index + 1"
                   :label="item.label"
                   :value="item.value"
                 >
@@ -148,13 +148,13 @@
                 style="float:left;height:80px;line-height:80px;overflow:hidden"
                 v-model="proofingValue"
                 clearable
-                placeholder="請選擇打樣幾款"
+                placeholder="請先選擇訂購數量"
                 size="large"
-                @change="handleCheckField"
+                @change="handleCheckField('proofingQuantity')"
               >
                 <el-option
-                  v-for="item in proofingOptions"
-                  :key="item.value"
+                  v-for="(item, index) in proofingOptions"
+                  :key="index"
                   :label="item.label"
                   :value="item.value"
                 >
@@ -198,11 +198,11 @@
                 filterable
                 placeholder="請輸入客戶名稱"
                 size="large"
-                @change="handleCheckField"
+                @change="handleCheckField('customerCompany')"
               >
                 <el-option
-                  v-for="item in customerOptions"
-                  :key="item.value"
+                  v-for="(item, index) in customerOptions"
+                  :key="item.value + index"
                   :label="item.label"
                   :value="item.value"
                 >
@@ -417,7 +417,6 @@ export default {
   created() {
     // this.getCategoriesLevelOneData()
     // this.getCategoriesLevelThreeData()
-    this.getProofingOptions()
     this.getCustomerNameAndId()
     this.initData()
   },
@@ -531,8 +530,12 @@ export default {
       this.dialogVisible = true
       e.stopPropagation()
     },
-    getProofingOptions() {
-      for (let i = 0; i < 21; i++) {
+    // 根據要訂購的數量去計算可以打樣的款式有幾款
+    getProofingOptions(orderValue) {
+      this.proofingOptions.length = 0
+      this.proofingValue = ''
+      let proofingQuantity = orderValue / this.categoryData[0].split_quantity
+      for (let i = 0; i <= proofingQuantity; i++) {
         let obj = { value: i, label: i + '款' }
         if (i == 0) {
           obj.label = '不需要打樣直接生產'
@@ -549,9 +552,10 @@ export default {
       this.categoryData.push(obj)
     },
     // 表單是否都有填寫資料了呢？
-    handleCheckField() {
+    handleCheckField(option) {
       // customerValue proofingOptions checkFlag: true,  orderValue
       // this.selectMaterial 選到的配件放這邊    this.materialGroup  要選擇的資料有這幾個
+      if (option === 'orderQuantity') this.getProofingOptions(this.orderValue)
       this.customerValue &&
       this.proofingValue != 0 &&
       this.orderValue > 0 &&
