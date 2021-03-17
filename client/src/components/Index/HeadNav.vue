@@ -54,12 +54,15 @@ export default {
       this.$router.push('/infoshow')
     },
     logout() {
+      // 設置 vuex store 把 登入資料刪除，這邊也會順便把權限刪除清空
+      this.$store.dispatch('clearCurrentState')
       // 清除 token
       localStorage.removeItem('eleToken')
-      // 設置 vuex store 把 登入資料刪除
-      this.$store.dispatch('clearCurrentState')
+
       // 跳轉到登入頁面
       this.$router.push('/login')
+
+      window.location.reload()
     }
   }
 }

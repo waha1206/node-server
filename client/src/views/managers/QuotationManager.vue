@@ -2,11 +2,9 @@
   <div class="quotatuin-manager">
     <el-container>
       <el-header>
+        <el-button type="primary" size="small" @click="">報價單查詢</el-button>
         <el-button type="primary" size="small" @click=""
-          >新增第一層分類</el-button
-        >
-        <el-button type="primary" size="small" @click=""
-          >新增第二層分類</el-button
+          >查詢單一客戶</el-button
         >
         <el-button type="primary" size="small" @click=""
           >新增原物料容器</el-button

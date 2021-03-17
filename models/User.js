@@ -2,6 +2,19 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 // Creat Schema
+const UserTitleSchema = new Schema({
+  create_date: {
+    type: Date,
+    default: Date.now
+  },
+  type: {
+    type: String
+  },
+  name: {
+    type: String
+  }
+})
+
 const UserSchema = new Schema({
   name: {
     type: String,
@@ -160,8 +173,14 @@ const UserSchema = new Schema({
   date: {
     type: Date,
     default: Date.now
+  },
+  title: {
+    type: String
   }
 })
 
 // eslint-disable-next-line no-undef
-module.exports = User = mongoose.model('users', UserSchema)
+module.exports = {
+  User: mongoose.model('users', UserSchema),
+  UserTitle: mongoose.model('user_titles', UserTitleSchema)
+}

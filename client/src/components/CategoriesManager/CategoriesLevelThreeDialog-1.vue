@@ -458,6 +458,7 @@
               <el-col :span="4">
                 <el-form-item prop="outside_layout_width" label="外表布寬：">
                   <el-input
+                    style="width:60px"
                     placeholder="寬度"
                     size="mini"
                     type="type"
@@ -468,6 +469,7 @@
               <el-col :span="4">
                 <el-form-item prop="outside_layout_height" label="外表布高：">
                   <el-input
+                    style="width:60px"
                     placeholder="高度"
                     size="mini"
                     type="type"
@@ -489,6 +491,7 @@
               <el-col :span="4">
                 <el-form-item prop="inside_layout_width" label="內裡布寬：">
                   <el-input
+                    style="width:60px"
                     placeholder="寬度"
                     size="mini"
                     type="type"
@@ -499,6 +502,7 @@
               <el-col :span="4">
                 <el-form-item prop="inside_layout_height" label="內裡布高：">
                   <el-input
+                    style="width:60px"
                     placeholder="高度"
                     size="mini"
                     type="type"

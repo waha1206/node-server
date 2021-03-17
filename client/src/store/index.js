@@ -42,6 +42,7 @@ const mutations = {
 // 異部的提交要放這邊
 // Action 提交的是 mutation，而不是直接改變狀態
 // Action 可以包含任何異步動作
+// Action 透過 store.dispach 方法觸發
 const actions = {
   setIsAutnenticated: ({ commit }, isAutnenticated) => {
     commit(types.SET_IS_AUTNENTIATED, isAutnenticated)
@@ -52,6 +53,8 @@ const actions = {
   clearCurrentState: ({ commit }) => {
     commit(types.SET_IS_AUTNENTIATED, false)
     commit(types.SET_USER, null)
+    // 把權限也清除掉
+    commit(types.UPDATE_PERMISSIOM_LIST, null)
   },
   getPermissionList: async ({ state, commit }) => {
     // 先防止重複提取

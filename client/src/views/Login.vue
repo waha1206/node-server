@@ -111,8 +111,8 @@ export default {
             // token 存儲到 vuex 中
             this.$store.dispatch('setIsAutnenticated', !this.isEmpty(decoded))
             this.$store.dispatch('setUser', decoded)
-
             this.$router.push('/index')
+            window.location.reload()
           })
         } else {
           console.log('error submit!!')

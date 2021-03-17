@@ -9,7 +9,7 @@ const keys = require('../../config/keys')
 const passport = require('passport')
 
 // 引入 User 才可以做查詢
-const User = require('../../models/User')
+const { User, UserTitle } = require('../../models/User')
 
 // $router GET api/users/test
 // @desc   返回的請求的 json 數據
@@ -18,6 +18,7 @@ router.get('/test', (req, res) => {
   res.json('msg:login works')
 })
 
+// ***************************************** user 的 api 開始 *****************************************
 // $router POST api/users/get-user-name
 // @desc   返回的請求的 json 數據
 // @access public
@@ -285,6 +286,121 @@ router.post(
       })
   }
 )
+
+// $router delete api/user//delete/:id
+// @desc   刪除訊息接口
+// @access private
+// 選擇 delete
+// 使用 hander 要驗證 token
+// body 要放編輯的資料 key:value
+router.delete(
+  '/delete/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    User.findOneAndRemove({ _id: req.params.id })
+      .then((user) => res.json(user))
+      .catch((_err) => res.status(404).json('刪除失敗'))
+  }
+)
+// ***************************************** user 的 api 結束 *****************************************
+
+// ***************************************** user title 的 api 開始 *****************************************
+// $router post api/user/title/add
+// @desc   創建訊息接口
+// @access private
+// 使用 hander 要驗證 token
+// 使用 body 要放創建的資料 type name
+router.post(
+  '/title/add',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const userTitleFields = {}
+
+    // 傳送過來的資料不見得會跟 schema 會一樣
+    if (req.body.type) userTitleFields.type = req.body.type
+    if (req.body.name) userTitleFields.name = req.body.name
+
+    // console.log(categoriesFields)
+    UserTitle.findOne({ name: req.body.name }).then((userTitle) => {
+      if (userTitle) {
+        return res.status(400).json('此客戶分類已經存在')
+      } else {
+        new UserTitle(userTitleFields)
+          .save()
+          .then((userTitle) => {
+            res.json(userTitle)
+          })
+          .catch((err) => {
+            res.status(404).json(err)
+          })
+      }
+    })
+  }
+)
+
+// $router get api/user/title
+// @desc   取得所有的 cumtomerClass 的資料
+// @access private
+// 不需要驗證 passport
+router.get(
+  '/title',
+  // passport.authenticate('jwt', { session: false }),  不需要驗證
+  (req, res) => {
+    console.log('有喔')
+    UserTitle.find()
+      .sort({ type: 1 })
+      .then((UserTitles) => {
+        if (!UserTitles) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(UserTitles)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
+// $router post api/user/title/edit/:id
+// @desc   編輯訊息接口
+// @access private
+// 使用 hander 要驗證 token
+// 有看到 post 就代表他會使用到 body 傳遞 數據 {}
+// 有看到 /:id 就代表要從 params 接收一個 id 進來
+router.post(
+  '/title/edit/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const userTitleFields = {}
+    console.log(req.params)
+    if (req.body.type) userTitleFields.type = req.body.type
+    if (req.body.name) userTitleFields.name = req.body.name
+
+    UserTitle.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $set: userTitleFields },
+      { new: false }
+    ).then((userTitle) => res.json(userTitle))
+  }
+)
+
+// $router delete api/user/title/delete/:id
+// @desc   刪除訊息接口
+// @access private
+// 選擇 delete
+// 使用 hander 要驗證 token
+// body 要放編輯的資料 key:value
+router.delete(
+  '/title/delete/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    UserTitle.findOneAndRemove({ _id: req.params.id })
+      .then((userTitle) => res.json(userTitle))
+      .catch((_err) => res.status(404).json('刪除失敗'))
+  }
+)
+
+// ***************************************** user title 的 api 結束 *****************************************
 
 // 技術點，獲取IP存到 mongodb
 // https://blog.csdn.net/Altaba/article/details/79067700

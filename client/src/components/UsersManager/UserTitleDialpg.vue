@@ -15,7 +15,7 @@
               <el-table :data="tableData" style="width: 100%" size="mini">
                 <el-table-column
                   prop="type"
-                  label="職務編號"
+                  label="編號"
                   width="120px"
                   align="center"
                 >
@@ -69,10 +69,10 @@
               style="margin:10px;width:auto"
             >
               <!-- 這邊開始新增 -->
-              <el-form-item prop="type" label="分類編號：" size="mini">
+              <el-form-item prop="type" label="職務編號：" size="mini">
                 <el-input type="type" v-model="formData.type"></el-input>
               </el-form-item>
-              <el-form-item prop="name" label="分類中文：" size="mini">
+              <el-form-item prop="name" label="職務中文：" size="mini">
                 <el-input type="name" v-model="formData.name"></el-input>
               </el-form-item>
               <!--提交與取消鍵 -->
@@ -107,27 +107,27 @@
       </div>
     </el-dialog>
     <el-dialog
-      title="編輯職務內容"
-      :visible.sync="levelOneEditDialog"
+      title="編輯使用者職務內容"
+      :visible.sync="editDialog"
       width="25%"
     >
       <el-form
         ref="editForm"
-        :model="cutomerTitleForm"
-        :rules="cutomerClassFormRules"
+        :model="userTitleForm"
+        :rules="userTitleFormRules"
         label-width="120px"
         style="margin:10px;width:auto"
       >
         <el-form-item
           prop="type"
-          label="職務代號"
+          label="職務編號"
           :label-width="formLabelWidth"
         >
           <el-input
-            v-model="cutomerTitleForm.type"
+            v-model="userTitleForm.type"
             autocomplete="off"
             size="mini"
-            placeholder="請輸入中文"
+            placeholder="請輸入大寫英文"
           ></el-input>
         </el-form-item>
         <el-form-item
@@ -136,15 +136,15 @@
           :label-width="formLabelWidth"
         >
           <el-input
-            v-model="cutomerTitleForm.name"
+            v-model="userTitleForm.name"
             autocomplete="off"
             size="mini"
-            placeholder="請輸入大寫英文"
+            placeholder="請輸入中文"
           ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="levelOneEditDialog = false">取消</el-button>
+        <el-button @click="editDialog = false">取消</el-button>
         <el-button type="primary" @click="onSubmit('editForm')">修改</el-button>
       </div>
     </el-dialog>
@@ -154,10 +154,10 @@
 <script>
 import { MessageBox } from 'element-ui'
 export default {
-  name: 'customer-title-dialog',
+  name: 'user-title-dialog',
   props: {
     dialog: Object,
-    customerTitleData: Array
+    userTitleData: Array
   },
   data() {
     return {
@@ -167,7 +167,7 @@ export default {
         type: '',
         name: ''
       },
-      cutomerTitleForm: {
+      userTitleForm: {
         type: '',
         name: '',
         _id: '',
@@ -176,7 +176,7 @@ export default {
       },
       // 管理分頁
       my_paginations: {
-        localStorage_page_size: 'customer_title_page_size',
+        localStorage_page_size: 'user_title_page_size',
         page_index: 1, // 位於當前第幾頁
         total: 0, // 總數
         page_size: 10, // 每一頁顯示幾條數據
@@ -184,11 +184,11 @@ export default {
         // layouts: 'total, sizes, prev, pager, next, jumper'
       },
       // 這個是驗證 editCategoriesEditForm的表單欄位
-      cutomerClassFormRules: {
+      userTitleFormRules: {
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }]
       },
-      levelOneEditDialog: false,
+      editDialog: false,
       // 驗證表單，form_rules 這個是驗證 addForm 的欄位
       form_rules: {
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
@@ -203,7 +203,7 @@ export default {
     this.setPaginations()
   },
   watch: {
-    customerTitleData() {
+    userTitleData() {
       // 資料有更新喔
       this.setPaginations()
     }
@@ -214,9 +214,9 @@ export default {
     }
   },
   methods: {
-    // 分頁開始
+    // ************************************** 分頁開始 **************************************
     setPaginations() {
-      this.my_paginations.total = this.customerTitleData.length
+      this.my_paginations.total = this.userTitleData.length
       this.my_paginations.page_index = 1
       if (localStorage[this.my_paginations.localStorage_page_size]) {
         this.my_paginations.page_size = Number(
@@ -226,7 +226,7 @@ export default {
         this.my_paginations.page_size = 5
       }
       // 設置分頁數據
-      this.tableData = this.customerTitleData.filter((item, index) => {
+      this.tableData = this.userTitleData.filter((item, index) => {
         return index < this.my_paginations.page_size
       })
     },
@@ -235,7 +235,7 @@ export default {
       localStorage[this.my_paginations.localStorage_page_size] = page_size
       this.my_paginations.page_index = 1
       this.my_paginations.page_size = page_size
-      this.tableData = this.customerTitleData.filter((item, index) => {
+      this.tableData = this.userTitleData.filter((item, index) => {
         return index < page_size
       })
     },
@@ -247,26 +247,26 @@ export default {
       // 容器
       let tables = []
       for (let i = index; i < nums; i++) {
-        if (this.customerTitleData[i]) {
-          tables.push(this.customerTitleData[i])
+        if (this.userTitleData[i]) {
+          tables.push(this.userTitleData[i])
         }
         this.tableData = tables
       }
-    }, // 分頁結束
+    }, /// ************************************** 分頁結束 **************************************
 
     // 新增、編輯、刪除 第一層的分類
     handleAdd(form) {
-      this.cutomerTitleForm.option = 'add'
+      this.userTitleForm.option = 'add'
       this.onSubmit(form)
     },
     handleEdit(row) {
       // 第一層的資料
-      this.levelOneEditDialog = true
-      this.cutomerTitleForm.type = row.type
-      this.cutomerTitleForm.name = row.name
-      this.cutomerTitleForm._id = row._id
-      this.cutomerTitleForm.level = 1
-      this.cutomerTitleForm.option = 'edit'
+      this.editDialog = true
+      this.userTitleForm.type = row.type
+      this.userTitleForm.name = row.name
+      this.userTitleForm._id = row._id
+      this.userTitleForm.level = 1 // 有點多餘的欄位
+      this.userTitleForm.option = 'edit'
     },
     handleDelete(row) {
       // 讓全部分類無法刪除
@@ -276,10 +276,10 @@ export default {
       )
         .then(() => {
           this.$axios
-            .delete(`/api/customer/title/delete/${row._id}`)
+            .delete(`/api/user/title/delete/${row._id}`)
             .then((res) => {
               this.$message('刪除成功！')
-              this.$emit('update', this.dialog.dataType)
+              this.$emit('update')
             })
         })
         .catch(() => {
@@ -289,32 +289,30 @@ export default {
     // 新增商品類別代號
     onSubmit(form) {
       const uploadFormData =
-        this.cutomerTitleForm.option == 'add'
-          ? this.formData
-          : this.cutomerTitleForm
+        this.userTitleForm.option == 'add' ? this.formData : this.userTitleForm
 
       this.$refs[form].validate((valid) => {
         if (valid && !uploadFormData.type == '') {
           const url =
-            this.cutomerTitleForm.option == 'add'
+            this.userTitleForm.option == 'add'
               ? 'add'
-              : `edit/${this.cutomerTitleForm._id}`
-          uploadFormData.level = this.cutomerTitleForm.level
+              : `edit/${this.userTitleForm._id}`
+          uploadFormData.level = this.userTitleForm.level
 
           this.$axios
-            .post(`/api/customer/title/${url}`, uploadFormData)
+            .post(`/api/user/title/${url}`, uploadFormData)
             .then((res) => {
-              console.log('(儲存/修改) 原料組合第一層分類成功！')
+              console.log('使用者職務(更新/新增)完畢！')
               // 添加成功
               this.$message({
                 message: '數據添加成功',
                 type: 'success'
               })
               // 不管怎麼樣都隱藏 edit dialog 的視窗
-              this.levelOneEditDialog = false
+              this.editDialog = false
 
               // 刷新網頁，傳遞給父組件做更新
-              this.$emit('update', this.dialog.dataType)
+              this.$emit('update')
             })
             .catch((err) => {
               console.log('axios添加數據失敗==>MyDialog.vue==>', err)

@@ -22,7 +22,6 @@
               <!-- value 這邊綁定的是此 陣列裡面，要傳給 select v-mode 的值 -->
               <!-- label 就單純的顯示再 input 上面可以看到的文字 -->
               <el-option
-                <el-option
                 v-for="(levelOneData, index) in categoriesLevelOneData"
                 :key="index"
                 :value="levelOneData._id"

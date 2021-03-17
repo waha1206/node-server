@@ -2,10 +2,12 @@
   <div class="materials-manager">
     <el-container>
       <el-header>
+        <el-button type="primary" size="small" @click="handleAddUserTitle"
+          >新增職務</el-button
+        >
         <el-button type="primary" size="small" @click="handleAddUser"
           >新增使用者</el-button
         >
-        <el-button type="primary" size="small">我只是按鈕</el-button>
       </el-header>
     </el-container>
     <!-- 分頁 -->
@@ -329,16 +331,28 @@
       @update="getAllUserData"
     ></UserEditDialog>
     <!-- UserEditDialog 插件結束 -->
+    <!-- UserTitleDialog 開始 -->
+    <UserTitleDialog
+      :dialog="addTitleDialog"
+      :formData="userTitleData"
+      :userTitleData="userTitleData"
+      @update="getUserTitleData"
+    ></UserTitleDialog>
+    <!-- UserTitleDialog 結束 -->
   </div>
 </template>
 
 <script>
 import UserEditDialog from '../../components/UsersManager/UserEditDialog'
+import UserTitleDialog from '../../components/UsersManager/UserTitleDialpg'
+import { MessageBox } from 'element-ui'
 
 export default {
   name: 'user-manager',
   data() {
     return {
+      // 取得使用者的 title 資料
+      userTitleData: [],
       // 只有使用者的 name and id
       allUserNameId: [],
       temp: 12345,
@@ -420,35 +434,28 @@ export default {
         show: false,
         title: '編輯使用者權限',
         option: 'edit'
+      },
+      addTitleDialog: {
+        show: false,
+        title: '新增使用者類型',
+        option: 'edit',
+        dataType: 'title'
       }
     }
+  },
+
+  components: {
+    UserEditDialog,
+    UserTitleDialog
   },
   created() {
     this.getAllUserData()
     this.getUserInfo()
+    this.getUserTitleData()
     this.initUserEditFormData()
   },
-  components: {
-    UserEditDialog
-  },
   methods: {
-    handleAddUser() {},
-    handleEditUser(index, row) {
-      this.userDialog = {
-        title: '使用者編輯',
-        show: true,
-        option: 'edit'
-      }
-      // deep copy https://larry850806.github.io/2016/09/20/shallow-vs-deep-copy/
-      // 把 userEditFormData 資料清空
-      this.initUserEditFormData()
-      // 再把點擊到的 row 的資料複製過去
-      for (let prop in row) {
-        this.userEditFormData[prop] = row[prop]
-      }
-    },
-    handleDeleteUser() {},
-    // 分頁設定
+    // ******************************************** 分頁設定 ********************************************
     setPaginations() {
       // 分頁屬性設置
       this.my_paginations.total = this.allUserData.length
@@ -485,7 +492,9 @@ export default {
         }
         this.tableData = tables
       }
-    },
+    }, // ******************************************** 分頁設定結束 ********************************************
+
+    // ******************************************** axios 開始 ********************************************
     getAllUserData() {
       this.$axios
         .get('/api/user/user-permission-list')
@@ -508,27 +517,64 @@ export default {
           console.log(err)
         })
     },
+    // 取得使用者職務的資料
+    getUserTitleData() {
+      this.$axios
+        .get('/api/user/title')
+        .then((res) => {
+          this.userTitleData = [...res.data]
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    // ******************************************** axios 結束 ********************************************
+
+    // ******************************************** 新增使用者，使用者的 Title 開始 ********************************************
+
+    handleAddUserTitle() {
+      this.addTitleDialog = {
+        show: true,
+        title: '新增使用者的職務選項',
+        dataType: 'title',
+        option: 'add',
+        data: {}
+      }
+    },
+    handleAddUser() {},
+    handleEditUser(index, row) {
+      this.userDialog = {
+        title: '使用者編輯',
+        show: true,
+        option: 'edit'
+      }
+      // deep copy https://larry850806.github.io/2016/09/20/shallow-vs-deep-copy/
+      // 把 userEditFormData 資料清空
+      this.initUserEditFormData()
+      // 再把點擊到的 row 的資料複製過去
+      for (let prop in row) {
+        this.userEditFormData[prop] = row[prop]
+      }
+    },
+    handleDeleteUser(index, row) {
+      // 刪除
+      MessageBox.confirm('注意！您要刪除使用者資料！', '嚴重警告！！！')
+        .then(() => {
+          this.$axios.delete(`/api/user/delete/${row._id}`).then((res) => {
+            this.$message('刪除成功！')
+            this.getAllUserData()
+          })
+        })
+        .catch(() => {
+          this.$message('您取消刪除了～鬆一口氣')
+        })
+    },
     initUserEditFormData() {
       this.userEditFormData = JSON.parse(
         JSON.stringify(this.originalUserEditFormData)
       )
     }
-  }
-  // 元件內局部註冊的自定義指令
-  // https://medium.com/itsems-frontend/vue-custom-directives-c991ce456748
-  // directives: {
-  //   price: function(el, binding) {
-  //     el.innerHTML = binding.value
-  //       .toString()
-  //       .replace(/^(-?\d+?)((?:\d{3})+)(?=\.\d+$|$)/, function(
-  //         all,
-  //         pre,
-  //         groupOf3Digital
-  //       ) {
-  //         return pre + groupOf3Digital.replace(/\d{3}/g, ',$&')
-  //       })
-  //   }
-  // }
+  } // ******************************************** 新增使用者，使用者的 Title 結束 ********************************************
 }
 </script>
 

@@ -40,10 +40,18 @@
             ></el-input>
           </el-form-item>
 
-          <el-form-item label="選擇身分">
-            <el-select v-model="registerUser.identity" placeholder="請選擇身分">
-              <el-option label="管理員" value="manager"></el-option>
-              <el-option label="員工" value="employee"></el-option>
+          <el-form-item label="選擇職務" prop="identity">
+            <el-select
+              v-model="registerUser.identity"
+              placeholder="請選擇您的職務"
+              filterable
+            >
+              <el-option
+                v-for="(item, index) in userTitleOptions"
+                :key="index"
+                :value="item.value"
+                :label="item.label"
+              ></el-option>
             </el-select>
           </el-form-item>
 
@@ -79,6 +87,9 @@ export default {
       }
     }
     return {
+      // 取得職務的清單
+      userTitleData: [],
+      userTitleOptions: [],
       registerUser: {
         name: '',
         email: '',
@@ -105,6 +116,13 @@ export default {
             type: 'email',
             required: true,
             message: 'email格式不正確',
+            trigger: 'blur'
+          }
+        ],
+        identity: [
+          {
+            required: true,
+            message: '請選擇您的職務',
             trigger: 'blur'
           }
         ],
@@ -138,7 +156,28 @@ export default {
       }
     }
   },
+  created() {
+    this.getUserTitleData()
+  },
   methods: {
+    getUserTitleData() {
+      this.$axios
+        .get('/api/user/title')
+        .then((res) => {
+          this.userTitleOptions = []
+          this.userTitleData = [...res.data]
+          res.data.forEach((item) => {
+            let obj = {}
+            obj.value = item._id
+            obj.label = item.name
+            this.userTitleOptions.push(obj)
+          })
+          console.log(res.data, this.userTitleOptions)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {

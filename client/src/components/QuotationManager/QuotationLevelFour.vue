@@ -560,10 +560,14 @@ export default {
     },
     // 表單是否都有填寫資料了呢？
     handleCheckField(option) {
-      // customerValue proofingOptions checkFlag: true,  orderValue
+      // 如果 option 是 orderQuantity 就代表 客戶訂購的數量改變了，這個時候再去計算 可以打樣的款式有幾款 ->this.ProofingOptions
+      if (option === 'orderQuantity') this.getProofingOptions(this.orderValue)
+      // customerValue proofingOptions orderValue 這幾個都需要有輸入值，才可以去計算成本的頁面 checkFlag 如果為 true 按鈕的 desable 才會解除狀態變成可以按
       // this.selectMaterial 選到的配件放這邊    this.materialGroup  要選擇的資料有這幾個
       // !this.selectMaterial.includes(undefined) 確保 array 裡面沒有空的值 例如 array['1','2', '','4'] 裡面會有空值
-      if (option === 'orderQuantity') this.getProofingOptions(this.orderValue)
+      // 下面的連結有很詳細的說明，ES2016 ES2017 等，怎麼去處理 array 裡面有空插槽 跟 undefined 的情形 var arr = [/*empty slot*/, undefined];
+      // 我這個程式區段遇到的是 /* empty slot*/ 但是我用 ES2016 的 undefined 去處理，卻是可以的
+      // https://stackoverflow.com/questions/36622064/check-the-array-has-empty-element-or-not
       this.customerValue &&
       this.proofingValue != 0 &&
       this.orderValue > 0 &&
