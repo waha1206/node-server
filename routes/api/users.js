@@ -302,6 +302,34 @@ router.delete(
       .catch((_err) => res.status(404).json('刪除失敗'))
   }
 )
+
+// $router get api/user/name-and-id
+// @desc   取得所有的 cumtomer 的資料
+// @access private
+// 使用 hander 要驗證 token
+router.get(
+  '/name-and-id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const query = {}
+    const options = {
+      _id: 1,
+      name: 1,
+      'permission.quotation_authority.inquire': 1
+    }
+    User.find(query, options)
+      // .sort({ type: 1 })
+      .then((users) => {
+        if (!users) {
+          return res.status(400).json('沒有任何業務資料')
+        }
+        res.json(users)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
 // ***************************************** user 的 api 結束 *****************************************
 
 // ***************************************** user title 的 api 開始 *****************************************

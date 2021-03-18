@@ -81,7 +81,7 @@
               ><div class="grid-content bg-purple-light">
                 <el-form-item
                   prop="material_authority"
-                  label="原物料權限"
+                  label="原物料權限："
                   label-width="110px"
                 >
                   <el-checkbox
@@ -99,7 +99,7 @@
               ><div class="grid-content ">
                 <el-form-item
                   prop="user_authority"
-                  label="使用者權限"
+                  label="使用者權限："
                   label-width="110px"
                 >
                   <el-checkbox
@@ -116,7 +116,7 @@
               ><div class="grid-content bg-purple-light">
                 <el-form-item
                   prop="customer_authority"
-                  label="客戶管理權限"
+                  label="客戶管理權限："
                   label-width="110px"
                 >
                   <el-checkbox
@@ -139,7 +139,7 @@
               ><div class="grid-content bg-purple-light">
                 <el-form-item
                   prop="quotation_authority"
-                  label="報價單管理"
+                  label="報價單管理："
                   label-width="110px"
                 >
                   <el-checkbox
@@ -157,7 +157,7 @@
               ><div class="grid-content ">
                 <el-form-item
                   prop="print_authority"
-                  label="輸出管理"
+                  label="輸出管理："
                   label-width="110px"
                 >
                   <el-checkbox
@@ -175,7 +175,7 @@
               ><div class="grid-content bg-purple-light">
                 <el-form-item
                   prop="sublimation_authority"
-                  label="布料轉印"
+                  label="布料轉印："
                   label-width="110px"
                 >
                   <el-checkbox
@@ -193,7 +193,7 @@
               ><div class="grid-content ">
                 <el-form-item
                   prop="delivery_authority"
-                  label="配送管理"
+                  label="配送管理："
                   label-width="110px"
                 >
                   <el-checkbox
@@ -216,7 +216,7 @@
               ><div class="grid-content">
                 <el-form-item
                   prop="accounting_authority"
-                  label="會計系統"
+                  label="會計系統："
                   label-width="110px"
                 >
                   <el-checkbox
@@ -234,7 +234,7 @@
               ><div class="grid-content bg-purple-light">
                 <el-form-item
                   prop="product_authority"
-                  label="商品建構"
+                  label="商品建構："
                   label-width="110px"
                 >
                   <el-checkbox
@@ -252,7 +252,7 @@
               ><div class="grid-content">
                 <el-form-item
                   prop="process_authority"
-                  label="加工系統"
+                  label="加工系統："
                   label-width="110px"
                 >
                   <el-checkbox
@@ -269,9 +269,33 @@
           </el-row>
           <!-- 第三列結束 -->
 
-          <!-- 第四層，最後修改時間，最後修改人 -->
+          <!-- 第四列開始 -->
+          <el-row :gutter="20" type="flex" class="row-bg">
+            <el-col :span="6"
+              ><el-form-item
+                label="職務名稱："
+                prop="identity"
+                label-width="110px"
+              >
+                <el-select
+                  v-model="formData.identity"
+                  placeholder="請選擇職務名稱"
+                  filterable
+                  size="mini"
+                >
+                  <!-- :lable 這個是顯示出來的  :value 這個要指定到 _id 因為我要存到資料庫，我需要唯一的一個 key (_id)-->
+                  <el-option
+                    v-for="(identity, index) in userTitleData"
+                    :key="index"
+                    :value="identity._id"
+                    :label="identity.name"
+                  ></el-option>
+                </el-select>
+              </el-form-item> </el-col
+          ></el-row>
+          <!-- 第四列結束 -->
 
-          <!-- 第四層結束 -->
+          <!-- 第五層，最後修改時間，最後修改人 -->
           <el-row :gutter="20" type="flex" class="row-bg">
             <el-col :span="6"
               ><div class="grid-content ">
@@ -298,6 +322,8 @@
                 </el-form-item></div
             ></el-col>
           </el-row>
+          <!-- 第五層結束 -->
+
           <!-- 取消與提交 -->
           <el-row :gutter="20" type="flex" class="row-bg">
             <el-col :span="12">
@@ -332,7 +358,8 @@ export default {
   props: {
     dialog: Object,
     formData: Object,
-    allUserNameId: Array
+    allUserNameId: Array,
+    userTitleData: Array
   },
   data() {
     return {

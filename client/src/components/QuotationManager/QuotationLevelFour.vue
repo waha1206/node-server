@@ -177,7 +177,7 @@
           <!-- 右邊的容器，最低數量，選擇打樣款式 -->
           <div
             class="other-wrap-right"
-            v-if="proofingOptions"
+            v-if="customerOptions"
             style="position:relative;border-radius:8px"
           >
             <div style="float:left;width:100%">
@@ -202,6 +202,54 @@
               >
                 <el-option
                   v-for="(item, index) in customerOptions"
+                  :key="item.value + index"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </div>
+          </div>
+        </div>
+        <!-- 請輸入業務名稱 -->
+        <div class="other-wrap">
+          <div class="other-wrap-left">
+            <!-- 左側的 icon -->
+            <el-image
+              class="other-wrap-left-image"
+              :src="salesImage"
+              @click="showImage($event, '請選擇服務的業務', salesImage)"
+            >
+            </el-image>
+          </div>
+          <!-- 右邊的容器，最低數量，選擇打樣款式 -->
+          <div
+            class="other-wrap-right"
+            v-if="salesOptions"
+            style="position:relative;border-radius:8px"
+          >
+            <div style="float:left;width:100%">
+              <i
+                v-if="salesValue"
+                class="el-icon-circle-check"
+                style="float:left;width:60px;height:80px;line-height:80px;font-size:26px"
+              ></i>
+              <i
+                v-else
+                class="el-icon-loading"
+                style="float:left;width:60px;height:80px;line-height:80px;font-size:26px"
+              ></i>
+              <el-select
+                style="float:left;height:80px;line-height:80px;overflow:hidden"
+                v-model="salesValue"
+                clearable
+                filterable
+                placeholder="請選擇處理的業務"
+                size="large"
+                @change="handleCheckField('sales')"
+              >
+                <el-option
+                  v-for="(item, index) in salesOptions"
                   :key="item.value + index"
                   :label="item.label"
                   :value="item.value"
@@ -362,16 +410,24 @@
       @reportError="reportError"
     >
     </QuotationMaterialDialog>
+    <QuotationCalculationDialog
+      :dialog="quotationCalculationDialog"
+    ></QuotationCalculationDialog>
   </div>
 </template>
 
 <script>
 import QuotationMaterialDialog from '../../components/QuotationManager/QuotationMaterialDialog.vue'
+import QuotationCalculationDialog from '../../components/QuotationManager/QuotationCalculationDialog'
 
 export default {
   name: 'quotation-level-four',
   data() {
     return {
+      // 選擇經手的業務
+      salesValue: '',
+      salesNameAmdId: [],
+      salesOptions: [],
       // 該選擇的是否都選擇完畢，選完後就可以開始進行檢查了
       checkFlag: true,
       // 取得 customer name and id
@@ -394,6 +450,12 @@ export default {
         index: 0,
         materialGroup: {}
       },
+      // 計算報價單資料的 dialog
+      quotationCalculationDialog: {
+        show: false,
+        title: '計算報價單資料',
+        calculationData: {}
+      },
       // 這個是 最後被選中的資料，從 level three 那邊傳過來的
       categoryItem: this.$route.params.item,
       categoryData: [],
@@ -410,21 +472,21 @@ export default {
       numberImage: '../../../images/number.jpg',
       proofingImage: '../../../images/proofing.jpg',
       checkImage: '../../../images/check.png',
+      salesImage: '../../../images/sales.png',
       customerImage: '../../../images/customer.png'
 
       // currentDate: new Date(),
     }
   },
   components: {
-    QuotationMaterialDialog
-    // GroupLevelOneDialog,
-    // GroupLevelTwoDialog,
-    // GroupLevelThreeDialog
+    QuotationMaterialDialog,
+    QuotationCalculationDialog
   },
   created() {
     // this.getCategoriesLevelOneData()
     // this.getCategoriesLevelThreeData()
     this.getCustomerNameAndId()
+    this.getSalesNameAndId()
     this.initData()
   },
   beforeRouteEnter(to, from, next) {
@@ -509,6 +571,29 @@ export default {
           console.log('get customer name and id fail', err)
         })
     },
+    // 取得業務與廠長的資料 另外接受這個 user 的 permission 是否具備成為報價單的 主人 檢查 quotation_authority.inquire === true
+    getSalesNameAndId() {
+      // 取得公司業務的資料
+      this.$axios
+        .get('/api/user/name-and-id')
+        .then((res) => {
+          //獲取成功
+          this.$message({
+            message: '成功取得業務 name and id',
+            type: 'sucess'
+          })
+          this.salesNameAndId = [...res.data]
+          this.salesNameAndId.forEach((item) => {
+            let obj = { value: item._id, label: item.name }
+            // 如果這個使用者具備了 業務 的權限，就代表它可以成為表單中業務下拉式選單裡的選項
+            if (item.permission.quotation_authority.inquire)
+              this.salesOptions.push(obj)
+          })
+        })
+        .catch((err) => {
+          console.log('get customer name and id fail', err)
+        })
+    },
     // **********************************************  讀取資料結束 **********************************************
     handleSelectMaterial(item, index) {
       this.quotationMaterialDialog = {
@@ -568,6 +653,7 @@ export default {
       // 下面的連結有很詳細的說明，ES2016 ES2017 等，怎麼去處理 array 裡面有空插槽 跟 undefined 的情形 var arr = [/*empty slot*/, undefined];
       // 我這個程式區段遇到的是 /* empty slot*/ 但是我用 ES2016 的 undefined 去處理，卻是可以的
       // https://stackoverflow.com/questions/36622064/check-the-array-has-empty-element-or-not
+      this.salesValue &&
       this.customerValue &&
       this.proofingValue != 0 &&
       this.orderValue > 0 &&
@@ -575,9 +661,26 @@ export default {
       this.selectMaterial.length === this.materialGroup.length
         ? (this.checkFlag = false)
         : (this.checkFlag = true)
+      this.checkFlag = false
     },
     handleCheckQuotation() {
       // 檢查報價單，重頭戲來了
+      this.quotationCalculationDialog = {
+        show: true,
+        title: '計算報價單資料',
+        calculationData: {
+          // 負責的業務 _id
+          salesValue: this.salesValue,
+          // 客戶名稱 _id
+          customerValue: this.customerValue,
+          // 打樣的款式
+          proofingValue: this.proofingValue,
+          // 訂購數量
+          orderValue: this.orderValue,
+          // 使用的原物料與配件
+          selectMaterial: this.selectMaterial
+        }
+      }
     }
   }
 }

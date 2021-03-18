@@ -350,7 +350,7 @@ router.post(
   }
 )
 
-// $router get api/cistomer/customer-name-and-id
+// $router get api/customer/name-and-id
 // @desc   取得所有的 cumtomer 的資料
 // @access private
 // 使用 hander 要驗證 token

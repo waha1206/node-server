@@ -55,12 +55,10 @@
         </el-table-column>
 
         <!-- 權限 -->
-        <el-table-column
-          label="權限"
-          prop="identity"
-          align="center"
-          width="100"
-        >
+        <el-table-column label="職務" align="center" width="100">
+          <template slot-scope="scope">
+            <span>{{ getUserIdentityName(scope.row.identity) }}</span>
+          </template>
         </el-table-column>
         <!-- 帳號啟用 -->
         <el-table-column label="啟用" align="center" width="60">
@@ -328,6 +326,7 @@
       :dialog="userDialog"
       :formData="userEditFormData"
       :allUserNameId="allUserNameId"
+      :userTitleData="userTitleData"
       @update="getAllUserData"
     ></UserEditDialog>
     <!-- UserEditDialog 插件結束 -->
@@ -531,7 +530,15 @@ export default {
     // ******************************************** axios 結束 ********************************************
 
     // ******************************************** 新增使用者，使用者的 Title 開始 ********************************************
-
+    // 取得職務名稱
+    getUserIdentityName(identity) {
+      if (identity === 'undefined') return
+      let name = ''
+      this.userTitleData.forEach((item) => {
+        if (item._id == identity) name = item.name
+      })
+      return name
+    },
     handleAddUserTitle() {
       this.addTitleDialog = {
         show: true,
