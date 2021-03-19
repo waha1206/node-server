@@ -467,7 +467,8 @@ export default {
       dialogTitle: '',
       // 使用到的圖片
       selectIcon: '../../../images/select.png',
-      lostImg: '../../../images/缺圖.jpg',
+
+      // lostImg: '../../../images/缺圖.jpg',
       src: '../../../images/點擊選擇規格.jpg',
       numberImage: '../../../images/number.jpg',
       proofingImage: '../../../images/proofing.jpg',
@@ -678,7 +679,19 @@ export default {
           // 訂購數量
           orderValue: this.orderValue,
           // 使用的原物料與配件
-          selectMaterial: this.selectMaterial
+          // 商品種類 kink 1:一般原料  2:轉印布料 (需要計算紙加上墨水的成本計算)  3:現成布料  4:配件專用 (配件專用需要再去計算下面的資料)
+          // 版型寬度-layout_width，版型高度-layout_height，布料種類-kind，平車費用-tailor_fee，裁切費用-crop_fee
+          // 一般原料 - processing_fee_flag 會有需要帶上加工費用
+          // paper_id ink_id  紙跟墨水的 _id (這邊只有使用的布料，好像沒有紙跟墨水)
+          selectMaterial: this.selectMaterial,
+          // 原物料組塞進去，因為會用到它的判斷 表布 裡布 或是 配件
+          // kind 1:表布  2：裡布  3：一般原料，配件用
+          materialGroup: this.materialGroup,
+          // 還需要商品建構管理裡面的資料  這邊的設定是計算表布與內裡使用的，還會需要耗損的欄位
+          // 表布寬-outside_layout_height  表布高-outside_layout_width 表布耗損-outside_cloth_loss
+          // 裡布寬-inside_layout_width 裡布高-inside_layout_height 裡布耗損-inside_cloth_loss
+          // ink_id paper_id
+          categoryData: this.categoryData
         }
       }
     }

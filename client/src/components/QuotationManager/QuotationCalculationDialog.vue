@@ -9,56 +9,6 @@
     >
       <div class="form">
         <el-container>
-          <el-aside width="50%" class="grid-content bg-purple">
-            <div class="table-container">
-              <!-- ***********************  manager 裡面的表單   ***********************-->
-              <el-table :data="tableData" style="width: 100%" size="mini">
-                <el-table-column
-                  prop="type"
-                  label="編號"
-                  width="120px"
-                  align="center"
-                >
-                </el-table-column>
-                <el-table-column
-                  prop="name"
-                  label="職務名稱"
-                  width="180"
-                  align="center"
-                >
-                </el-table-column>
-
-                <el-table-column
-                  prop="operation"
-                  label="操作"
-                  width="150"
-                  align="center"
-                >
-                  <!-- 編輯、刪除 第一層的分類 -->
-                  <template slot-scope="scope">
-                    <el-button
-                      type="warning"
-                      icon="edit"
-                      size="small"
-                      v-if="user.identity == 'manager'"
-                      @click="handleEdit(scope.row)"
-                      >編輯</el-button
-                    >
-                    <el-button
-                      type="danger"
-                      icon="delete"
-                      size="small"
-                      v-if="user.identity == 'manager'"
-                      @click="handleDelete(scope.row)"
-                      >刪除</el-button
-                    >
-                  </template>
-                </el-table-column>
-              </el-table>
-              <!-- ***********************  manager 裡面的表單 結束   ***********************-->
-            </div>
-          </el-aside>
-
           <!-- 右半邊的新增第一層分類 -->
           <el-aside width="50%" class="grid-content bg-purple-light">
             <el-form
