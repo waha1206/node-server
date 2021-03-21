@@ -468,7 +468,7 @@ export default {
       // 使用到的圖片
       selectIcon: '../../../images/select.png',
 
-      // lostImg: '../../../images/缺圖.jpg',
+      lostImg: '../../../images/缺圖.jpg',
       src: '../../../images/點擊選擇規格.jpg',
       numberImage: '../../../images/number.jpg',
       proofingImage: '../../../images/proofing.jpg',

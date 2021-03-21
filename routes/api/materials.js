@@ -66,7 +66,7 @@ router.post(
 )
 
 // $router GET api/material/all
-// @desc   取得所有使用者資料
+// @desc   取得所有原物料的資料
 // @access Private
 router.get(
   '/',
@@ -358,4 +358,29 @@ router.delete(
   }
 )
 
+// $router post api/material/get-material-by-id/:id
+// @desc   透過 _id 取得商品的資料
+// @access private
+// 使用 hander 要驗證 token
+// 有看到 post 就代表他會使用到 body 傳遞 數據 {}
+// 有看到 /:id 就代表要從 params 接收一個 id 進來
+// 這個接口是根據 _id 返回 該原料的 完整資料
+router.get(
+  '/get-material-by-id/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // query 選擇的條件
+    // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
+    const query = { _id: req.params.id }
+    const options = {}
+
+    Material.findOne(query, options).then((material) => {
+      // Material.find().then((materials) => {
+      if (!material) {
+        return res.status(400).json('沒有任何原物料資訊')
+      }
+      res.json(material)
+    })
+  }
+)
 module.exports = router
