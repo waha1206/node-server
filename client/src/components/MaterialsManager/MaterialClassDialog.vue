@@ -56,7 +56,6 @@
                       type="warning"
                       icon="edit"
                       size="small"
-                      v-if="user.identity == 'manager'"
                       @click="handleEdit(scope.row)"
                       >編輯</el-button
                     >
@@ -64,7 +63,6 @@
                       type="danger"
                       icon="delete"
                       size="small"
-                      v-if="user.identity == 'manager'"
                       @click="handleDelete(scope.row)"
                       >刪除</el-button
                     >

@@ -526,6 +526,21 @@
 
             <!-- 第十行 -->
             <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="6"
+                ><div class="grid-content ">
+                  <el-form-item
+                    prop="typesetting"
+                    label="智慧排版："
+                    label-width="110px"
+                  >
+                    <el-switch
+                      v-model="levelThreeFormData.typesetting"
+                      active-text="啟用"
+                      inactive-text="禁用"
+                    >
+                    </el-switch>
+                  </el-form-item></div
+              ></el-col>
               <el-col :span="8" style="position:relative">
                 <!-- style="position:relative;border-radius:8px" -->
                 <div>
@@ -945,6 +960,7 @@ export default {
       // dialog 發生變化的時候 (使用 watch 觀察) 就會把 levelThreeFormData 的內容清空或是設定好
       // 關於 tailor_fee 跟 crop_fee 的數字，也是使用 watch 去觀察跟設定到 levelThreeFoemData 裡面
       const uploadFormData = {
+        typesetting: this.levelThreeFormData.typesetting,
         processing_describe: this.levelThreeFormData.processing_describe,
         ink_id: this.levelThreeFormData.ink_id,
         paper_id: this.levelThreeFormData.paper_id,

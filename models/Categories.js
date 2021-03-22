@@ -210,6 +210,10 @@ const CategoryLevelThreeSchema = new Schema({
   // 加工說明
   processing_describe: {
     type: String
+  },
+  // 智慧排版
+  typesetting: {
+    type: Boolean
   }
 })
 

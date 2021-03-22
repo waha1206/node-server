@@ -52,6 +52,9 @@ router.post(
     }
 
     if (req.body.level === 3) {
+      if (req.body.typesetting) {
+        categoriesFields.typesetting = req.body.typesetting
+      }
       if (req.body.processing_describe) {
         categoriesFields.processing_describe = req.body.processing_describe
       }
@@ -345,6 +348,9 @@ router.post(
       categoryFields.level_one_id = req.body.level_one_id
     }
     if (req.body.level === 3) {
+      if (req.body.typesetting) {
+        categoryFields.typesetting = req.body.typesetting
+      }
       if (req.body.processing_describe) {
         categoryFields.processing_describe = req.body.processing_describe
       }
