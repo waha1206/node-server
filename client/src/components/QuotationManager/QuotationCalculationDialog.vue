@@ -46,7 +46,24 @@ export default {
   },
   data() {
     return {
-      // 報價單欄位開始
+      // calOutsideCloth 這邊會記錄 外層布料的 所有訊息狀態
+      calOutsideCloth: {
+        typeSetting: Boolean, // 是否啟用智慧排版
+        clothHeight: 0, // 使用了多少的布料，總長度單位為公分，取最大的接近整數
+        clothArea: 0, // 使用的布料他的才積，取最大的接近整數
+        rowNumber: 0, // 橫向可以排幾個版型
+        clothPrice: 0, // 布料的成本
+        clothWidth: 0, // 布料的幅寬
+        lossPercentage: 0, // 排版的耗損率 最多不超過 50%
+        cloth30x30Price: 0, // 布料每才的成本
+        clothFee: 0, // 此商品布料的成本總計
+        inkPrice: 0, // 墨水每 cc 的成本
+        ink30x30Price: 0, // 墨水噴每才的成本
+        inkFee: 0, // 此商品使用墨水的成本總計
+        paper1CmPrice: 0, // 每公分長度的紙的成本
+        paperFee: 0 // 此商品使用紙的成本總計
+      },
+      // 報價單欄位開始，這邊的資料會存放到報價單的資料庫裏面
       quotationForm: {
         category_id: '',
         order_value: '',
@@ -186,6 +203,7 @@ export default {
             this.fnCalOutsideCloth(
               calculationData.selectMaterial[i],
               calculationData.selectMaterial[i].kind,
+              calculationData.categoryData[0].typesetting,
               calculationData.categoryData[0].outside_layout_width,
               calculationData.categoryData[0].outside_layout_height,
               calculationData.categoryData[0].outside_cloth_loss,
@@ -213,6 +231,7 @@ export default {
     async fnCalOutsideCloth(
       material, // 選擇哪種布料 我會需要裡面的幅寬來計算版型可以排幾個
       kind, // 2 = 表布  3 = 裡布
+      typesetting, // 是否啟用智慧排版 true = 啟用  false = 禁用
       layoutWidth, // 版型的寬度
       layoutHeight, // 版型的高度
       clothLoss, // 布料耗損 20 單位因為是 % 所以要把成本 乘上 (100 + 20) / 100
@@ -230,42 +249,47 @@ export default {
       //   paper_id
       // )
       if (kind === 2) {
-        let paper = await this.getMaterialData(paper_id) // 取得轉印紙的資料 paper.data.nit_price
-        let ink = await this.getMaterialData(ink_id) // 取得墨水的資料 ink.data.unit_price
-        // 計算布料使用量 fnBestLayout
-        let a_obj = this.fnBestLayout(
-          layoutWidth,
-          layoutHeight,
-          material.cloth_width,
-          orderValue
-        )
-        // 交換寬跟高的位置
-        let b_obj = this.fnBestLayout(
-          layoutHeight,
-          layoutWidth,
-          material.cloth_width,
-          orderValue
-        )
-        console.log('a_area 才積：', a_obj.cloth_area)
-        console.log('b_area 才積：', b_obj.cloth_area)
-        const obj = a_obj.cloth_area > b_obj.cloth_area ? b_obj : a_obj // 商品使用的布料才數
-        // 再來要算三個數字 1.布料金額 2.轉印紙的金額 3.墨水的金額
-        const cloth_30x30_price =
-          material.unit_price / ((material.cloth_width * 90) / 900)
-        console.log('實際使用的布料才數為', Math.ceil(obj.cloth_area))
-        console.log('布料每才的單價：', cloth_30x30_price)
-        const cloth_fee = cloth_30x30_price * obj.cloth_area // 最終布料的成本在這邊
-        console.log('布料使用的成本為：', cloth_fee)
-        // 墨水成本
-        console.log('墨水每CC成本：', ink.data.unit_price)
-        const ink_30x30_price = ink.data.unit_price * 0.6 // 噴一才的費用
-        console.log('墨水噴一才的費用：', ink_30x30_price)
-        const ink_fee = obj.cloth_area * ink_30x30_price // 商品使用的墨水費用
-        console.log('此商品使用的墨水費用為：', ink_fee)
-        const paper_1cm_price = paper.data.unit_price / 100
-        console.log('1公分的紙成本', paper_1cm_price)
-        const paper_fee = paper_1cm_price * obj.cloth_length
-        console.log('此商品使用的轉印紙費用為：', paper_fee)
+        if (typesetting) {
+          console.log('啟用智慧排版')
+          let paper = await this.getMaterialData(paper_id) // 取得轉印紙的資料 paper.data.nit_price
+          let ink = await this.getMaterialData(ink_id) // 取得墨水的資料 ink.data.unit_price
+          // 計算布料使用量 fnBestLayout
+          let a_obj = this.fnBestLayout(
+            layoutWidth,
+            layoutHeight,
+            material.cloth_width,
+            orderValue
+          )
+          // 交換寬跟高的位置
+          let b_obj = this.fnBestLayout(
+            layoutHeight,
+            layoutWidth,
+            material.cloth_width,
+            orderValue
+          )
+          console.log('a_area 才積：', a_obj.cloth_area)
+          console.log('b_area 才積：', b_obj.cloth_area)
+          const obj = a_obj.cloth_area > b_obj.cloth_area ? b_obj : a_obj // 商品使用的布料才數
+          // 再來要算三個數字 1.布料金額 2.轉印紙的金額 3.墨水的金額
+          const cloth_30x30_price =
+            material.unit_price / ((material.cloth_width * 90) / 900)
+          console.log('實際使用的布料才數為', Math.ceil(obj.cloth_area))
+          console.log('布料每才的單價：', cloth_30x30_price)
+          const cloth_fee = cloth_30x30_price * obj.cloth_area // 最終布料的成本在這邊
+          console.log('布料使用的成本為：', cloth_fee)
+          // 墨水成本
+          console.log('墨水每CC成本：', ink.data.unit_price)
+          const ink_30x30_price = ink.data.unit_price * 0.6 // 噴一才的費用
+          console.log('墨水噴一才的費用：', ink_30x30_price)
+          const ink_fee = obj.cloth_area * ink_30x30_price // 商品使用的墨水費用
+          console.log('此商品使用的墨水費用為：', ink_fee)
+          const paper_1cm_price = paper.data.unit_price / 100
+          console.log('1公分的紙成本', paper_1cm_price)
+          const paper_fee = paper_1cm_price * obj.cloth_length
+          console.log('此商品使用的轉印紙費用為：', paper_fee)
+        } else {
+          console.log('禁用智慧排版')
+        }
       } else {
         console.log('這邊會是內裡布料的計算')
       }

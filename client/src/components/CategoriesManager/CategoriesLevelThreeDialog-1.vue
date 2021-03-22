@@ -455,7 +455,24 @@
             </el-row>
             <!-- 第九行開始，外表布寬，高，內裡布寬，高 -->
             <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="4">
+              <el-col :span="4" style="position:relative">
+                <!-- style="position:relative;border-radius:8px" -->
+                <div @click="handleCalculationLayout">
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="試算版型耗損率"
+                    placement="right"
+                    style="z-index:2000"
+                  >
+                    <el-badge
+                      value="試算"
+                      class="item"
+                      style="margin-top: 0px;margin-right: 0px;position:absolute;top:0px;right:-40px"
+                    >
+                    </el-badge>
+                  </el-tooltip>
+                </div>
                 <el-form-item prop="outside_layout_width" label="外表布寬：">
                   <el-input
                     style="width:60px"
@@ -720,11 +737,13 @@
     </el-dialog>
     <PaperAndInk :dialog="paperAndInkDialog" @update="updatePaperAndInk">
     </PaperAndInk>
+    <CalLayoutDialog :dialog="calLayoutDialog"></CalLayoutDialog>
   </div>
 </template>
 
 <script>
 import PaperAndInk from '../../components/CategoriesManager/PaperAndInk'
+import CalLayoutDialog from '../../components/CategoriesManager/CalLayoutDialog'
 
 export default {
   name: 'categories-level-three-dialog',
@@ -736,9 +755,13 @@ export default {
     categoriesLevelOneData: Array,
     categoriesLevelTwoData: Array
   },
-  components: { PaperAndInk },
+  components: { PaperAndInk, CalLayoutDialog },
   data() {
     return {
+      calLayoutDialog: {
+        show: false,
+        title: '試算版型尺寸'
+      },
       paperAndInkDialog: {
         show: false,
         title: '選擇轉印紙或墨水',
@@ -859,6 +882,11 @@ export default {
     }
   },
   methods: {
+    // 試算版型
+    handleCalculationLayout() {
+      console.log('hello')
+      this.calLayoutDialog.show = true
+    },
     // 子元件選擇了哪種 paper or ink  option 會傳回選擇的種類
     updatePaperAndInk(item, option) {
       this.paperAndInkDialog.show = false
