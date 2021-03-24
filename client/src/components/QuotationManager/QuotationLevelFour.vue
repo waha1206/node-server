@@ -599,7 +599,7 @@ export default {
     handleSelectMaterial(item, index) {
       this.quotationMaterialDialog = {
         show: true,
-        title: item.name,
+        title: item.web_side_name,
         index: index,
         materialGroup: item.choice_level_three_material
       }
@@ -662,7 +662,7 @@ export default {
       this.selectMaterial.length === this.materialGroup.length
         ? (this.checkFlag = false)
         : (this.checkFlag = true)
-      this.checkFlag = false
+      // this.checkFlag = false
     },
     handleCheckQuotation() {
       // 檢查報價單，重頭戲來了

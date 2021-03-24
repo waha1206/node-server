@@ -10,21 +10,13 @@
       <el-container>
         <el-aside width="50%"
           ><el-row>
-            <el-col :span="6" style="overflow:hidden">
+            <el-col
+              :span="24"
+              v-for="item in 8"
+              style="overflow:hidden;background-color:red;float:left;hight:100px;line-height:40px"
+            >
+              <p>Hello</p>
               <!-- dialog.calculationData -->
-              <p
-                style="height:24px;line-height:24px;text-align:center;display:block;float:left"
-              >
-                Hello
-              </p>
-              <span
-                style="height:24px;line-height:24px;text-align:center;display:block;float:left"
-                >Hello</span
-              >
-              <span
-                style="height:24px;line-height:24px;text-align:center;display:block;float:left"
-                >Hello</span
-              >
             </el-col>
           </el-row></el-aside
         >
@@ -47,32 +39,38 @@ export default {
   data() {
     return {
       // calOutsideCloth 這邊會記錄 外層布料的 所有訊息狀態
-      calOutsideCloth: {
-        typeSetting: Boolean, // 是否啟用智慧排版
-        clothHeight: 0, // 使用了多少的布料，總長度單位為公分，取最大的接近整數
-        clothArea: 0, // 使用的布料他的才積，取最大的接近整數
-        rowNumber: 0, // 橫向可以排幾個版型
-        clothPrice: 0, // 布料的成本
-        clothWidth: 0, // 布料的幅寬
-        lossPercentage: 0, // 排版的耗損率 最多不超過 50%
-        cloth30x30Price: 0, // 布料每才的成本
-        clothFee: 0, // 此商品布料的成本總計
-        inkPrice: 0, // 墨水每 cc 的成本
-        ink30x30Price: 0, // 墨水噴每才的成本
-        inkFee: 0, // 此商品使用墨水的成本總計
-        paper1CmPrice: 0, // 每公分長度的紙的成本
-        paperFee: 0 // 此商品使用紙的成本總計
+      calOutsideCloth: {},
+      emptyCalOutsideCloth: {
+        kind: 0, // 1.記錄了是哪一種的原料類型，每種資料 kind 有不同的紀錄欄位 1.一般原料 2.轉印布料 3.現成布料 4.配件專用
+        typesetting: false, // 2.是否啟用智慧排版
+        clothHeight: 0, // 3.使用了多少的布料，總長度單位為公分，取最大的接近整數
+        clothArea: 0, // 4.使用的布料他的才積，取最大的接近整數
+        rowNumber: 0, // 5.橫向可以排幾個版型
+        clothWidth: 0, // 6.布料的幅寬
+        lossPercentage: 0, // 7.排版的耗損率 最多不超過 50%
+        cloth30x30Price: 0, // 8.布料每才的成本
+        clothFee: 0, // 9.此商品布料的成本總計
+        inkCcPrice: 0, // 10.墨水每 cc 的成本
+        ink30x30Price: 0, // 11.墨水噴每才的成本
+        inkFee: 0, // 12.此商品使用墨水的成本總計
+        paper1CmPrice: 0, // 13.每公分長度的紙的成本
+        paperFee: 0 // 14.此商品使用紙的成本總計
       },
-      // 報價單欄位開始，這邊的資料會存放到報價單的資料庫裏面
-      quotationForm: {
-        category_id: '',
-        order_value: '',
-        proofing_value: '',
-        sales_value: '',
-        customer_value: '',
-        material_group: [],
-        select_material: []
+      // 報價單欄位開始，這邊的資料會存放到報價單的資料庫裏面，最原始的資料
+      quotationForm: {},
+      emptyQuotationForm: {
+        category_id: '', // 紀錄商品的 _id
+        order_value: '', // 訂購數量
+        proofing_value: '', // 打樣數量
+        sales_value: '', // 業務的 _id
+        customer_value: '', // 客戶的 _id
+        material_group: [], // 選擇商品規格的 _id 原料組
+        select_material: [], // 這筆訂單選擇哪些的 原料
+        // 紀錄每一個進來的 表布，裡布，配件 的相關資訊
+        // 有幾種設定就 push 幾種進來這裡
+        saveCalaulationData: []
       },
+
       // 報價單欄位結束
       tableData: [],
       formLabelWidth: '',
@@ -107,6 +105,8 @@ export default {
   created() {},
   watch: {
     dialog(dialog) {
+      this.calOutsideCloth = Object.assign({}, this.emptyCalOutsideCloth)
+      this.quotationForm = Object.assign({}, this.emptyQuotationForm)
       this.handleSaveQuotationData(dialog.calculationData)
       this.handleCalculationData(dialog.calculationData)
     }
@@ -249,6 +249,7 @@ export default {
       //   paper_id
       // )
       if (kind === 2) {
+        // typesetting 判斷需不需要使用智慧排版 true  = 要  false = 不要
         if (typesetting) {
           console.log('啟用智慧排版')
           let paper = await this.getMaterialData(paper_id) // 取得轉印紙的資料 paper.data.nit_price
@@ -275,7 +276,7 @@ export default {
             material.unit_price / ((material.cloth_width * 90) / 900)
           console.log('實際使用的布料才數為', Math.ceil(obj.cloth_area))
           console.log('布料每才的單價：', cloth_30x30_price)
-          const cloth_fee = cloth_30x30_price * obj.cloth_area // 最終布料的成本在這邊
+          const cloth_fee = cloth_30x30_price * obj.cloth_area // 最終布料的費用在這邊
           console.log('布料使用的成本為：', cloth_fee)
           // 墨水成本
           console.log('墨水每CC成本：', ink.data.unit_price)
@@ -287,6 +288,30 @@ export default {
           console.log('1公分的紙成本', paper_1cm_price)
           const paper_fee = paper_1cm_price * obj.cloth_length
           console.log('此商品使用的轉印紙費用為：', paper_fee)
+          // 把 訊息記錄下來
+          this.calOutsideCloth.kind = kind // 1
+          this.calOutsideCloth.typesetting = typesetting // 2
+          this.calOutsideCloth.clothHeight =
+            Math.ceil(obj.cloth_length * 100) / 100 // 3
+          this.calOutsideCloth.clothArea = Math.ceil(obj.cloth_area * 100) / 100 // 4
+          this.calOutsideCloth.rowNumber = obj.row_number // 5
+          this.calOutsideCloth.clothWidth =
+            Math.ceil(material.cloth_width * 100) / 100 // 6
+          this.calOutsideCloth.lossPercentage =
+            Math.ceil(obj.loss_percentage * 100) / 100 // 7
+          this.calOutsideCloth.cloth30x30Price =
+            Math.ceil(cloth_30x30_price * 100) / 100 // 8
+          this.calOutsideCloth.clothFee = Math.ceil(cloth_fee * 100) / 100 // 9
+          this.calOutsideCloth.inkCcPrice =
+            Math.ceil(ink.data.unit_price * 100) / 100 // 10
+          this.calOutsideCloth.ink30x30Price =
+            Math.ceil(ink_30x30_price * 100) / 100 // 11
+          this.calOutsideCloth.inkFee = Math.ceil(ink_fee * 100) / 100 // 12
+          this.calOutsideCloth.paper1CmPrice =
+            Math.ceil(paper_1cm_price * 100) / 100 // 13
+          this.calOutsideCloth.paperFee = Math.ceil(paper_fee * 100) / 100 // 14
+          this.quotationForm.saveCalaulationData.push(this.calOutsideCloth)
+          console.log(this.quotationForm)
         } else {
           console.log('禁用智慧排版')
         }
