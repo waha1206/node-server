@@ -550,6 +550,7 @@
                     label="智慧排版："
                     label-width="110px"
                   >
+                    <!-- @change="handleTypesettingChange" -->
                     <el-switch
                       v-model="levelThreeFormData.typesetting"
                       active-text="啟用"
@@ -882,6 +883,10 @@ export default {
     }
   },
   methods: {
+    // 智慧排版啟用 / 禁止
+    // handleTypesettingChange(value) {
+    //   this.levelThreeFormData.typesetting = value
+    // },
     // 試算版型
     handleCalculationLayout() {
       console.log('hello')

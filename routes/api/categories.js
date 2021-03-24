@@ -52,7 +52,7 @@ router.post(
     }
 
     if (req.body.level === 3) {
-      if (req.body.typesetting) {
+      if (req.body.typesetting !== 'undefined') {
         categoriesFields.typesetting = req.body.typesetting
       }
       if (req.body.processing_describe) {
@@ -348,7 +348,7 @@ router.post(
       categoryFields.level_one_id = req.body.level_one_id
     }
     if (req.body.level === 3) {
-      if (req.body.typesetting) {
+      if (req.body.typesetting !== 'undefined') {
         categoryFields.typesetting = req.body.typesetting
       }
       if (req.body.processing_describe) {
