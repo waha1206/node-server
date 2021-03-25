@@ -139,6 +139,15 @@ router.post(
           req.body.note_two_video
         )
       }
+      if (req.body.tailor_fee) {
+        categoriesFields.tailor_fee = req.body.tailor_fee
+      }
+      if (req.body.crop_fee) {
+        categoriesFields.crop_fee = req.body.crop_fee
+      }
+      if (req.body.quantity_profit) {
+        categoriesFields.quantity_profit = req.body.quantity_profit
+      }
     }
     // console.log(categoriesFields)
     CategoryLevel.findOne({ name: req.body.name }).then((category) => {
