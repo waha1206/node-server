@@ -87,6 +87,16 @@
                 >
                 <span class="outside-cloth-content">
                   <el-tag size="mini">{{
+                    '平車費用：' + item.tailorFee + ' 元'
+                  }}</el-tag></span
+                >
+                <span class="outside-cloth-content">
+                  <el-tag size="mini">{{
+                    '裁切布料費用：' + item.cropFee + ' 元'
+                  }}</el-tag></span
+                >
+                <span class="outside-cloth-content">
+                  <el-tag size="mini">{{
                     '總計 (墨水+紙+布) * 印布耗損率：' + item.realFee + ' 元'
                   }}</el-tag></span
                 >
@@ -135,7 +145,9 @@ export default {
         layoutHeight: 0, // 16.版型高
         clothLoss: 0, // 17.印布損耗率
         realFee: 0, // 18.(布料+墨水+紙) * (1+轉印布料的耗損率)
-        orderValue: 0 // 19.訂購數量
+        orderValue: 0, // 19.訂購數量
+        tailorFee: 0, // 20.平車費用
+        cropFee: 0 // 21.裁切費用
       },
       // 報價單欄位開始，這邊的資料會存放到報價單的資料庫裏面，最原始的資料
       quotationForm: {},
@@ -279,7 +291,7 @@ export default {
       for (let i = 0; i < calculationData.materialGroup.length; i++) {
         // 第一次過濾使用原物料組 materialGroup 的 kind 去判斷
         switch (calculationData.materialGroup[i].kind) {
-          case 1: // kind = 1  表布計算
+          case 1: // kind = 1 計算表布
             this.fnCalOutsideCloth(
               calculationData.selectMaterial[i],
               calculationData.selectMaterial[i].kind,
@@ -289,6 +301,8 @@ export default {
               calculationData.categoryData[0].outside_cloth_loss,
               calculationData.categoryData[0].ink_id,
               calculationData.categoryData[0].paper_id,
+              calculationData.categoryData[0].tailor_fee,
+              calculationData.categoryData[0].crop_fee,
               calculationData.orderValue
             )
             break
@@ -307,7 +321,7 @@ export default {
       }
     },
     // **********************************************  計算報價相關 結束 **********************************************
-    // 處理表布的計算，kind 2 = 表布   kind 3 = 裡布  ----------------  第一層篩選之一
+    // 處理表布的計算，kind 2 = 表布   kind 3 = 裡布  ----------------
     async fnCalOutsideCloth(
       material, // 選擇哪種布料 我會需要裡面的幅寬來計算版型可以排幾個
       kind, // 2 = 表布  3 = 裡布
@@ -317,6 +331,8 @@ export default {
       clothLoss, // 布料耗損 20 單位因為是 % 所以要把成本 乘上 (100 + 20) / 100
       ink_id, // 這裡的墨水是讀取 建構商品裡的
       paper_id, // 這邊的紙是讀取 建構商品裡的
+      tailorFee, // 平車費用
+      cropFee, // 裁切布料費用
       orderValue // 訂購數量
     ) {
       // console.log(
@@ -328,6 +344,7 @@ export default {
       //   ink_id,
       //   paper_id
       // )
+
       if (kind === 2) {
         // typesetting 判斷需不需要使用智慧排版 true  = 要  false = 不要
         if (typesetting) {
@@ -395,7 +412,9 @@ export default {
               this.calOutsideCloth.clothFee) *
               (1 + this.calOutsideCloth.clothLoss / 100)
           ) // 18
-          this.calOutsideCloth.orderValue = orderValue
+          this.calOutsideCloth.orderValue = orderValue // 19
+          this.calOutsideCloth.tailorFee = tailorFee // 20
+          this.calOutsideCloth.cropFee = cropFee // 21
           this.quotationForm.saveCalaulationData.push(this.calOutsideCloth)
         } else {
           console.log('禁用智慧排版')
