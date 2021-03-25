@@ -518,6 +518,41 @@
                   >
                 </el-form-item>
               </el-col>
+              <el-col :span="4" style="position:relative">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  placement="right"
+                  style="z-index:2000"
+                >
+                  <el-badge
+                    value="說明"
+                    class="item"
+                    style="margin-top: 0px;margin-right: 0px;position:absolute;top:10px;right:-30px"
+                  >
+                  </el-badge>
+                  <div slot="content">
+                    <span
+                      >10安仿帆布會追加的紙跟布的長度，紙跟布請設定一樣長度</span
+                    ><br />
+                    <span
+                      >目前得知大概要預留2碼長度
+                      (180公分)，此欄位請勿輸入小數點</span
+                    ><br />
+                    <span
+                      >其他布料多少抓一些就好，只限布料類型原料有輸入值</span
+                    >
+                  </div>
+                </el-tooltip>
+                <el-form-item prop="accessory_cloth_id" label="額外追加：">
+                  <el-input
+                    placeholder="正整數"
+                    size="mini"
+                    type="type"
+                    v-model="materialDataForm.additional_height"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
             </el-row>
           </el-header>
 

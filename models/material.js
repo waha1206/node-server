@@ -169,6 +169,10 @@ const MaterialSchema = new Schema({
   // 加工費用
   processing_fee: {
     type: String
+  },
+  // 追加的耗材，這邊只根據紙跟布料去計算
+  additional_height: {
+    type: String
   }
 })
 

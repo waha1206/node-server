@@ -15,93 +15,126 @@
               v-for="(item, index) in quotationForm.saveCalaulationData"
               :key="index"
             >
+              <!-- 如果 kind === 2 下面是揭示 表布的各種計算欄位 -->
               <div v-if="item.kind === 2" class="outside-cloth-warp">
-                <span class="outside-cloth-content">
+                <span class="outside-print-cloth-content">
                   <el-tag size="mini" type="danger">表布計算</el-tag></span
                 >
-                <span class="outside-cloth-content">
+                <span class="outside-print-cloth-content">
                   <el-tag size="mini">{{
                     '布料幅寬：' + item.clothWidth + ' 公分'
                   }}</el-tag></span
                 >
-                <span class="outside-cloth-content">
+                <span class="outside-print-cloth-content">
                   <el-tag size="mini">{{
                     '版型寬：' + item.layoutWidth + ' 公分'
                   }}</el-tag></span
                 >
-                <span class="outside-cloth-content">
+                <span class="outside-print-cloth-content">
                   <el-tag size="mini">{{
                     '版型高：' + item.layoutHeight + ' 公分'
                   }}</el-tag></span
                 >
-                <span class="outside-cloth-content" v-if="item.typesetting">
+                <span
+                  class="outside-print-cloth-content"
+                  v-if="item.typesetting"
+                >
                   <el-tag size="mini">智慧排版：是</el-tag></span
                 >
-                <span class="outside-cloth-content" v-else>
+                <span class="outside-print-cloth-content" v-else>
                   <el-tag size="mini">智慧排版：否</el-tag></span
                 >
-                <span class="outside-cloth-content">
+                <span class="outside-print-cloth-content">
                   <el-tag size="mini">{{
                     '排版耗損率：' + item.lossPercentage + ' %'
                   }}</el-tag></span
                 >
-                <span class="outside-cloth-content">
+                <span class="outside-print-cloth-content">
                   <el-tag size="mini">{{
                     '印布耗損率：' + item.clothLoss + ' %'
                   }}</el-tag></span
                 >
-                <span class="outside-cloth-content">
+                <span class="outside-print-cloth-content">
                   <el-tag size="mini">{{
                     '橫排：' + item.rowNumber + ' 個'
                   }}</el-tag></span
                 >
-                <span class="outside-cloth-content">
+                <span class="outside-print-cloth-content">
                   <el-tag size="mini">{{
                     '使用布長：' + item.clothHeight + ' 公分'
                   }}</el-tag></span
                 >
-                <span class="outside-cloth-content">
+                <span class="outside-print-cloth-content">
                   <el-tag size="mini">{{
                     '布料才積：' + item.clothArea + ' 才'
                   }}</el-tag></span
                 >
-                <span class="outside-cloth-content">
+                <span class="outside-print-cloth-content">
                   <el-tag size="mini">{{
                     '布料小計：' + item.clothFee + ' 元'
                   }}</el-tag></span
                 >
-                <span class="outside-cloth-content">
+                <span class="outside-print-cloth-content">
                   <el-tag size="mini">{{
                     '轉印紙總計：' + item.paperFee + ' 元'
                   }}</el-tag></span
                 >
-                <span class="outside-cloth-content">
+                <span class="outside-print-cloth-content">
                   <el-tag size="mini">{{
                     '墨水總計：' + item.inkFee + ' 元'
                   }}</el-tag></span
                 >
-                <span class="outside-cloth-content">
+                <span class="outside-print-cloth-content">
                   <el-tag size="mini">{{
                     '訂購數量：' + item.orderValue + ' 個'
                   }}</el-tag></span
                 >
-                <span class="outside-cloth-content">
+                <span class="outside-print-cloth-content">
                   <el-tag size="mini">{{
                     '平車費用：' + item.tailorFee + ' 元'
                   }}</el-tag></span
                 >
-                <span class="outside-cloth-content">
+                <span class="outside-print-cloth-content">
                   <el-tag size="mini">{{
                     '裁切布料費用：' + item.cropFee + ' 元'
                   }}</el-tag></span
                 >
-                <span class="outside-cloth-content">
+                <span class="outside-print-cloth-content">
                   <el-tag size="mini">{{
-                    '總計 (墨水+紙+布) * 印布耗損率：' + item.realFee + ' 元'
+                    '轉印增加長度：' + item.additionalHeight + ' 公分'
+                  }}</el-tag></span
+                >
+                <span class="outside-print-cloth-content">
+                  <el-tag size="mini">{{
+                    '轉印紙增加費用：' + item.additionalPaperFee + ' 元'
+                  }}</el-tag></span
+                >
+                <span class="outside-print-cloth-content">
+                  <el-tag size="mini">{{
+                    '布料增加費用：' + item.additionalClothFee + ' 元'
+                  }}</el-tag></span
+                >
+                <span class="outside-print-cloth-content">
+                  <el-tag size="mini">{{
+                    '總計 (墨水+紙+布) * 印布耗損率 + 額外紙跟布：' +
+                      item.realFee +
+                      ' 元'
+                  }}</el-tag></span
+                >
+                <span class="outside-print-cloth-content">
+                  <el-tag size="mini">{{
+                    '目前 quotationForm.saveCalaulationData 有 ' +
+                      quotationForm.saveCalaulationData.length +
+                      ' 筆 資料'
                   }}</el-tag></span
                 >
               </div>
-
+              <!-- 這裡開始會是展示裡布的部分 -->
+              <div v-if="item.kind === 3" class="outside-normal-cloth-warp">
+                <span class="outside-normal-cloth-content">
+                  <el-tag size="mini" type="danger">其他計算</el-tag></span
+                >
+              </div>
               <!-- dialog.calculationData -->
             </el-col>
           </el-row></el-aside
@@ -117,6 +150,8 @@
 
 <script>
 import { MessageBox } from 'element-ui'
+import { isEmpty } from '../../utils/tools'
+
 export default {
   name: 'quotation-calculation-dialog',
   props: {
@@ -147,7 +182,10 @@ export default {
         realFee: 0, // 18.(布料+墨水+紙) * (1+轉印布料的耗損率)
         orderValue: 0, // 19.訂購數量
         tailorFee: 0, // 20.平車費用
-        cropFee: 0 // 21.裁切費用
+        cropFee: 0, // 21.裁切費用
+        additionalHeight: 0, // 22.追加紙跟布料的長度
+        additionalPaperFee: 0, // 23.額外增加的轉印紙費用
+        additionalClothFee: 0 // 24.額外增加的布料費用
       },
       // 報價單欄位開始，這邊的資料會存放到報價單的資料庫裏面，最原始的資料
       quotationForm: {},
@@ -295,6 +333,7 @@ export default {
             this.fnCalOutsideCloth(
               calculationData.selectMaterial[i],
               calculationData.selectMaterial[i].kind,
+              calculationData.selectMaterial[i].additional_height,
               calculationData.categoryData[0].typesetting,
               calculationData.categoryData[0].outside_layout_width,
               calculationData.categoryData[0].outside_layout_height,
@@ -325,6 +364,7 @@ export default {
     async fnCalOutsideCloth(
       material, // 選擇哪種布料 我會需要裡面的幅寬來計算版型可以排幾個
       kind, // 2 = 表布  3 = 裡布
+      additionalHeight, // 額外增加的長度，加工過程會增加紙跟布的使用量
       typesetting, // 是否啟用智慧排版 true = 啟用  false = 禁用
       layoutWidth, // 版型的寬度
       layoutHeight, // 版型的高度
@@ -406,15 +446,30 @@ export default {
           this.calOutsideCloth.layoutHeight =
             Math.ceil(obj.layout_Height * 100) / 100 // 16
           this.calOutsideCloth.clothLoss = Math.ceil(clothLoss * 100) / 100 // 17
+
+          this.calOutsideCloth.orderValue = orderValue // 19
+          this.calOutsideCloth.tailorFee = tailorFee // 20
+          this.calOutsideCloth.cropFee = cropFee // 21
+          this.calOutsideCloth.additionalHeight = !isEmpty(additionalHeight)
+            ? Math.ceil(additionalHeight * 100) / 100
+            : 0 // 22
+          this.calOutsideCloth.additionalPaperFee = Math.ceil(
+            paper_1cm_price * this.calOutsideCloth.additionalHeight
+          ) // 23.追加多少紙錢 (無轉印)
+          this.calOutsideCloth.additionalClothFee = Math.ceil(
+            ((this.calOutsideCloth.additionalHeight * material.cloth_width) /
+              900) *
+              cloth_30x30_price
+          ) // 24.追加多少布錢 (無轉印)
+
           this.calOutsideCloth.realFee = Math.ceil(
             (this.calOutsideCloth.inkFee +
               this.calOutsideCloth.paperFee +
               this.calOutsideCloth.clothFee) *
-              (1 + this.calOutsideCloth.clothLoss / 100)
+              (1 + this.calOutsideCloth.clothLoss / 100) +
+              this.calOutsideCloth.additionalPaperFee +
+              this.calOutsideCloth.additionalClothFee
           ) // 18
-          this.calOutsideCloth.orderValue = orderValue // 19
-          this.calOutsideCloth.tailorFee = tailorFee // 20
-          this.calOutsideCloth.cropFee = cropFee // 21
           this.quotationForm.saveCalaulationData.push(this.calOutsideCloth)
         } else {
           console.log('禁用智慧排版')
@@ -565,7 +620,17 @@ body > .el-container {
   background-color: red;
   float: left;
 }
-.outside-cloth-content {
+.outside-print-cloth-content {
+  float: left;
+  height: 24px;
+  line-height: 24px;
+  margin: 2px;
+}
+.outside-normal-cloth-warp {
+  background-color: blue;
+  float: left;
+}
+.outside-normal-cloth-content {
   float: left;
   height: 24px;
   line-height: 24px;
