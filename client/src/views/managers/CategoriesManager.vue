@@ -385,7 +385,7 @@ export default {
         page_index: 1, // 位於當前第幾頁
         total: 0, // 總數
         page_size: 10, // 每一頁顯示幾條數據
-        page_sizes: [5, 7, 8, 9, 10] // 選擇一頁要顯示多少條
+        page_sizes: [1, 2, 3, 4, 5, 7, 8, 9, 10] // 選擇一頁要顯示多少條
         // layouts: 'total, sizes, prev, pager, next, jumper'
       },
       search: '', // 表格搜尋的值

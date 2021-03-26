@@ -134,6 +134,26 @@
                 <span class="outside-normal-cloth-content">
                   <el-tag size="mini" type="danger">其他計算</el-tag></span
                 >
+                <span class="outside-print-cloth-content">
+                  <el-tag size="mini">{{
+                    '我的名字是：' + item.name
+                  }}</el-tag></span
+                >
+                <span class="outside-print-cloth-content">
+                  <el-tag size="mini">{{
+                    '我的名字是：' + item.name
+                  }}</el-tag></span
+                >
+                <span class="outside-print-cloth-content">
+                  <el-tag size="mini">{{
+                    '我的名字是：' + item.name
+                  }}</el-tag></span
+                >
+                <span class="outside-print-cloth-content">
+                  <el-tag size="mini">{{
+                    '我的名字是：' + item.name
+                  }}</el-tag></span
+                >
               </div>
               <!-- dialog.calculationData -->
             </el-col>
@@ -521,7 +541,14 @@ export default {
       return obj
     },
     // 處理裡布的計算 ----------------  第一層篩選之二
-    fnCalInsideCloth(groupData) {},
+    fnCalInsideCloth(groupData) {
+      console.log('我是內裡布料～喔嗨喲！')
+      let obj = {}
+      obj.kind = 3
+      obj.name = '測試一下'
+      this.quotationForm.saveCalaulationData.push(obj)
+      console.log(this.quotationForm.saveCalaulationData)
+    },
     // 處理原物料 material 與配件 accessory 的計算 ----------------  第一層篩選之三
     fnCalMAterialOrAccessory(groupData) {},
     // 取得墨水的原料資訊
