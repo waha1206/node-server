@@ -173,6 +173,10 @@ const MaterialSchema = new Schema({
   // 追加的耗材，這邊只根據紙跟布料去計算
   additional_height: {
     type: String
+  },
+  // 當選擇 4 配件專用的時候，要決定要不要智慧排版
+  typesetting: {
+    type: Boolean
   }
 })
 

@@ -889,7 +889,6 @@ export default {
     // },
     // 試算版型
     handleCalculationLayout() {
-      console.log('hello')
       this.calLayoutDialog.show = true
     },
     // 子元件選擇了哪種 paper or ink  option 會傳回選擇的種類

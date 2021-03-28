@@ -455,7 +455,9 @@ export default {
         accessory_cloth_id: '',
         pattern_download: '',
         pattern_no: '',
-        processing_fee: ''
+        processing_fee: '',
+        additional_height: '',
+        typesetting: false
       },
       // 編輯原物料的分類跳出視窗
       formData: {
@@ -494,7 +496,7 @@ export default {
         page_index: 1, // 位於當前第幾頁
         total: 0, // 總數
         page_size: 10, // 每一頁顯示幾條數據
-        page_sizes: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] // 選擇一頁要顯示多少條
+        page_sizes: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 100] // 選擇一頁要顯示多少條
         // layouts: 'total, sizes, prev, pager, next, jumper'
       }
     }

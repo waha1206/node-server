@@ -79,6 +79,21 @@
             <el-row>
               <p>{{ typesetting.one }}</p>
               <p>{{ typesetting.two }}</p>
+              <p>--</p>
+            </el-row>
+            <el-row>
+              <span
+                class="cloth-content"
+                v-for="(item, index) in clothData"
+                @click="getClothWidth(item.cloth_width)"
+              >
+                <el-tag size="mini" class="cloth-content-tag">{{
+                  item.product_name +
+                    ' 布料幅寬為：' +
+                    item.cloth_width +
+                    ' 公分'
+                }}</el-tag></span
+              >
             </el-row>
           </el-main>
         </el-container>
@@ -89,7 +104,8 @@
 
 <script>
 import { MessageBox } from 'element-ui'
-import { fnBestLayout, fnfnBestLayout } from '../../utils/calculation'
+import { fnBestLayout } from '../../utils/calculation'
+import { isEmpty } from '../../utils/tools'
 
 export default {
   name: 'cal-layout-dialog',
@@ -98,6 +114,8 @@ export default {
   },
   data() {
     return {
+      // 所有布料的資訊
+      clothData: [],
       calForm: {
         layoutWidth: 0,
         layoutHeight: 0,
@@ -112,6 +130,9 @@ export default {
     }
   },
 
+  created() {
+    this.getAllCloth()
+  },
   mounted() {},
   computed: {},
   watch: {
@@ -149,6 +170,32 @@ export default {
   },
   methods: {
     // **********************************************  讀取資料開始 **********************************************
+    getAllCloth() {
+      this.$axios
+        .get('/api/material/cloth/')
+        .then((res) => {
+          // 添加成功
+          this.$message({
+            message: '獲取布料資訊成功！',
+            type: 'success'
+          })
+          this.clothData.length = 0
+          this.clothData = res.data.map((item) => {
+            let obj = {}
+            obj.product_name = item.product_name
+            obj.cloth_width = item.cloth_width
+            return obj
+          })
+        })
+        .catch((err) => {
+          console.log('axios獲取布料資訊失敗', err)
+        })
+    },
+    // **********************************************  讀取資料結束 **********************************************
+    getClothWidth(clothWidth) {
+      if (isEmpty(clothWidth)) return
+      this.calForm.clothWidth = Number(clothWidth)
+    }
   }
 }
 </script>
@@ -204,5 +251,15 @@ export default {
   width: 100%;
   height: 40px;
   line-height: 100%;
+}
+.cloth-content {
+  margin: 2px;
+  cursor: pointer;
+}
+
+.cloth-content-tag:hover {
+  background-color: red;
+  color: yellow;
+  /* font-size: 120%; */
 }
 </style>

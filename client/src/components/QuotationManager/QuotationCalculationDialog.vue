@@ -6,9 +6,10 @@
       :close-on-click-model="false"
       :close-on-press-escape="false"
       :modal-append-to-body="false"
+      width="1280px"
     >
       <el-container>
-        <el-aside width="50%"
+        <el-aside width="70%"
           ><el-row>
             <el-col
               :span="24"
@@ -16,153 +17,160 @@
               :key="index"
             >
               <!-- 如果 kind === 2 下面是揭示 表布的各種計算欄位 -->
-              <div v-if="item.kind === 2" class="outside-cloth-warp">
-                <span class="outside-print-cloth-content">
-                  <el-tag size="mini" type="danger">表布計算</el-tag></span
+              <!-- 這邊的 kind 是 原物料當中的 kind 2 = 轉印布料 3 = 非轉印布料 -->
+              <div
+                v-if="item.materialKind === 2 || item.materialKind === 3"
+                class="cloth-warp"
+              >
+                <!-- 這邊的 groupKind = 原物料組 裡面的 kind -->
+                <!-- 1 = 表布專用  2= 裡布專用(枕類代表背面) -->
+                <span class="cloth-content">
+                  <el-tag size="mini" type="danger">{{
+                    item.name
+                  }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '布料幅寬：' + item.clothWidth + ' 公分'
                   }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '版型寬：' + item.layoutWidth + ' 公分'
                   }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '版型高：' + item.layoutHeight + ' 公分'
                   }}</el-tag></span
                 >
-                <span
-                  class="outside-print-cloth-content"
-                  v-if="item.typesetting"
-                >
+                <span class="cloth-content" v-if="item.typesetting">
                   <el-tag size="mini">智慧排版：是</el-tag></span
                 >
-                <span class="outside-print-cloth-content" v-else>
+                <span class="cloth-content" v-else>
                   <el-tag size="mini">智慧排版：否</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '排版耗損率：' + item.lossPercentage + ' %'
                   }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '印布耗損率：' + item.clothLoss + ' %'
                   }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '橫排：' + item.rowNumber + ' 個'
                   }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '使用布長：' + item.clothHeight + ' 公分'
                   }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '布料才積：' + item.clothArea + ' 才'
                   }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '布料小計：' + item.clothFee + ' 元'
                   }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '轉印紙總計：' + item.paperFee + ' 元'
                   }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '墨水總計：' + item.inkFee + ' 元'
                   }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '訂購數量：' + item.orderValue + ' 個'
                   }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '平車費用：' + item.tailorFee + ' 元'
                   }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '裁切布料費用：' + item.cropFee + ' 元'
                   }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '轉印增加長度：' + item.additionalHeight + ' 公分'
                   }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '轉印紙增加費用：' + item.additionalPaperFee + ' 元'
                   }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '布料增加費用：' + item.additionalClothFee + ' 元'
                   }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <span class="cloth-content">
                   <el-tag size="mini">{{
                     '總計 (墨水+紙+布) * 印布耗損率 + 額外紙跟布：' +
                       item.realFee +
-                      ' 元'
+                      ' 元 (不含平車與裁切布料費用)'
                   }}</el-tag></span
                 >
-                <span class="outside-print-cloth-content">
+                <!-- <span class="cloth-content">
                   <el-tag size="mini">{{
                     '目前 quotationForm.saveCalaulationData 有 ' +
                       quotationForm.saveCalaulationData.length +
                       ' 筆 資料'
                   }}</el-tag></span
+                > -->
+              </div>
+              <div v-else-if="item.materialKind === 1" class="material-warp">
+                <span class="material-content">
+                  <el-tag size="mini" type="danger">{{
+                    item.name
+                  }}</el-tag></span
+                >
+                <span class="material-content">
+                  <el-tag size="mini">{{
+                    '原料成本：' + item.unitPrice + ' 元'
+                  }}</el-tag></span
+                >
+                <span class="material-content">
+                  <el-tag size="mini" v-if="item.processingFeeFlag">{{
+                    '有無加工費：有'
+                  }}</el-tag>
+                  <el-tag size="mini" v-else>{{
+                    '有無加工費：無'
+                  }}</el-tag></span
+                >
+                <span class="material-content">
+                  <el-tag size="mini">{{
+                    '加工費用：' + item.processingFee + ' 元'
+                  }}</el-tag></span
                 >
               </div>
-              <!-- 這裡開始會是展示裡布的部分 -->
-              <div v-if="item.kind === 3" class="outside-normal-cloth-warp">
-                <span class="outside-normal-cloth-content">
-                  <el-tag size="mini" type="danger">其他計算</el-tag></span
-                >
-                <span class="outside-print-cloth-content">
-                  <el-tag size="mini">{{
-                    '我的名字是：' + item.name
-                  }}</el-tag></span
-                >
-                <span class="outside-print-cloth-content">
-                  <el-tag size="mini">{{
-                    '我的名字是：' + item.name
-                  }}</el-tag></span
-                >
-                <span class="outside-print-cloth-content">
-                  <el-tag size="mini">{{
-                    '我的名字是：' + item.name
-                  }}</el-tag></span
-                >
-                <span class="outside-print-cloth-content">
-                  <el-tag size="mini">{{
-                    '我的名字是：' + item.name
-                  }}</el-tag></span
-                >
-              </div>
-              <!-- dialog.calculationData -->
+              <!-- 這邊的 kind 是 原物料當中的 kind 2 = 轉印布料 3 = 非轉印布料 -->
             </el-col>
           </el-row></el-aside
         >
         <el-main>Main</el-main>
       </el-container>
       <el-container>
-        <el-footer></el-footer>
+        <el-footer>
+          <el-button type="primary">新增報價單</el-button>
+        </el-footer>
       </el-container>
     </el-dialog>
   </div>
@@ -179,10 +187,27 @@ export default {
   },
   data() {
     return {
-      // calOutsideCloth 這邊會記錄 外層布料的 所有訊息狀態
-      calOutsideCloth: {},
-      emptyCalOutsideCloth: {
-        kind: 0, // 1.記錄了是哪一種的原料類型，每種資料 kind 有不同的紀錄欄位 1.一般原料 2.轉印布料 3.現成布料 4.配件專用
+      // 金額統計
+      calculationFee: {},
+      // 紀錄 一般原料
+      calculationMaterial: {},
+      emptyCalculationMaterial: {
+        materialKind: 0, // 1.記錄了是哪一種的原料類型，每種資料 kind 有不同的紀錄欄位 1.一般原料 2.轉印布料 3.現成布料 4.配件專用
+        unitPrice: 0, // 2.原料成本
+        processingFeeFlag: false, // 3.是否要帶上加工費用
+        processingFee: 0, // 4.加工費用
+        name: '', // 顯示在網頁上辨識的名稱
+        materialId: '' // 原物料的 _id
+      },
+      // 紀錄 布料配件
+      claculationAccessory: {},
+      emptyCalculationAccessory: {
+        materialKind: 0 // 1.記錄了是哪一種的原料類型，每種資料 kind 有不同的紀錄欄位 1.一般原料 2.轉印布料 3.現成布料 4.配件專用
+      },
+      // calculationCloth 這邊會記錄 外層布料的 所有訊息狀態
+      calculationCloth: {},
+      emptyCalculationCloth: {
+        materialKind: 0, // 1.記錄了是哪一種的原料類型，每種資料 kind 有不同的紀錄欄位 1.一般原料 2.轉印布料 3.現成布料 4.配件專用
         typesetting: false, // 2.是否啟用智慧排版
         clothHeight: 0, // 3.使用了多少的布料，總長度單位為公分，取最大的接近整數
         clothArea: 0, // 4.使用的布料他的才積，取最大的接近整數
@@ -205,7 +230,10 @@ export default {
         cropFee: 0, // 21.裁切費用
         additionalHeight: 0, // 22.追加紙跟布料的長度
         additionalPaperFee: 0, // 23.額外增加的轉印紙費用
-        additionalClothFee: 0 // 24.額外增加的布料費用
+        additionalClothFee: 0, // 24.額外增加的布料費用
+        groupKind: 0, // 25.原物料組的 kind 1.表布 2.裡布 3.一般原料跟配件
+        name: '', // 26.這是哪種原物料的文字說明
+        materialId: '' // 27.原物料的 _id
       },
       // 報價單欄位開始，這邊的資料會存放到報價單的資料庫裏面，最原始的資料
       quotationForm: {},
@@ -256,7 +284,7 @@ export default {
   created() {},
   watch: {
     dialog(dialog) {
-      this.calOutsideCloth = Object.assign({}, this.emptyCalOutsideCloth)
+      this.calculationCloth = Object.assign({}, this.emptyCalculationCloth)
       this.quotationForm = Object.assign({}, this.emptyQuotationForm)
       this.quotationForm.saveCalaulationData.length = 0
       this.handleSaveQuotationData(dialog.calculationData)
@@ -328,10 +356,10 @@ export default {
     // https://wcc723.github.io/javascript/2017/06/29/es6-native-array/
     handleSaveQuotationData(dialogData) {
       this.quotationForm.category_id = dialogData.categoryData[0]._id // 記錄這張報價單的來源 _id
-      this.quotationForm.sales_value = dialogData.salesValue
-      this.quotationForm.customer_value = dialogData.customerValue
-      this.quotationForm.order_value = dialogData.orderValue
-      this.quotationForm.proofing_value = dialogData.proofingValue
+      this.quotationForm.sales_value = dialogData.salesValue // 業務 _id
+      this.quotationForm.customer_value = dialogData.customerValue // 客戶 _id
+      this.quotationForm.order_value = dialogData.orderValue // 訂購數量
+      this.quotationForm.proofing_value = dialogData.proofingValue // 打樣數量
       this.quotationForm.material_group = dialogData.materialGroup.map(
         (item) => {
           return item._id
@@ -345,12 +373,20 @@ export default {
     },
     // 如何使用異步讀取 server 資料，完美的解答
     // https://stackoverflow.com/questions/54955426/how-to-use-async-await-in-vue-js
-    handleCalculationData(calculationData) {
+    async handleCalculationData(calculationData) {
+      let paper = await this.getMaterialData(
+        calculationData.categoryData[0].paper_id
+      ) // 取得轉印紙的資料 paper.data.unit_price
+      let ink = await this.getMaterialData(
+        calculationData.categoryData[0].ink_id
+      ) // 取得墨水的資料 ink.data.unit_price
       for (let i = 0; i < calculationData.materialGroup.length; i++) {
         // 第一次過濾使用原物料組 materialGroup 的 kind 去判斷
+        // kind = 1  代表是表布 kink = 2 代表是裡布
+
         switch (calculationData.materialGroup[i].kind) {
-          case 1: // kind = 1 計算表布
-            this.fnCalOutsideCloth(
+          case 1: // kind = 1 計算表布  (groupKind)
+            this.fnCalculationCloth(
               calculationData.selectMaterial[i],
               calculationData.selectMaterial[i].kind,
               calculationData.selectMaterial[i].additional_height,
@@ -358,18 +394,38 @@ export default {
               calculationData.categoryData[0].outside_layout_width,
               calculationData.categoryData[0].outside_layout_height,
               calculationData.categoryData[0].outside_cloth_loss,
-              calculationData.categoryData[0].ink_id,
-              calculationData.categoryData[0].paper_id,
+              ink,
+              paper,
               calculationData.categoryData[0].tailor_fee,
               calculationData.categoryData[0].crop_fee,
-              calculationData.orderValue
+              calculationData.orderValue,
+              calculationData.materialGroup[i].kind
             )
             break
-          case 2: // kind = 2 裡布計算
-            this.fnCalInsideCloth(calculationData.materialGroup[i])
+
+          case 2: // kind = 2 裡布計算  (groupKind)
+            this.fnCalculationCloth(
+              calculationData.selectMaterial[i],
+              calculationData.selectMaterial[i].kind,
+              calculationData.selectMaterial[i].additional_height,
+              calculationData.categoryData[0].typesetting,
+              calculationData.categoryData[0].inside_layout_width,
+              calculationData.categoryData[0].inside_layout_height,
+              calculationData.categoryData[0].inside_cloth_loss,
+              ink,
+              paper,
+              calculationData.categoryData[0].tailor_fee,
+              calculationData.categoryData[0].crop_fee,
+              calculationData.orderValue,
+              calculationData.materialGroup[i].kind
+            )
             break
-          case 3: // kind = 3 原物料與配件的計算
-            this.fnCalMAterialOrAccessory(calculationData.materialGroup[i])
+
+          case 3: // kind = 3 原物料與配件的計算  (groupKind)
+            this.fnCalMaterialOrAccessory(
+              calculationData.selectMaterial[i],
+              calculationData.selectMaterial[i].kind
+            )
             break
           default:
             this.$message({
@@ -380,123 +436,138 @@ export default {
       }
     },
     // **********************************************  計算報價相關 結束 **********************************************
-    // 處理表布的計算，kind 2 = 表布   kind 3 = 裡布  ----------------
-    async fnCalOutsideCloth(
+    // 處理表布的計算，materialKind 2 = 表布   materialKind 3 = 裡布
+    fnCalculationCloth(
       material, // 選擇哪種布料 我會需要裡面的幅寬來計算版型可以排幾個
-      kind, // 2 = 表布  3 = 裡布
+      materialKind, // 2 = 表布  3 = 裡布 (這裡的 kind 是 原物料的 kind)
       additionalHeight, // 額外增加的長度，加工過程會增加紙跟布的使用量
       typesetting, // 是否啟用智慧排版 true = 啟用  false = 禁用
       layoutWidth, // 版型的寬度
       layoutHeight, // 版型的高度
       clothLoss, // 布料耗損 20 單位因為是 % 所以要把成本 乘上 (100 + 20) / 100
-      ink_id, // 這裡的墨水是讀取 建構商品裡的
-      paper_id, // 這邊的紙是讀取 建構商品裡的
+      ink, // 這裡的墨水是讀取 建構商品裡的
+      paper, // 這邊的紙是讀取 建構商品裡的
       tailorFee, // 平車費用
       cropFee, // 裁切布料費用
-      orderValue // 訂購數量
+      orderValue, // 訂購數量
+      groupKind // 這邊的 kind 是原物料組的
     ) {
-      // console.log(
-      //   material,
-      //   kind,
-      //   clothWidth,
-      //   clothHeight,節省
-      //   ClothLoss,
-      //   ink_id,
-      //   paper_id
-      // )
+      // return obj = { cloth_length , cloth_area ,  row_number, loss_percentage}
+      // 計算布料使用量 fnBestLayout 智慧排版需要輸入兩次計算
+      // typesetting 判斷需不需要使用智慧排版 true  = 要  false = 不要
 
-      if (kind === 2) {
-        // typesetting 判斷需不需要使用智慧排版 true  = 要  false = 不要
-        if (typesetting) {
-          let paper = await this.getMaterialData(paper_id) // 取得轉印紙的資料 paper.data.nit_price
-          let ink = await this.getMaterialData(ink_id) // 取得墨水的資料 ink.data.unit_price
+      let b_obj = {}
+      let a_obj = {}
 
-          // return obj = { cloth_length , cloth_area ,  row_number, loss_percentage}
-          // 計算布料使用量 fnBestLayout 智慧排版需要輸入兩次計算
-          let a_obj = this.fnBestLayout(
-            layoutWidth,
-            layoutHeight,
-            material.cloth_width,
-            orderValue
-          )
-          // 交換寬跟高的位置
-          let b_obj = this.fnBestLayout(
-            layoutHeight,
-            layoutWidth,
-            material.cloth_width,
-            orderValue
-          )
-
-          // 智慧排版，布料需要旋轉90度去找最加的排版輸出方式
-          const obj = a_obj.cloth_area > b_obj.cloth_area ? b_obj : a_obj // 商品使用的布料才數
-          // 布料每才的價錢 - 最後存起來的時候要在做小數點後兩位的無條件進入
-          const cloth_30x30_price =
-            material.unit_price / ((material.cloth_width * 90) / 900)
-          const cloth_fee = cloth_30x30_price * obj.cloth_area // 最終布料的費用在這邊
-          // console.log('墨水每CC成本：', ink.data.unit_price) // 墨水成本
-          const ink_30x30_price = ink.data.unit_price * 0.6 // 墨水噴一才的費用
-          const ink_fee = obj.cloth_area * ink_30x30_price // 商品使用的墨水費用
-          const paper_1cm_price = paper.data.unit_price / 100 // 長度1公分的紙多少錢
-          const paper_fee = paper_1cm_price * obj.cloth_length // 布料長度 * 紙1cm 的成本
-
-          // 把 訊息記錄下來
-          this.calOutsideCloth.kind = kind // 1
-          this.calOutsideCloth.typesetting = typesetting // 2
-          this.calOutsideCloth.clothHeight =
-            Math.ceil(obj.cloth_length * 100) / 100 // 3
-          this.calOutsideCloth.clothArea = Math.ceil(obj.cloth_area * 100) / 100 // 4
-          this.calOutsideCloth.rowNumber = obj.row_number // 5
-          this.calOutsideCloth.clothWidth =
-            Math.ceil(material.cloth_width * 100) / 100 // 6
-          this.calOutsideCloth.lossPercentage =
-            Math.ceil(obj.loss_percentage * 100) / 100 // 7
-          this.calOutsideCloth.cloth30x30Price =
-            Math.ceil(cloth_30x30_price * 100) / 100 // 8
-          this.calOutsideCloth.clothFee = Math.ceil(cloth_fee * 100) / 100 // 9
-          this.calOutsideCloth.inkCcPrice =
-            Math.ceil(ink.data.unit_price * 100) / 100 // 10
-          this.calOutsideCloth.ink30x30Price =
-            Math.ceil(ink_30x30_price * 100) / 100 // 11
-          this.calOutsideCloth.inkFee = Math.ceil(ink_fee * 100) / 100 // 12
-          this.calOutsideCloth.paper1CmPrice =
-            Math.ceil(paper_1cm_price * 100) / 100 // 13
-          this.calOutsideCloth.paperFee = Math.ceil(paper_fee * 100) / 100 // 14
-          this.calOutsideCloth.layoutWidth =
-            Math.ceil(obj.layout_width * 100) / 100 // 15
-          this.calOutsideCloth.layoutHeight =
-            Math.ceil(obj.layout_Height * 100) / 100 // 16
-          this.calOutsideCloth.clothLoss = Math.ceil(clothLoss * 100) / 100 // 17
-
-          this.calOutsideCloth.orderValue = orderValue // 19
-          this.calOutsideCloth.tailorFee = tailorFee // 20
-          this.calOutsideCloth.cropFee = cropFee // 21
-          this.calOutsideCloth.additionalHeight = !isEmpty(additionalHeight)
-            ? Math.ceil(additionalHeight * 100) / 100
-            : 0 // 22
-          this.calOutsideCloth.additionalPaperFee = Math.ceil(
-            paper_1cm_price * this.calOutsideCloth.additionalHeight
-          ) // 23.追加多少紙錢 (無轉印)
-          this.calOutsideCloth.additionalClothFee = Math.ceil(
-            ((this.calOutsideCloth.additionalHeight * material.cloth_width) /
-              900) *
-              cloth_30x30_price
-          ) // 24.追加多少布錢 (無轉印)
-
-          this.calOutsideCloth.realFee = Math.ceil(
-            (this.calOutsideCloth.inkFee +
-              this.calOutsideCloth.paperFee +
-              this.calOutsideCloth.clothFee) *
-              (1 + this.calOutsideCloth.clothLoss / 100) +
-              this.calOutsideCloth.additionalPaperFee +
-              this.calOutsideCloth.additionalClothFee
-          ) // 18
-          this.quotationForm.saveCalaulationData.push(this.calOutsideCloth)
-        } else {
-          console.log('禁用智慧排版')
-        }
-      } else {
-        console.log('這邊會是內裡布料的計算')
+      if (typesetting) {
+        // 交換寬跟高的位置
+        b_obj = this.fnBestLayout(
+          layoutHeight,
+          layoutWidth,
+          material.cloth_width,
+          orderValue
+        )
       }
+      a_obj = this.fnBestLayout(
+        layoutWidth,
+        layoutHeight,
+        material.cloth_width,
+        orderValue
+      )
+
+      // 智慧排版，布料需要旋轉90度去找最加的排版輸出方式
+      const obj = a_obj.cloth_area > b_obj.cloth_area ? b_obj : a_obj // 商品使用的布料才數
+      // 布料每才的價錢 - 最後存起來的時候要在做小數點後兩位的無條件進入
+      const cloth_30x30_price =
+        material.unit_price / ((material.cloth_width * 90) / 900)
+      const cloth_fee = cloth_30x30_price * obj.cloth_area // 最終布料的費用在這邊
+      // console.log('墨水每CC成本：', ink.data.unit_price) // 墨水成本
+      const ink_30x30_price = ink.data.unit_price * 0.6 // 墨水噴一才的費用
+      const ink_fee = obj.cloth_area * ink_30x30_price // 商品使用的墨水費用
+      const paper_1cm_price = paper.data.unit_price / 100 // 長度1公分的紙多少錢
+      const paper_fee = paper_1cm_price * obj.cloth_length // 布料長度 * 紙1cm 的成本
+
+      // 把 訊息記錄下來
+      this.calculationCloth.materialKind = materialKind // 1
+      this.calculationCloth.typesetting = typesetting // 2
+      this.calculationCloth.clothHeight =
+        Math.ceil(obj.cloth_length * 100) / 100 // 3
+      this.calculationCloth.clothArea = Math.ceil(obj.cloth_area * 100) / 100 // 4
+      this.calculationCloth.rowNumber = obj.row_number // 5
+      this.calculationCloth.clothWidth =
+        Math.ceil(material.cloth_width * 100) / 100 // 6
+      this.calculationCloth.lossPercentage =
+        Math.ceil(obj.loss_percentage * 100) / 100 // 7
+      this.calculationCloth.cloth30x30Price =
+        Math.ceil(cloth_30x30_price * 100) / 100 // 8
+      this.calculationCloth.clothFee = Math.ceil(cloth_fee * 100) / 100 // 9
+      this.calculationCloth.inkCcPrice =
+        Math.ceil(ink.data.unit_price * 100) / 100 // 10
+      this.calculationCloth.ink30x30Price =
+        Math.ceil(ink_30x30_price * 100) / 100 // 11
+      this.calculationCloth.inkFee = Math.ceil(ink_fee * 100) / 100 // 12
+      this.calculationCloth.paper1CmPrice =
+        Math.ceil(paper_1cm_price * 100) / 100 // 13
+      this.calculationCloth.paperFee = Math.ceil(paper_fee * 100) / 100 // 14
+      this.calculationCloth.layoutWidth =
+        Math.ceil(obj.layout_width * 100) / 100 // 15
+      this.calculationCloth.layoutHeight =
+        Math.ceil(obj.layout_Height * 100) / 100 // 16
+      this.calculationCloth.clothLoss = Math.ceil(clothLoss * 100) / 100 // 17
+
+      this.calculationCloth.orderValue = orderValue // 19
+      this.calculationCloth.tailorFee = tailorFee // 20
+      this.calculationCloth.cropFee = cropFee // 21
+      this.calculationCloth.additionalHeight = !isEmpty(additionalHeight)
+        ? Math.ceil(additionalHeight * 100) / 100
+        : 0 // 22
+      this.calculationCloth.additionalPaperFee = Math.ceil(
+        paper_1cm_price * this.calculationCloth.additionalHeight
+      ) // 23.追加多少紙錢 (無轉印)
+      this.calculationCloth.additionalClothFee = Math.ceil(
+        ((this.calculationCloth.additionalHeight * material.cloth_width) /
+          900) *
+          cloth_30x30_price
+      ) // 24.追加多少布錢 (無轉印)
+
+      // 18.(布料+墨水+紙) * (1+轉印布料的耗損率)
+      this.calculationCloth.groupKind = groupKind
+      this.calculationCloth.realFee = Math.ceil(
+        (this.calculationCloth.inkFee +
+          this.calculationCloth.paperFee +
+          this.calculationCloth.clothFee) *
+          (1 + this.calculationCloth.clothLoss / 100) +
+          this.calculationCloth.additionalPaperFee +
+          this.calculationCloth.additionalClothFee
+      ) // 18
+      // 紀錄原物料的 id
+      this.calculationCloth.materialId = material._id
+      this.quotationForm.saveCalaulationData.push(this.calculationCloth)
+
+      // 如果是非轉印布料的話 material.kind 判斷，把不需要的欄位填 0 ， 墨水，轉印紙等等都不需要
+      // groupKind 1.表布  2.裡布  3.一般原料，布料配件用
+      // naterialKind 1.一般原料  2.轉印布料   3.現成布料  4.布料配件用  5.紙   6.墨水
+      let clothName = groupKind === 1 ? '表布類' : '裡布類'
+      if (materialKind === 3) {
+        this.calculationCloth.ink30x30Price = 0
+        this.calculationCloth.inkCcPrice = 0
+        this.calculationCloth.inkFee = 0
+        this.calculationCloth.paper1CmPrice = 0
+        this.calculationCloth.paperFee = 0
+        this.calculationCloth.realFee = Math.ceil(
+          this.calculationCloth.clothFee *
+            (1 + this.calculationCloth.clothLoss / 100) +
+            this.calculationCloth.additionalPaperFee +
+            this.calculationCloth.additionalClothFee
+        ) // 18
+        this.calculationCloth.name =
+          clothName + '：我是非轉印布料-' + material.product_name
+      } else {
+        this.calculationCloth.name =
+          clothName + '：我是轉印布料-' + material.product_name
+      }
+      // 每次計算完之後，都把欄位清空，讓之後的 for 迴圈循環的資料重新使用
+      this.calculationCloth = Object.assign({}, this.emptyCalculationCloth)
     },
     // 選擇最好的排版方式 回傳值 使用了幾才的布料
     fnBestLayout(layoutWidth, layoutHeight, clothWidth, orderValue) {
@@ -528,33 +599,50 @@ export default {
           clothWidth) *
         100
       ).toFixed(2)
-      // console.log(
-      //   '布料幅寬：',
-      //   clothWidth,
-      //   '版型寬：',
-      //   layoutWidth,
-      //   '橫向可以排幾個：',
-      //   obj.row_number + ' 個 ',
-      //   '耗損率：',
-      //   obj.loss_percentage + '%'
-      // )
+      // return obj = { cloth_length , cloth_area ,  row_number, loss_percentage}
       return obj
     },
-    // 處理裡布的計算 ----------------  第一層篩選之二
-    fnCalInsideCloth(groupData) {
-      console.log('我是內裡布料～喔嗨喲！')
-      let obj = {}
-      obj.kind = 3
-      obj.name = '測試一下'
-      this.quotationForm.saveCalaulationData.push(obj)
-      console.log(this.quotationForm.saveCalaulationData)
+
+    // 處理原物料 material 與配件 accessory 的計算，進去後要判斷 materialKind 3 or 4
+    fnCalMaterialOrAccessory(material, materialKind) {
+      // 一般配件紙會用到兩個參數 material and materialKind
+      if (materialKind === 1) {
+        // 如果 materialKind = 3 就 原料成本 + 判斷要不要 加工費 然後結案，這邊會牽扯到 加工費，薪資
+        this.calculationMaterial.materialKind = materialKind
+        this.calculationMaterial.materialId = material._id
+        this.calculationMaterial.name = '一般原物料：' + material.product_name
+        this.calculationMaterial.unitPrice =
+          Math.ceil(material.unit_price * 100) / 100
+        this.calculationMaterial.processingFeeFlag =
+          material.processing_fee_flag
+
+        // 如果勾選要加工費用，才會去計算
+        if (material.processing_fee_flag && !isEmpty(material.processing_fee)) {
+          this.calculationMaterial.processingFee =
+            Math.ceil(material.processing_fee * 100) / 100
+        } else {
+          this.calculationMaterial.processingFee = 0
+        }
+
+        this.quotationForm.saveCalaulationData.push(this.calculationMaterial)
+        this.calculationMaterial = Object.assign(
+          {},
+          this.emptyCalculationMaterial
+        )
+      } else {
+        // 如果 materialKind = 4 就 要計算布料那些很複雜的東西
+        // 配件類的會用到的參數有
+        // material 原料的原始資訊
+        // materialKind 原料的種類 判斷是 material or accessory
+        // orderValue 訂購數量
+
+        console.log(material)
+      }
     },
-    // 處理原物料 material 與配件 accessory 的計算 ----------------  第一層篩選之三
-    fnCalMAterialOrAccessory(groupData) {},
-    // 取得墨水的原料資訊
-    getMaterialData(ink_id) {
+    // 取得墨水或是紙的的原料資訊，最主要是要找到裡面的 unit_price
+    getMaterialData(id) {
       return this.$axios
-        .get(`/api/material/get-material-by-id/${ink_id}`)
+        .get(`/api/material/get-material-by-id/${id}`)
         .catch((err) => {
           console.log(err)
         })
@@ -643,11 +731,24 @@ body > .el-container {
   line-height: 320px;
 }
 
-.outside-cloth-warp {
+.cloth-warp {
   background-color: red;
   float: left;
+  width: 100%;
 }
-.outside-print-cloth-content {
+.cloth-content {
+  float: left;
+  height: 24px;
+  line-height: 24px;
+  margin: 2px;
+}
+
+.material-warp {
+  background-color: green;
+  float: left;
+  width: 100%;
+}
+.material-content {
   float: left;
   height: 24px;
   line-height: 24px;

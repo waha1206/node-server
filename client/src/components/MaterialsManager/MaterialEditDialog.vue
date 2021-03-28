@@ -425,7 +425,23 @@
             <!-- 第九列結束 -->
             <!-- 第十列 -->
             <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="4">
+              <el-col :span="4" style="position:relative">
+								<div @click="handleCalculationLayout">
+                  <el-tooltip
+                    class="calculation-layout-tooltip"
+                    effect="dark"
+                    content="試算版型耗損率"
+                    placement="right"
+                    style="z-index:2000"
+                  >
+                    <el-badge
+                      value="試算"
+                      class="item"
+                      style="margin-top: 0px;margin-right: 0px;position:absolute;top:10px;right:-25px"
+                    >
+                    </el-badge>
+                  </el-tooltip>
+                </div>
                 <el-form-item prop="layout_width" label="版型寬度：">
                   <el-input
                     placeholder="版型寬度"
@@ -479,8 +495,25 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <!-- 第十一列結束 -->
+            <!-- 第十列結束 -->
+            <!-- 第十一列開始 -->
             <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="6"
+                <div class="grid-content ">
+                  <el-form-item
+                    prop="typesetting"
+                    label="智慧排版："
+                    label-width="110px"
+                  >
+                    <!-- @change="handleTypesettingChange" -->
+                    <el-switch
+                      v-model="materialDataForm.typesetting"
+                      active-text="啟用"
+                      inactive-text="禁用"
+                    >
+                    </el-switch>
+                  </el-form-item></div
+              ></el-col>
               <el-col :span="8" style="position:relative">
                 <!-- style="position:relative;border-radius:8px" -->
                 <div @click="handleClearAccessoryCloth">
@@ -535,13 +568,7 @@
                     <span
                       >10安仿帆布會追加的紙跟布的長度，紙跟布請設定一樣長度</span
                     ><br />
-                    <span
-                      >目前得知大概要預留2碼長度
-                      (180公分)，此欄位請勿輸入小數點</span
-                    ><br />
-                    <span
-                      >其他布料多少抓一些就好，只限布料類型原料有輸入值</span
-                    >
+                    <span>目前得知大概要預留2碼長度</span>
                   </div>
                 </el-tooltip>
                 <el-form-item prop="accessory_cloth_id" label="額外追加：">
@@ -549,11 +576,12 @@
                     placeholder="正整數"
                     size="mini"
                     type="type"
-                    v-model="materialDataForm.additional_height"
+                    v-model="materialDataForm.layout_height"
                   ></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
+            <!-- 第十一列結束 -->
           </el-header>
 
           <!-- 第七行開始，圖片上傳 -->
@@ -644,12 +672,14 @@
       @reportError="reportError"
     >
     </MaterialClothDialog>
+		<CalLayoutDialog :dialog="calLayoutDialog"></CalLayoutDialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import MaterialClothDialog from '../../components/MaterialsManager/MaterialClothDialog'
+import CalLayoutDialog from '../../components/CategoriesManager/CalLayoutDialog'
 
 export default {
   name: 'material-edit-dialog',
@@ -662,10 +692,15 @@ export default {
     formData: Object
   },
   components: {
-    MaterialClothDialog
+    MaterialClothDialog,
+		CalLayoutDialog
   },
   data() {
     return {
+			 calLayoutDialog: {
+        show: false,
+        title: '試算版型尺寸'
+      },
       // 控制 material cloth dialog 的物件
       materialClothDialog: {
         show: false,
@@ -948,6 +983,10 @@ export default {
       // console.log('this.files', this.files)
     },
     // ************************************ 圖片結束 ************************************
+		    // 試算版型
+    handleCalculationLayout() {
+      this.calLayoutDialog.show = true
+    },
     // 無條件進位，小數點第三位數會無條件進位
     setCeil(float) {
       this.retailPrice = Math.ceil(float * 100) / 100
@@ -1088,4 +1127,8 @@ body > .el-container {
   line-height: 100% !important;
 }
 /* 布局容器 結束 */
+
+.calculation-layout-tooltip{
+	cursor: pointer;
+}
 </style>

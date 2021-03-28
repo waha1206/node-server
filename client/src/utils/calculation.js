@@ -39,10 +39,10 @@ function fnBestLayout(
   let result =
     '布料使用了：' +
     obj.cloth_length +
-    ' 公分，' +
-    '版型寬：' +
+    ' 公分 (數字越小越好)，' +
+    '版型寬度：' +
     layoutWidth +
-    '，可以排' +
+    '公分，此布料幅寬可以排' +
     obj.row_number +
     ' 個，' +
     '耗損率：' +
