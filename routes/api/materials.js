@@ -145,9 +145,14 @@ router.get(
     // query 選擇的條件
     // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
     // const query = {}
-    // const options = {}
+    const options = {
+      _id: 1,
+      product_name: 1,
+      unit_price: 1,
+      cloth_width: 1
+    }
 
-    Material.find({ kind: { $in: ['2', '3'] } })
+    Material.find({ kind: { $in: ['2', '3'] } }, options)
       // .sort({ type: 1 }) 如果需要排序的話
       .then((materials) => {
         if (!materials) {

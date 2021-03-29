@@ -551,7 +551,7 @@
                   >
                 </el-form-item>
               </el-col>
-              <el-col :span="4" style="position:relative">
+              <el-col :span="5" style="position:relative">
                 <el-tooltip
                   class="item"
                   effect="dark"
@@ -561,7 +561,7 @@
                   <el-badge
                     value="說明"
                     class="item"
-                    style="margin-top: 0px;margin-right: 0px;position:absolute;top:10px;right:-30px"
+                    style="margin-top: 0px;margin-right: 0px;position:absolute;top:10px;right:20px"
                   >
                   </el-badge>
                   <div slot="content">
@@ -571,13 +571,24 @@
                     <span>目前得知大概要預留2碼長度</span>
                   </div>
                 </el-tooltip>
-                <el-form-item prop="accessory_cloth_id" label="額外追加：">
+                <el-form-item prop="additional_height" label="額外追加：">
                   <el-input
                     placeholder="正整數"
                     size="mini"
                     type="type"
-                    v-model="materialDataForm.layout_height"
+                    v-model="materialDataForm.additional_height"
                   ></el-input>
+                </el-form-item>
+              </el-col>
+							<el-col :span="4">
+                <el-form-item prop="product_profit" label="表布耗損：">
+                  <my-percentage-input
+                    :isReadyOnly="false"
+                    :width="34"
+                    :height="24"
+                    type="accessory_cloth_loss"
+                    v-model="accessoryClothLoss"
+                  ></my-percentage-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -724,6 +735,7 @@ export default {
       tailorFee: 0, // 平車費用
       processingFee: 0, // 加工費用
       cropFee: 0, // 裁切費用
+			accessoryClothLoss:0, // 配件類布料耗損
       accessoryClothName: '',
       materialDataForm: {},
       // materialDataForm_rules: {
@@ -791,6 +803,9 @@ export default {
     }
   },
   watch: {
+		accessoryClothLoss(newValue){
+			this.materialDataForm.accessory_cloth_loss = String(newValue)
+		},
     processingFee(newValue) {
       this.materialDataForm.processing_fee = String(newValue)
     },
@@ -847,6 +862,7 @@ export default {
         this.cropFee = 0
         this.tailorFee = 0
         this.processingFee = 0
+				this.accessoryClothLoss = 0
       } else {
         if (isNaN(this.materialDataForm.processing_fee)) {
           this.processingFee = 0
@@ -867,6 +883,11 @@ export default {
           this.productProfit = 0
         } else {
           this.productProfit = Number(this.materialDataForm.product_profit)
+        }
+        if (isNaN(this.materialDataForm.accessory_cloth_loss)) {
+          this.accessoryClothLoss = 0
+        } else {
+          this.accessoryClothLoss = Number(this.materialDataForm.accessory_cloth_loss)
         }
         if (isNaN(this.materialDataForm.retail_price)) {
           this.retailPrice = 0

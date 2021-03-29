@@ -177,6 +177,9 @@ const MaterialSchema = new Schema({
   // 當選擇 4 配件專用的時候，要決定要不要智慧排版
   typesetting: {
     type: Boolean
+  },
+  accessory_cloth_loss: {
+    type: String
   }
 })
 

@@ -91,7 +91,9 @@
                   item.product_name +
                     ' 布料幅寬為：' +
                     item.cloth_width +
-                    ' 公分'
+                    ' 公分 一碼 ' +
+                    item.unit_price +
+                    ' 元'
                 }}</el-tag></span
               >
             </el-row>
@@ -184,6 +186,7 @@ export default {
             let obj = {}
             obj.product_name = item.product_name
             obj.cloth_width = item.cloth_width
+            obj.unit_price = item.unit_price
             return obj
           })
         })
