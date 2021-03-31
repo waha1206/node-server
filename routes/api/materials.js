@@ -149,7 +149,8 @@ router.get(
       _id: 1,
       product_name: 1,
       unit_price: 1,
-      cloth_width: 1
+      cloth_width: 1,
+      imgs: 1
     }
 
     Material.find({ kind: { $in: ['2', '3'] } }, options)

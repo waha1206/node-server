@@ -30,11 +30,11 @@
         <span slot="title" class="dialog-title">{{ dialog.title }}</span>
 
         <el-main class="quotation-main">
-          <el-row v-if="materialClothData.length">
+          <el-row v-if="tableData.length > 0">
             <el-col :span="4" v-for="(item, index) in tableData" :key="index">
               <el-card>
                 <img
-                  v-if="item.imgs[0]"
+                  v-if="item.imgs"
                   :src="item.imgs[0]"
                   class="quotation-image"
                   @click="showImage($event, item.product_name, item.imgs[0])"
@@ -101,6 +101,7 @@
 </template>
 
 <script>
+import { isEmpty } from '../../utils/tools'
 import { MessageBox } from 'element-ui'
 export default {
   name: 'material-cloth-dialog',
@@ -151,6 +152,7 @@ export default {
             type: 'success'
           })
           this.materialClothData = res.data
+          console.log(res.data)
           this.setPaginations()
         })
         .catch((err) => {
@@ -163,14 +165,7 @@ export default {
       this.my_paginations.total = this.materialClothData.length
       this.my_paginations.page_index = 1
       this.my_paginations.page_size = 12
-      // if (localStorage.group_level_two_page_size) {
-      //   this.my_paginations.page_size = Number(
-      //     localStorage.group_level_two_page_size
-      //   )
-      // } else {
-      //   this.my_paginations.page_size = 5
-      // }
-      // 設置分頁數據
+
       this.tableData = this.materialClothData.filter((item, index) => {
         return index < this.my_paginations.page_size
       })
@@ -178,7 +173,6 @@ export default {
     // 分頁的 function
     handleSizeChange(page_size) {
       // 切換每頁有幾條數據
-      localStorage.group_level_two_page_size = page_size
       this.my_paginations.page_index = 1
       this.my_paginations.page_size = page_size
       this.tableData = this.materialClothData.filter((item, index) => {

@@ -160,7 +160,7 @@ const router = new VueRouter({
         },
         {
           path: '/materials-group-manager', // 原物料組管理
-          name: 'materials-manager',
+          name: 'material-group-manager',
           component: () =>
             import('../views/managers/MaterialsGroupManager.vue'),
           meta: {

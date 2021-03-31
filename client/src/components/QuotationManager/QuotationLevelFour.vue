@@ -71,6 +71,7 @@
                 class="el-icon-loading"
                 style="float:left;width:60px;height:80px;line-height:80px;font-size:26px"
               ></i>
+
               <el-select
                 style="float:left;height:80px;line-height:80px;overflow:hidden"
                 v-model="orderValue"
@@ -87,6 +88,12 @@
                 >
                 </el-option>
               </el-select>
+              <!-- 動畫的 click -->
+              <!-- <el-image
+                class="other-wrap-left-image"
+                :src="click"
+                style="width:80px;height:80px"
+              ></el-image> -->
             </div>
           </div>
         </div>
@@ -475,7 +482,8 @@ export default {
       proofingImage: '../../../images/proofing.jpg',
       checkImage: '../../../images/check.png',
       salesImage: '../../../images/sales.png',
-      customerImage: '../../../images/customer.png'
+      customerImage: '../../../images/customer.png',
+      click: '../../../images/click.gif'
 
       // currentDate: new Date(),
     }
