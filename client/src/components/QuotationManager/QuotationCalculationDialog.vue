@@ -13,7 +13,7 @@
           ><el-row>
             <el-col
               :span="24"
-              v-for="(item, index) in quotationForm.saveCalculationData"
+              v-for="(item, index) in quotationForm.save_calculation_data"
               :key="index"
             >
               <!-- 如果 kind === 2 下面是揭示 表布的各種計算欄位 -->
@@ -141,8 +141,8 @@
                 >
                 <!-- <span class="cloth-content">
                   <el-tag size="mini">{{
-                    '目前 quotationForm.saveCalculationData 有 ' +
-                      quotationForm.saveCalculationData.length +
+                    '目前 quotationForm.save_calculation_data 有 ' +
+                      quotationForm.save_calculation_data.length +
                       ' 筆 資料'
                   }}</el-tag></span
                 > -->
@@ -218,6 +218,9 @@
                   未稅總金額：{{ quotationForm.total_amount }} 元
                 </p>
                 <p class="quotation-content">
+                  營業稅：{{ quotationForm.tax }} 元
+                </p>
+                <p class="quotation-content">
                   含稅總金額：{{ quotationForm.total_amount_tax }} 元
                 </p>
               </div>
@@ -225,7 +228,7 @@
             <el-col :span="24">
               <div
                 class="quotation-warp"
-                v-for="(item, index) in quotationForm.saveCalculationData"
+                v-for="(item, index) in quotationForm.save_calculation_data"
                 :key="index"
               >
                 <p class="quotation-content">
@@ -236,7 +239,7 @@
       </el-container>
       <el-container>
         <el-footer>
-          <el-button type="primary" @click="onSubmit">新增報價單</el-button>
+          <el-button type="primary" @click="onSubmit">儲存報價單</el-button>
         </el-footer>
       </el-container>
     </el-dialog>
@@ -245,7 +248,7 @@
 
 <script>
 import { MessageBox } from 'element-ui'
-import { isEmpty } from '../../utils/tools'
+import { isEmpty, appendZero, appendTwoZero } from '../../utils/tools'
 
 export default {
   name: 'quotation-calculation-dialog',
@@ -322,32 +325,19 @@ export default {
         proofing_price: 0, // 單款打樣費用 - 已經有計算利潤
         total_amount: 0, // 總金額 - 已經有計算利潤
         total_amount_tax: 0, // 含稅總金額 - 已經有計算利潤
+        tax: 0, // 稅，已經做好四捨五入了
         // 紀錄每一個進來的 表布，裡布，配件 的相關資訊
+        creation_date: Date, // 訂單最一開始被建立的日期
+        modified_date: Date, // 最後被修改的日期
+        modifiedUser_id: '', // 最後一個修改人
+        index_date: '', // 索引日期 年月日  210331  六碼
+        quotation_no: '',
+
         // 有幾種設定就 push 幾種進來這裡
-        saveCalculationData: []
+        save_calculation_data: []
       },
 
       // 報價單欄位結束
-      tableData: [],
-      formLabelWidth: '',
-      formData: {
-        type: '',
-        name: ''
-      },
-      userTitleForm: {
-        type: '',
-        name: '',
-        _id: '',
-        level: 1,
-        option: ''
-      },
-
-      // 這個是驗證 editCategoriesEditForm的表單欄位
-      userTitleFormRules: {
-        type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
-        name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }]
-      },
-      editDialog: false,
       // 驗證表單，form_rules 這個是驗證 addForm 的欄位
       form_rules: {
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
@@ -365,7 +355,7 @@ export default {
     dialog(dialog) {
       this.calculationCloth = Object.assign({}, this.emptyCalculationCloth)
       this.quotationForm = Object.assign({}, this.emptyQuotationForm)
-      this.quotationForm.saveCalculationData.length = 0
+      this.quotationForm.save_calculation_data.length = 0
       // 先把重要的資料存起來
       this.handleSaveQuotationData(dialog.calculationData)
       // 然後計算一下報價單內容
@@ -386,6 +376,13 @@ export default {
     getMaterialData(id) {
       return this.$axios
         .get(`/api/material/get-material-by-id/${id}`)
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    getQuantityOfQuotationAtDay(index_date) {
+      return this.$axios
+        .get(`/api/quotation/quantity/${index_date}`)
         .catch((err) => {
           console.log(err)
         })
@@ -414,40 +411,30 @@ export default {
         })
     },
     // 新增商品類別代號
-    onSubmit(form) {
-      const uploadFormData =
-        this.userTitleForm.option == 'add' ? this.formData : this.userTitleForm
-
-      console.log('報價單的內容', this.quotationForm)
-      return
-      this.$refs[form].validate((valid) => {
-        if (valid && !uploadFormData.type == '') {
-          const url =
-            this.userTitleForm.option == 'add'
-              ? 'add'
-              : `edit/${this.userTitleForm._id}`
-          uploadFormData.level = this.userTitleForm.level
-
-          this.$axios
-            .post(`/api/customer/title/${url}`, uploadFormData)
-            .then((res) => {
-              console.log('(儲存/修改) 原料組合第一層分類成功！')
-              // 添加成功
-              this.$message({
-                message: '數據添加成功',
-                type: 'success'
-              })
-              // 不管怎麼樣都隱藏 edit dialog 的視窗
-              this.editDialog = false
-
-              // 刷新網頁，傳遞給父組件做更新
-              this.$emit('update', this.dialog.dataType)
-            })
-            .catch((err) => {
-              console.log('axios添加數據失敗==>MyDialog.vue==>', err)
-            })
-        }
-      })
+    onSubmit() {
+      const uploadFormData = Object.assign({}, this.quotationForm)
+      if (!uploadFormData.quotation_no) {
+        this.$message({
+          message: '報價單出錯了！',
+          type: 'success'
+        })
+        return
+      }
+      this.$axios
+        .post('/api/quotation/add', uploadFormData)
+        .then((res) => {
+          // 添加成功
+          this.$message({
+            message: '報價單添加成功',
+            type: 'success'
+          })
+          this.$emit('update')
+        })
+        .catch((err) => {
+          console.log('報價單添加失敗==>', err)
+        })
+      // }
+      // })
     },
     // **********************************************  axios 結束 **********************************************
     // **********************************************  計算報價相關 開始 **********************************************
@@ -458,9 +445,8 @@ export default {
       let average_unit_price_profit = 0
       let total_amount_profit = 0
       let proofing_price
-      console.log('cal-fee', this.quotationForm)
       // 計算出總金額先把所有的金額都抓出來，這邊是 material 中所有的 real_fee
-      this.quotationForm.saveCalculationData.forEach((item) => {
+      this.quotationForm.save_calculation_data.forEach((item) => {
         total_amount += item.realFee
       })
       // 再來把 category 裡的 平車跟裁切費用 乘上 訂購數量 再加上上面的
@@ -488,16 +474,16 @@ export default {
           : 500
 
       // 最後，訂單金額 = total_amount_profit + 打樣費用
-      console.log(total_amount_profit)
-      console.log(proofing_price * Number(this.quotationForm.proofing_value))
+      // console.log(total_amount_profit)
+      // console.log(proofing_price * Number(this.quotationForm.proofing_value))
       total_amount_profit =
         total_amount_profit +
         proofing_price * Number(this.quotationForm.proofing_value)
-      console.log('total_amount', total_amount)
-      console.log('total_amount_profit', total_amount_profit)
-      console.log('average_unit_price', average_unit_price)
-      console.log('average_unit_price_profit', average_unit_price_profit)
-      console.log('proofing_price', proofing_price)
+      // console.log('total_amount', total_amount)
+      // console.log('total_amount_profit', total_amount_profit)
+      // console.log('average_unit_price', average_unit_price)
+      // console.log('average_unit_price_profit', average_unit_price_profit)
+      // console.log('proofing_price', proofing_price)
 
       // 紀錄打樣費用 (單款)
       this.quotationForm.proofing_price = proofing_price
@@ -506,15 +492,60 @@ export default {
       // 記錄總金額 (含打樣費用了)
       this.quotationForm.total_amount = total_amount_profit
       // 記錄含稅總金額，並且四捨五入
-      this.quotationForm.total_amount_tax = Math.round(
-        total_amount_profit * 1.05
-      )
+      this.quotationForm.tax = Math.round(total_amount_profit * 0.05)
+      // 記錄含稅總金額，並且四捨五入
+      this.quotationForm.total_amount_tax =
+        total_amount_profit + this.quotationForm.tax
+
+      // 日期等等
+      this.quotationForm.creation_date = new Date()
+      this.quotationForm.modified_date = new Date()
+      this.quotationForm.modifiedUser_id = this.user.id
+
+      // 訂單編號的文章參考 https://my.oschina.net/zqouba/blog/718224
+      // 資料庫有3筆資料 取 res.data.length
+      // appendTwoZero(res.data.length)
+      // appendTwoZero 確保輸出是三位數字 1-999
+      // 然後轉換成陣列 split 把 字串拆開後放到 array 裡面
+      // 超過 999 的時候 要另外處理 (尚未寫這段程式碼)
+
+      // 日期前六碼 + '-' + 毫秒 5 位數
+      const d = new Date()
+      this.quotationForm.index_date =
+        (d.getFullYear() % 100) +
+        appendZero(d.getMonth() + 1) +
+        appendZero(d.getDate())
+
+      const num = this.getQuantityOfQuotationAtDay(
+        this.quotationForm.index_date
+      ).then((num) => {
+        // 找到資料庫有幾筆資料後加 1 = 今日的訂單流水號
+        this.setQuotationNo(num.data.length + 1)
+      })
     },
+    // 建立報價單編號
+    setQuotationNo(num) {
+      const d = new Date()
+      let get_no = appendTwoZero(num).split('')
+
+      var quotation_no =
+        this.quotationForm.index_date + '-' + (d.getTime() % 100000)
+      // 把字串拆成 array 然後再插入 訂單流水號 get_no
+      let arr = quotation_no.split('')
+      // 這邊是把 5 位數的毫秒混入 訂單流水號
+      for (let i = 0; i < get_no.length; i++) {
+        arr.splice(9 + i * 2, 0, get_no[i])
+      }
+
+      quotation_no = arr.join('')
+      console.log('訂單編號：', quotation_no)
+      this.quotationForm.quotation_no = quotation_no
+    },
+
     // 儲存 報價單的資料
     // forEach map ... 等各種的用法如下，forEach 不會 return 值，如果要 return 用 map
     // https://wcc723.github.io/javascript/2017/06/29/es6-native-array/
     handleSaveQuotationData(dialogData) {
-      console.log('dialogData', dialogData)
       this.quotationForm.category_id = dialogData.categoryData[0]._id // 記錄這張報價單的來源 _id
       this.quotationForm.category_name = dialogData.categoryData[0].name // 商品名稱
       this.quotationForm.tailor_fee = dialogData.categoryData[0].tailor_fee // 平車費用
@@ -761,7 +792,7 @@ export default {
       ) // 18
       // 紀錄原物料的 id
       this.calculationCloth.materialId = clothMaterialId // ------ _id 取代 66666
-      this.quotationForm.saveCalculationData.push(this.calculationCloth)
+      this.quotationForm.save_calculation_data.push(this.calculationCloth)
 
       // 如果是非轉印布料的話 material.kind 判斷，把不需要的欄位填 0 ， 墨水，轉印紙等等都不需要
       // groupKind 1.表布  2.裡布  3.一般原料，布料配件用
@@ -844,45 +875,35 @@ export default {
     // 處理原物料 material 與配件 accessory 的計算，進去後要判斷 materialKind 3 or 4
     fnCalMaterial(material, materialKind, groupKind, orderValue) {
       // 一般配件紙會用到兩個參數 material and materialKind
-      if (materialKind === 1) {
-        // 如果 materialKind = 3 就 原料成本 + 判斷要不要 加工費 然後結案，這邊會牽扯到 加工費，薪資
-        this.calculationMaterial.materialKind = materialKind
-        this.calculationMaterial.groupKind = groupKind
-        this.calculationMaterial.materialId = material._id
-        this.calculationMaterial.name = '一般原物料：' + material.product_name
-        this.calculationMaterial.unitPrice =
-          Math.ceil(material.unit_price * 100) / 100
-        this.calculationMaterial.processingFeeFlag =
-          material.processing_fee_flag
 
-        // 如果勾選要加工費用，才會去計算
-        if (material.processing_fee_flag && !isEmpty(material.processing_fee)) {
-          this.calculationMaterial.processingFee =
-            Math.ceil(material.processing_fee * 100) / 100
-        } else {
-          this.calculationMaterial.processingFee = 0
-        }
+      // 如果 materialKind = 3 就 原料成本 + 判斷要不要 加工費 然後結案，這邊會牽扯到 加工費，薪資
+      this.calculationMaterial.materialKind = materialKind
+      this.calculationMaterial.groupKind = groupKind
+      this.calculationMaterial.materialId = material._id
+      this.calculationMaterial.name = '一般原物料：' + material.product_name
+      this.calculationMaterial.unitPrice =
+        Math.ceil(material.unit_price * 100) / 100
+      this.calculationMaterial.processingFeeFlag = material.processing_fee_flag
 
-        // 最後總金額 = 原物料成本 + 加工費用
-        this.calculationMaterial.realFee =
-          (this.calculationMaterial.processingFee +
-            this.calculationMaterial.unitPrice) *
-          orderValue
-
-        this.quotationForm.saveCalculationData.push(this.calculationMaterial)
-        this.calculationMaterial = Object.assign(
-          {},
-          this.emptyCalculationMaterial
-        )
+      // 如果勾選要加工費用，才會去計算
+      if (material.processing_fee_flag && !isEmpty(material.processing_fee)) {
+        this.calculationMaterial.processingFee =
+          Math.ceil(material.processing_fee * 100) / 100
       } else {
-        // 如果 materialKind = 4 就 要計算布料那些很複雜的東西
-        // 配件類的會用到的參數有
-        // material 原料的原始資訊
-        // materialKind 原料的種類 判斷是 material or accessory
-        // orderValue 訂購數量
-
-        console.log(material)
+        this.calculationMaterial.processingFee = 0
       }
+
+      // 最後總金額 = 原物料成本 + 加工費用
+      this.calculationMaterial.realFee =
+        (this.calculationMaterial.processingFee +
+          this.calculationMaterial.unitPrice) *
+        orderValue
+
+      this.quotationForm.save_calculation_data.push(this.calculationMaterial)
+      this.calculationMaterial = Object.assign(
+        {},
+        this.emptyCalculationMaterial
+      )
     }
   }
 }

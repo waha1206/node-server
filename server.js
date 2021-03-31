@@ -14,6 +14,7 @@ const materialClass = require('./routes/api/materialClass')
 const suppliers = require('./routes/api/suppliers')
 const supplierClass = require('./routes/api/supplierClass')
 const materialGroup = require('./routes/api/materialGroup')
+const quotation = require('./routes/api/quotation')
 
 // db config
 const db = require('./config/keys').mongoURI
@@ -54,6 +55,7 @@ app.use('/api/material-class/', materialClass)
 app.use('/api/supplier/', suppliers)
 app.use('/api/supplier-class/', supplierClass)
 app.use('/api/material-group/', materialGroup)
+app.use('/api/quotation/', quotation)
 
 // 監聽
 app.listen(port, () => {

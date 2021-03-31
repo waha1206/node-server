@@ -412,6 +412,7 @@
     </QuotationMaterialDialog>
     <QuotationCalculationDialog
       :dialog="quotationCalculationDialog"
+      @update="closeQuotationCalculationDialog"
     ></QuotationCalculationDialog>
   </div>
 </template>
@@ -596,6 +597,9 @@ export default {
         })
     },
     // **********************************************  讀取資料結束 **********************************************
+    closeQuotationCalculationDialog() {
+      this.quotationCalculationDialog.show = false
+    },
     handleSelectMaterial(item, index) {
       this.quotationMaterialDialog = {
         show: true,

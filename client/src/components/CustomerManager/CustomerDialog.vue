@@ -912,6 +912,17 @@
             </el-row>
             <!-- 第十四列，其它備註事項 -->
             <el-row :gutter="20" type="flex" class="row-bg">
+              <!-- <el-col :span="4">
+                <el-form-item label="客戶編號：" prop="no" label-width="120px">
+                  <el-input
+                    class="rt-input"
+                    :readonly="true"
+                    v-model="customerFormData.no"
+                    placeholder="會自動產生"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col> -->
               <el-col :span="24">
                 <el-form-item
                   label="其它備註："
