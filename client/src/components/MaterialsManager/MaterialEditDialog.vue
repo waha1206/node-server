@@ -426,7 +426,7 @@
             <!-- 第十列 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="4" style="position:relative">
-								<div @click="handleCalculationLayout">
+                <div @click="handleCalculationLayout">
                   <el-tooltip
                     class="calculation-layout-tooltip"
                     effect="dark"
@@ -498,22 +498,22 @@
             <!-- 第十列結束 -->
             <!-- 第十一列開始 -->
             <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="6"
-                <div class="grid-content ">
+              <el-col :span="6">
+                <div class="grid-content">
                   <el-form-item
                     prop="typesetting"
                     label="智慧排版："
                     label-width="110px"
                   >
-                    <!-- @change="handleTypesettingChange" -->
                     <el-switch
                       v-model="materialDataForm.typesetting"
                       active-text="啟用"
                       inactive-text="禁用"
                     >
                     </el-switch>
-                  </el-form-item></div
-              ></el-col>
+                  </el-form-item>
+                </div>
+              </el-col>
               <el-col :span="8" style="position:relative">
                 <!-- style="position:relative;border-radius:8px" -->
                 <div @click="handleClearAccessoryCloth">
@@ -580,7 +580,7 @@
                   ></el-input>
                 </el-form-item>
               </el-col>
-							<el-col :span="4">
+              <el-col :span="4">
                 <el-form-item prop="product_profit" label="表布耗損：">
                   <my-percentage-input
                     :isReadyOnly="false"
@@ -593,6 +593,36 @@
               </el-col>
             </el-row>
             <!-- 第十一列結束 -->
+            <!-- 第十二列開始 選擇供應商-->
+            <!-- <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    prop="typesetting"
+                    label="供應商："
+                    label-width="110px"
+                  >
+                    <el-button
+                      v-if="materialDataForm.supplier_id"
+                      type="primary"
+                      size="mini"
+                      class="button"
+                      @click="handleSelectSupplier"
+                      >{{ accessoryClothName }}</el-button
+                    >
+                    <el-button
+                      v-else
+                      type="primary"
+                      size="mini"
+                      class="button"
+                      @click="handleSelectSupplier"
+                      >點我選擇供應商</el-button
+                    >
+                  </el-form-item>
+                </div></el-col
+              ></el-row
+            > -->
+            <!-- 第十二列結束 選擇供應商-->
           </el-header>
 
           <!-- 第七行開始，圖片上傳 -->
@@ -683,7 +713,7 @@
       @reportError="reportError"
     >
     </MaterialClothDialog>
-		<CalLayoutDialog :dialog="calLayoutDialog"></CalLayoutDialog>
+    <CalLayoutDialog :dialog="calLayoutDialog"></CalLayoutDialog>
   </div>
 </template>
 
@@ -704,11 +734,11 @@ export default {
   },
   components: {
     MaterialClothDialog,
-		CalLayoutDialog
+    CalLayoutDialog
   },
   data() {
     return {
-			 calLayoutDialog: {
+      calLayoutDialog: {
         show: false,
         title: '試算版型尺寸'
       },
@@ -735,7 +765,7 @@ export default {
       tailorFee: 0, // 平車費用
       processingFee: 0, // 加工費用
       cropFee: 0, // 裁切費用
-			accessoryClothLoss:0, // 配件類布料耗損
+      accessoryClothLoss: 0, // 配件類布料耗損
       accessoryClothName: '',
       materialDataForm: {},
       // materialDataForm_rules: {
@@ -803,9 +833,9 @@ export default {
     }
   },
   watch: {
-		accessoryClothLoss(newValue){
-			this.materialDataForm.accessory_cloth_loss = String(newValue)
-		},
+    accessoryClothLoss(newValue) {
+      this.materialDataForm.accessory_cloth_loss = String(newValue)
+    },
     processingFee(newValue) {
       this.materialDataForm.processing_fee = String(newValue)
     },
@@ -862,7 +892,7 @@ export default {
         this.cropFee = 0
         this.tailorFee = 0
         this.processingFee = 0
-				this.accessoryClothLoss = 0
+        this.accessoryClothLoss = 0
       } else {
         if (isNaN(this.materialDataForm.processing_fee)) {
           this.processingFee = 0
@@ -887,7 +917,9 @@ export default {
         if (isNaN(this.materialDataForm.accessory_cloth_loss)) {
           this.accessoryClothLoss = 0
         } else {
-          this.accessoryClothLoss = Number(this.materialDataForm.accessory_cloth_loss)
+          this.accessoryClothLoss = Number(
+            this.materialDataForm.accessory_cloth_loss
+          )
         }
         if (isNaN(this.materialDataForm.retail_price)) {
           this.retailPrice = 0
@@ -1004,7 +1036,7 @@ export default {
       // console.log('this.files', this.files)
     },
     // ************************************ 圖片結束 ************************************
-		    // 試算版型
+    // 試算版型
     handleCalculationLayout() {
       this.calLayoutDialog.show = true
     },
@@ -1084,7 +1116,8 @@ export default {
         .catch((err) => {
           console.log(err)
         })
-    }
+    },
+    handleSelectSupplier() {}
   }
 }
 </script>
@@ -1149,7 +1182,7 @@ body > .el-container {
 }
 /* 布局容器 結束 */
 
-.calculation-layout-tooltip{
-	cursor: pointer;
+.calculation-layout-tooltip {
+  cursor: pointer;
 }
 </style>

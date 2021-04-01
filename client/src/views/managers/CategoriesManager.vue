@@ -74,7 +74,7 @@
                       <el-button
                         size="mini"
                         type="primary"
-                        @click="handleUpdateProfir(props.row)"
+                        @click="handleUpdateProfit(props.row)"
                         >利潤清單更新</el-button
                       >
                     </el-header>
@@ -90,11 +90,22 @@
                           v-model="citem.quantity"
                         ></el-input>
                         <my-percentage-input
+                          class="profit"
                           :width="52"
                           :height="28"
                           :isReadyOnly="false"
                           v-model="citem.profit"
                         ></my-percentage-input>
+                        <el-input
+                          class="my-input"
+                          placeholder="幾箱"
+                          v-model="citem.carton"
+                        ></el-input>
+                        <el-input
+                          class="my-input"
+                          placeholder="淨重"
+                          v-model="citem.net_weight"
+                        ></el-input>
                         <el-button
                           class="profit-btn"
                           size="mini"
@@ -582,6 +593,7 @@ export default {
         profit: '40'
       }
       row.quantity_profit.push(obj)
+      // quantity_profit 下面包含了四個欄位 數量 利潤 幾箱 淨重
       const uploadFormData = {
         level: 3,
         quantity_profit: row.quantity_profit
@@ -603,7 +615,7 @@ export default {
         })
     },
     // 更新增加數量與利潤到資料庫裏面
-    handleUpdateProfir(row) {
+    handleUpdateProfit(row) {
       const uploadFormData = {
         level: 3,
         quantity_profit: row.quantity_profit
@@ -947,13 +959,6 @@ export default {
   border: 1px solid red;
 }
 
-.el-main {
-  background-color: #e9eef3;
-  color: #333;
-  text-align: center;
-  line-height: 160px;
-}
-
 body > .el-container {
   margin-bottom: 40px;
 }
@@ -1014,7 +1019,7 @@ body > .el-container {
 
 .el-main {
   width: 1000px;
-  height: 128px;
+
   padding: 5px;
   margin: 0;
   background-color: rgb(239, 236, 250);
@@ -1022,14 +1027,14 @@ body > .el-container {
 
 .profit-wrap {
   width: 80px;
-  height: 128;
+
   float: left;
 }
 
 .my-input {
-  height: 40px;
+  height: 30px;
   width: 72px;
-  line-height: 40px;
+  line-height: 30px;
   float: left;
   margin-bottom: 6px;
 }
@@ -1042,8 +1047,11 @@ body > .el-container {
 .profit-btn {
   float: left;
   margin-left: 1px;
-  margin-top: 10px;
+  margin-top: 0px;
   width: 70px;
   height: 28px;
+}
+.profit {
+  margin-bottom: 10px;
 }
 </style>

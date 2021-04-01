@@ -413,6 +413,8 @@ export default {
     // 新增商品類別代號
     onSubmit() {
       const uploadFormData = Object.assign({}, this.quotationForm)
+      console.log(uploadFormData)
+      return
       if (!uploadFormData.quotation_no) {
         this.$message({
           message: '報價單出錯了！',
@@ -553,7 +555,11 @@ export default {
       this.quotationForm.sales_value = dialogData.salesValue // 業務 _id
       this.quotationForm.customer_value = dialogData.customerValue // 客戶 _id
       this.quotationForm.order_value = dialogData.orderValue // 訂購數量
-      this.quotationForm.proofing_value = dialogData.proofingValue // 打樣數量
+      if (dialogData.proofingValue > 0)
+        this.quotationForm.proofing_value = dialogData.proofingValue
+      // 打樣數量
+      else this.quotationForm.proofing_value = 0
+
       this.quotationForm.material_group = dialogData.materialGroup.map(
         (item) => {
           return item._id
@@ -765,9 +771,9 @@ export default {
       this.calculationCloth.clothLoss = Math.ceil(clothLoss * 100) / 100 // 17
 
       // 只有配件類才需要紀錄，平車與裁切的費用，表布，裡布，跟一般原料不需要
-      this.calculationCloth.orderValue = 0 // 19
+      this.calculationCloth.orderValue = orderValue // 19
       this.calculationCloth.tailorFee = 0 // 20
-      this.calculationCloth.cropFee = cropFee // 21
+      this.calculationCloth.cropFee = 0 // 21
       this.calculationCloth.additionalHeight = !isEmpty(additionalHeight)
         ? Math.ceil(additionalHeight * 100) / 100
         : 0 // 22
@@ -894,10 +900,11 @@ export default {
       }
 
       // 最後總金額 = 原物料成本 + 加工費用
-      this.calculationMaterial.realFee =
+      this.calculationMaterial.realFee = Math.ceil(
         (this.calculationMaterial.processingFee +
           this.calculationMaterial.unitPrice) *
-        orderValue
+          orderValue
+      )
 
       this.quotationForm.save_calculation_data.push(this.calculationMaterial)
       this.calculationMaterial = Object.assign(
