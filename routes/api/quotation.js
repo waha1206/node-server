@@ -101,6 +101,39 @@ router.get(
   }
 )
 
+// $router POST api/quotation/update
+// @desc   透過客戶的 _id 取得該客戶的所有報價單，並且用日期排序後回傳
+// @access Private
+router.post(
+  '/update',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // query 選擇的條件
+    // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
+    const query = { _id: req.body.id }
+    const quotationFields = {}
+    const options = {
+      // _id: 1
+    }
+    for (const prop in req.body) {
+      if (prop !== 'id') {
+        quotationFields[prop] = req.body[prop]
+      }
+    }
+
+    Quotation.findOneAndUpdate(query, { $set: quotationFields }, options)
+      .then((quotations) => {
+        if (!quotations) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(quotations)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
 // ************************************* quotation 結束 *************************************
 
 module.exports = router

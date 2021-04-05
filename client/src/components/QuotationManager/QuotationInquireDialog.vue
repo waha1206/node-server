@@ -7,7 +7,7 @@
       :close-on-click-model="false"
       :close-on-press-escape="false"
       :modal-append-to-body="false"
-      width="1780px"
+      width="1820px"
     >
       <el-container class="inquire-dialog">
         <el-header class="inquire-dialog" style="height:100px;"
@@ -81,7 +81,7 @@
               <el-table-column
                 prop="quotation_no"
                 label="單號"
-                width="130px"
+                width="110px"
                 align="center"
               >
               </el-table-column>
@@ -108,24 +108,178 @@
                 width="80px"
                 align="center"
               >
-                <template slot-scope="scope">
-                  <div @click="handleChangeOrderStatus(scope.row)">
-                    <el-tag
-                      size="medium"
-                      type="danger"
-                      v-if="
-                        !scope.row.order_status || scope.row.order_status == '0'
-                      "
-                      >未成交</el-tag
-                    >
-                  </div>
+                <template v-slot="scope">
+                  <el-popover
+                    width="160"
+                    placement="right"
+                    :ref="`popover-${scope.$index}`"
+                  >
+                    <p>請選擇交易狀態</p>
+                    <el-radio-group v-model="tradingStatus">
+                      <el-radio :label="0">無</el-radio><br />
+                      <el-radio :label="1">進行中</el-radio><br />
+                      <el-radio :label="2">已完成</el-radio><br />
+                      <el-radio :label="3">客戶棄單</el-radio><br />
+                    </el-radio-group>
+                    <div style="text-align: right; margin: 0">
+                      <el-button
+                        type="text"
+                        size="mini"
+                        @click="handleClose(scope.$index)"
+                      >
+                        取消
+                      </el-button>
+                      <el-button
+                        type="danger"
+                        size="mini"
+                        @click="
+                          handleChangeTradingStatus(
+                            scope.row,
+                            tradingStatus,
+                            scope.$index
+                          )
+                        "
+                        >確定</el-button
+                      >
+                    </div>
+                    <!-- slot="reference" 觸發 popover 顯示的 HTML 元素 -->
+                    <div slot="reference">
+                      <el-button
+                        size="mini"
+                        v-if="scope.row.trading_status == 0"
+                        >{{ handleTradingStatus(scope.row) }}
+                      </el-button>
+                      <el-button
+                        type="primary"
+                        size="mini"
+                        v-else-if="scope.row.trading_status == 1"
+                        >{{ handleTradingStatus(scope.row) }}
+                      </el-button>
+                      <el-button
+                        type="success"
+                        size="mini"
+                        v-else-if="scope.row.trading_status == 2"
+                        >{{ handleTradingStatus(scope.row) }}
+                      </el-button>
+                      <el-button
+                        type="danger"
+                        size="mini"
+                        v-else-if="scope.row.trading_status == 3"
+                        >{{ handleTradingStatus(scope.row) }}
+                      </el-button>
+                      <el-button size="mini" v-else
+                        >{{ handleTradingStatus(scope.row) }}
+                      </el-button>
+                    </div>
+                  </el-popover>
                 </template>
               </el-table-column>
-              <el-table-column prop="" label="狀態" width="70px" align="center">
+              <el-table-column
+                prop=""
+                label="生產狀態"
+                width="70px"
+                align="center"
+              >
               </el-table-column>
-              <el-table-column prop="" label="會計" width="70px" align="center">
+              <el-table-column
+                prop=""
+                label="會計狀態"
+                width="70px"
+                align="center"
+              >
               </el-table-column>
-              <el-table-column prop="" label="進度" width="70px" align="center">
+              <el-table-column
+                prop=""
+                label="訂單狀態"
+                width="140px"
+                align="center"
+              >
+                <template v-slot="scope">
+                  <el-popover
+                    width="160"
+                    placement="right"
+                    :ref="`popover-${scope.$index}`"
+                  >
+                    <p>請選擇訂單狀態</p>
+                    <el-radio-group v-model="processingStatus">
+                      <el-radio :label="0">尚未安排</el-radio><br />
+                      <el-radio :label="1">等待打樣檔案</el-radio><br />
+                      <el-radio :label="2">等待生產檔案</el-radio><br />
+                      <el-radio :label="3">打樣中</el-radio><br />
+                      <el-radio :label="4">生產中</el-radio><br />
+                      <el-radio :label="5">打樣完待確認</el-radio><br />
+                      <el-radio :label="6">已出貨貨款未結清</el-radio><br />
+                    </el-radio-group>
+                    <div style="text-align: right; margin: 0">
+                      <el-button
+                        type="text"
+                        size="mini"
+                        @click="handleClose(scope.$index)"
+                      >
+                        取消
+                      </el-button>
+                      <el-button
+                        type="danger"
+                        size="mini"
+                        @click="
+                          handleChangeProcessingStatus(
+                            scope.row,
+                            processingStatus,
+                            scope.$index
+                          )
+                        "
+                        >確定</el-button
+                      >
+                    </div>
+                    <!-- slot="reference" 觸發 popover 顯示的 HTML 元素 -->
+                    <div slot="reference">
+                      <el-button
+                        size="mini"
+                        v-if="scope.row.processing_status == 0"
+                        >{{ handleProcessingStatus(scope.row) }}
+                      </el-button>
+                      <el-button
+                        type="danger"
+                        size="mini"
+                        v-else-if="scope.row.processing_status == 1"
+                        >{{ handleProcessingStatus(scope.row) }}
+                      </el-button>
+                      <el-button
+                        type="danger"
+                        size="mini"
+                        v-else-if="scope.row.processing_status == 2"
+                        >{{ handleProcessingStatus(scope.row) }}
+                      </el-button>
+                      <el-button
+                        type="primary"
+                        size="mini"
+                        v-else-if="scope.row.processing_status == 3"
+                        >{{ handleProcessingStatus(scope.row) }}
+                      </el-button>
+                      <el-button
+                        type="primary"
+                        size="mini"
+                        v-else-if="scope.row.processing_status == 4"
+                        >{{ handleProcessingStatus(scope.row) }}
+                      </el-button>
+                      <el-button
+                        type="danger"
+                        size="mini"
+                        v-else-if="scope.row.processing_status == 5"
+                        >{{ handleProcessingStatus(scope.row) }}
+                      </el-button>
+                      <el-button
+                        type="danger"
+                        size="mini"
+                        v-else-if="scope.row.processing_status == 6"
+                        >{{ handleProcessingStatus(scope.row) }}
+                      </el-button>
+                      <el-button size="mini" v-else
+                        >{{ handleProcessingStatus(scope.row) }}
+                      </el-button>
+                    </div>
+                  </el-popover>
+                </template>
               </el-table-column>
               <el-table-column
                 prop=""
@@ -286,10 +440,19 @@ export default {
   },
   data() {
     return {
+      // 訂單狀態
+      // 0:尚未安排 1:等待打樣檔案 2:等待生產檔案 3:打樣中 4:生產中 5:打樣完待確認
+      // 6:已出貨貨款未結清
+      processingStatus: 0,
+      // 交易狀態
+      statusVisible: false,
       // 報價單的篩選
       quotationStatus: [],
       quotationStatus: quotationStatusOptions,
       statusCheckList: [],
+      // 目前的交易狀態
+      // 0：無成交  1:進行中  2:已完成  3:客棄單
+      tradingStatus: 0,
       customerClassData: [], // 存放客戶分類
       customerTitleData: [], // 存放客戶職稱
       customerData: {}, // 存放客戶資料
@@ -465,6 +628,28 @@ export default {
         this.tableData = tables
       }
     }, /// ************************************** 分頁結束 **************************************
+    handleProcessingStatus(row) {
+      if (isEmpty(row.processing_status)) return '尚未安排'
+      const status = [
+        '尚未安排',
+        '等待打樣檔案',
+        '等待生產檔案',
+        '打樣中',
+        '生產中',
+        '打樣完待確認',
+        '已出貨貨款未結清'
+      ]
+      return status[row.processing_status]
+    },
+    handleTradingStatus(row) {
+      if (isEmpty(row.trading_status)) return '無成交'
+      const status = ['無成交', '進行中', '已完成', '客棄單']
+      return status[row.trading_status]
+    },
+    // 關閉 el-popover
+    handleClose(index) {
+      this.$refs[`popover-${index}`].doClose()
+    },
     // 點擊查看客戶資料
     async handleEditCustomerData(customerId) {
       if (isEmpty(customerId)) return
@@ -480,8 +665,46 @@ export default {
       }
     },
     // 改變訂單的下單狀態 未成交、成交、客戶棄單
-    handleChangeOrderStatus(row) {
-      console.log(row)
+    handleChangeProcessingStatus(row, processingStatus, index) {
+      const uploadData = {
+        id: row._id,
+        processing_status: processingStatus
+      }
+      this.$axios
+        .post('/api/quotation/update', uploadData)
+        .then((res) => {
+          // 添加成功
+          this.$message({
+            message: '訂單狀態更新完成！',
+            type: 'success'
+          })
+          this.$refs[`popover-${index}`].doClose()
+          this.getQuotationFromCustomerId(row.customer_value)
+        })
+        .catch((err) => {
+          console.log('交易狀態更新失敗', err)
+        })
+    },
+    // 改變訂單的下單狀態 未成交、成交、客戶棄單
+    handleChangeTradingStatus(row, tradingStatus, index) {
+      const uploadData = {
+        id: row._id,
+        trading_status: tradingStatus
+      }
+      this.$axios
+        .post('/api/quotation/update', uploadData)
+        .then((res) => {
+          // 添加成功
+          this.$message({
+            message: '交易狀態更新完成！',
+            type: 'success'
+          })
+          this.$refs[`popover-${index}`].doClose()
+          this.getQuotationFromCustomerId(row.customer_value)
+        })
+        .catch((err) => {
+          console.log('交易狀態更新失敗', err)
+        })
     },
     // 複製點選的資料
     // 技術文件出處 https://iter01.com/439667.html

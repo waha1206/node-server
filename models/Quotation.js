@@ -78,8 +78,14 @@ const QuotationSchema = new Schema({
   },
   order_status: {
     order: {
-      type: Boolean
+      type: String
     }
+  },
+  trading_status: {
+    type: Number
+  },
+  processing_status: {
+    type: Number
   }
 })
 
