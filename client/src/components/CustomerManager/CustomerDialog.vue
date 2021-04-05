@@ -481,7 +481,7 @@
                   </el-badge>
                   <div slot="content">
                     <a
-                      href="http://zipcode.mosky.tw/"
+                      href="https://twzipcode.com/"
                       target="_blank"
                       style="color:#fff"
                       >點我查詢區碼</a
@@ -665,7 +665,7 @@
                   </el-badge>
                   <div slot="content">
                     <a
-                      href="http://zipcode.mosky.tw/"
+                      href="https://twzipcode.com/"
                       target="_blank"
                       style="color:#fff"
                       >點我查詢區碼</a

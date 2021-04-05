@@ -75,6 +75,11 @@ const QuotationSchema = new Schema({
   },
   index_date: {
     type: String
+  },
+  order_status: {
+    order: {
+      type: Boolean
+    }
   }
 })
 

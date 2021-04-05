@@ -521,7 +521,7 @@ export default {
           console.log('axios添加數據失敗==>MyDialog.vue==>', err)
         })
     },
-    // 讀取兩種資料 1.客戶分類資料  2.客戶職務資料
+    // 讀取兩種資料 1.客戶分類資料 dataType = 'class'  2.客戶職務資料 dataType = 'title
     getServerData(dataType) {
       this.$axios
         .get(`/api/customer/${dataType}`)

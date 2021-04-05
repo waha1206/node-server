@@ -38,4 +38,9 @@ export default {
   height: 100%;
   overflow: auto;
 }
+
+.el-dialog__header {
+  background-color: #67c23a;
+  line-height: 30px;
+}
 </style>

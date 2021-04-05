@@ -569,7 +569,7 @@ export default {
           //獲取成功
           this.$message({
             message: '成功取得客戶 name and id',
-            type: 'sucess'
+            type: 'success'
           })
           this.customerNameAndId = [...res.data]
           this.customerNameAndId.forEach((item) => {
@@ -590,7 +590,7 @@ export default {
           //獲取成功
           this.$message({
             message: '成功取得業務 name and id',
-            type: 'sucess'
+            type: 'success'
           })
           this.salesNameAndId = [...res.data]
           this.salesNameAndId.forEach((item) => {

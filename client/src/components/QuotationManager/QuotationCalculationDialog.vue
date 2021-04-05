@@ -414,7 +414,7 @@ export default {
     onSubmit() {
       const uploadFormData = Object.assign({}, this.quotationForm)
       console.log(uploadFormData)
-      return
+
       if (!uploadFormData.quotation_no) {
         this.$message({
           message: '報價單出錯了！',

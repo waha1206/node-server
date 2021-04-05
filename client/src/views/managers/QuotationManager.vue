@@ -2,10 +2,13 @@
   <div class="quotatuin-manager">
     <el-container>
       <el-header>
-        <el-button type="primary" size="small" @click="">報價單查詢</el-button>
-        <el-button type="primary" size="small" @click=""
-          >查詢單一客戶</el-button
+        <el-button type="primary" size="small" @click="handleQuotationInquire"
+          >報價單管理與查詢</el-button
         >
+        <el-button type="primary" size="small" @click="handelQuotationSetting"
+          >基本設定</el-button
+        >
+
         <el-button type="primary" size="small" @click=""
           >新增原物料容器</el-button
         >
@@ -33,19 +36,36 @@
     </el-container>
 
     <!-- 子元件 -->
+    <QuotationInquireDialog :dialog="inquireDialog"> </QuotationInquireDialog>
+    <QuotationSettingDialog :dialog="settingDialog"> </QuotationSettingDialog>
     <!-- 子元件結束 -->
   </div>
 </template>
 
 <script>
+import QuotationInquireDialog from '../../components/QuotationManager/QuotationInquireDialog'
+import QuotationSettingDialog from '../../components/QuotationManager/QuotationSettingDialog'
+
 export default {
   name: 'quotation-manager',
   data() {
     return {
-      breadList: []
+      // 麵包屑路徑放這邊
+      breadList: [],
+      inquireDialog: {
+        show: false,
+        title: '報價單管理與查詢'
+      },
+      settingDialog: {
+        show: false,
+        title: '報價單環境基本設定'
+      }
     }
   },
-  components: {},
+  components: {
+    QuotationInquireDialog,
+    QuotationSettingDialog
+  },
   watch: {
     // 路由傳遞一個或多個參數
     // https://blog.csdn.net/weixin_40297452/article/details/90704936
@@ -68,6 +88,21 @@ export default {
     next()
   },
   methods: {
+    // 測試開啟目錄
+    handelQuotationSetting() {
+      this.settingDialog = {
+        show: true,
+        title: '報價單基本設定'
+      }
+    },
+    // 報價單查詢頁面
+    handleQuotationInquire() {
+      this.inquireDialog = {
+        show: true,
+        title: '報價單管理與查詢'
+      }
+    },
+    // 處理麵包屑
     getBreadList(val) {
       // 注意 要理解到 matched 是一個物件
       if (val.matched) {
