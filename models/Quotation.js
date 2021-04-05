@@ -86,6 +86,9 @@ const QuotationSchema = new Schema({
   },
   processing_status: {
     type: Number
+  },
+  delivery_date: {
+    type: Date
   }
 })
 

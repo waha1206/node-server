@@ -7,7 +7,7 @@
       :close-on-click-model="false"
       :close-on-press-escape="false"
       :modal-append-to-body="false"
-      width="1820px"
+      width="1845px"
     >
       <el-container class="inquire-dialog">
         <el-header class="inquire-dialog" style="height:100px;"
@@ -305,9 +305,26 @@
               <el-table-column
                 prop=""
                 label="大貨交期"
-                width="70px"
+                width="117px"
                 align="center"
               >
+                <template v-slot="scope">
+                  <el-date-picker
+                    style="width:107px"
+                    v-model="scope.row.delivery_date"
+                    type="date"
+                    placeholder="交期"
+                    format="M 月 d"
+                    size="mini"
+                    @change="
+                      handleDeliveryDateChange(
+                        scope.row,
+                        scope.row.delivery_date
+                      )
+                    "
+                  >
+                  </el-date-picker>
+                </template>
               </el-table-column>
               <el-table-column
                 prop=""
@@ -315,6 +332,11 @@
                 width="70px"
                 align="center"
               >
+                <template v-slot="scope">
+                  <div style="color:red;font-weight:bold">
+                    {{ fewDaysLeft(scope.row.delivery_date) }}
+                  </div>
+                </template>
               </el-table-column>
               <el-table-column
                 prop="proofing_value"
@@ -440,6 +462,8 @@ export default {
   },
   data() {
     return {
+      // 交貨日期
+      deliveryDate: '',
       // 訂單狀態
       // 0:尚未安排 1:等待打樣檔案 2:等待生產檔案 3:打樣中 4:生產中 5:打樣完待確認
       // 6:已出貨貨款未結清
@@ -628,6 +652,40 @@ export default {
         this.tableData = tables
       }
     }, /// ************************************** 分頁結束 **************************************
+    // 交期的時間發生變化
+    handleDeliveryDateChange(row, deliveryDate) {
+      const uploadData = {
+        id: row._id,
+        delivery_date: deliveryDate
+      }
+      this.$axios
+        .post('/api/quotation/update', uploadData)
+        .then((res) => {
+          // 添加成功
+          this.$message({
+            message: '交貨日期更新完成！',
+            type: 'success'
+          })
+
+          this.getQuotationFromCustomerId(row.customer_value)
+        })
+        .catch((err) => {
+          console.log('交期更新失敗', err)
+        })
+    },
+    // 交期剩下幾天
+    fewDaysLeft(deliveryDate) {
+      if (isEmpty(deliveryDate)) return
+      const setTime = new Date(deliveryDate)
+      const nowTime = new Date()
+
+      let restSec =
+        parseInt(setTime.getTime() / (60 * 60 * 24 * 1000)) -
+        parseInt(nowTime.getTime() / (60 * 60 * 24 * 1000))
+
+      restSec = restSec >= 0 ? '剩 ' + restSec + ' 天' : '已截止'
+      return restSec
+    },
     handleProcessingStatus(row) {
       if (isEmpty(row.processing_status)) return '尚未安排'
       const status = [
