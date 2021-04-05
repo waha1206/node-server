@@ -125,7 +125,7 @@
                       <el-button
                         type="text"
                         size="mini"
-                        @click="handleClose(scope.$index)"
+                        @click="handleClose(scope.$index, 'popover')"
                       >
                         取消
                       </el-button>
@@ -198,7 +198,7 @@
                   <el-popover
                     width="160"
                     placement="right"
-                    :ref="`popover-${scope.$index}`"
+                    :ref="`processing-${scope.$index}`"
                   >
                     <p>請選擇訂單狀態</p>
                     <el-radio-group v-model="processingStatus">
@@ -214,7 +214,7 @@
                       <el-button
                         type="text"
                         size="mini"
-                        @click="handleClose(scope.$index)"
+                        @click="handleClose(scope.$index, 'processing')"
                       >
                         取消
                       </el-button>
@@ -647,8 +647,8 @@ export default {
       return status[row.trading_status]
     },
     // 關閉 el-popover
-    handleClose(index) {
-      this.$refs[`popover-${index}`].doClose()
+    handleClose(index, type) {
+      this.$refs[`${type}-${index}`].doClose()
     },
     // 點擊查看客戶資料
     async handleEditCustomerData(customerId) {
@@ -678,7 +678,7 @@ export default {
             message: '訂單狀態更新完成！',
             type: 'success'
           })
-          this.$refs[`popover-${index}`].doClose()
+          this.$refs[`processing-${index}`].doClose()
           this.getQuotationFromCustomerId(row.customer_value)
         })
         .catch((err) => {
