@@ -209,6 +209,8 @@
                       <el-radio :label="4">生產中</el-radio><br />
                       <el-radio :label="5">打樣完待確認</el-radio><br />
                       <el-radio :label="6">已出貨貨款未結清</el-radio><br />
+                      <el-radio :label="7">等尾款結清再出貨</el-radio><br />
+                      <el-radio :label="8">已結案</el-radio><br />
                     </el-radio-group>
                     <div style="text-align: right; margin: 0">
                       <el-button
@@ -272,6 +274,18 @@
                         type="danger"
                         size="mini"
                         v-else-if="scope.row.processing_status == 6"
+                        >{{ handleProcessingStatus(scope.row) }}
+                      </el-button>
+                      <el-button
+                        type="danger"
+                        size="mini"
+                        v-else-if="scope.row.processing_status == 7"
+                        >{{ handleProcessingStatus(scope.row) }}
+                      </el-button>
+                      <el-button
+                        type="danger"
+                        size="mini"
+                        v-else-if="scope.row.processing_status == 8"
                         >{{ handleProcessingStatus(scope.row) }}
                       </el-button>
                       <el-button size="mini" v-else
@@ -695,7 +709,9 @@ export default {
         '打樣中',
         '生產中',
         '打樣完待確認',
-        '已出貨貨款未結清'
+        '已出貨貨款未結清',
+        '等尾款結清再出貨',
+        '已結案'
       ]
       return status[row.processing_status]
     },
