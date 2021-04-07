@@ -261,7 +261,7 @@
                   <el-popover
                     width="200"
                     placement="right"
-                    :ref="`processing-${scope.$index}`"
+                    :ref="`proofing-payment-${scope.$index}`"
                   >
                     <p>(更新 / 新增) 打樣費付款紀錄</p>
                     <el-button
@@ -292,7 +292,7 @@
                       <el-button
                         type="text"
                         size="mini"
-                        @click="handleClose(scope.$index, 'processing')"
+                        @click="handleClose(scope.$index, 'proofing-payment')"
                       >
                         取消
                       </el-button>
@@ -300,7 +300,7 @@
                         type="danger"
                         size="mini"
                         @click="handleUpdatePaymentRecord()"
-                        >確定</el-button
+                        >更新</el-button
                       >
                     </div>
                     <!-- slot="reference" 觸發 popover 顯示的 HTML 元素 -->
