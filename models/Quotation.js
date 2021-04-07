@@ -89,6 +89,28 @@ const QuotationSchema = new Schema({
   },
   delivery_date: {
     type: Date
+  },
+  // 打樣費用的付款紀錄
+  proofing_payment_record: {
+    type: [
+      {
+        date: Date, // 轉帳時間
+        amount: Number, // 轉帳總金額 NT 計算，無小數點
+        last_five_digits: Number, // 轉出帳號的後五碼
+        payment_kind: Number // 0.現金 1.國內轉帳 2.paypal 3.信用卡支付 4.載具支付
+      }
+    ]
+  },
+  // 訂金的付款紀錄
+  deposit: {
+    type: [
+      {
+        date: Date, // 支付訂金日期
+        amount: Number, // 轉帳總金額 NT 計算，無小數點
+        last_five_digts: Number, // 轉出帳號的後五碼
+        payment_kind: Number // 0.現金 1.國內轉帳 2.paypal 3.信用卡支付 4.載具支付
+      }
+    ]
   }
 })
 
