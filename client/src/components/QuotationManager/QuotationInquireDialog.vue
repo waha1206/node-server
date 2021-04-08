@@ -259,35 +259,74 @@
               >
                 <template slot-scope="scope">
                   <el-popover
-                    width="200"
+                    width="660"
                     placement="right"
                     :ref="`proofing-payment-${scope.$index}`"
                   >
                     <p>(更新 / 新增) 打樣費付款紀錄</p>
 
-                    <el-button
-                      size="mini"
-                      type="primary"
-                      @click="handleUpdateProofingPaymentRecord(props.row)"
-                      >更新紀錄</el-button
+                    <!-- 日期 金額 後五碼 付款方式 -->
+
+                    <el-row
+                      v-for="(item, index) in scope.row.proofing_payment_record"
+                      :key="index"
+                      style="margin:3px 0"
                     >
-                    <el-radio-group v-model="scope.row.processing_status">
-                      <el-radio :label="0">尚未安排</el-radio><br />
-                      <el-radio :label="1">等待打樣檔案</el-radio><br />
-                      <el-radio :label="2">等待生產檔案</el-radio><br />
-                      <el-radio :label="3">打樣中</el-radio><br />
-                      <el-radio :label="4">生產中</el-radio><br />
-                      <el-radio :label="5">打樣完待確認</el-radio><br />
-                      <el-radio :label="6">已出貨貨款未結清</el-radio><br />
-                      <el-radio :label="7">等尾款結清再出貨</el-radio><br />
-                      <el-radio :label="8">已結案</el-radio><br />
-                    </el-radio-group>
+                      <el-col :span="8">
+                        日期：
+                        <el-date-picker
+                          style="width:140px"
+                          v-model="item.date"
+                          type="date"
+                          placeholder="選擇日期"
+                          size="mini"
+                        >
+                        </el-date-picker>
+                      </el-col>
+                      <el-col :span="6">
+                        <span
+                          style="float:left;height:26px;line-height:26px;display:inline-block"
+                          >金額：</span
+                        >
+                        <my-currency-int-input
+                          style="float:left"
+                          :isReadyOnly="false"
+                          :bgcColor="'yellow'"
+                          :txtColor="'black'"
+                          :height="22"
+                          :width="83"
+                          type="text"
+                          v-model="item.amount"
+                        ></my-currency-int-input>
+                      </el-col>
+                      <el-col :span="6">
+                        <span
+                          style="float:left;height:26px;line-height:26px;display:inline-block"
+                          >後5碼：</span
+                        >
+                        <el-input
+                          v-model="item.last_five_digits"
+                          size="mini"
+                          style="float:left;width:80px"
+                        >
+                        </el-input>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-button
+                          style="margin:3px 0px"
+                          size="mini"
+                          type="danger"
+                          @click="handleDeletePaymentRecord(index, item)"
+                          >刪除此紀錄</el-button
+                        >
+                      </el-col>
+                    </el-row>
                     <div style="text-align: right; margin: 0">
                       <el-button
                         style="margin:3px 0px"
                         size="mini"
                         type="primary"
-                        @click="handleAddProofingPaymentRecord(props.row)"
+                        @click="handleUpdatePaymentRecord(scope.row, 'add')"
                         >新增</el-button
                       >
                       <el-button
@@ -300,13 +339,15 @@
                       <el-button
                         type="danger"
                         size="mini"
-                        @click="handleUpdatePaymentRecord()"
+                        @click="handleUpdatePaymentRecord(scope.row, 'update')"
                         >更新</el-button
                       >
                     </div>
                     <!-- slot="reference" 觸發 popover 顯示的 HTML 元素 -->
                     <div slot="reference">
-                      <el-tag size="small">--------</el-tag>
+                      <el-tag size="small">{{
+                        getProofingAmount(scope.row.proofing_payment_record)
+                      }}</el-tag>
                     </div>
                   </el-popover>
                 </template>
@@ -667,9 +708,37 @@ export default {
           console.log('get customer name and id fail', err)
         })
     },
-    handleUpdatePaymentRecord() {},
-    handleAddProofingPaymentRecord() {},
-    handleUpdateProofingPaymentRecord() {},
+
+    handleUpdatePaymentRecord(row, type) {
+      if (type === 'add') {
+        const obj = {
+          date: new Date(),
+          amount: 0,
+          last_five_digits: '',
+          payment_kind: 0
+        }
+        row.proofing_payment_record.push(obj)
+      }
+      const uploadData = {
+        id: row._id,
+        proofing_payment_record: row.proofing_payment_record
+      }
+      this.$axios
+        .post('/api/quotation/update', uploadData)
+        .then((res) => {
+          // 添加成功
+          this.$message({
+            message: '新增打樣費欄位完成！',
+            type: 'success'
+          })
+
+          this.getQuotationFromCustomerId(row.customer_value)
+        })
+        .catch((err) => {
+          console.log('交期更新失敗', err)
+        })
+    },
+
     // **********************************************  axios 讀取資料結束 **********************************************
     // ************************************** 分頁開始 **************************************
     setPaginations() {
@@ -710,6 +779,17 @@ export default {
         this.tableData = tables
       }
     }, /// ************************************** 分頁結束 **************************************
+    // 取得打樣費用總和
+    getProofingAmount(ProofingPaymentRecord) {
+      if (isEmpty(ProofingPaymentRecord)) return '-------'
+      let amount = 0
+      ProofingPaymentRecord.forEach((item) => {
+        amount += item.amount
+      })
+      return amount
+    },
+    // 刪除打樣費用的交易紀錄
+    handleDeletePaymentRecord(index, item) {},
     // 交期的時間發生變化
     handleDeliveryDateChange(row, deliveryDate) {
       const uploadData = {
