@@ -264,13 +264,7 @@
                     :ref="`proofing-payment-${scope.$index}`"
                   >
                     <p>(更新 / 新增) 打樣費付款紀錄</p>
-                    <el-button
-                      style="margin:3px 0px"
-                      size="mini"
-                      type="primary"
-                      @click="handleAddProofingPaymentRecord(props.row)"
-                      >新增紀錄</el-button
-                    >
+
                     <el-button
                       size="mini"
                       type="primary"
@@ -289,6 +283,13 @@
                       <el-radio :label="8">已結案</el-radio><br />
                     </el-radio-group>
                     <div style="text-align: right; margin: 0">
+                      <el-button
+                        style="margin:3px 0px"
+                        size="mini"
+                        type="primary"
+                        @click="handleAddProofingPaymentRecord(props.row)"
+                        >新增</el-button
+                      >
                       <el-button
                         type="text"
                         size="mini"
