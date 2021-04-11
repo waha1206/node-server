@@ -1,7 +1,7 @@
 <template>
   <div class="my-dialog">
     <el-dialog
-      class="inquire-dialog"
+      class="processing-dialog"
       :title="dialog.title"
       :visible.sync="dialog.show"
       :close-on-click-model="false"
@@ -9,51 +9,23 @@
       :modal-append-to-body="false"
       width="1845px"
     >
-      <el-container class="inquire-dialog">
-        <el-header class="inquire-dialog" style="height:100px;"
-          ><div class="header-wrap" v-if="customerOptions">
-            <el-select
-              class="inquire-dialog"
-              v-model="customerValue"
-              clearable
-              filterable
-              placeholder="請輸入客戶名稱"
-              size="mini"
-              @change="handleSelectCustomer"
-            >
-              <el-option
-                v-for="(item, index) in customerOptions"
-                :key="item.value + index"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-            <el-button
-              style="margin-left:5px;"
-              size="mini"
-              type="primary"
-              @click="handleEditCustomerData(customerValue)"
-              >查看客戶資料</el-button
-            >
-            <el-button
-              style="margin-left:5px;margin-right:25px"
-              size="mini"
-              type="primary"
-              @click="handleProcessingQuotationDialog"
-              >進行中訂單總覽</el-button
+      <el-container class="processing-dialog">
+        <el-header class="processing-dialog" style="height:100px;"
+          ><div class="header-wrap">
+            <el-tag style="float:left;margin-right:10px"
+              >請過濾您要看的資料</el-tag
             >
             <el-checkbox-group
-              v-model="statusCheckList"
+              v-model="processingStatusCheckList"
               size="small"
-              style="margin-top:10px"
+              style="margin-top:10px;height:32px;line-height:32px"
             >
-              <el-checkbox label="無下單"></el-checkbox>
-              <el-checkbox label="打樣中"></el-checkbox>
-              <el-checkbox label="生產中"></el-checkbox>
-              <el-checkbox label="已結案"></el-checkbox>
-              <el-checkbox label="打樣完待確認"></el-checkbox>
-              <el-checkbox label="已出貨貨款未結清"></el-checkbox>
+              <el-checkbox
+                v-for="(status, index) in filterProcessingStatus"
+                :key="index"
+                :label="status"
+                >{{ status }}</el-checkbox
+              >
             </el-checkbox-group>
           </div>
 
@@ -84,6 +56,89 @@
                 width="110px"
                 align="center"
               >
+              </el-table-column>
+              <el-table-column
+                prop=""
+                label="訂單狀態"
+                width="116px"
+                align="center"
+              >
+                <template v-slot="scope">
+                  <el-popover
+                    width="160"
+                    placement="right"
+                    :ref="`processing-${scope.$index}`"
+                  >
+                    <p>請選擇訂單狀態</p>
+                    <el-radio-group v-model="scope.row.processing_status">
+                      <el-radio :label="0">尚未安排</el-radio><br />
+                      <el-radio :label="1">等待打樣檔案</el-radio><br />
+                      <el-radio :label="2">等待生產檔案</el-radio><br />
+                      <el-radio :label="3">打樣中</el-radio><br />
+                      <el-radio :label="4">生產中</el-radio><br />
+                      <el-radio :label="5">打樣完待確認</el-radio><br />
+                      <el-radio :label="6">已出貨貨款未結清</el-radio><br />
+                      <el-radio :label="7">等尾款結清再出貨</el-radio><br />
+                      <el-radio :label="8">已結案</el-radio><br />
+                    </el-radio-group>
+                    <div style="text-align: right; margin: 0">
+                      <el-button
+                        type="text"
+                        size="mini"
+                        @click="handleClose(scope.$index, 'processing')"
+                      >
+                        取消
+                      </el-button>
+                      <el-button
+                        type="danger"
+                        size="mini"
+                        @click="
+                          handleChangeProcessingStatus(
+                            scope.row,
+                            scope.row.processing_status,
+                            scope.$index
+                          )
+                        "
+                        >確定</el-button
+                      >
+                    </div>
+                    <!-- slot="reference" 觸發 popover 顯示的 HTML 元素 -->
+                    <div slot="reference">
+                      <el-tag
+                        :type="
+                          handleProcessingStatus(
+                            scope.row.processing_status,
+                            'type'
+                          )
+                        "
+                        :effect="
+                          handleProcessingStatus(
+                            scope.row.processing_status,
+                            'effect'
+                          )
+                        "
+                        size="medium"
+                      >
+                        {{
+                          handleProcessingStatus(
+                            scope.row.processing_status,
+                            'label'
+                          )
+                        }}
+                      </el-tag>
+                    </div>
+                  </el-popover>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop=""
+                label="客戶名稱"
+                width="200px"
+                align="left"
+              >
+                <template v-slot="scope">
+                  {{ getCustomerNameById(scope.row.customer_value) }}
+                </template>
               </el-table-column>
               <el-table-column
                 prop="category_name"
@@ -178,79 +233,7 @@
                 align="center"
               >
               </el-table-column>
-              <el-table-column
-                prop=""
-                label="訂單狀態"
-                width="116px"
-                align="center"
-              >
-                <template v-slot="scope">
-                  <el-popover
-                    width="160"
-                    placement="right"
-                    :ref="`processing-${scope.$index}`"
-                  >
-                    <p>請選擇訂單狀態</p>
-                    <el-radio-group v-model="scope.row.processing_status">
-                      <el-radio :label="0">尚未安排</el-radio><br />
-                      <el-radio :label="1">等待打樣檔案</el-radio><br />
-                      <el-radio :label="2">等待生產檔案</el-radio><br />
-                      <el-radio :label="3">打樣中</el-radio><br />
-                      <el-radio :label="4">生產中</el-radio><br />
-                      <el-radio :label="5">打樣完待確認</el-radio><br />
-                      <el-radio :label="6">已出貨貨款未結清</el-radio><br />
-                      <el-radio :label="7">等尾款結清再出貨</el-radio><br />
-                      <el-radio :label="8">已結案</el-radio><br />
-                    </el-radio-group>
-                    <div style="text-align: right; margin: 0">
-                      <el-button
-                        type="text"
-                        size="mini"
-                        @click="handleClose(scope.$index, 'processing')"
-                      >
-                        取消
-                      </el-button>
-                      <el-button
-                        type="danger"
-                        size="mini"
-                        @click="
-                          handleChangeProcessingStatus(
-                            scope.row,
-                            scope.row.processing_status,
-                            scope.$index
-                          )
-                        "
-                        >確定</el-button
-                      >
-                    </div>
-                    <!-- slot="reference" 觸發 popover 顯示的 HTML 元素 -->
-                    <div slot="reference">
-                      <el-tag
-                        :type="
-                          handleProcessingStatus(
-                            scope.row.processing_status,
-                            'type'
-                          )
-                        "
-                        :effect="
-                          handleProcessingStatus(
-                            scope.row.processing_status,
-                            'effect'
-                          )
-                        "
-                        size="medium"
-                      >
-                        {{
-                          handleProcessingStatus(
-                            scope.row.processing_status,
-                            'label'
-                          )
-                        }}
-                      </el-tag>
-                    </div>
-                  </el-popover>
-                </template>
-              </el-table-column>
+
               <el-table-column
                 prop=""
                 label="已付打樣費"
@@ -560,44 +543,7 @@
                 align="center"
               >
               </el-table-column>
-              <el-table-column
-                prop="proofing_price"
-                label="打樣/單"
-                width="83px"
-                align="center"
-              >
-                <template slot-scope="scope">
-                  <my-currency-int-input
-                    :isReadyOnly="false"
-                    :bgcColor="'yellow'"
-                    :txtColor="'black'"
-                    :height="22"
-                    :width="43"
-                    type="text"
-                    v-model="scope.row.proofing_price"
-                  ></my-currency-int-input>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="proofing_price"
-                label="打樣/總"
-                width="83px"
-                align="center"
-              >
-                <template slot-scope="scope">
-                  <my-currency-int-input
-                    :isReadyOnly="false"
-                    :bgcColor="'yellow'"
-                    :txtColor="'black'"
-                    :height="22"
-                    :width="43"
-                    type="text"
-                    v-model="
-                      scope.row.proofing_price * scope.row.proofing_value
-                    "
-                  ></my-currency-int-input>
-                </template>
-              </el-table-column>
+
               <el-table-column
                 prop="order_value"
                 label="數量"
@@ -653,31 +599,31 @@
         </el-main>
       </el-container>
     </el-dialog>
-    <CustomerDialog
-      v-if="customerTitleData && customerTitleData && customerClassData"
-      :dialog="addCustomerDialog"
-      :customerClassData="customerClassData"
-      :customerTitleData="customerTitleData"
-      @update=""
-    >
-    </CustomerDialog>
-    <QuotationInProcessingDialog
-      :dialog="processingQuotationDialog"
-      @update="getQuotationFromCustomerId"
-    ></QuotationInProcessingDialog>
   </div>
 </template>
 
 <script>
 import { copyValueToWindow, isEmpty, appendComma } from '../../utils/tools'
-import CustomerDialog from '../../components/CustomerManager/CustomerDialog'
-import QuotationInProcessingDialog from '../../components/QuotationManager/QuotationInProcessingDialog'
 
 const types = {
   SET_IS_AUTNENTIATED: 'SET_IS_AUTNENTIATED', // 是否通過認證
   SET_USER: 'SET_USER', // 用户信息
   UPDATE_PERMISSIOM_LIST: 'UPDATE_PERMISSION_LIST' // 設定使用者的權限
 }
+
+const tradingStatusSelect = ['進行中']
+
+const filterProcessingStatus = [
+  '尚未安排',
+  '等待打樣檔案',
+  '等待生產檔案',
+  '打樣中',
+  '生產中',
+  '打樣完待確認',
+  '已出貨貨款未結',
+  '尾款結清再出貨',
+  '已結案'
+]
 
 const tradingStatusOptions = [
   { type: '', effect: 'plain', label: '無成交' },
@@ -698,19 +644,20 @@ const processingStatusOptions = [
 ]
 
 export default {
-  name: 'quotation-inquire-dialog',
+  name: 'quotation-processing-dialog',
   props: {
     dialog: Object
   },
   data() {
     return {
+      filterProcessingStatus: filterProcessingStatus,
       // 交貨日期
       deliveryDate: '',
       // 交易狀態
       statusVisible: false,
       // 報價單的篩選
       quotationStatus: [],
-      statusCheckList: [],
+      processingStatusCheckList: ['尚未安排'], // 選擇要揭示哪種交易狀態的 list
       customerClassData: [], // 存放客戶分類
       customerTitleData: [], // 存放客戶職稱
       customerData: {}, // 存放客戶資料
@@ -723,7 +670,7 @@ export default {
       customerValue: '',
       // 管理分頁
       my_paginations: {
-        localStorage_page_size: 'inquire_quotation_page_size',
+        localStorage_page_size: 'processing_quotation_page_size',
         page_index: 1, // 位於當前第幾頁
         total: 0, // 總數
         page_size: 10, // 每一頁顯示幾條數據
@@ -736,33 +683,32 @@ export default {
         editData: {},
         option: 'edit',
         data: {}
-      },
-      processingQuotationDialog: {
-        show: false,
-        title: '進行中的訂單總覽',
-        data: {}
       }
     }
   },
   mounted() {
     // this.initQuotationCustomerId()
   },
-  components: {
-    CustomerDialog,
-    QuotationInProcessingDialog
-  },
+  components: {},
   watch: {
     dialog() {
       console.log('我是子元件')
       this.tableData.length = 0
+      // 這個目的是先取得 使用者的 名稱與ID
       this.getCustomerNameAndId()
     },
     // 當取得客戶資料之後 取代掉 then 的功能
+    // 當從 getCustomerNameAndId 取得所有客戶的清單後 watch 到資料異動，就來這邊
     customerNameAndId(newValue) {
       if (localStorage.quotation_customer_id) {
         this.customerValue = localStorage.quotation_customer_id
-        this.getQuotationFromCustomerId(localStorage.quotation_customer_id)
+
+        this.getProcessingQuotation() // 讀取所有進行中的訂單
       }
+    },
+    // 監視 processingStatusCheckList 一切從這邊開始
+    processingStatusCheckList(value) {
+      console.log(value)
     }
   },
   computed: {
@@ -772,22 +718,23 @@ export default {
   },
   methods: {
     // **********************************************  axios 讀取資料開始 **********************************************
-    getQuotationFromCustomerId(customerId) {
+    // 取得資料庫中所有正在進行中的報價單
+    getProcessingQuotation() {
       this.$axios
-        .get(`/api/quotation/quotation/${customerId}`)
+        .get('/api/quotation/processing')
         .then((res) => {
-          // 讀取客戶報價單資料成功
           this.$message({
-            message: '讀取客戶報價單資料成功',
+            message: '讀取進行中的訂單資料完成',
             type: 'success'
           })
           this.quotationData = res.data
           this.setPaginations()
         })
         .catch((err) => {
-          console.log(err)
+          console.log('讀取進行中的報價單失敗', err)
         })
     },
+
     getCustomerNameAndId() {
       // 輸入客戶名稱的時候用的
       this.$axios
@@ -898,7 +845,7 @@ export default {
             type: 'success'
           })
 
-          this.getQuotationFromCustomerId(row.customer_value)
+          this.getProcessingQuotation(row.customer_value)
         })
         .catch((err) => {
           console.log('交期更新失敗', err)
@@ -945,11 +892,14 @@ export default {
         this.tableData = tables
       }
     }, /// ************************************** 分頁結束 **************************************
-    handleProcessingQuotationDialog() {
-      this.processingQuotationDialog = {
-        show: true,
-        title: '進行中訂單總覽'
-      }
+    // 取得客戶的名稱
+    getCustomerNameById(customerId) {
+      if (isEmpty(this.customerNameAndId)) return
+      let obj = this.customerNameAndId.filter((item) => {
+        return item._id === customerId
+      })
+
+      return obj[0].company
     },
     // 點擊複製 使用 tools 裡面的 複製功能
     copyValue(value) {
@@ -1002,7 +952,7 @@ export default {
             type: 'success'
           })
 
-          this.getQuotationFromCustomerId(row.customer_value)
+          this.getProcessingQuotation(row.customer_value)
         })
         .catch((err) => {
           console.log('交期更新失敗', err)
@@ -1066,7 +1016,8 @@ export default {
             type: 'success'
           })
           this.$refs[`processing-${index}`].doClose()
-          this.getQuotationFromCustomerId(row.customer_value)
+          this.getProcessingQuotation(row.customer_value)
+          this.$emit('update', row.customer_value)
         })
         .catch((err) => {
           console.log('交易狀態更新失敗', err)
@@ -1087,7 +1038,8 @@ export default {
             type: 'success'
           })
           this.$refs[`popover-${index}`].doClose()
-          this.getQuotationFromCustomerId(row.customer_value)
+          this.getProcessingQuotation(row.customer_value)
+          this.$emit('update', row.customer_value)
         })
         .catch((err) => {
           console.log('交易狀態更新失敗', err)
@@ -1119,7 +1071,7 @@ export default {
 
     handleSelectCustomer(customerId) {
       if (isEmpty(customerId)) return
-      this.getQuotationFromCustomerId(customerId)
+      this.getProcessingQuotation(customerId)
       localStorage.quotation_customer_id = customerId
     }
   }
@@ -1127,7 +1079,7 @@ export default {
 </script>
 
 <style scoped>
-.inquire-dialog .el-main {
+.processing-dialog .el-main {
   background-color: #e9eef3;
   color: #333;
   text-align: center;

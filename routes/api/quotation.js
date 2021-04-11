@@ -134,6 +134,35 @@ router.post(
   }
 )
 
+// $router GET api/quotation/processing
+// @desc   取得所有進行中的報價單 trading_status = 1
+// trading_status 0.無成交  1.進行中  2.已完成  3.客戶棄單
+// @access Private
+router.get(
+  '/processing',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // query 選擇的條件
+    // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
+    const query = { trading_status: 1 }
+    const options = {
+      // 空的，意謂我要取得所有資料
+    }
+
+    Quotation.find(query, options)
+      .sort({ creation_date: -1 }) // 日期越新的排越前面
+      .then((quotations) => {
+        if (!quotations) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(quotations)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
 // ************************************* quotation 結束 *************************************
 
 module.exports = router
