@@ -9,8 +9,11 @@
           >基本設定</el-button
         >
 
-        <el-button type="primary" size="small" @click=""
-          >新增原物料容器</el-button
+        <el-button
+          type="primary"
+          size="small"
+          @click="handleProcessingQuotationDialog"
+          >進行中訂單總覽</el-button
         >
       </el-header>
       <el-main>
@@ -38,6 +41,10 @@
     <!-- 子元件 -->
     <QuotationInquireDialog :dialog="inquireDialog"> </QuotationInquireDialog>
     <QuotationSettingDialog :dialog="settingDialog"> </QuotationSettingDialog>
+    <QuotationInProcessingDialog
+      :dialog="processingQuotationDialog"
+      @update=""
+    ></QuotationInProcessingDialog>
     <!-- 子元件結束 -->
   </div>
 </template>
@@ -45,6 +52,7 @@
 <script>
 import QuotationInquireDialog from '../../components/QuotationManager/QuotationInquireDialog'
 import QuotationSettingDialog from '../../components/QuotationManager/QuotationSettingDialog'
+import QuotationInProcessingDialog from '../../components/QuotationManager/QuotationInProcessingDialog'
 
 export default {
   name: 'quotation-manager',
@@ -59,12 +67,18 @@ export default {
       settingDialog: {
         show: false,
         title: '報價單環境基本設定'
+      },
+      processingQuotationDialog: {
+        show: false,
+        title: '進行中的訂單總覽',
+        data: {}
       }
     }
   },
   components: {
     QuotationInquireDialog,
-    QuotationSettingDialog
+    QuotationSettingDialog,
+    QuotationInProcessingDialog
   },
   watch: {
     // 路由傳遞一個或多個參數
@@ -88,6 +102,12 @@ export default {
     next()
   },
   methods: {
+    handleProcessingQuotationDialog() {
+      this.processingQuotationDialog = {
+        show: true,
+        title: '進行中訂單總覽'
+      }
+    },
     // 測試開啟目錄
     handelQuotationSetting() {
       this.settingDialog = {
