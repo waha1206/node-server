@@ -50,6 +50,81 @@
         <el-main>
           <div class="table-container">
             <el-table style="width:100%" :data="tableData" size="mini">
+              <el-table-column type="expand">
+                <template v-slot="props">
+                  <el-form
+                    label-position="left"
+                    inline
+                    class="demo-table-expand"
+                  >
+                    <!-- <el-form-item label="" class="cascader-item">
+                  <div class="block"></div>
+
+                </el-form-item> -->
+                    <el-form-item label="利潤表格：" class="cascader-item">
+                      <el-container>
+                        <!-- header 兩個按紐 新增欄位，利潤清單更新 -->
+                        <el-header class="profit-btn-wrap">
+                          <el-button
+                            size="mini"
+                            type="primary"
+                            @click="handleAddInformation(props.row)"
+                            >新增資訊</el-button
+                          >
+                          <el-button
+                            size="mini"
+                            type="primary"
+                            @click="handleUpdateInformation(props.row)"
+                            >更新資訊</el-button
+                          >
+                        </el-header>
+                        <el-main>
+                          <!-- 這邊會秀出欄位名稱 數量，利潤，刪除按紐 -->
+                          <div
+                            class="profit-wrap"
+                            v-for="(citem, index) in props.row.quantity_profit"
+                            :key="index"
+                          >
+                            <el-input
+                              class="my-input"
+                              v-model="citem.quantity"
+                            ></el-input>
+                            <my-percentage-input
+                              class="profit"
+                              :width="52"
+                              :height="28"
+                              :isReadyOnly="false"
+                              v-model="citem.profit"
+                            ></my-percentage-input>
+                            <el-input
+                              class="my-input"
+                              placeholder="幾箱"
+                              v-model="citem.carton"
+                            ></el-input>
+                            <el-input
+                              class="my-input"
+                              placeholder="淨重"
+                              v-model="citem.net_weight"
+                            ></el-input>
+                            <el-button
+                              class="profit-btn"
+                              size="mini"
+                              type="danger"
+                              @click="
+                                handleDeleteProfit(
+                                  index,
+                                  props.row.quantity_profit
+                                )
+                              "
+                              >刪除</el-button
+                            >
+                          </div>
+                        </el-main>
+                      </el-container>
+                    </el-form-item>
+                  </el-form>
+                </template>
+              </el-table-column>
               <el-table-column
                 prop="quotation_no"
                 label="單號"
@@ -133,7 +208,7 @@
               <el-table-column
                 prop=""
                 label="客戶名稱"
-                width="200px"
+                width="180px"
                 align="left"
               >
                 <template v-slot="scope">
@@ -495,6 +570,7 @@
                 <template slot-scope="scope">
                   <el-tag
                     size="medium"
+                    :type="getTagColor(scope.row)"
                     @click="copyValue(getRecoverableAmount(scope.row))"
                     >{{ getRecoverableAmount(scope.row) }}</el-tag
                   >
@@ -552,46 +628,29 @@
               >
               </el-table-column>
               <el-table-column prop="" label="單價" width="72px" align="center">
-                <template slot-scope="scope">
-                  <my-currency-int-input
-                    :isReadyOnly="false"
-                    :bgcColor="'yellow'"
-                    :txtColor="'black'"
-                    :height="22"
-                    :width="35"
-                    type="text"
-                    v-model="scope.row.unit_price"
-                  ></my-currency-int-input>
+                <template v-slot="scope">
+                  <el-tag size="medium">
+                    {{ getFormatAnount('$', scope.row.unit_price) }}
+                  </el-tag>
                 </template>
               </el-table-column>
-              <el-table-column prop="" label="稅" width="80px" align="center">
-                <template slot-scope="scope">
-                  <my-currency-int-input
-                    :isReadyOnly="false"
-                    :bgcColor="'yellow'"
-                    :txtColor="'black'"
-                    :height="22"
-                    :width="43"
-                    type="text"
-                    v-model="scope.row.tax"
-                  ></my-currency-int-input>
+              <el-table-column prop="" label="稅" width="72px" align="center">
+                <template v-slot="scope">
+                  <el-tag size="medium">
+                    {{ getFormatAnount('$', scope.row.tax) }}
+                  </el-tag>
                 </template>
               </el-table-column>
               <el-table-column
                 prop=""
                 label="總金額含稅"
-                width="110px"
+                width="100px"
                 align="center"
-                ><template slot-scope="scope">
-                  <my-currency-int-input
-                    :isReadyOnly="false"
-                    :bgcColor="'yellow'"
-                    :txtColor="'black'"
-                    :height="22"
-                    :width="65"
-                    type="text"
-                    v-model="scope.row.total_amount_tax"
-                  ></my-currency-int-input>
+              >
+                <template v-slot="scope">
+                  <el-tag size="medium">
+                    {{ getFormatAnount('$', scope.row.total_amount_tax) }}
+                  </el-tag>
                 </template>
               </el-table-column>
             </el-table>
@@ -657,7 +716,7 @@ export default {
       statusVisible: false,
       // 報價單的篩選
       quotationStatus: [],
-      processingStatusCheckList: ['尚未安排'], // 選擇要揭示哪種交易狀態的 list
+      processingStatusCheckList: [], // 選擇要揭示哪種交易狀態的 list
       customerClassData: [], // 存放客戶分類
       customerTitleData: [], // 存放客戶職稱
       customerData: {}, // 存放客戶資料
@@ -688,6 +747,10 @@ export default {
   },
   mounted() {
     // this.initQuotationCustomerId()
+    if (!isEmpty(localStorage.quitation_filter_field))
+      this.processingStatusCheckList = JSON.parse(
+        localStorage.getItem('quitation_filter_field')
+      )
   },
   components: {},
   watch: {
@@ -708,7 +771,8 @@ export default {
     },
     // 監視 processingStatusCheckList 一切從這邊開始
     processingStatusCheckList(value) {
-      console.log(value)
+      localStorage.setItem('quitation_filter_field', JSON.stringify(value))
+      this.getProcessingQuotation()
     }
   },
   computed: {
@@ -727,7 +791,36 @@ export default {
             message: '讀取進行中的訂單資料完成',
             type: 'success'
           })
-          this.quotationData = res.data
+          // 先把資料清空
+          this.quotationData.length = 0
+          // 如果本地端有存篩選資料，才進行，不然初始的話就是拿所有資料 else
+          if (!isEmpty(localStorage.quitation_filter_field)) {
+            for (let i = 0; i < this.processingStatusCheckList.length; i++) {
+              // 0-8 的狀態，如果本地設定裡面有選重的話  把文字解譯成 0-8 然後去判斷收到的資料是否符合
+              let find = filterProcessingStatus.indexOf(
+                this.processingStatusCheckList[i]
+              )
+              // 邏輯 1.有比對到我要的資料 0-8  2.如果是為定義的 (因為新舊資料跟避免錯誤)
+              res.data.forEach((item) => {
+                if (
+                  // this.quotationData.indexOf(item.quotation_no) &&
+                  item.processing_status === find ||
+                  isEmpty(item.processing_status)
+                ) {
+                  this.quotationData.push(item)
+                }
+              })
+              // 讓陣列中的物件不重複
+              // 出處 https://guahsu.io/2017/06/JavaScript-Duplicates-Array/
+              this.quotationData = Array.from(new Set(this.quotationData))
+              // 按時間排序，日期越接近今日的排越前面
+              this.quotationData.sort(function(a, b) {
+                return new Date(b.creation_date) - new Date(a.creation_date)
+              })
+            }
+          } else {
+            this.quotationData = res.data
+          }
           this.setPaginations()
         })
         .catch((err) => {
@@ -909,6 +1002,24 @@ export default {
         message: `複製 ${message} 成功！`,
         type: 'success'
       })
+    },
+    // 顯示金額格式化
+    getFormatAnount(symbol, value) {
+      return appendComma(symbol, value)
+    },
+    // 更改尚未回收金額的 tag 底色，如果回收金額為 0 就藍色，否則就紅色
+    getTagColor(row) {
+      let proofingFee = 0
+      let depositFee = 0
+      let recoverableAmount = 0
+      row.proofing_payment_record.forEach((item) => {
+        proofingFee += item.amount
+      })
+      row.deposit_payment_record.forEach((item) => {
+        depositFee += item.amount
+      })
+      recoverableAmount = row.total_amount_tax - proofingFee - depositFee
+      return recoverableAmount === 0 ? '' : 'danger'
     },
     // 計算尚未回收金額
     getRecoverableAmount(row) {

@@ -84,6 +84,16 @@ const QuotationSchema = new Schema({
   trading_status: {
     type: Number
   },
+  // processing_status 的狀態
+  // '尚未安排', 0
+  // '等待打樣檔案', 1
+  // '等待生產檔案', 2
+  // '打樣中', 3
+  // '生產中', 4
+  // '打樣完待確認', 5
+  // '已出貨貨款未結', 6
+  // '尾款結清再出貨', 7
+  // '已結案' 8
   processing_status: {
     type: Number
   },

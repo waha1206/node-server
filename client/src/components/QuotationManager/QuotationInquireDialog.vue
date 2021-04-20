@@ -581,7 +581,7 @@
               <el-table-column
                 prop="proofing_price"
                 label="打樣/總"
-                width="83px"
+                width="93px"
                 align="center"
               >
                 <template slot-scope="scope">
@@ -590,7 +590,7 @@
                     :bgcColor="'yellow'"
                     :txtColor="'black'"
                     :height="22"
-                    :width="43"
+                    :width="53"
                     type="text"
                     v-model="
                       scope.row.proofing_price * scope.row.proofing_value
