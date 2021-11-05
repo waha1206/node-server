@@ -27,7 +27,6 @@
 	"files.encoding": "utf8", // 設定預設編碼
 	"files.trimTrailingWhitespace": true, // 儲存的時候，會幫你自動過濾多餘的空格
 	"files.autoGuessEncoding": false, // 是否自動猜測檔案的編碼
-	"terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\cmd.exe",
 	// "workbench.welcome.enabled": false, // 使否關閉 vscode 歡迎的顯示頁面
 	"workbench.startupEditor": "newUntitledFile",
 	"explorer.confirmDelete": false,

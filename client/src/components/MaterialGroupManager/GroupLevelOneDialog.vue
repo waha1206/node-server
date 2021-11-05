@@ -73,6 +73,7 @@
               <el-form-item prop="name" label="第一層中文：" size="mini">
                 <el-input type="name" v-model="formData.name"></el-input>
               </el-form-item>
+
               <!--提交與取消鍵 -->
               <el-form-item class="text_right">
                 <el-button type="warning" @click="dialog.show = false"

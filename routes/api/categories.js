@@ -353,6 +353,7 @@ router.post(
 
     if (req.body.type) categoryFields.type = req.body.type
     if (req.body.name) categoryFields.name = req.body.name
+    if (req.body.name) categoryFields.describe = req.body.describe
     if (req.body.level_one_id) {
       categoryFields.level_one_id = req.body.level_one_id
     }

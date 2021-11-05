@@ -83,6 +83,12 @@
               <el-form-item prop="name" label="第一層中文：" size="mini">
                 <el-input type="name" v-model="formData.name"></el-input>
               </el-form-item>
+              <el-form-item prop="describe" label="商品說明：" size="mini">
+                <el-input
+                  type="describe"
+                  v-model="formData.describe"
+                ></el-input>
+              </el-form-item>
               <!--提交與取消鍵 -->
               <el-form-item class="text_right">
                 <el-button type="warning" @click="dialog.show = false"
@@ -147,6 +153,18 @@
             v-model="categoriesEditForm.name"
             autocomplete="off"
             placeholder="請輸入大寫英文"
+            size="mini"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          prop="describe"
+          label="商品敘述 (中文)"
+          :label-width="formLabelWidth"
+        >
+          <el-input
+            v-model="categoriesEditForm.describe"
+            autocomplete="off"
+            placeholder="請輸入商品敘述文字"
             size="mini"
           ></el-input>
         </el-form-item>
@@ -394,6 +412,7 @@ export default {
               ? 'add'
               : `edit/${this.categoriesEditForm._id}`
           uploadFormData.level = 1
+
           this.$axios
             .post(`/api/categories/${url}`, uploadFormData)
             .then((res) => {
