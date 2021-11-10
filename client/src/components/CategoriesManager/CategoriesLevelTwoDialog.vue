@@ -144,6 +144,13 @@
               <el-form-item prop="name" label="第二層中文：" size="mini">
                 <el-input type="name" v-model="formData.name"></el-input>
               </el-form-item>
+              <el-form-item prop="describe" label="商品說明：" size="mini">
+                <el-input
+                  type="textarea"
+                  :autosize="{ minRows: 2, maxRows: 10 }"
+                  v-model="formData.describe"
+                ></el-input>
+              </el-form-item>
               <!--提交與取消鍵 -->
               <el-form-item class="text_right">
                 <el-button type="warning" @click="dialog.show = false"
@@ -236,6 +243,20 @@
             v-model="categoriesEditForm.name"
             autocomplete="off"
             placeholder="請輸入大寫英文"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          prop="describe"
+          label="商品敘述 (中文)"
+          :label-width="formLabelWidth"
+        >
+          <el-input
+            v-model="categoriesEditForm.describe"
+            autocomplete="off"
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 10 }"
+            placeholder="請輸入商品敘述文字"
+            size="mini"
           ></el-input>
         </el-form-item>
         <el-main>
@@ -338,6 +359,7 @@ export default {
       categoriesEditForm: {
         type: '',
         name: '',
+        describe: '',
         imgs: [],
         level_one_id: '',
         _id: '',
@@ -374,10 +396,10 @@ export default {
       // 驗證表單，form_rules 這個是驗證 addForm 的欄位
       form_rules: {
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
-        name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
-        describe: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
-        ]
+        name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }]
+        // describe: [
+        //   { required: true, message: '此欄位不能為空', trigger: 'blur' }
+        // ]
       }
     }
   },
@@ -483,6 +505,7 @@ export default {
       this.categoriesEditDialog = true
       this.categoriesEditForm.type = row.type
       this.categoriesEditForm.name = row.name
+      this.categoriesEditForm.describe = row.describe
       this.categoriesEditForm._id = row._id
       this.categoriesEditForm.level_one_name = this.getLevelOneNameById(row)
       if (row.imgs) {
@@ -512,6 +535,7 @@ export default {
     onSubmit(form) {
       const uploadFormData =
         this.dialog.option == 'add' ? this.formData : this.categoriesEditForm
+
       uploadFormData.imgs = this.categoriesEditForm.imgs.join('|')
 
       this.$refs[form].validate((valid) => {

@@ -85,7 +85,8 @@
               </el-form-item>
               <el-form-item prop="describe" label="商品說明：" size="mini">
                 <el-input
-                  type="describe"
+                  type="textarea"
+                  :autosize="{ minRows: 2, maxRows: 10 }"
                   v-model="formData.describe"
                 ></el-input>
               </el-form-item>
@@ -164,6 +165,8 @@
           <el-input
             v-model="categoriesEditForm.describe"
             autocomplete="off"
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 10 }"
             placeholder="請輸入商品敘述文字"
             size="mini"
           ></el-input>
@@ -275,6 +278,7 @@ export default {
       formLabelWidth: '',
       categoriesEditForm: {
         type: '',
+        describe: '',
         name: '',
         imgs: [],
         _id: ''
@@ -298,10 +302,10 @@ export default {
       // 驗證表單，form_rules 這個是驗證 addForm 的欄位
       form_rules: {
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
-        name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
-        describe: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
-        ]
+        name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }]
+        // describe: [
+        //   { required: true, message: '此欄位不能為空', trigger: 'blur' }
+        // ]
       }
     }
   },
@@ -371,6 +375,7 @@ export default {
       this.categoriesEditDialog = true
       this.categoriesEditForm.type = row.type
       this.categoriesEditForm.name = row.name
+      this.categoriesEditForm.describe = row.describe
       this.categoriesEditForm._id = row._id
       if (row.imgs) {
         this.categoriesEditForm.imgs = row.imgs

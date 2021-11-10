@@ -12,6 +12,7 @@
         <el-button
           type="primary"
           size="small"
+          breadList
           @click="handleProcessingQuotationDialog"
           >進行中訂單總覽</el-button
         >
