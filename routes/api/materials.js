@@ -91,6 +91,7 @@ router.post(
   '/many',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
+    console.log(req.body)
     Material.find({ _id: { $in: req.body } })
       .sort({ type: 1 })
       .then((materials) => {
