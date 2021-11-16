@@ -547,6 +547,7 @@ export default {
     },
     // 再根據取得的商品資料裡的 material group id 去找到 group ， 這些 group 裡面會帶有完整的 跟組合完整的 material _id
     getMaterialGroupData(groupId) {
+      console.log(groupId)
       this.$axios
         .post('/api/material-group/many', groupId)
         .then((res) => {

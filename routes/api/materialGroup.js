@@ -86,9 +86,8 @@ router.post(
         materialGroupFields.last_edit_person = req.body.last_edit_person
       }
       if (req.body.choiceLevelTwoValue) {
-        materialGroupFields.choiceLevelTwoValue = req.body.choiceLevelTwoValue.map(
-          (x) => x
-        )
+        materialGroupFields.choiceLevelTwoValue =
+          req.body.choiceLevelTwoValue.map((x) => x)
       }
     }
     MaterialGroupLevel.findOne({
@@ -164,6 +163,7 @@ router.post(
   '/many',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
+    console.log(req.body)
     MaterialGroupMember.find({ _id: { $in: req.body } })
       .sort({ type: 1 })
       .then((materialGroupOne) => {
@@ -350,14 +350,12 @@ router.post(
         materialGroupFields.last_edit_person = req.body.last_edit_person
       }
       if (req.body.choiceLevelTwoValue) {
-        materialGroupFields.choiceLevelTwoValue = req.body.choiceLevelTwoValue.map(
-          (x) => x
-        )
+        materialGroupFields.choiceLevelTwoValue =
+          req.body.choiceLevelTwoValue.map((x) => x)
       }
       if (req.body.choice_level_three_material) {
-        materialGroupFields.choice_level_three_material = req.body.choice_level_three_material.map(
-          (x) => x
-        )
+        materialGroupFields.choice_level_three_material =
+          req.body.choice_level_three_material.map((x) => x)
       }
     }
 
@@ -365,11 +363,9 @@ router.post(
     const update = { $set: materialGroupFields }
     const action = { new: false }
 
-    MaterialGroupLevel.findByIdAndUpdate(
-      filter,
-      update,
-      action
-    ).then((materialGroupOne) => res.json(materialGroupOne))
+    MaterialGroupLevel.findByIdAndUpdate(filter, update, action).then(
+      (materialGroupOne) => res.json(materialGroupOne)
+    )
   }
 )
 
