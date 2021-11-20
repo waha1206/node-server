@@ -142,6 +142,7 @@ export default {
   methods: {
     // **********************************************  讀取資料開始 **********************************************
     getMaterialGroupData(materialsId) {
+      console.log('getMaterialGroupData', materialsId)
       this.$axios
         .post('/api/material/many', materialsId)
         .then((res) => {
@@ -151,6 +152,7 @@ export default {
             type: 'success'
           })
           this.materialGroupData = res.data
+          console.log('this.materialGroupDataㄙㄩㄣˉ', this.materialGroupData)
           this.setPaginations()
         })
         .catch((err) => {
