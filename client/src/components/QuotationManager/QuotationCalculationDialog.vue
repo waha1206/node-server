@@ -580,6 +580,10 @@ export default {
     // 如何使用異步讀取 server 資料，完美的解答
     // https://stackoverflow.com/questions/54955426/how-to-use-async-await-in-vue-js
     async handleCalculationData(calculationData) {
+      // calculationData 下面有三天王
+      // selectMaterial - 客戶選擇的原料 selectMaterial
+      // materialGroup - 官方設定的原料組 materialGroupMany
+      // categoryData  - 建構商品裡面的 catogory
       let paper = await this.getMaterialData(
         calculationData.categoryData[0].paper_id
       ) // 取得轉印紙的資料 paper.data.unit_price
@@ -711,27 +715,47 @@ export default {
       // 計算布料使用量 fnBestLayout 智慧排版需要輸入兩次計算
       // typesetting 判斷需不需要使用智慧排版 true  = 要  false = 不要
 
-      let b_obj = {}
-      let a_obj = {}
+      // let b_obj = {}
+      // let a_obj = {}
 
-      if (typesetting) {
-        // 交換寬跟高的位置
-        b_obj = this.fnBestLayout(
-          layoutHeight,
-          layoutWidth,
-          clothMaterialWidth, // ------ 寬度取代 11111
-          orderValue
-        )
-      }
-      a_obj = this.fnBestLayout(
+      // if (typesetting) {
+      //   // 交換寬跟高的位置
+      //   b_obj = this.fnBestLayout(
+      //     layoutHeight,
+      //     layoutWidth,
+      //     clothMaterialWidth, // ------ 寬度取代 11111
+      //     orderValue
+      //   )
+      // }
+      // a_obj = this.fnBestLayout(
+      //   layoutWidth,
+      //   layoutHeight,
+      //   clothMaterialWidth, // ------ 寬度取代 22222
+      //   orderValue
+      // )
+      let a_obj = this.fnBestLayout(
         layoutWidth,
         layoutHeight,
         clothMaterialWidth, // ------ 寬度取代 22222
         orderValue
       )
+      // 寬高互換再計算一次，如果智慧排版有開啟的話，此 b_obj 就要拿出來跟 a_obj 比較看誰比較省布料面積
+      let b_obj = this.fnBestLayout(
+        layoutHeight,
+        layoutWidth,
+        clothMaterialWidth, // ------ 寬度取代 11111
+        orderValue
+      )
+      let obj = {}
+      // 智慧排版如果開啟 值 = true obj = a_obj   如果沒開啟，就比較 a b 取數字低的
+      if (typesetting) {
+        obj = a_obj
+      } else {
+        obj = a_obj.cloth_area > b_obj.cloth_area ? b_obj : a_obj
+      }
 
       // 智慧排版，布料需要旋轉90度去找最加的排版輸出方式
-      const obj = a_obj.cloth_area > b_obj.cloth_area ? b_obj : a_obj // 商品使用的布料才數
+      // const obj = a_obj.cloth_area > b_obj.cloth_area ? b_obj : a_obj // 商品使用的布料才數
       // 布料每才的價錢 - 最後存起來的時候要在做小數點後兩位的無條件進入
       const cloth_30x30_price =
         clothMaterialUnitPrice / ((clothMaterialWidth * 90) / 900) // ------ 寬度取代 33333 價錢
