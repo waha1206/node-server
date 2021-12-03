@@ -151,7 +151,7 @@ const router = new VueRouter({
           ]
         },
         {
-          path: '/categories-manager', // 商品建構管理
+          path: '/categories-manager', // 商品目錄管理
           name: 'categories-manager',
           component: () => import('../views/managers/CategoriesManager.vue'),
           meta: {

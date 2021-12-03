@@ -104,7 +104,7 @@ export default {
             },
             {
               path: '/categories-manager',
-              name: '商品建構管理',
+              name: '商品目錄管理',
               meta: {
                 permission: ['product_authority_r']
               }
