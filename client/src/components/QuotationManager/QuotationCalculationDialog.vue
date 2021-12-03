@@ -360,6 +360,7 @@ export default {
       this.handleSaveQuotationData(dialog.calculationData)
       // 然後計算一下報價單內容
       this.handleCalculationData(dialog.calculationData).then(() => {
+        console.log('this.quotationForm :', this.quotationForm)
         // 最後計把小計跟總金額都精算一次
         this.handleCalculationFee()
       })
@@ -451,6 +452,7 @@ export default {
       this.quotationForm.save_calculation_data.forEach((item) => {
         total_amount += item.realFee
       })
+
       // 再來把 category 裡的 平車跟裁切費用 乘上 訂購數量 再加上上面的
       total_amount +=
         (Number(this.quotationForm.tailor_fee) +
@@ -834,6 +836,7 @@ export default {
       } else {
         clothName = groupKind === 2 ? '裡布類' : '其他類'
       }
+
       if (materialKind === 3) {
         this.calculationCloth.ink30x30Price = 0
         this.calculationCloth.inkCcPrice = 0
@@ -862,9 +865,10 @@ export default {
         this.calculationCloth.tailorFee = tailorFee // 20
         this.calculationCloth.cropFee = cropFee // 21
         this.calculationCloth.realFee =
-          this.calculationCloth.realFee + tailorFee * 100 + cropFee * 100
+          this.calculationCloth.realFee +
+          tailorFee * orderValue +
+          cropFee * orderValue
       }
-
       // 每次計算完之後，都把欄位清空，讓之後的 for 迴圈循環的資料重新使用
       this.calculationCloth = Object.assign({}, this.emptyCalculationCloth)
     },

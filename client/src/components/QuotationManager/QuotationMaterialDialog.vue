@@ -152,7 +152,7 @@ export default {
             type: 'success'
           })
           this.materialGroupData = res.data
-          console.log('this.materialGroupDataㄙㄩㄣˉ', this.materialGroupData)
+          // console.log('this.materialGroupDataㄙㄩㄣˉ', this.materialGroupData)
           this.setPaginations()
         })
         .catch((err) => {
