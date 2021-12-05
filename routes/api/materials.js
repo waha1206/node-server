@@ -304,6 +304,7 @@ router.post(
         }
       }
     }
+    console.log(req.body)
     Material.findByIdAndUpdate(
       { _id: req.params.id },
       { $set: materialFields },

@@ -470,11 +470,12 @@ export default {
       // 再把總金額更新一下，金額會增加一點點，確保是無虧損的狀態
       total_amount_profit =
         average_unit_price_profit * Number(this.quotationForm.order_value)
+
       // 核算打樣費用，有利潤的成本，邏輯大概是 成本 * 2 + 運費 80元
 
       proofing_price =
-        average_unit_price_profit * 2 + 80 > 500
-          ? average_unit_price_profit * 2 + 80
+        average_unit_price_profit * 2 + 100 > 500
+          ? average_unit_price_profit * 2 + 100
           : 500
 
       // 最後，訂單金額 = total_amount_profit + 打樣費用
@@ -543,6 +544,7 @@ export default {
 
       quotation_no = arr.join('')
       console.log('訂單編號：', quotation_no)
+      console.log('訂單內容', this.quotationForm)
       this.quotationForm.quotation_no = quotation_no
     },
 
@@ -665,7 +667,7 @@ export default {
                 cloth.productName +
                 ')'
               this.fnCalculationCloth(
-                cloth.id, // 布料 _id
+                calculationData.selectMaterial[i]._id, // 布料 _id
                 productName, // 布料商品名稱
                 cloth.unitPrice, // 每碼布料的價錢
                 cloth.clothWidth, // 布料的寬度
@@ -713,28 +715,10 @@ export default {
       orderValue, // 訂購數量
       groupKind // 這邊的 kind 是原物料組的
     ) {
-      // return obj = { cloth_length , cloth_area ,  row_number, loss_percentage}
-      // 計算布料使用量 fnBestLayout 智慧排版需要輸入兩次計算
-      // typesetting 判斷需不需要使用智慧排版 true  = 要  false = 不要
+      // 處理 bug clothLoss typesetting 修正因為前端的錯誤導致資料庫沒有建立該欄位，所以這樣補強，很不得已的作法
+      if (clothLoss === undefined) clothLoss = 0
+      if (typesetting === undefined) typesetting = true
 
-      // let b_obj = {}
-      // let a_obj = {}
-
-      // if (typesetting) {
-      //   // 交換寬跟高的位置
-      //   b_obj = this.fnBestLayout(
-      //     layoutHeight,
-      //     layoutWidth,
-      //     clothMaterialWidth, // ------ 寬度取代 11111
-      //     orderValue
-      //   )
-      // }
-      // a_obj = this.fnBestLayout(
-      //   layoutWidth,
-      //   layoutHeight,
-      //   clothMaterialWidth, // ------ 寬度取代 22222
-      //   orderValue
-      // )
       let a_obj = this.fnBestLayout(
         layoutWidth,
         layoutHeight,
@@ -811,6 +795,8 @@ export default {
           900) *
           cloth_30x30_price
       ) // 24.追加多少布錢 (無轉印)
+      // if (materialKind == 2)
+      //   console.log('this.calculationCloth (要轉印) :', this.calculationCloth)
 
       // 18.(布料+墨水+紙) * (1+轉印布料的耗損率)
       this.calculationCloth.groupKind = groupKind
@@ -868,6 +854,7 @@ export default {
           this.calculationCloth.realFee +
           tailorFee * orderValue +
           cropFee * orderValue
+        // console.log('this.calculationCloth :', this.calculationCloth)
       }
       // 每次計算完之後，都把欄位清空，讓之後的 for 迴圈循環的資料重新使用
       this.calculationCloth = Object.assign({}, this.emptyCalculationCloth)
