@@ -518,6 +518,7 @@ export default {
       const d = new Date()
       this.quotationForm.index_date =
         (d.getFullYear() % 100) +
+        '' +
         appendZero(d.getMonth() + 1) +
         appendZero(d.getDate())
 
