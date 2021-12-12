@@ -248,7 +248,7 @@
 
 <script>
 import { MessageBox } from 'element-ui'
-import { isEmpty, appendZero, appendTwoZero } from '../../utils/tools'
+import { isEmpty, appendZero, appendThreeZero } from '../../utils/tools'
 
 export default {
   name: 'quotation-calculation-dialog',
@@ -509,8 +509,8 @@ export default {
 
       // 訂單編號的文章參考 https://my.oschina.net/zqouba/blog/718224
       // 資料庫有3筆資料 取 res.data.length
-      // appendTwoZero(res.data.length)
-      // appendTwoZero 確保輸出是三位數字 1-999
+      // appendThreeZero(res.data.length)
+      // appendThreeZero 確保輸出是四位數字 1-9999
       // 然後轉換成陣列 split 把 字串拆開後放到 array 裡面
       // 超過 999 的時候 要另外處理 (尚未寫這段程式碼)
 
@@ -532,10 +532,11 @@ export default {
     // 建立報價單編號
     setQuotationNo(num) {
       const d = new Date()
-      let get_no = appendTwoZero(num).split('')
+      let get_no = appendThreeZero(num).split('')
+      let gt = d.getTime() % 1000000
+      gt = gt < 100000 ? gt + 100000 : gt
 
-      var quotation_no =
-        this.quotationForm.index_date + '-' + (d.getTime() % 100000)
+      var quotation_no = this.quotationForm.index_date + '-' + gt
       // 把字串拆成 array 然後再插入 訂單流水號 get_no
       let arr = quotation_no.split('')
       // 這邊是把 5 位數的毫秒混入 訂單流水號

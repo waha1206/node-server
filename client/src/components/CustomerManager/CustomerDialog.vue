@@ -1021,6 +1021,7 @@ export default {
       console.log('CustomerDialog.vue - watch - dialog', newValue, oldValue)
       // 當 dialog.option == 'add' 的時候就把表格都清空  另外我準備了一個 editData = {} 準備承接 edit 狀態下的 scope.row 資料
       this.customerFormData = Object.assign({}, newValue.data)
+
       if (!this.isEmpty(this.customerFormData.delivery_charge_fee)) {
         this.deliveryChargeFee = Number(
           this.customerFormData.delivery_charge_fee

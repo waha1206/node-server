@@ -81,7 +81,7 @@
               <el-table-column
                 prop="quotation_no"
                 label="單號"
-                width="110px"
+                width="120px"
                 align="center"
               >
               </el-table-column>

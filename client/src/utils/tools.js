@@ -12,9 +12,10 @@ function appendZero(obj) {
   else return obj
 }
 
-function appendTwoZero(obj) {
-  if (obj < 10) return '00' + '' + obj
-  else if (obj < 100) return '0' + '' + obj
+function appendThreeZero(obj) {
+  if (obj < 10) return '000' + '' + obj
+  else if (obj < 100) return '00' + '' + obj
+  else if (obj < 1000) return '0' + '' + obj
   else return obj
 }
 
@@ -39,4 +40,4 @@ function copyValueToWindow(value) {
   oInput.style.display = 'none'
 }
 
-export { copyValueToWindow, appendComma, isEmpty, appendZero, appendTwoZero }
+export { copyValueToWindow, appendComma, isEmpty, appendZero, appendThreeZero }

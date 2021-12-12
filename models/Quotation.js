@@ -8,6 +8,15 @@ const QuotationSchema = new Schema({
     type: String,
     required: [true, '訂單編號必須要有']
   },
+  // 版型編號
+  pattern_no: {
+    type: String
+  },
+  // 是否允許刪除，一旦啟動交易就無法刪除
+  allow_delete: {
+    type: Boolean,
+    default: true
+  },
   category_id: {
     type: String,
     // 紀錄商品的 _id
@@ -123,6 +132,10 @@ const QuotationSchema = new Schema({
         payment_kind: Number // 0.現金 1.國內轉帳 2.paypal 3.信用卡支付 4.載具支付
       }
     ]
+  },
+  // 新增找尋報價單的索引，firebase uid
+  customer_uid: {
+    type: String
   }
 })
 

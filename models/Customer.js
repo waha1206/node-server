@@ -227,6 +227,14 @@ const CustomerSchema = new Schema({
   },
   activated: {
     type: Number
+  },
+  // 客戶資料的唯一識別鍵為 email 這邊使用的是 nuxt 裡面是userName
+  primary_key: {
+    type: String
+  },
+  // nuxt 裡面是抓 userUid firebase裡面的
+  second_key: {
+    type: String
   }
 })
 
