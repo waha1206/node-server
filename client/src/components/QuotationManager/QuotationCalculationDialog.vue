@@ -332,9 +332,10 @@ export default {
         modifiedUser_id: '', // 最後一個修改人
         index_date: '', // 索引日期 年月日  210331  六碼
         quotation_no: '',
-
         // 有幾種設定就 push 幾種進來這裡
-        save_calculation_data: []
+        save_calculation_data: [],
+        level_one_id: '',
+        level_two_id: ''
       },
 
       // 報價單欄位結束
@@ -561,6 +562,8 @@ export default {
       this.quotationForm.sales_value = dialogData.salesValue // 業務 _id
       this.quotationForm.customer_value = dialogData.customerValue // 客戶 _id
       this.quotationForm.order_value = dialogData.orderValue // 訂購數量
+      this.quotationForm.level_one_id = dialogData.categoryData[0].level_one_id
+      this.quotationForm.level_two_id = dialogData.categoryData[0].level_two_id
       if (dialogData.proofingValue > 0)
         this.quotationForm.proofing_value = dialogData.proofingValue
       // 打樣數量

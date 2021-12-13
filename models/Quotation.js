@@ -136,6 +136,14 @@ const QuotationSchema = new Schema({
   // 新增找尋報價單的索引，firebase uid
   customer_uid: {
     type: String
+  },
+  // 繼承 category裡的 level_one_id
+  level_one_id: {
+    type: String
+  },
+  // 繼承 category裡的 level_two_id
+  level_two_id: {
+    type: String
   }
 })
 
