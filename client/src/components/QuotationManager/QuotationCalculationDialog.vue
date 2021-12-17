@@ -585,6 +585,8 @@ export default {
           return item.quantity === dialogData.orderValue
         }
       ).profit
+      // 這邊處理關於運費的問題
+      console.log('dialogData.categoryData[0] :', dialogData.categoryData[0])
     },
     // 如何使用異步讀取 server 資料，完美的解答
     // https://stackoverflow.com/questions/54955426/how-to-use-async-await-in-vue-js

@@ -217,6 +217,58 @@ router.get(
   }
 )
 
+// $router GET api/material/delivery
+// @desc   取得所有原料中的運費類選項
+// @access Private
+router.get(
+  '/delivery',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // query 選擇的條件
+    // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
+    // const query = {}
+    // const options = {}
+
+    Material.find({ kind: ['8'] })
+      // .sort({ type: 1 }) 如果需要排序的話
+      .then((materials) => {
+        if (!materials) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(materials)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
+// $router GET api/material/carton
+// @desc   取得所有原料中的紙箱類資料
+// @access Private
+router.get(
+  '/carton',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // query 選擇的條件
+    // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
+    // const query = {}
+    // const options = {}
+
+    Material.find({ kind: ['7'] })
+      // .sort({ type: 1 }) 如果需要排序的話
+      .then((materials) => {
+        if (!materials) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(materials)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
 // $router post api/material/get-material-name-by-id/:id
 // @desc   透過 _id 取得商品名稱
 // @access private

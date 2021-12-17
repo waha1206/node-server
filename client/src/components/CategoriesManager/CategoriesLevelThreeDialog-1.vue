@@ -543,6 +543,85 @@
 
             <!-- 第十行 -->
             <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="8" style="position:relative">
+                <!-- style="position:relative;border-radius:8px" -->
+                <div>
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="運費為必選欄位"
+                    placement="right"
+                    style="z-index:2000"
+                  >
+                    <el-badge
+                      value="help"
+                      class="item"
+                      style="margin-top: 0px;margin-right: 0px;position:absolute;top:0px;right:30px"
+                    >
+                    </el-badge>
+                  </el-tooltip>
+                </div>
+                <el-form-item prop="delivery_id" label="運費：">
+                  <el-button
+                    v-if="delivery"
+                    type="primary"
+                    size="mini"
+                    class="button"
+                    @click="handleSelectDeliveryOrCarton('delivery')"
+                    >{{ delivery }}</el-button
+                  >
+                  <el-button
+                    v-else
+                    type="primary"
+                    size="mini"
+                    class="button"
+                    @click="handleSelectDeliveryOrCarton('delivery')"
+                    >運費尚未選擇</el-button
+                  >
+                </el-form-item>
+              </el-col>
+              <el-col :span="8" style="position:relative">
+                <!-- style="position:relative;border-radius:8px" -->
+                <div>
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="紙箱為必選欄位"
+                    placement="right"
+                    style="z-index:2000"
+                  >
+                    <el-badge
+                      value="help"
+                      class="item"
+                      style="margin-top: 0px;margin-right: 0px;position:absolute;top:0px;right:30px"
+                    >
+                    </el-badge>
+                  </el-tooltip>
+                </div>
+                <el-form-item prop="carton_id" label="紙箱：">
+                  <el-button
+                    v-if="carton"
+                    type="primary"
+                    size="mini"
+                    class="button"
+                    @click="handleSelectDeliveryOrCarton('carton')"
+                    >{{ carton }}</el-button
+                  >
+                  <el-button
+                    v-else
+                    type="primary"
+                    size="mini"
+                    class="button"
+                    @click="handleSelectDeliveryOrCarton('carton')"
+                    >紙箱尚未選擇</el-button
+                  >
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- 第十行結束 -->
+
+            <!-- 第十一行 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6"
                 ><div class="grid-content ">
                   <el-form-item
@@ -634,9 +713,9 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <!-- 第十行結束 -->
+            <!-- 第十一行結束 -->
           </el-header>
-          <!-- 第十行開始，圖片上傳 -->
+          <!-- 第十二行開始，圖片上傳 -->
           <!-- 圖片上傳的教學 https://segmentfault.com/a/1190000013796215 -->
           <!-- 上傳一張照片的時候隱藏 後面的 + 框框  https://www.twblogs.net/a/5b81a49e2b71772165ad9752 -->
           <!-- 另外一種做法：https://blog.csdn.net/zaocha321/article/details/103345423 -->
@@ -708,6 +787,7 @@
             </el-form-item>
             <!-- </div> -->
           </el-main>
+          <!-- 第十二行結束 -->
 
           <!-- 取消、提交、重置 -->
           <el-row :gutter="20" type="flex" class="row-bg">
@@ -738,6 +818,11 @@
     </el-dialog>
     <PaperAndInk :dialog="paperAndInkDialog" @update="updatePaperAndInk">
     </PaperAndInk>
+    <DeliveryAndCarton
+      :dialog="deliveryAndCartonDialog"
+      @update="updateDeliveryAndCarton"
+    >
+    </DeliveryAndCarton>
     <CalLayoutDialog :dialog="calLayoutDialog"></CalLayoutDialog>
   </div>
 </template>
@@ -745,6 +830,7 @@
 <script>
 import PaperAndInk from '../../components/CategoriesManager/PaperAndInk'
 import CalLayoutDialog from '../../components/CategoriesManager/CalLayoutDialog'
+import DeliveryAndCarton from '../../components/CategoriesManager/DeliveryAndCarton.vue'
 
 export default {
   name: 'categories-level-three-dialog',
@@ -756,7 +842,7 @@ export default {
     categoriesLevelOneData: Array,
     categoriesLevelTwoData: Array
   },
-  components: { PaperAndInk, CalLayoutDialog },
+  components: { PaperAndInk, CalLayoutDialog, DeliveryAndCarton },
   data() {
     return {
       calLayoutDialog: {
@@ -767,6 +853,11 @@ export default {
         show: false,
         title: '選擇轉印紙或墨水',
         option: '' // paper 是紙類  ink 是墨水類
+      },
+      deliveryAndCartonDialog: {
+        show: false,
+        title: '選擇運費或紙箱',
+        option: '' // delivery 是運費  carton 是紙箱
       },
       levelThreeFormData: {},
       dontRemove: '5fd54071cbcb7757640a7ee7',
@@ -786,7 +877,15 @@ export default {
       insideClothLoss: 0,
       paper: '', // 選擇的 轉印紙
       ink: '', // 選擇的 墨水
+      delivery: '', // 選擇的運費 _id
+      carton: '', // 選擇的紙箱
       form_rules: {
+        delivery_id: [
+          { required: true, message: '此欄位不能為空', trigger: 'blur' }
+        ],
+        carton_id: [
+          { required: true, message: '此欄位不能為空', trigger: 'blur' }
+        ],
         ink_id: [
           { required: true, message: '此欄位不能為空', trigger: 'blur' }
         ],
@@ -805,6 +904,12 @@ export default {
     }
     if (this.levelThreeFormData.ink_id) {
       this.getMaterialNameById(this.levelThreeFormData.ink_id, 'ink')
+    }
+    if (this.levelThreeFormData.delivery_id) {
+      this.getMaterialNameById(this.levelThreeFormData.delivery_id, 'delivery')
+    }
+    if (this.levelThreeFormData.carton_id) {
+      this.getMaterialNameById(this.levelThreeFormData.carton_id, 'carton')
     }
     this.getImgs()
   },
@@ -870,11 +975,22 @@ export default {
       // 先清空 ink 跟 paper 欄位   如果傳遞過來的資料有 墨水 id、轉印紙 id 的話，就讀取他的 _id 轉換成 name
       this.ink = ''
       this.paper = ''
+      this.delivery = ''
+      this.carton = ''
       if (this.levelThreeFormData.paper_id) {
         this.getMaterialNameById(this.levelThreeFormData.paper_id, 'paper')
       }
       if (this.levelThreeFormData.ink_id) {
         this.getMaterialNameById(this.levelThreeFormData.ink_id, 'ink')
+      }
+      if (this.levelThreeFormData.delivery_id) {
+        this.getMaterialNameById(
+          this.levelThreeFormData.delivery_id,
+          'delivery'
+        )
+      }
+      if (this.levelThreeFormData.carton_id) {
+        this.getMaterialNameById(this.levelThreeFormData.carton_id, 'carton')
       }
       this.getImgs()
     },
@@ -902,6 +1018,17 @@ export default {
         this.getMaterialNameById(item._id, option)
       }
     },
+    // 子元件選擇了哪種 delivery or carton  option 會傳回選擇的種類
+    updateDeliveryAndCarton(item, option) {
+      this.deliveryAndCartonDialog.show = false
+      if (option == 'delivery') {
+        this.levelThreeFormData.delivery_id = item._id
+        this.getMaterialNameById(item._id, option)
+      } else if (option == 'carton') {
+        this.levelThreeFormData.carton_id = item._id
+        this.getMaterialNameById(item._id, option)
+      }
+    },
     // 取得墨水的中文品名
     getMaterialNameById(id, option) {
       this.$axios
@@ -911,16 +1038,29 @@ export default {
             this.paper = res.data.product_name
           } else if (option == 'ink') {
             this.ink = res.data.product_name
+          } else if (option == 'delivery') {
+            this.delivery = res.data.product_name
+          } else if (option == 'carton') {
+            this.carton = res.data.product_name
           }
         })
         .catch((err) => {
           console.log(err)
         })
     },
-    // 選擇轉印紙
+    // 選擇轉印紙或墨水
     handleSelectPaperOrInk(option) {
       let title = option == 'paper' ? '請選擇轉印紙' : '請選擇轉印墨水'
       this.paperAndInkDialog = {
+        show: true,
+        title: title,
+        option: option
+      }
+    },
+    // 選擇運費或紙箱
+    handleSelectDeliveryOrCarton(option) {
+      let title = option == 'delivery' ? '請選擇運費' : '請選擇紙箱尺寸'
+      this.deliveryAndCartonDialog = {
         show: true,
         title: title,
         option: option
@@ -996,6 +1136,8 @@ export default {
         processing_describe: this.levelThreeFormData.processing_describe,
         ink_id: this.levelThreeFormData.ink_id,
         paper_id: this.levelThreeFormData.paper_id,
+        delivery_id: this.levelThreeFormData.delivery_id,
+        carton_id: this.levelThreeFormData.carton_id,
         outside_cloth_loss: String(this.outsideClothLoss),
         outside_layout_width: this.levelThreeFormData.outside_layout_width,
         outside_layout_height: this.levelThreeFormData.outside_layout_height,

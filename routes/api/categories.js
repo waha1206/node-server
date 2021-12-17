@@ -64,6 +64,12 @@ router.post(
       if (req.body.paper_id) {
         categoriesFields.paper_id = req.body.paper_id
       }
+      if (req.body.delivery_id) {
+        categoriesFields.delivery_id = req.body.delivery_id
+      }
+      if (req.body.carton_id) {
+        categoriesFields.carton_id = req.body.carton_id
+      }
       if (req.body.inside_cloth_loss) {
         categoriesFields.inside_cloth_loss = req.body.inside_cloth_loss
       }

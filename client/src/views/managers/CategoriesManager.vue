@@ -464,6 +464,8 @@ export default {
         inside_cloth_loss: '',
         paper_id: '',
         ink_id: '',
+        delivery_id: '',
+        carton_id: '',
         processing_describe: ''
       },
       categoriesLevelOneDialog: {

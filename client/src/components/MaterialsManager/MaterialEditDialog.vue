@@ -414,10 +414,12 @@
                     <el-radio :label="2">轉印布料</el-radio>
                     <el-radio :label="3">現成布料</el-radio>
                     <el-radio :label="4"
-                      >配件專用，需要帶版型寬度，版型高度，布料種類，平車費用，裁切費用</el-radio
+                      >配件專用，需版型寬，版型高，布料種類，平車費用，裁切費用</el-radio
                     >
                     <el-radio :label="5">紙</el-radio>
                     <el-radio :label="6">墨</el-radio>
+                    <el-radio :label="7">紙箱</el-radio>
+                    <el-radio :label="8">運費</el-radio>
                   </el-radio-group>
                 </el-form-item>
               </el-col>

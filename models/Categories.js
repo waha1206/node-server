@@ -214,6 +214,12 @@ const CategoryLevelThreeSchema = new Schema({
   paper_id: {
     type: String
   },
+  delivery_id: {
+    type: String
+  },
+  carton_id: {
+    type: String
+  },
   // 加工說明
   processing_describe: {
     type: String
