@@ -81,7 +81,7 @@ export default {
   methods: {
     //移除图片
     handleRemove(file, fileList) {
-      console.log(fileList)
+      // console.log(fileList)
       for (let index = 0; index < fileList.length; index++) {
         if (fileList[index].uid == file.uid) {
           this.fileList.splice(index, 1) //移除数组中要删除的图片
@@ -109,9 +109,9 @@ export default {
     },
     //图片上传成功
     handleAvatarSuccess(res, file, fileList) {
-      console.log('图片上传')
-      console.log(fileList)
-      console.log(file)
+      // console.log('图片上传')
+      // console.log(fileList)
+      // console.log(file)
       this.imgList = fileList
       // this.imageUrl = URL.createObjectURL(file.raw);
       this.$emit('getImgList', fileList)
@@ -129,8 +129,8 @@ export default {
     },
     //图片上传失败调用
     imgUploadError(err, file, fileList) {
-      console.log(file)
-      console.log(fileList)
+      // console.log(file)
+      // console.log(fileList)
       console.log(err)
       this.$message.error('上传图片失败!')
       this.$emit('getImgList', fileList)

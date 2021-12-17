@@ -152,7 +152,7 @@ export default {
             type: 'success'
           })
           this.materialClothData = res.data
-          console.log(res.data)
+          // console.log(res.data)
           this.setPaginations()
         })
         .catch((err) => {
