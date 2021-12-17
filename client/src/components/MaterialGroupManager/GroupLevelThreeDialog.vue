@@ -75,7 +75,7 @@
             <el-col :span="6">
               <div class="grid-content">
                 <el-form-item
-                  label="加工費："
+                  label="加工費-暫時沒用："
                   size="mini"
                   label-width="120px"
                   prop="processing_fee"
