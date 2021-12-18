@@ -144,6 +144,26 @@ const QuotationSchema = new Schema({
   // 繼承 category裡的 level_two_id
   level_two_id: {
     type: String
+  },
+  // 裝箱數
+  carton: {
+    type: String
+  },
+  // 商品淨重
+  net_weight: {
+    type: String
+  },
+  // 箱子費用
+  carton_fee: {
+    type: String
+  },
+  // 單箱運費
+  delivery_fee: {
+    type: String
+  },
+  // 總運費 = (carton_fee + delivery_fee) * carton
+  total_delivery_fee: {
+    type: String
   }
 })
 

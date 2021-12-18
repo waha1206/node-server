@@ -831,6 +831,7 @@
 import PaperAndInk from '../../components/CategoriesManager/PaperAndInk'
 import CalLayoutDialog from '../../components/CategoriesManager/CalLayoutDialog'
 import DeliveryAndCarton from '../../components/CategoriesManager/DeliveryAndCarton.vue'
+import { Message } from 'element-ui'
 
 export default {
   name: 'categories-level-three-dialog',
@@ -880,16 +881,16 @@ export default {
       delivery: '', // 選擇的運費 _id
       carton: '', // 選擇的紙箱
       form_rules: {
-        delivery_id: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
-        ],
-        carton_id: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
-        ],
         ink_id: [
           { required: true, message: '此欄位不能為空', trigger: 'blur' }
         ],
         paper_id: [
+          { required: true, message: '此欄位不能為空', trigger: 'blur' }
+        ],
+        delivery_id: [
+          { required: true, message: '此欄位不能為空', trigger: 'blur' }
+        ],
+        carton_id: [
           { required: true, message: '此欄位不能為空', trigger: 'blur' }
         ],
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
@@ -1177,7 +1178,17 @@ export default {
           this.levelThreeFormData.note_two_video
         )
       }
-      console.log(uploadFormData)
+
+      if (
+        uploadFormData.carton_id == undefined ||
+        uploadFormData.delivery_id == undefined
+      ) {
+        this.$message({
+          message: '紙箱跟運費欄位必填！',
+          type: 'error'
+        })
+        return
+      }
 
       this.$refs[formName].validate((valid) => {
         if (valid) {

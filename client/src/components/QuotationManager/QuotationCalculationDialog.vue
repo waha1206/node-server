@@ -215,6 +215,19 @@
                   商品單價：{{ quotationForm.unit_price }} 元
                 </p>
                 <p class="quotation-content">
+                  裝箱數：{{ quotationForm.carton }} 箱
+                </p>
+                <p class="quotation-content">
+                  箱子成本：{{ quotationForm.carton_fee }} 元
+                </p>
+                <p class="quotation-content">
+                  每箱運費：{{ quotationForm.delivery_fee }} 元
+                </p>
+                <p class="quotation-content">
+                  未稅總運費：{{ quotationForm.total_delivery_fee }} 元 →
+                  幾箱*(單箱運費+箱子成本) 會再加上利潤
+                </p>
+                <p class="quotation-content">
                   未稅總金額：{{ quotationForm.total_amount }} 元
                 </p>
                 <p class="quotation-content">
@@ -314,6 +327,11 @@ export default {
         category_name: '', // 商品的名稱
         order_value: '', // 訂購數量
         profit: '', // 利潤
+        carton: '', // 裝箱數
+        net_weight: '', // 商品淨重
+        delivery_fee: '', // 單箱運費 (含稅)
+        carton_fee: '', // 箱子費用 (含稅)
+        total_delivery_fee: '', // 總運費 = (carton_fee + delivery_fee)*carton
         proofing_value: '', // 打樣數量
         sales_value: '', // 業務的 _id
         customer_value: '', // 客戶的 _id
@@ -361,9 +379,8 @@ export default {
       this.handleSaveQuotationData(dialog.calculationData)
       // 然後計算一下報價單內容
       this.handleCalculationData(dialog.calculationData).then(() => {
-        console.log('this.quotationForm :', this.quotationForm)
         // 最後計把小計跟總金額都精算一次
-        this.handleCalculationFee()
+        this.handleCalculationFee(dialog.calculationData.categoryData[0])
       })
     }
   },
@@ -416,7 +433,11 @@ export default {
     onSubmit() {
       const uploadFormData = Object.assign({}, this.quotationForm)
       console.log(uploadFormData)
-
+      this.$message({
+        message: '暫時不提供儲存功能！',
+        type: 'error'
+      })
+      return
       if (!uploadFormData.quotation_no) {
         this.$message({
           message: '報價單出錯了！',
@@ -443,12 +464,35 @@ export default {
     // **********************************************  axios 結束 **********************************************
     // **********************************************  計算報價相關 開始 **********************************************
     // 最後，精算一下小計，總計，打樣費等等，然後放到 quotationForm 裡面
-    handleCalculationFee() {
+    async handleCalculationFee(category) {
       let average_unit_price = 0
       let total_amount = 0
       let average_unit_price_profit = 0
       let total_amount_profit = 0
       let proofing_price
+
+      if (
+        category.carton_id == undefined ||
+        category.delivery_id == undefined
+      ) {
+        this.$message({
+          message: '請檢查紙箱跟運費設定是否有錯誤！',
+          type: 'error'
+        })
+        return
+      }
+      // 這邊寫得很爛 carton.data.unit_price ( 不管布料，墨水，還是原物料，都使用 單位售價 unit_price )
+      let carton = await this.getMaterialData(category.carton_id)
+      // 要取得 delivery.data.unit_price
+      let delivery = await this.getMaterialData(category.delivery_id)
+
+      this.quotationForm.carton_fee = carton.data.unit_price
+      this.quotationForm.delivery_fee = delivery.data.unit_price
+      this.quotationForm.total_delivery_fee =
+        (parseInt(carton.data.unit_price) +
+          parseInt(delivery.data.unit_price)) *
+        parseInt(this.quotationForm.carton)
+
       // 計算出總金額先把所有的金額都抓出來，這邊是 material 中所有的 real_fee
       this.quotationForm.save_calculation_data.forEach((item) => {
         total_amount += item.realFee
@@ -459,6 +503,9 @@ export default {
         (Number(this.quotationForm.tailor_fee) +
           Number(this.quotationForm.crop_fee)) *
         this.quotationForm.order_value
+
+      // 把總金額再加上運費
+      total_amount += this.quotationForm.total_delivery_fee
 
       // 這邊把總金額除以 1-profit 取完總金額利潤後再往下算單價
       total_amount_profit = total_amount / (1 - this.quotationForm.profit / 100)
@@ -497,6 +544,7 @@ export default {
       this.quotationForm.unit_price = average_unit_price_profit
       // 記錄總金額 (含打樣費用了)
       this.quotationForm.total_amount = total_amount_profit
+
       // 記錄含稅總金額，並且四捨五入
       this.quotationForm.tax = Math.round(total_amount_profit * 0.05)
       // 記錄含稅總金額，並且四捨五入
@@ -554,7 +602,7 @@ export default {
     // 儲存 報價單的資料
     // forEach map ... 等各種的用法如下，forEach 不會 return 值，如果要 return 用 map
     // https://wcc723.github.io/javascript/2017/06/29/es6-native-array/
-    handleSaveQuotationData(dialogData) {
+    async handleSaveQuotationData(dialogData) {
       this.quotationForm.category_id = dialogData.categoryData[0]._id // 記錄這張報價單的來源 _id
       this.quotationForm.category_name = dialogData.categoryData[0].name // 商品名稱
       this.quotationForm.tailor_fee = dialogData.categoryData[0].tailor_fee // 平車費用
@@ -580,13 +628,14 @@ export default {
         }
       )
       // 從訂購的數量找到他的利潤
-      this.quotationForm.profit = dialogData.categoryData[0].quantity_profit.find(
+      let quantity_profit = dialogData.categoryData[0].quantity_profit.find(
         (item) => {
           return item.quantity === dialogData.orderValue
         }
-      ).profit
-      // 這邊處理關於運費的問題
-      console.log('dialogData.categoryData[0] :', dialogData.categoryData[0])
+      )
+      this.quotationForm.profit = quantity_profit.profit
+      this.quotationForm.net_weight = quantity_profit.net_weight
+      this.quotationForm.carton = quantity_profit.carton
     },
     // 如何使用異步讀取 server 資料，完美的解答
     // https://stackoverflow.com/questions/54955426/how-to-use-async-await-in-vue-js
