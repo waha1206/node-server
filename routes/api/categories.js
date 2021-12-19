@@ -145,6 +145,9 @@ router.post(
           req.body.note_two_video
         )
       }
+      if (req.body.sample_order) {
+        categoriesFields.sample_order = Object.assign({}, req.body.sample_order)
+      }
       if (req.body.tailor_fee) {
         categoriesFields.tailor_fee = req.body.tailor_fee
       }
@@ -455,6 +458,9 @@ router.post(
           {},
           req.body.note_two_video
         )
+      }
+      if (req.body.sample_order) {
+        categoryFields.sample_order = Object.assign({}, req.body.sample_order)
       }
       if (req.body.material_group) {
         categoryFields.material_group = req.body.material_group.map((x) => x)

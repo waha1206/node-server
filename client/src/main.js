@@ -8,6 +8,7 @@ import locale from 'element-ui/lib/locale/lang/zh-TW'
 import 'element-ui/lib/theme-chalk/index.css'
 import router from './router'
 import store from './store'
+import _ from 'lodash'
 // https://www.cnblogs.com/yck123/p/11212979.html
 // 滑鼠事件控制台警告 - 使用的插件
 import 'default-passive-events'
@@ -19,6 +20,8 @@ Vue.config.productionTip = false
 Vue.use(ElementUI, { locale }) // 掛載繁體中文
 
 Vue.prototype.$axios = axios
+
+Vue.prototype._ = _
 
 // 局部註冊的自定義指令，把值轉換成為有千位符號的逗號
 // https://medium.com/itsems-frontend/vue-custom-directives-c991ce456748

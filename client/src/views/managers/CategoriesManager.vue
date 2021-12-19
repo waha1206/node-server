@@ -445,6 +445,7 @@ export default {
         salting_on_color_video: { label: '', link: '' }, // 校色影片
         note_one_video: { label: '', link: '' }, // 其它影片(一)
         note_two_video: { label: '', link: '' }, // 其它影片(二)
+        sample_order: { name: '', url: '' }, // 其它影片(二)
         last_modify_date: new Date(),
         last_edit_person: '',
         status: { activated: false, vip: false }, // 啟用？網頁端會看到商品與否，VIP = 客製化商品專屬
@@ -716,6 +717,7 @@ export default {
         .then((res) => {
           // 把資料庫的數據都先讀出來
           this.groupLevelThreeData = res.data
+
           // 設置分頁數據 如果是子組件的話，不需要這邊重新整理更新頁面
           // 子組件裡面會有一個 watch 去觀察資料，如果有異動了 setPagination 會在那邊觸發
           // this.setPaginations()
@@ -868,9 +870,17 @@ export default {
         option: 'edit'
       }
       // 把 row 裡面的資料深拷貝一份給 formdata 這是是傳到 子元件裡面所需要的屬性
-      this.formData = Object.assign({}, row)
+      // this.formData = Object.assign({}, row)
+      this.formData = this._.cloneDeep(row)
+      console.log('this.formData :', this.formData)
+
       if (typeof row.tailor_fee === 'undefined') this.formData.tailor_fee = ''
       if (typeof row.crop_fee === 'undefined') this.formData.crop_fee = ''
+
+      if (typeof row.sample_order === 'undefined') {
+        console.log('乾你老師哩')
+        this.formData.sample_order = { name: '', url: '' }
+      }
     },
     // 刪除第一層的 class 目前不開放
     handleDeleteCategory(index, row) {

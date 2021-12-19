@@ -7,6 +7,7 @@
       :close-on-press-escape="false"
       :modal-append-to-body="false"
       width="1200px"
+      top="40px"
       ><el-container>
         <!-- :mmodel 綁定的會是 data return 裡面的某個物件 這邊綁定的是 levelOneData -->
         <el-form
@@ -346,6 +347,43 @@
                 </div>
               </el-col>
             </el-row>
+
+            <!-- 第6.5行開始，購買樣品 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="購買樣品："
+                    size="mini"
+                    label-width="120px"
+                    prop="sample_order.name"
+                  >
+                    <el-input
+                      type="type"
+                      placeholder="購買樣品"
+                      v-model="levelThreeFormData.sample_order.name"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="販售網址："
+                    size="mini"
+                    label-width="120px"
+                    prop="sample_order.url"
+                  >
+                    <el-input
+                      type="type"
+                      placeholder="https://youtu.be/Olm_oOCY_2Y"
+                      v-model="levelThreeFormData.sample_order.url"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+            </el-row>
+
             <!-- 第七行開始，版型編號-->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="12">
@@ -1176,7 +1214,8 @@ export default {
         note_two_video: Object.assign(
           {},
           this.levelThreeFormData.note_two_video
-        )
+        ),
+        sample_order: Object.assign({}, this.levelThreeFormData.sample_order)
       }
 
       if (

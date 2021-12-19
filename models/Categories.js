@@ -125,6 +125,11 @@ const CategoryLevelThreeSchema = new Schema({
     label: { type: String },
     link: { type: String }
   },
+  // 樣品購買的網址
+  sample_order: {
+    name: { type: String },
+    url: { type: String }
+  },
   describe: {
     type: String
   },
