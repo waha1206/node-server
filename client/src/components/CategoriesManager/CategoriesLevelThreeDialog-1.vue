@@ -145,7 +145,7 @@
                 </div>
               </el-col>
             </el-row>
-            <!-- 第四行開始，商品編號，商品狀態 啟用/VIP ，最後修改時間，最後修改人員-->
+            <!-- 第四行開始，商品編號，商品狀態 啟用/VIP ，NEW，HOT-->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
                 <div class="grid-content">
@@ -163,7 +163,7 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="12">
                 <div class="grid-content">
                   <el-form-item
                     label="商品狀態："
@@ -177,42 +177,17 @@
                     <el-checkbox v-model="levelThreeFormData.status.vip"
                       >VIP</el-checkbox
                     >
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="最後修改時間："
-                    size="mini"
-                    label-width="120px"
-                    prop=""
-                  >
-                    <el-input
-                      type=""
-                      v-model="getDate"
-                      :readonly="true"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="最後修改人員："
-                    size="mini"
-                    label-width="120px"
-                    prop=""
-                  >
-                    <el-input
-                      type=""
-                      v-model="getUserNameById"
-                      :readonly="true"
-                    ></el-input>
+                    <el-checkbox v-model="levelThreeFormData.status.new"
+                      >NEW</el-checkbox
+                    >
+                    <el-checkbox v-model="levelThreeFormData.status.hot"
+                      >HOT</el-checkbox
+                    >
                   </el-form-item>
                 </div>
               </el-col>
             </el-row>
+
             <!-- 第五行開始，商品介紹影片，校色影片-->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
@@ -348,7 +323,7 @@
               </el-col>
             </el-row>
 
-            <!-- 第6.5行開始，購買樣品 -->
+            <!-- 第6.5行開始，購買樣品，最後修改時間，最後修改人員 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
                 <div class="grid-content">
@@ -378,6 +353,38 @@
                       type="type"
                       placeholder="https://youtu.be/Olm_oOCY_2Y"
                       v-model="levelThreeFormData.sample_order.url"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="最後修改時間："
+                    size="mini"
+                    label-width="120px"
+                    prop=""
+                  >
+                    <el-input
+                      type=""
+                      v-model="getDate"
+                      :readonly="true"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="最後修改人員："
+                    size="mini"
+                    label-width="120px"
+                    prop=""
+                  >
+                    <el-input
+                      type=""
+                      v-model="getUserNameById"
+                      :readonly="true"
                     ></el-input>
                   </el-form-item>
                 </div>
@@ -1270,6 +1277,8 @@ export default {
       this.files = []
       this.levelThreeFormData.imgs = []
       this.levelThreeFormData.status.vip = false
+      this.levelThreeFormData.status.new = false
+      this.levelThreeFormData.status.hot = false
     },
     // 圖片移除的 function
     handleRemove(file, fileList) {

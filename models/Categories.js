@@ -145,6 +145,14 @@ const CategoryLevelThreeSchema = new Schema({
     vip: {
       type: Boolean,
       default: false
+    },
+    new: {
+      type: Boolean,
+      default: false
+    },
+    hot: {
+      type: Boolean,
+      default: false
     }
   },
   level_two_id: {
