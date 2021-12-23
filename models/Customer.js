@@ -235,7 +235,9 @@ const CustomerSchema = new Schema({
   // nuxt 裡面是抓 userUid firebase裡面的
   second_key: {
     type: String
-  }
+  },
+  // 我的最愛
+  favortive: []
 })
 
 // eslint-disable-next-line no-undef
