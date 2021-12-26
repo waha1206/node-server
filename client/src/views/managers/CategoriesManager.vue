@@ -467,7 +467,10 @@ export default {
         ink_id: '',
         delivery_id: '',
         carton_id: '',
-        processing_describe: ''
+        processing_describe: '',
+        feature: '', // 商品特色，給WEB看的，不超過10字
+        selling_price: '', // 末端售價
+        specification: '' // 簡易規格
       },
       categoriesLevelOneDialog: {
         show: false,
@@ -866,7 +869,7 @@ export default {
     handleEditCategory(index, row) {
       this.categoriesLevelThreeDialog = {
         show: true,
-        title: '編輯加第三層的商品',
+        title: '編輯加第三層的商品' + row._id,
         option: 'edit'
       }
       // 把 row 裡面的資料深拷貝一份給 formdata 這是是傳到 子元件裡面所需要的屬性

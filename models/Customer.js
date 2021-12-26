@@ -237,7 +237,9 @@ const CustomerSchema = new Schema({
     type: String
   },
   // 我的最愛
-  favorite: []
+  favorite: {
+    type: Array
+  }
 })
 
 // eslint-disable-next-line no-undef

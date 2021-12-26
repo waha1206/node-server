@@ -163,7 +163,7 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="10">
                 <div class="grid-content">
                   <el-form-item
                     label="商品狀態："
@@ -183,6 +183,22 @@
                     <el-checkbox v-model="levelThreeFormData.status.hot"
                       >HOT</el-checkbox
                     >
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content">
+                  <el-form-item
+                    label="商品特色："
+                    size="mini"
+                    label-width="120px"
+                    prop="feature"
+                  >
+                    <el-input
+                      type="type"
+                      placeholder="最多10個字"
+                      v-model="levelThreeFormData.feature"
+                    ></el-input>
                   </el-form-item>
                 </div>
               </el-col>
@@ -588,7 +604,7 @@
 
             <!-- 第十行 -->
             <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="8" style="position:relative">
+              <el-col :span="6" style="position:relative">
                 <!-- style="position:relative;border-radius:8px" -->
                 <div>
                   <el-tooltip
@@ -625,7 +641,7 @@
                   >
                 </el-form-item>
               </el-col>
-              <el-col :span="8" style="position:relative">
+              <el-col :span="6" style="position:relative">
                 <!-- style="position:relative;border-radius:8px" -->
                 <div>
                   <el-tooltip
@@ -638,7 +654,7 @@
                     <el-badge
                       value="help"
                       class="item"
-                      style="margin-top: 0px;margin-right: 0px;position:absolute;top:0px;right:30px"
+                      style="margin-top: 0px;margin-right: 0px;position:absolute;top:0px;right:0px"
                     >
                     </el-badge>
                   </el-tooltip>
@@ -661,6 +677,38 @@
                     >紙箱尚未選擇</el-button
                   >
                 </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="建議售價："
+                    size="mini"
+                    label-width="120px"
+                    prop="selling_price"
+                  >
+                    <el-input
+                      type="type"
+                      placeholder="建議市售價"
+                      v-model="levelThreeFormData.selling_price"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="6">
+                <div class="grid-content">
+                  <el-form-item
+                    label="簡易規格："
+                    size="mini"
+                    label-width="120px"
+                    prop="specification"
+                  >
+                    <el-input
+                      type="type"
+                      placeholder="9公分*20公分"
+                      v-model="levelThreeFormData.specification"
+                    ></el-input>
+                  </el-form-item>
+                </div>
               </el-col>
             </el-row>
             <!-- 第十行結束 -->
@@ -1212,6 +1260,9 @@ export default {
         crop_fee: this.levelThreeFormData.crop_fee,
         split_quantity: this.levelThreeFormData.split_quantity,
         mini_order: this.levelThreeFormData.mini_order,
+        feature: this.levelThreeFormData.feature,
+        selling_price: this.levelThreeFormData.selling_price,
+        specification: this.levelThreeFormData.specification,
         introduction_video: Object.assign(
           {},
           this.levelThreeFormData.introduction_video

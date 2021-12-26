@@ -240,6 +240,18 @@ const CategoryLevelThreeSchema = new Schema({
   // 智慧排版
   typesetting: {
     type: Boolean
+  },
+  // 商品特色，web端看的，不超過10字
+  feature: {
+    type: String
+  },
+  // 市售價
+  selling_price: {
+    type: String
+  },
+  // 簡易規格
+  specification: {
+    type: String
   }
 })
 

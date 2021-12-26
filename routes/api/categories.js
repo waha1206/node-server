@@ -155,7 +155,16 @@ router.post(
         categoriesFields.crop_fee = req.body.crop_fee
       }
       if (req.body.quantity_profit) {
+        categoriesFields.feature = req.body.feature
+      }
+      if (req.body.feature) {
         categoriesFields.quantity_profit = req.body.quantity_profit
+      }
+      if (req.body.selling_price) {
+        categoriesFields.selling_price = req.body.selling_price
+      }
+      if (req.body.specification) {
+        categoriesFields.specification = req.body.specification
       }
     }
     // console.log(categoriesFields)
@@ -473,6 +482,15 @@ router.post(
       }
       if (req.body.quantity_profit) {
         categoryFields.quantity_profit = req.body.quantity_profit
+      }
+      if (req.body.feature) {
+        categoryFields.feature = req.body.feature
+      }
+      if (req.body.selling_price) {
+        categoryFields.selling_price = req.body.selling_price
+      }
+      if (req.body.specification) {
+        categoryFields.specification = req.body.specification
       }
     }
 
