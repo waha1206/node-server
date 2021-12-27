@@ -626,6 +626,8 @@ export default {
         level: 3,
         quantity_profit: row.quantity_profit
       }
+      console.log('uploadFormData :', uploadFormData)
+
       const url = `edit/${row._id}`
       this.$axios
         .post(`/api/categories/${url}`, uploadFormData)
