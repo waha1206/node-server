@@ -467,6 +467,7 @@ export default {
         ink_id: '',
         delivery_id: '',
         carton_id: '',
+        typesetting: Boolean,
         processing_describe: '',
         feature: '', // 商品特色，給WEB看的，不超過10字
         selling_price: '', // 末端售價
