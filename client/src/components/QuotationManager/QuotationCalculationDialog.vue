@@ -790,7 +790,7 @@ export default {
       )
       let obj = {}
       // 智慧排版如果開啟 值 = true obj = a_obj   如果沒開啟，就比較 a b 取數字低的
-      if (typesetting) {
+      if (!typesetting) {
         obj = a_obj
       } else {
         obj = a_obj.cloth_area > b_obj.cloth_area ? b_obj : a_obj
