@@ -1062,10 +1062,6 @@ export default {
       // 父元素 就處理好了 formData 如果是 add 就是乾淨的資料，如果是 edit 就是要編輯的資料
       // this.levelThreeFormData = Object.assign({}, this.formData)
       this.levelThreeFormData = this._.cloneDeep(this.formData)
-      if (!isEmpty(this.levelThreeFormData.typesetting)) {
-        console.log(this.levelThreeFormData.typesetting)
-        this.levelThreeFormData.typesetting = false
-      }
 
       // 記得要把要編輯的資料裡面的 tailor_fee 跟 crop_fee 存到 tailorFee 跟 cropFee 裡面
       // 因為這兩個欄位是另外的子元件會需要使用到的欄位，而且有被 watch

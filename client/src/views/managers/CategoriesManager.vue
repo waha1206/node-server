@@ -878,13 +878,11 @@ export default {
       // 把 row 裡面的資料深拷貝一份給 formdata 這是是傳到 子元件裡面所需要的屬性
       // this.formData = Object.assign({}, row)
       this.formData = this._.cloneDeep(row)
-      console.log('this.formData :', this.formData)
 
       if (typeof row.tailor_fee === 'undefined') this.formData.tailor_fee = ''
       if (typeof row.crop_fee === 'undefined') this.formData.crop_fee = ''
 
       if (typeof row.sample_order === 'undefined') {
-        console.log('乾你老師哩')
         this.formData.sample_order = { name: '', url: '' }
       }
     },
