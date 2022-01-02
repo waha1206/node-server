@@ -153,6 +153,10 @@ const CategoryLevelThreeSchema = new Schema({
     hot: {
       type: Boolean,
       default: false
+    },
+    discount: {
+      type: Boolean,
+      default: false
     }
   },
   level_two_id: {

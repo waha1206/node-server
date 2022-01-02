@@ -163,7 +163,7 @@
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="10">
+              <el-col :span="11">
                 <div class="grid-content">
                   <el-form-item
                     label="商品狀態："
@@ -183,10 +183,13 @@
                     <el-checkbox v-model="levelThreeFormData.status.hot"
                       >HOT</el-checkbox
                     >
+                    <el-checkbox v-model="levelThreeFormData.status.discount"
+                      >優惠</el-checkbox
+                    >
                   </el-form-item>
                 </div>
               </el-col>
-              <el-col :span="8">
+              <el-col :span="7">
                 <div class="grid-content">
                   <el-form-item
                     label="商品特色："

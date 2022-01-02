@@ -2,6 +2,7 @@
 const express = require('express')
 const router = express.Router()
 const passport = require('passport')
+const _ = require('lodash')
 
 // 引入 User 才可以做查詢
 const {
@@ -336,11 +337,11 @@ router.post(
   '/edit/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    const customerFields = {}
-    for (const prop in req.body) {
-      customerFields[prop] = req.body[prop]
-    }
-    console.log('/edit/:id', req.body)
+    const customerFields = _.cloneDeep(req.body)
+    // for (const prop in req.body) {
+    //   customerFields[prop] = req.body[prop]
+    // }
+    // console.log('/edit/:id', req.body)
 
     Customer.findByIdAndUpdate(
       { _id: req.params.id },

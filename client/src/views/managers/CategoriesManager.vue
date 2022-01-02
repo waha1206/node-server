@@ -448,7 +448,13 @@ export default {
         sample_order: { name: '', url: '' }, // 其它影片(二)
         last_modify_date: new Date(),
         last_edit_person: '',
-        status: { activated: false, vip: false }, // 啟用？網頁端會看到商品與否，VIP = 客製化商品專屬
+        status: {
+          activated: false,
+          vip: false,
+          hot: false,
+          new: false,
+          discount: false
+        }, // 啟用？網頁端會看到商品與否，VIP = 客製化商品專屬
         id: '',
         level: 3,
         level_one_id: '',
@@ -467,7 +473,7 @@ export default {
         ink_id: '',
         delivery_id: '',
         carton_id: '',
-        typesetting: Boolean,
+        typesetting: false,
         processing_describe: '',
         feature: '', // 商品特色，給WEB看的，不超過10字
         selling_price: '', // 末端售價
@@ -501,13 +507,13 @@ export default {
     CategoriesLevelThreeDialog
   },
 
-  created() {
-    this.getGroupLevelOneData()
-    this.getGroupLevelTwoData()
-    this.getCategoriesLevelOneData()
-    this.getCategoriesLevelTwoData()
-    this.getGroupLevelThreeData()
-    this.getUserInfo()
+  async created() {
+    await this.getGroupLevelOneData()
+    await this.getGroupLevelTwoData()
+    await this.getCategoriesLevelOneData()
+    await this.getCategoriesLevelTwoData()
+    await this.getGroupLevelThreeData()
+    await this.getUserInfo()
   },
   mounted() {
     this.setCascaderOptions()
@@ -645,7 +651,6 @@ export default {
     },
     // 取得 group member option ， 當讀取 group one two three 都完成的時候，才取得 cascader option 的資料
     getMaterialGroupOptions() {
-      console.log('被觸發了')
       this.materialGroupOptions = []
       this.groupLevelOneData.forEach((item) => {
         // console.log(index, item.name, item._id)
@@ -866,7 +871,7 @@ export default {
         option: 'add'
       }
       // 新增，就把要傳到子元件裡面的資料清空，這邊傳到子元件是 formData
-      this.formData = Object.assign({}, this.categoriesLevelThreeFormData)
+      this.formData = this._.cloneDeep(this.categoriesLevelThreeFormData)
     },
     // 編輯選中的商品資料
     handleEditCategory(index, row) {

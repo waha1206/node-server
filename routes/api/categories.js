@@ -2,6 +2,7 @@
 const express = require('express')
 const router = express.Router()
 const passport = require('passport')
+const _ = require('lodash')
 
 // 引入 categroies 才可以做查詢
 const {
@@ -52,120 +53,23 @@ router.post(
     }
 
     if (req.body.level === 3) {
-      if (req.body.typesetting !== 'undefined') {
-        categoriesFields.typesetting = req.body.typesetting
-      }
-      if (req.body.processing_describe) {
-        categoriesFields.processing_describe = req.body.processing_describe
-      }
-      if (req.body.ink_id) {
-        categoriesFields.ink_id = req.body.ink_id
-      }
-      if (req.body.paper_id) {
-        categoriesFields.paper_id = req.body.paper_id
-      }
-      if (req.body.delivery_id) {
-        categoriesFields.delivery_id = req.body.delivery_id
-      }
-      if (req.body.carton_id) {
-        categoriesFields.carton_id = req.body.carton_id
-      }
-      if (req.body.inside_cloth_loss) {
-        categoriesFields.inside_cloth_loss = req.body.inside_cloth_loss
-      }
-      if (req.body.outside_cloth_loss) {
-        categoriesFields.outside_cloth_loss = req.body.outside_cloth_loss
-      }
-      if (req.body.outside_layout_width) {
-        categoriesFields.outside_layout_width = req.body.outside_layout_width
-      }
-      if (req.body.outside_layout_height) {
-        categoriesFields.outside_layout_height = req.body.outside_layout_height
-      }
-      if (req.body.inside_layout_width) {
-        categoriesFields.inside_layout_width = req.body.inside_layout_width
-      }
-      if (req.body.inside_layout_height) {
-        categoriesFields.inside_layout_height = req.body.inside_layout_height
-      }
-      if (req.body.level_two_id) {
-        categoriesFields.level_two_id = req.body.level_two_id
-      }
-      if (req.body.split_quantity) {
-        categoriesFields.split_quantity = req.body.split_quantity
-      }
-      if (req.body.mini_order) {
-        categoriesFields.mini_order = req.body.mini_order
-      }
-      // 多張圖片
-      if (req.body.imgs) {
-        categoriesFields.imgs = req.body.imgs.split('|')
-      }
-      if (req.body.describe) {
-        categoriesFields.describe = req.body.describe
-      }
-      if (req.body.last_modify_date) {
-        categoriesFields.last_modify_date = req.body.last_modify_date
-      }
-      if (req.body.last_edit_person) {
-        categoriesFields.last_edit_person = req.body.last_edit_person
-      }
-      if (req.body.status) {
-        categoriesFields.status = Object.assign({}, req.body.status)
-      }
-      if (req.body.pattern_no) {
-        categoriesFields.pattern_no = req.body.pattern_no
-      }
-
-      if (req.body.pattern_download) {
-        categoriesFields.pattern_download = req.body.pattern_download
-      }
-
-      if (req.body.introduction_video) {
-        categoriesFields.introduction_video = Object.assign(
-          {},
-          req.body.introduction_video
-        )
-      }
-      if (req.body.salting_on_color_video) {
-        categoriesFields.salting_on_color_video = Object.assign(
-          {},
-          req.body.salting_on_color_video
-        )
-      }
-      if (req.body.note_one_video) {
-        categoriesFields.note_one_video = Object.assign(
-          {},
-          req.body.note_one_video
-        )
-      }
-      if (req.body.note_two_video) {
-        categoriesFields.note_two_video = Object.assign(
-          {},
-          req.body.note_two_video
-        )
-      }
-      if (req.body.sample_order) {
-        categoriesFields.sample_order = Object.assign({}, req.body.sample_order)
-      }
-      if (req.body.tailor_fee) {
-        categoriesFields.tailor_fee = req.body.tailor_fee
-      }
-      if (req.body.crop_fee) {
-        categoriesFields.crop_fee = req.body.crop_fee
-      }
-      if (req.body.quantity_profit) {
-        categoriesFields.feature = req.body.feature
-      }
-      if (req.body.feature) {
-        categoriesFields.quantity_profit = req.body.quantity_profit
-      }
-      if (req.body.selling_price) {
-        categoriesFields.selling_price = req.body.selling_price
-      }
-      if (req.body.specification) {
-        categoriesFields.specification = req.body.specification
-      }
+      const data = _.cloneDeep(req.body)
+      data.imgs = req.body.imgs.split('|')
+      CategoriesLevelThree.findOne({ name: req.body.name }).then((category) => {
+        if (category) {
+          return res.status(400).json('此商品類型(英文)已經存在')
+        } else {
+          new CategoriesLevelThree(data)
+            .save()
+            .then((category) => {
+              res.json(category)
+            })
+            .catch((err) => {
+              res.status(404).json(err)
+            })
+        }
+      })
+      return
     }
     // console.log(categoriesFields)
     CategoryLevel.findOne({ name: req.body.name }).then((category) => {
@@ -376,127 +280,16 @@ router.post(
       categoryFields.level_one_id = req.body.level_one_id
     }
     if (req.body.level === 3) {
-      if (req.body.typesetting !== 'undefined') {
-        categoryFields.typesetting = req.body.typesetting
-      }
-      if (req.body.processing_describe) {
-        categoryFields.processing_describe = req.body.processing_describe
-      }
-      if (req.body.ink_id) {
-        categoryFields.ink_id = req.body.ink_id
-      }
-      if (req.body.paper_id) {
-        categoryFields.paper_id = req.body.paper_id
-      }
-      if (req.body.delivery_id) {
-        categoryFields.delivery_id = req.body.delivery_id
-      }
-      if (req.body.carton_id) {
-        categoryFields.carton_id = req.body.carton_id
-      }
-      if (req.body.inside_cloth_loss) {
-        categoryFields.inside_cloth_loss = req.body.inside_cloth_loss
-      }
-      if (req.body.outside_cloth_loss) {
-        categoryFields.outside_cloth_loss = req.body.outside_cloth_loss
-      }
-      if (req.body.outside_layout_width) {
-        categoryFields.outside_layout_width = req.body.outside_layout_width
-      }
-      if (req.body.outside_layout_height) {
-        categoryFields.outside_layout_height = req.body.outside_layout_height
-      }
-      if (req.body.inside_layout_width) {
-        categoryFields.inside_layout_width = req.body.inside_layout_width
-      }
-      if (req.body.inside_layout_height) {
-        categoryFields.inside_layout_height = req.body.inside_layout_height
-      }
-      if (req.body.level_two_id) {
-        categoryFields.level_two_id = req.body.level_two_id
-      }
-      if (req.body.split_quantity) {
-        categoryFields.split_quantity = req.body.split_quantity
-      }
-      if (req.body.mini_order) {
-        categoryFields.mini_order = req.body.mini_order
-      }
-      // else {
-      //   categoryFields.imgs = []
-      // }
-      if (req.body.describe) {
-        categoryFields.describe = req.body.describe
-      }
-      if (req.body.last_modify_date) {
-        categoryFields.last_modify_date = req.body.last_modify_date
-      }
-      if (req.body.last_edit_person) {
-        categoryFields.last_edit_person = req.body.last_edit_person
-      }
-      if (req.body.status) {
-        categoryFields.status = Object.assign({}, req.body.status)
-      }
-      if (req.body.pattern_no) {
-        categoryFields.pattern_no = req.body.pattern_no
-      }
-
-      if (req.body.pattern_download) {
-        categoryFields.pattern_download = req.body.pattern_download
-      }
-
-      if (req.body.introduction_video) {
-        categoryFields.introduction_video = Object.assign(
-          {},
-          req.body.introduction_video
-        )
-      }
-      if (req.body.salting_on_color_video) {
-        categoryFields.salting_on_color_video = Object.assign(
-          {},
-          req.body.salting_on_color_video
-        )
-      }
-      if (req.body.note_one_video) {
-        categoryFields.note_one_video = Object.assign(
-          {},
-          req.body.note_one_video
-        )
-      }
-      if (req.body.note_two_video) {
-        categoryFields.note_two_video = Object.assign(
-          {},
-          req.body.note_two_video
-        )
-      }
-      if (req.body.sample_order) {
-        categoryFields.sample_order = Object.assign({}, req.body.sample_order)
-      }
-      if (req.body.material_group) {
-        categoryFields.material_group = req.body.material_group.map((x) => x)
-      }
-      if (req.body.tailor_fee) {
-        categoryFields.tailor_fee = req.body.tailor_fee
-      }
-      if (req.body.crop_fee) {
-        categoryFields.crop_fee = req.body.crop_fee
-      }
-      if (req.body.quantity_profit) {
-        categoryFields.quantity_profit = req.body.quantity_profit
-      }
-      if (req.body.feature) {
-        categoryFields.feature = req.body.feature
-      }
-      if (req.body.selling_price) {
-        categoryFields.selling_price = req.body.selling_price
-      }
-      if (req.body.specification) {
-        categoryFields.specification = req.body.specification
-      }
+      const data = _.cloneDeep(req.body)
+      data.imgs = req.body.imgs.split('|')
+      CategoriesLevelThree.findByIdAndUpdate(
+        { _id: req.params.id },
+        { $set: data },
+        { new: false }
+      ).then((catrgory) => res.json(catrgory))
+      return
     }
 
-    // if (categoryFields.imgs.length) {
-    //   console.log(categoryFields.imgs.length)
-    // }
     CategoryLevel.findByIdAndUpdate(
       { _id: req.params.id },
       { $set: categoryFields },

@@ -28,6 +28,18 @@
         <el-button type="primary" size="small" @click="addCustomer"
           >新增客戶資料</el-button
         >
+        <el-button type="primary" size="small" @click="addEmployeeAuthority"
+          >新增員工權限</el-button
+        >
+        <el-button type="primary" size="small" @click="addEmployeeJobClass"
+          >新增員工職務類別</el-button
+        >
+        <el-button type="primary" size="small" @click="addEmployeeJobTitle"
+          >新增員工職稱</el-button
+        >
+        <el-button type="primary" size="small" @click="addEmployeePayment"
+          >新增支付薪資方式</el-button
+        >
       </el-header>
       <!-- 分頁 -->
       <div class="pagination">
@@ -288,12 +300,37 @@
       @update="getServerData"
     ></CustomerClassDialog>
     <CustomerDialog
+      v-if="customersData.length"
       :dialog="addCustomerDialog"
       :customerClassData="customerClassData"
       :customerTitleData="customerTitleData"
+      :employeeAuthorityData="employeeAuthorityData"
+      :employeeJobClassData="employeeJobClassData"
+      :employeeJobTitleData="employeeJobTitleData"
+      :employeePaymentData="employeePaymentData"
       @update="getCustomerData"
     >
     </CustomerDialog>
+    <EmployeeAuthority
+      :dialog="addEmployeeAuthorityDialog"
+      :employeeAuthorityData="employeeAuthorityData"
+      @update="getEmployeeAuthorityData"
+    ></EmployeeAuthority>
+    <EmployeeJobClass
+      :dialog="addEmployeeJobClassDialog"
+      :employeeJobClassData="employeeJobClassData"
+      @update="getEmployeeJobClassData"
+    ></EmployeeJobClass>
+    <EmployeeJobTitle
+      :dialog="addEmployeeJobTitleDialog"
+      :employeeJobTitleData="employeeJobTitleData"
+      @update="getEmployeeJobTitleData"
+    ></EmployeeJobTitle>
+    <EmployeePayment
+      :dialog="addEmployeePaymentDialog"
+      :employeePaymentData="employeePaymentData"
+      @update="getEmployeePaymentData"
+    ></EmployeePayment>
     <!-- 子元件結束 -->
   </div>
 </template>
@@ -302,11 +339,23 @@
 import CustomerClassDialog from '../../components/CustomerManager/CustomerClassDialog'
 import CustomerDialog from '../../components/CustomerManager/CustomerDialog'
 import CustomerTitleDialog from '../../components/CustomerManager/CustomerTitleDialog'
+import EmployeeAuthority from '../../components/CustomerManager/EmployeeAuthority.vue'
+import EmployeeJobClass from '../../components/CustomerManager/EmployeeJobClass.vue'
+import EmployeeJobTitle from '../../components/CustomerManager/EmployeeJobTitle.vue'
+import EmployeePayment from '../../components/CustomerManager/EmployeePayment.vue'
 
 export default {
   name: 'customer-manager',
   data() {
     return {
+      // 員工職務類別
+      employeeJobClassData: [],
+      // 員工職務名稱
+      employeeJobTitleData: [],
+      // 員工支付新資方式
+      employeePaymentData: [],
+      // 員工權限
+      employeeAuthorityData: [],
       // table 需要的搜尋欄位
       search: '',
       // 選擇客戶的分類，然後去伺服器要資料
@@ -345,6 +394,26 @@ export default {
         option: 'edit',
         data: {}
       },
+      addEmployeeAuthorityDialog: {
+        show: false,
+        title: '新增員工權限',
+        option: 'edit'
+      },
+      addEmployeeJobClassDialog: {
+        show: false,
+        title: '新增員工職務類別',
+        option: 'edit'
+      },
+      addEmployeeJobTitleDialog: {
+        show: false,
+        title: '新增員工職務抬頭',
+        option: 'edit'
+      },
+      addEmployeePaymentDialog: {
+        show: false,
+        title: '新增付款方式',
+        option: 'edit'
+      },
       // 存處這個元件的所有 localStorage 的設定
       setLocalStorage: {
         customerClass: 'customer_class'
@@ -353,16 +422,23 @@ export default {
       customerFormData: {}
     }
   },
-  created() {
-    this.getServerData(this.addClassDialog.dataType)
-    this.getServerData(this.addTitleDialog.dataType)
-    this.getCustomerData()
+  async created() {
+    await this.getServerData(this.addClassDialog.dataType)
+    await this.getServerData(this.addTitleDialog.dataType)
+    await this.getCustomerData()
+    await this.getEmployeeAuthorityData()
+    await this.getEmployeeJobClassData()
+    await this.getEmployeeJobTitleData()
+    await this.getEmployeePaymentData()
   },
   components: {
     CustomerClassDialog,
     CustomerDialog,
-    CustomerTitleDialog
-    // GroupLevelThreeDialog
+    CustomerTitleDialog,
+    EmployeeAuthority,
+    EmployeeJobClass,
+    EmployeeJobTitle,
+    EmployeePayment
   },
   methods: {
     // 管理者權限
@@ -421,6 +497,36 @@ export default {
     customerClassChange(customerClass) {
       localStorage[this.setLocalStorage.customerClass] = customerClass
     },
+    // 新增員工權限
+    addEmployeeAuthority() {
+      this.addEmployeeAuthorityDialog = {
+        show: true,
+        title: '新增員工權限',
+        option: 'add'
+      }
+    },
+    addEmployeeJobClass() {
+      this.addEmployeeJobClassDialog = {
+        show: true,
+        title: '新增員工職務類別',
+        option: 'add'
+      }
+    },
+    addEmployeeJobTitle() {
+      this.addEmployeeJobTitleDialog = {
+        show: true,
+        title: '新增員工職務抬頭',
+        option: 'add'
+      }
+    },
+    addEmployeePayment() {
+      this.addEmployeePaymentDialog = {
+        show: true,
+        title: '新增員工支付薪資方式',
+        option: 'add'
+      }
+    },
+
     // 新增客戶類別
     addCustomerClass() {
       this.addClassDialog = {
@@ -432,6 +538,11 @@ export default {
     },
     // 新增客戶資料
     addCustomer() {
+      this.$message({
+        message: '此功能暫時關閉，請從 myoacg.tw 新增客戶資訊',
+        type: 'error'
+      })
+      return
       this.addCustomerDialog = {
         show: true,
         title: '新增客戶資料',
@@ -490,10 +601,9 @@ export default {
 
     // 編輯 客戶資料
     handleEditCustomer(row) {
-      console.log('handleEditCustomer', row)
       this.addCustomerDialog = {
         show: true,
-        title: '編輯客戶資料',
+        title: '編輯客戶資料' + row.second_key,
         option: 'edit',
         data: row
       }
@@ -501,9 +611,73 @@ export default {
     handleDeleteCustomer(row) {},
 
     // ****************************************** axios 的部分 ******************************************
+    // 讀取權限列表
+    async getEmployeeAuthorityData() {
+      await this.$axios
+        .get(`/api/employee/authority`)
+        .then((res) => {
+          // 添加成功
+          this.$message({
+            message: '讀取員工權限完成！',
+            type: 'success'
+          })
+          this.employeeAuthorityData = res.data
+        })
+        .catch((err) => {
+          console.log('取得用戶權限失敗！', err)
+        })
+    },
+    // 讀取員工職務抬頭
+    async getEmployeeJobTitleData() {
+      await this.$axios
+        .get(`/api/employee/job-title`)
+        .then((res) => {
+          // 添加成功
+          this.$message({
+            message: '讀取員工權限完成！',
+            type: 'success'
+          })
+          this.employeeJobTitleData = res.data
+        })
+        .catch((err) => {
+          console.log('取得員工職務抬頭失敗！', err)
+        })
+    },
+    // 讀取員工職務類別
+    async getEmployeeJobClassData() {
+      await this.$axios
+        .get(`/api/employee/job-class`)
+        .then((res) => {
+          // 添加成功
+          this.$message({
+            message: '讀取員工職務類別完成！',
+            type: 'success'
+          })
+          this.employeeJobClassData = res.data
+        })
+        .catch((err) => {
+          console.log('取得員工職務類別失敗！', err)
+        })
+    },
+    // 讀取員工支付薪資方式
+    async getEmployeePaymentData() {
+      await this.$axios
+        .get(`/api/employee/Payment`)
+        .then((res) => {
+          // 添加成功
+          this.$message({
+            message: '讀取員工支付薪資方式完成！',
+            type: 'success'
+          })
+          this.employeePaymentData = res.data
+        })
+        .catch((err) => {
+          console.log('取得員工支付薪資方式失敗！', err)
+        })
+    },
     // 讀取客戶的資料
-    getCustomerData() {
-      this.$axios
+    async getCustomerData() {
+      await this.$axios
         .get(`/api/customer/customer`)
         .then((res) => {
           // 添加成功
@@ -511,10 +685,6 @@ export default {
             message: '讀取客戶資料完成！',
             type: 'success'
           })
-          // let result = res.data
-          // result.sort(function(a, b) {
-          //   return Number(a.type) - Number(b.type)
-          // })
           this.customersData = res.data
           this.setPaginations()
         })
@@ -523,8 +693,8 @@ export default {
         })
     },
     // 讀取兩種資料 1.客戶分類資料 dataType = 'class'  2.客戶職務資料 dataType = 'title
-    getServerData(dataType) {
-      this.$axios
+    async getServerData(dataType) {
+      await this.$axios
         .get(`/api/customer/${dataType}`)
         .then((res) => {
           // 添加成功

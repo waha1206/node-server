@@ -239,6 +239,69 @@ const CustomerSchema = new Schema({
   // 我的最愛
   favorite: {
     type: Array
+  },
+
+  switch: {
+    type: Boolean
+  },
+  service_sales: {
+    type: String
+  },
+  employee_data: {
+    authority: {
+      type: Array
+    },
+    number: {
+      type: String
+    },
+    job_class: {
+      type: String
+    },
+    join_date: {
+      type: Date
+    },
+    name: {
+      type: String
+    },
+    english_name: {
+      type: String
+    },
+    job_title: {
+      type: String
+    },
+    date_of_birth: {
+      type: Date
+    },
+    gender: {
+      type: String
+    },
+    telephone: {
+      type: String
+    },
+    cellphone: {
+      type: String
+    },
+    email: {
+      type: String
+    },
+    address: {
+      type: String
+    },
+    payment: {
+      type: String
+    },
+    payment_account: {
+      type: String
+    },
+    emergency_contact: {
+      type: String
+    },
+    emergency_phone: {
+      type: String
+    },
+    remarks: {
+      type: String
+    }
   }
 })
 

@@ -16,7 +16,20 @@
         :rules="form_rules"
         label-width="100px"
       >
-        <el-container>
+        <el-form-item
+          label="顯示頁面："
+          prop="switch"
+          label-width="120px"
+          class="switch"
+        >
+          <el-switch
+            v-model="customerFormData.switch"
+            active-text="公司員工"
+            inactive-text="一般會員"
+          >
+          </el-switch
+        ></el-form-item>
+        <el-container v-show="!customerFormData.switch">
           <el-header>
             <!-- 第一列，客戶分類，客戶名稱，公司統編，公司電話，公司傳真 -->
             <el-row :gutter="20" type="flex" class="row-bg">
@@ -177,6 +190,7 @@
                     v-model="customerFormData.contact_person_title"
                     placeholder="創作者本人"
                     filterable
+                    clearable
                     size="mini"
                   >
                     <!-- :lable 這個是顯示出來的  :value 這個要指定到 _id 因為我要存到資料庫，我需要唯一的一個 key (_id)-->
@@ -912,18 +926,21 @@
             </el-row>
             <!-- 第十四列，其它備註事項 -->
             <el-row :gutter="20" type="flex" class="row-bg">
-              <!-- <el-col :span="4">
-                <el-form-item label="客戶編號：" prop="no" label-width="120px">
+              <el-col :span="6">
+                <el-form-item
+                  label="服務業務："
+                  prop="service_sales"
+                  label-width="120px"
+                >
                   <el-input
-                    class="rt-input"
                     :readonly="true"
-                    v-model="customerFormData.no"
-                    placeholder="會自動產生"
+                    v-model="customerFormData.service_sales"
+                    placeholder="業務名稱"
                     size="mini"
                   ></el-input>
                 </el-form-item>
-              </el-col> -->
-              <el-col :span="24">
+              </el-col>
+              <el-col :span="18">
                 <el-form-item
                   label="其它備註："
                   prop="remarks"
@@ -951,6 +968,261 @@
             </el-form-item>
           </el-footer>
         </el-container>
+        <el-container v-show="customerFormData.switch">
+          <!-- 這邊是員工資料 開始 -->
+          <!-- 第一列 員工權限，占整排 -->
+          <el-row :gutter="20" type="flex" class="row-bg">
+            <el-col :span="24">
+              <el-form-item label="員工權限：" prop="" label-width="120px">
+                <el-select
+                  v-model="customerFormData.employee_data.authority"
+                  multiple
+                  placeholder="請選擇員工權限"
+                  size="mini"
+                  :clearable="true"
+                  style="display: block; width: 100%;"
+                >
+                  <!-- v-for="item in authorityOption" -->
+                  <!-- employeeAuthorityData -->
+                  <el-option
+                    v-for="item in employeeAuthorityData"
+                    :key="item._id"
+                    :label="item.name"
+                    :value="item._id"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!-- 第二列 員工編號 員工所屬部門 員工職務 就職時間-->
+          <el-row :gutter="20" type="flex" class="row-bg">
+            <el-col :span="6">
+              <!-- prop = 要驗證的欄位名稱 -->
+              <el-form-item label="員工編號：" prop="" label-width="120px">
+                <el-input
+                  v-model="customerFormData.employee_data.number"
+                  placeholder="編號會自行產生"
+                  size="mini"
+                  :disabled="true"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="所屬部門：" prop="" label-width="120px">
+                <el-select
+                  v-model="customerFormData.employee_data.job_class"
+                  placeholder="選擇所屬部門"
+                  size="mini"
+                  filterable
+                  style="display: block; width: 100%;"
+                >
+                  <el-option
+                    v-for="item in employeeJobClassData"
+                    :key="item._id"
+                    :label="item.name"
+                    :value="item._id"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="職務名稱：" prop="" label-width="120px">
+                <el-select
+                  v-model="customerFormData.employee_data.job_title"
+                  placeholder="擔任職務"
+                  size="mini"
+                  filterable
+                  style="display: block; width: 100%;"
+                >
+                  <el-option
+                    v-for="item in employeeJobTitleData"
+                    :key="item._id"
+                    :label="item.name"
+                    :value="item._id"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="就職時間：" prop="" label-width="120px">
+                <el-date-picker
+                  v-model="customerFormData.employee_data.join_date"
+                  type="date"
+                  size="mini"
+                  placeholder="選擇日期"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!-- 第三列 中文姓名 英文姓名 出生日期 性別 -->
+          <el-row :gutter="20" type="flex" class="row-bg">
+            <el-col :span="4">
+              <el-form-item label="中文姓名：" prop="" label-width="120px">
+                <el-input
+                  v-model="customerFormData.employee_data.name"
+                  placeholder="輸入中文姓名"
+                  size="mini"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="英文姓名：" prop="" label-width="120px">
+                <el-input
+                  v-model="customerFormData.employee_data.english_name"
+                  placeholder="其它的備註說明"
+                  size="mini"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="性別：" prop="" label-width="120px">
+                <el-select
+                  v-model="customerFormData.employee_data.gender"
+                  placeholder="選擇"
+                  size="mini"
+                  filterable
+                >
+                  <el-option
+                    v-for="item in gender"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="出生日期：" prop="" label-width="120px">
+                <el-date-picker
+                  v-model="customerFormData.employee_data.date_of_birth"
+                  type="date"
+                  size="mini"
+                  placeholder="選擇日期"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                label="E-mail："
+                prop="employee_data.email"
+                label-width="120px"
+              >
+                <el-input
+                  v-model="customerFormData.employee_data.email"
+                  placeholder="請輸入信箱"
+                  size="mini"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!-- 第四列 家裡電話 移動電話 員工地址 緊急連絡人 緊急聯絡電話 -->
+          <el-row :gutter="20" type="flex" class="row-bg">
+            <el-col :span="4">
+              <el-form-item label="家裡電話：" prop="" label-width="120px">
+                <el-input
+                  v-model="customerFormData.employee_data.telephone"
+                  placeholder="請輸入市電"
+                  size="mini"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="移動電話：" prop="" label-width="120px">
+                <el-input
+                  v-model="customerFormData.employee_data.cellphone"
+                  placeholder="請輸入手機號碼"
+                  size="mini"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="住家地址：" prop="" label-width="120px">
+                <el-input
+                  v-model="customerFormData.employee_data.address"
+                  placeholder="請輸入住家地址"
+                  size="mini"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="緊急連絡人：" prop="" label-width="120px">
+                <el-input
+                  v-model="customerFormData.employee_data.emergency_contact"
+                  placeholder="請輸姓名"
+                  size="mini"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="緊急連絡手機：" prop="" label-width="120px">
+                <el-input
+                  v-model="customerFormData.employee_data.emergency_phone"
+                  placeholder="請輸入手機"
+                  size="mini"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!-- 第五列 支付薪資的方式 匯款帳號 員工備註 -->
+          <el-row :gutter="20" type="flex" class="row-bg">
+            <el-col :span="6">
+              <el-form-item label="支付薪資方式：" prop="" label-width="120px">
+                <el-select
+                  v-model="customerFormData.employee_data.payment"
+                  placeholder="請選擇支付方式"
+                  size="mini"
+                  filterable
+                  style="display: block; width: 100%;"
+                >
+                  <el-option
+                    v-for="item in employeePaymentData"
+                    :key="item._id"
+                    :label="item.name"
+                    :value="item._id"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="匯款帳號：" prop="" label-width="120px">
+                <el-input
+                  v-model="customerFormData.employee_data.payment_account"
+                  placeholder="請輸入帳號如：17010111220"
+                  size="mini"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="員工備註：" prop="" label-width="120px">
+                <el-input
+                  v-model="customerFormData.employee_data.remarks"
+                  placeholder="請輸入你想輸入的關於員工的注意事項！"
+                  size="mini"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-main> </el-main>
+          <!-- 這邊是員工資料 結束 -->
+
+          <el-footer>
+            <el-form-item class="text_right">
+              <el-button type="warning" @click="dialog.show = false"
+                >取消</el-button
+              >
+              <el-button type="primary" @click="onSubmit('form')"
+                >提交</el-button
+              >
+            </el-form-item>
+          </el-footer>
+        </el-container>
       </el-form>
     </el-dialog>
   </div>
@@ -964,28 +1236,37 @@ export default {
   props: {
     dialog: Object,
     customerClassData: Array,
-    customerTitleData: Array
+    customerTitleData: Array,
+    employeeAuthorityData: Array,
+    employeeJobClassData: Array,
+    employeeJobTitleData: Array,
+    employeePaymentData: Array
   },
   components: {},
   data() {
     return {
+      gender: [
+        { label: '男', value: 'male' },
+        { label: '女', value: 'female' },
+        { label: '其他', value: 'other' }
+      ],
       // 貨運加收費用
       deliveryChargeFee: 0,
-      // 控制 material cloth dialog 的物件
-      customerFormData: {},
-      // materialDataForm_rules: {
+      // 第二行的 employee_data 很重要，沒有他會報錯，在該 {} 下面的欄位 如 number job_class 等等全部都會出現 undefined 的問題，在 rander 的時候
+
+      customerFormData: {
+        employee_data: {}
+      },
+      // customer form_rules
       form_rules: {
-        contact_person_title: [
-          { required: true, message: '必選，必須正確', trigger: 'blur' }
-        ],
         contact_person_name: [
-          { required: true, message: '必選，必須正確', trigger: 'blur' }
-        ],
-        customer_class: [
           { required: true, message: '必選，必須正確', trigger: 'blur' }
         ],
         company: [
           { required: true, message: '必選，必須正確', trigger: 'blur' }
+        ],
+        'employee_data.email': [
+          { type: 'email', message: '必須要符合email格式', trigger: 'blur' }
         ]
       }
     }
@@ -1015,12 +1296,13 @@ export default {
       this.customerFormData.delivery_charge_fee = String(newValue)
     },
     customerTitleData(value) {
-      console.log(value)
+      // console.log('customerTitleData', value)
     },
     dialog: function(newValue, oldValue) {
-      console.log('CustomerDialog.vue - watch - dialog', newValue, oldValue)
+      // console.log('CustomerDialog.vue - watch - dialog', newValue, oldValue)
       // 當 dialog.option == 'add' 的時候就把表格都清空  另外我準備了一個 editData = {} 準備承接 edit 狀態下的 scope.row 資料
-      this.customerFormData = Object.assign({}, newValue.data)
+      // this.customerFormData = Object.assign({}, newValue.data)
+      this.customerFormData = this._.cloneDeep(newValue.data)
 
       if (!this.isEmpty(this.customerFormData.delivery_charge_fee)) {
         this.deliveryChargeFee = Number(
@@ -1031,9 +1313,7 @@ export default {
       }
     }
   },
-  created() {
-    // this.customerFormData = Object.assign({}, this.formData)
-  },
+  created() {},
   methods: {
     isEmpty(value) {
       return (
@@ -1055,8 +1335,6 @@ export default {
             this.dialog.option == 'add'
               ? 'add'
               : `edit/${this.customerFormData._id}`
-          console.log(url, this.customerFormData)
-
           this.$axios
             .post(`/api/customer/${url}`, this.customerFormData)
             .then((res) => {
@@ -1092,6 +1370,9 @@ export default {
     margin-bottom: 0;
   }
 } */
+.customer-dialog {
+  margin-top: 0px;
+}
 .el-col {
   border-radius: 4px;
 }
@@ -1143,5 +1424,13 @@ body > .el-container {
 .el-container:nth-child(7) .el-aside {
   line-height: 100% !important;
 }
+.el-dialog__wrapper {
+  top: -40px;
+}
+
+.switch {
+  margin-bottom: 0px;
+}
+
 /* 布局容器 結束 */
 </style>
