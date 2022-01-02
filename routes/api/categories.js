@@ -281,6 +281,7 @@ router.post(
     }
     if (req.body.level === 3) {
       const data = _.cloneDeep(req.body)
+
       data.imgs = req.body.imgs.split('|')
       CategoriesLevelThree.findByIdAndUpdate(
         { _id: req.params.id },

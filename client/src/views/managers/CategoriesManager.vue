@@ -477,7 +477,11 @@ export default {
         processing_describe: '',
         feature: '', // 商品特色，給WEB看的，不超過10字
         selling_price: '', // 末端售價
-        specification: '' // 簡易規格
+        specification: '', // 簡易規格
+        switch: false, // 切換 商品目錄或市優惠商品
+        start_date_of_discount: Date,
+        end_date_of_discount: Date,
+        sales_event_description: ''
       },
       categoriesLevelOneDialog: {
         show: false,

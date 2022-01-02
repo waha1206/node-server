@@ -256,6 +256,22 @@ const CategoryLevelThreeSchema = new Schema({
   // 簡易規格
   specification: {
     type: String
+  },
+  // 切換 商品目錄，還是優惠活動畫面
+  switch: {
+    type: Boolean
+  },
+  // 優惠活動開始日期
+  start_date_of_discount: {
+    type: Date
+  },
+  // 優惠活動結束日期
+  end_date_of_discount: {
+    type: Date
+  },
+  // 優惠活動的敘述
+  sales_event_description: {
+    type: String
   }
 })
 

@@ -164,6 +164,18 @@ const QuotationSchema = new Schema({
   // 總運費 = (carton_fee + delivery_fee) * carton
   total_delivery_fee: {
     type: String
+  },
+  // 商品特色，web端看的，不超過10字
+  feature: {
+    type: String
+  },
+  // 市售價
+  selling_price: {
+    type: String
+  },
+  // 簡易規格
+  specification: {
+    type: String
   }
 })
 

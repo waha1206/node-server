@@ -16,801 +16,887 @@
           :rules="form_rules"
           label-width="120px"
           style="margin:10px;width:auto"
-          ><el-header height="auto">
-            <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="8"
-                ><div class="grid-content">
-                  <el-form-item
-                    label="先選擇大分類："
-                    size="mini"
-                    prop="level_one_id"
-                    label-width="120px"
-                  >
-                    <!-- v-model 通常會指定到 formData (要提交的表單) 裡面的某個屬性 這邊是再 data return 裡面的 levelThreeData.level_one_id -->
-                    <el-select
-                      v-model="levelThreeFormData.level_one_id"
-                      placeholder="請選擇"
-                      filterable
-                      @change="levelOneChang"
+        >
+          <el-form-item
+            label="顯示頁面："
+            prop="switch"
+            label-width="120px"
+            class="switch"
+          >
+            <el-switch
+              v-model="levelThreeFormData.switch"
+              active-text="優惠商品"
+              inactive-text="商品目錄"
+            >
+            </el-switch
+          ></el-form-item>
+          <el-container v-show="!levelThreeFormData.switch">
+            <el-header height="auto">
+              <el-row :gutter="20" type="flex" class="row-bg">
+                <el-col :span="8"
+                  ><div class="grid-content">
+                    <el-form-item
+                      label="先選擇大分類："
                       size="mini"
+                      prop="level_one_id"
+                      label-width="120px"
                     >
-                      <!-- value 這邊綁定的是此 陣列裡面，要傳給 select v-mode 的值 -->
-                      <!-- label 就單純的顯示再 input 上面可以看到的文字 -->
-                      <el-option
-                        v-for="(item, index) in categoriesLevelOneData"
-                        :key="index"
-                        :label="item.name"
-                        :value="item._id"
+                      <!-- v-model 通常會指定到 formData (要提交的表單) 裡面的某個屬性 這邊是再 data return 裡面的 levelThreeData.level_one_id -->
+                      <el-select
+                        v-model="levelThreeFormData.level_one_id"
+                        placeholder="請選擇"
+                        filterable
+                        @change="levelOneChang"
+                        size="mini"
                       >
-                        <span style="float: left">{{ item.type }}</span>
-                        <span
-                          style="float: right; color: #8492a6; font-size: 13px"
-                          >{{ item.name }}</span
+                        <!-- value 這邊綁定的是此 陣列裡面，要傳給 select v-mode 的值 -->
+                        <!-- label 就單純的顯示再 input 上面可以看到的文字 -->
+                        <el-option
+                          v-for="(item, index) in categoriesLevelOneData"
+                          :key="index"
+                          :label="item.name"
+                          :value="item._id"
                         >
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                </div></el-col
-              >
-              <!-- 第二層的下拉選單 -->
-              <!-- ********************* 兩種做法，1.第二個選擇欄位獨立出去  *********************-->
-              <!-- ********************* 兩種做法，2.v-if 去判斷資料要不要顯示出來  *********************-->
-              <el-col :span="8"
-                ><div class="grid-content">
-                  <el-form-item
-                    label="選擇中分類："
-                    size="mini"
-                    prop="level_two_id"
-                    label-width="120px"
-                  >
-                    <!-- 可複選的 select 要加入這三個屬性 allow-create default-first-option multiple -->
-                    <!-- v-model="levelThreeFormData.level_two_id" -->
-                    <el-select
-                      v-model="levelThreeFormData.level_two_id"
-                      placeholder="請選擇"
-                      filterable
-                      @change="levelTwoChang"
+                          <span style="float: left">{{ item.type }}</span>
+                          <span
+                            style="float: right; color: #8492a6; font-size: 13px"
+                            >{{ item.name }}</span
+                          >
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
+                  </div></el-col
+                >
+                <!-- 第二層的下拉選單 -->
+                <!-- ********************* 兩種做法，1.第二個選擇欄位獨立出去  *********************-->
+                <!-- ********************* 兩種做法，2.v-if 去判斷資料要不要顯示出來  *********************-->
+                <el-col :span="8"
+                  ><div class="grid-content">
+                    <el-form-item
+                      label="選擇中分類："
                       size="mini"
+                      prop="level_two_id"
+                      label-width="120px"
                     >
-                      <el-option
-                        v-for="(citem, cindex) in updateLevelTwoData"
-                        :key="citem._id"
-                        :label="citem.name"
-                        :value="citem._id"
+                      <!-- 可複選的 select 要加入這三個屬性 allow-create default-first-option multiple -->
+                      <!-- v-model="levelThreeFormData.level_two_id" -->
+                      <el-select
+                        v-model="levelThreeFormData.level_two_id"
+                        placeholder="請選擇"
+                        filterable
+                        @change="levelTwoChang"
+                        size="mini"
                       >
-                        <span style="float: left">{{ citem.type }}</span>
-                        <span
-                          style="float: right; color: #8492a6; font-size: 13px"
-                          >{{ citem.name }}</span
+                        <el-option
+                          v-for="(citem, cindex) in updateLevelTwoData"
+                          :key="citem._id"
+                          :label="citem.name"
+                          :value="citem._id"
                         >
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                </div></el-col
-              >
-              <!-- 輸入商品名稱 -->
-              <el-col :span="8">
-                <div class="grid-content">
-                  <el-form-item
-                    label="商品名稱："
-                    size="mini"
-                    label-width="120px"
-                    prop="name"
-                  >
-                    <el-input
-                      placeholder="造型圓形側背包"
-                      type="name"
-                      v-model="levelThreeFormData.name"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
-
-            <!-- 第二行開始，備註說明 -->
-            <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="24">
-                <div class="grid-content">
-                  <el-form-item
-                    label="備註說明："
-                    size="mini"
-                    label-width="120px"
-                    prop="describe"
-                  >
-                    <el-input
-                      placeholder="(無耳朵)直徑約25x厚7公分(外口袋+8吋拉鍊內口袋)-仿帆布10安造型圓形側背包(轉印仿帆布10安內裡)(轉印可調背帶2.5X150公分)(10吋)50個"
-                      type="name"
-                      v-model="levelThreeFormData.describe"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
-            <!-- 第三行開始，加工說明 -->
-            <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="24">
-                <div class="grid-content">
-                  <el-form-item
-                    label="加工說明："
-                    size="mini"
-                    label-width="120px"
-                    prop="processing_describe"
-                  >
-                    <el-input
-                      placeholder="給自己人看的加工說明"
-                      type="name"
-                      v-model="levelThreeFormData.processing_describe"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
-            <!-- 第四行開始，商品編號，商品狀態 啟用/VIP ，NEW，HOT-->
-            <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="商品編號："
-                    size="mini"
-                    label-width="120px"
-                    prop="type"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="0001 (四碼)"
-                      v-model="levelThreeFormData.type"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="11">
-                <div class="grid-content">
-                  <el-form-item
-                    label="商品狀態："
-                    size="mini"
-                    label-width="120px"
-                    prop="status.activated"
-                  >
-                    <el-checkbox v-model="levelThreeFormData.status.activated"
-                      >啟用</el-checkbox
+                          <span style="float: left">{{ citem.type }}</span>
+                          <span
+                            style="float: right; color: #8492a6; font-size: 13px"
+                            >{{ citem.name }}</span
+                          >
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
+                  </div></el-col
+                >
+                <!-- 輸入商品名稱 -->
+                <el-col :span="8">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="商品名稱："
+                      size="mini"
+                      label-width="120px"
+                      prop="name"
                     >
-                    <el-checkbox v-model="levelThreeFormData.status.vip"
-                      >VIP</el-checkbox
-                    >
-                    <el-checkbox v-model="levelThreeFormData.status.new"
-                      >NEW</el-checkbox
-                    >
-                    <el-checkbox v-model="levelThreeFormData.status.hot"
-                      >HOT</el-checkbox
-                    >
-                    <el-checkbox v-model="levelThreeFormData.status.discount"
-                      >優惠</el-checkbox
-                    >
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="7">
-                <div class="grid-content">
-                  <el-form-item
-                    label="商品特色："
-                    size="mini"
-                    label-width="120px"
-                    prop="feature"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="最多10個字"
-                      v-model="levelThreeFormData.feature"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
+                      <el-input
+                        placeholder="造型圓形側背包"
+                        type="name"
+                        v-model="levelThreeFormData.name"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+              </el-row>
 
-            <!-- 第五行開始，商品介紹影片，校色影片-->
-            <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="影片名稱："
-                    size="mini"
-                    label-width="120px"
-                    prop="introduction_video.label"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="零錢包的製作影片"
-                      v-model="levelThreeFormData.introduction_video.label"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="影片連結："
-                    size="mini"
-                    label-width="120px"
-                    prop="introduction_video.link"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="https://youtu.be/Olm_oOCY_2Y"
-                      v-model="levelThreeFormData.introduction_video.link"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="布料校色："
-                    size="mini"
-                    label-width="120px"
-                    prop="salting_on_color_video.label"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="布料校色"
-                      v-model="levelThreeFormData.salting_on_color_video.label"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="校色連結："
-                    size="mini"
-                    label-width="120px"
-                    prop="salting_on_color_video.link"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="https://youtu.be/Olm_oOCY_2Y"
-                      v-model="levelThreeFormData.salting_on_color_video.link"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
-            <!-- 第六行開始，其他影片(一)，其他影片(二)-->
-            <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="其它(一)："
-                    size="mini"
-                    label-width="120px"
-                    prop="note_one_video.label"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="影片(一)"
-                      v-model="levelThreeFormData.note_one_video.label"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="連結(一)："
-                    size="mini"
-                    label-width="120px"
-                    prop="note_one_video.link"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="https://youtu.be/Olm_oOCY_2Y"
-                      v-model="levelThreeFormData.note_one_video.link"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="其它(二)："
-                    size="mini"
-                    label-width="120px"
-                    prop="note_two_video.label"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="影片(二)"
-                      v-model="levelThreeFormData.note_two_video.label"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="連結(二)："
-                    size="mini"
-                    label-width="120px"
-                    prop="note_two_video.link"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="https://youtu.be/Olm_oOCY_2Y"
-                      v-model="levelThreeFormData.note_two_video.link"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
+              <!-- 第二行開始，備註說明 -->
+              <el-row :gutter="20" type="flex" class="row-bg">
+                <el-col :span="24">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="備註說明："
+                      size="mini"
+                      label-width="120px"
+                      prop="describe"
+                    >
+                      <el-input
+                        placeholder="(無耳朵)直徑約25x厚7公分(外口袋+8吋拉鍊內口袋)-仿帆布10安造型圓形側背包(轉印仿帆布10安內裡)(轉印可調背帶2.5X150公分)(10吋)50個"
+                        type="name"
+                        v-model="levelThreeFormData.describe"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+              </el-row>
+              <!-- 第三行開始，加工說明 -->
+              <el-row :gutter="20" type="flex" class="row-bg">
+                <el-col :span="24">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="加工說明："
+                      size="mini"
+                      label-width="120px"
+                      prop="processing_describe"
+                    >
+                      <el-input
+                        placeholder="給自己人看的加工說明"
+                        type="name"
+                        v-model="levelThreeFormData.processing_describe"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+              </el-row>
+              <!-- 第四行開始，商品編號，商品狀態 啟用/VIP ，NEW，HOT-->
+              <el-row :gutter="20" type="flex" class="row-bg">
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="商品編號："
+                      size="mini"
+                      label-width="120px"
+                      prop="type"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="0001 (四碼)"
+                        v-model="levelThreeFormData.type"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="11">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="商品狀態："
+                      size="mini"
+                      label-width="120px"
+                      prop="status.activated"
+                    >
+                      <el-checkbox v-model="levelThreeFormData.status.activated"
+                        >啟用</el-checkbox
+                      >
+                      <el-checkbox v-model="levelThreeFormData.status.vip"
+                        >VIP</el-checkbox
+                      >
+                      <el-checkbox v-model="levelThreeFormData.status.new"
+                        >NEW</el-checkbox
+                      >
+                      <el-checkbox v-model="levelThreeFormData.status.hot"
+                        >HOT</el-checkbox
+                      >
+                      <el-checkbox v-model="levelThreeFormData.status.discount"
+                        >優惠</el-checkbox
+                      >
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="7">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="商品特色："
+                      size="mini"
+                      label-width="120px"
+                      prop="feature"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="最多10個字"
+                        v-model="levelThreeFormData.feature"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+              </el-row>
 
-            <!-- 第6.5行開始，購買樣品，最後修改時間，最後修改人員 -->
-            <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="購買樣品："
-                    size="mini"
-                    label-width="120px"
-                    prop="sample_order.name"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="購買樣品"
-                      v-model="levelThreeFormData.sample_order.name"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="販售網址："
-                    size="mini"
-                    label-width="120px"
-                    prop="sample_order.url"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="https://youtu.be/Olm_oOCY_2Y"
-                      v-model="levelThreeFormData.sample_order.url"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="最後修改時間："
-                    size="mini"
-                    label-width="120px"
-                    prop=""
-                  >
-                    <el-input
-                      type=""
-                      v-model="getDate"
-                      :readonly="true"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="最後修改人員："
-                    size="mini"
-                    label-width="120px"
-                    prop=""
-                  >
-                    <el-input
-                      type=""
-                      v-model="getUserNameById"
-                      :readonly="true"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
+              <!-- 第五行開始，商品介紹影片，校色影片-->
+              <el-row :gutter="20" type="flex" class="row-bg">
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="影片名稱："
+                      size="mini"
+                      label-width="120px"
+                      prop="introduction_video.label"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="零錢包的製作影片"
+                        v-model="levelThreeFormData.introduction_video.label"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="影片連結："
+                      size="mini"
+                      label-width="120px"
+                      prop="introduction_video.link"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="https://youtu.be/Olm_oOCY_2Y"
+                        v-model="levelThreeFormData.introduction_video.link"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="布料校色："
+                      size="mini"
+                      label-width="120px"
+                      prop="salting_on_color_video.label"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="布料校色"
+                        v-model="
+                          levelThreeFormData.salting_on_color_video.label
+                        "
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="校色連結："
+                      size="mini"
+                      label-width="120px"
+                      prop="salting_on_color_video.link"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="https://youtu.be/Olm_oOCY_2Y"
+                        v-model="levelThreeFormData.salting_on_color_video.link"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+              </el-row>
+              <!-- 第六行開始，其他影片(一)，其他影片(二)-->
+              <el-row :gutter="20" type="flex" class="row-bg">
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="其它(一)："
+                      size="mini"
+                      label-width="120px"
+                      prop="note_one_video.label"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="影片(一)"
+                        v-model="levelThreeFormData.note_one_video.label"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="連結(一)："
+                      size="mini"
+                      label-width="120px"
+                      prop="note_one_video.link"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="https://youtu.be/Olm_oOCY_2Y"
+                        v-model="levelThreeFormData.note_one_video.link"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="其它(二)："
+                      size="mini"
+                      label-width="120px"
+                      prop="note_two_video.label"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="影片(二)"
+                        v-model="levelThreeFormData.note_two_video.label"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="連結(二)："
+                      size="mini"
+                      label-width="120px"
+                      prop="note_two_video.link"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="https://youtu.be/Olm_oOCY_2Y"
+                        v-model="levelThreeFormData.note_two_video.link"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+              </el-row>
 
-            <!-- 第七行開始，版型編號-->
-            <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="12">
-                <div class="grid-content">
-                  <el-form-item
-                    label="版型編號："
-                    size="mini"
-                    label-width="120px"
-                    prop="pattern_no"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="版型編號範例尚未制定"
-                      v-model="levelThreeFormData.pattern_no"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="12">
-                <div class="grid-content">
-                  <el-form-item
-                    label="版型下載："
-                    size="mini"
-                    label-width="120px"
-                    prop="pattern_download"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="雲端的下載連結網址，通常是一個google雲端目錄"
-                      v-model="levelThreeFormData.pattern_download"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
+              <!-- 第6.5行開始，購買樣品，最後修改時間，最後修改人員 -->
+              <el-row :gutter="20" type="flex" class="row-bg">
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="購買樣品："
+                      size="mini"
+                      label-width="120px"
+                      prop="sample_order.name"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="購買樣品"
+                        v-model="levelThreeFormData.sample_order.name"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="販售網址："
+                      size="mini"
+                      label-width="120px"
+                      prop="sample_order.url"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="https://youtu.be/Olm_oOCY_2Y"
+                        v-model="levelThreeFormData.sample_order.url"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="最後修改時間："
+                      size="mini"
+                      label-width="120px"
+                      prop=""
+                    >
+                      <el-input
+                        type=""
+                        v-model="getDate"
+                        :readonly="true"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="最後修改人員："
+                      size="mini"
+                      label-width="120px"
+                      prop=""
+                    >
+                      <el-input
+                        type=""
+                        v-model="getUserNameById"
+                        :readonly="true"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+              </el-row>
 
-            <!-- 第八行開始，平車費用，裁切費用-->
-            <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="平車費用"
-                    size="mini"
-                    label-width="120px"
-                    prop="tailor_fee"
-                  >
-                    <my-currency-input
-                      :height="24"
-                      :width="130"
+              <!-- 第七行開始，版型編號-->
+              <el-row :gutter="20" type="flex" class="row-bg">
+                <el-col :span="12">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="版型編號："
+                      size="mini"
+                      label-width="120px"
+                      prop="pattern_no"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="版型編號範例尚未制定"
+                        v-model="levelThreeFormData.pattern_no"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="版型下載："
+                      size="mini"
+                      label-width="120px"
+                      prop="pattern_download"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="雲端的下載連結網址，通常是一個google雲端目錄"
+                        v-model="levelThreeFormData.pattern_download"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+              </el-row>
+
+              <!-- 第八行開始，平車費用，裁切費用-->
+              <el-row :gutter="20" type="flex" class="row-bg">
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="平車費用"
+                      size="mini"
+                      label-width="120px"
+                      prop="tailor_fee"
+                    >
+                      <my-currency-input
+                        :height="24"
+                        :width="130"
+                        :isReadyOnly="false"
+                        type="tailor_fee"
+                        v-model="tailorFee"
+                      ></my-currency-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="裁切費用："
+                      size="mini"
+                      label-width="120px"
+                      prop="crop_fee"
+                    >
+                      <my-currency-input
+                        :height="24"
+                        :width="130"
+                        :isReadyOnly="false"
+                        type="crop_fee"
+                        v-model="cropFee"
+                      ></my-currency-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="拆圖數量："
+                      size="mini"
+                      label-width="120px"
+                      prop="split_quantity"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="可拆圖的最低數量"
+                        v-model="levelThreeFormData.split_quantity"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="最低訂量："
+                      size="mini"
+                      label-width="120px"
+                      prop="mini_order"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="商品的最低訂購量"
+                        v-model="levelThreeFormData.mini_order"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+              </el-row>
+              <!-- 第九行開始，外表布寬，高，內裡布寬，高 -->
+              <el-row :gutter="20" type="flex" class="row-bg">
+                <el-col :span="4" style="position:relative">
+                  <!-- style="position:relative;border-radius:8px" -->
+                  <div @click="handleCalculationLayout">
+                    <el-tooltip
+                      class="item"
+                      effect="dark"
+                      content="試算版型耗損率"
+                      placement="right"
+                      style="z-index:2000"
+                    >
+                      <el-badge
+                        value="試算"
+                        class="item"
+                        style="margin-top: 0px;margin-right: 0px;position:absolute;top:0px;right:-40px"
+                      >
+                      </el-badge>
+                    </el-tooltip>
+                  </div>
+                  <el-form-item prop="outside_layout_width" label="外表布寬：">
+                    <el-input
+                      style="width:60px"
+                      placeholder="寬度"
+                      size="mini"
+                      type="type"
+                      v-model="levelThreeFormData.outside_layout_width"
+                    ></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                  <el-form-item prop="outside_layout_height" label="外表布高：">
+                    <el-input
+                      style="width:60px"
+                      placeholder="高度"
+                      size="mini"
+                      type="type"
+                      v-model="levelThreeFormData.outside_layout_height"
+                    ></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                  <el-form-item prop="product_profit" label="表布耗損：">
+                    <my-percentage-input
                       :isReadyOnly="false"
-                      type="tailor_fee"
-                      v-model="tailorFee"
-                    ></my-currency-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="裁切費用："
-                    size="mini"
-                    label-width="120px"
-                    prop="crop_fee"
-                  >
-                    <my-currency-input
+                      :width="34"
                       :height="24"
-                      :width="130"
+                      type=""
+                      v-model="outsideClothLoss"
+                    ></my-percentage-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                  <el-form-item prop="inside_layout_width" label="內裡布寬：">
+                    <el-input
+                      style="width:60px"
+                      placeholder="寬度"
+                      size="mini"
+                      type="type"
+                      v-model="levelThreeFormData.inside_layout_width"
+                    ></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                  <el-form-item prop="inside_layout_height" label="內裡布高：">
+                    <el-input
+                      style="width:60px"
+                      placeholder="高度"
+                      size="mini"
+                      type="type"
+                      v-model="levelThreeFormData.inside_layout_height"
+                    ></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                  <el-form-item prop="product_profit" label="裡布耗損：">
+                    <my-percentage-input
                       :isReadyOnly="false"
-                      type="crop_fee"
-                      v-model="cropFee"
-                    ></my-currency-input>
+                      :width="34"
+                      :height="24"
+                      type=""
+                      v-model="insideClothLoss"
+                    ></my-percentage-input>
                   </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="拆圖數量："
-                    size="mini"
-                    label-width="120px"
-                    prop="split_quantity"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="可拆圖的最低數量"
-                      v-model="levelThreeFormData.split_quantity"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="最低訂量："
-                    size="mini"
-                    label-width="120px"
-                    prop="mini_order"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="商品的最低訂購量"
-                      v-model="levelThreeFormData.mini_order"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
-            <!-- 第九行開始，外表布寬，高，內裡布寬，高 -->
-            <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="4" style="position:relative">
-                <!-- style="position:relative;border-radius:8px" -->
-                <div @click="handleCalculationLayout">
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="試算版型耗損率"
-                    placement="right"
-                    style="z-index:2000"
-                  >
-                    <el-badge
-                      value="試算"
-                      class="item"
-                      style="margin-top: 0px;margin-right: 0px;position:absolute;top:0px;right:-40px"
-                    >
-                    </el-badge>
-                  </el-tooltip>
-                </div>
-                <el-form-item prop="outside_layout_width" label="外表布寬：">
-                  <el-input
-                    style="width:60px"
-                    placeholder="寬度"
-                    size="mini"
-                    type="type"
-                    v-model="levelThreeFormData.outside_layout_width"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="4">
-                <el-form-item prop="outside_layout_height" label="外表布高：">
-                  <el-input
-                    style="width:60px"
-                    placeholder="高度"
-                    size="mini"
-                    type="type"
-                    v-model="levelThreeFormData.outside_layout_height"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="4">
-                <el-form-item prop="product_profit" label="表布耗損：">
-                  <my-percentage-input
-                    :isReadyOnly="false"
-                    :width="34"
-                    :height="24"
-                    type=""
-                    v-model="outsideClothLoss"
-                  ></my-percentage-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="4">
-                <el-form-item prop="inside_layout_width" label="內裡布寬：">
-                  <el-input
-                    style="width:60px"
-                    placeholder="寬度"
-                    size="mini"
-                    type="type"
-                    v-model="levelThreeFormData.inside_layout_width"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="4">
-                <el-form-item prop="inside_layout_height" label="內裡布高：">
-                  <el-input
-                    style="width:60px"
-                    placeholder="高度"
-                    size="mini"
-                    type="type"
-                    v-model="levelThreeFormData.inside_layout_height"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="4">
-                <el-form-item prop="product_profit" label="裡布耗損：">
-                  <my-percentage-input
-                    :isReadyOnly="false"
-                    :width="34"
-                    :height="24"
-                    type=""
-                    v-model="insideClothLoss"
-                  ></my-percentage-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <!-- 第九行結束 -->
+                </el-col>
+              </el-row>
+              <!-- 第九行結束 -->
 
-            <!-- 第十行 -->
-            <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="6" style="position:relative">
-                <!-- style="position:relative;border-radius:8px" -->
-                <div>
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="運費為必選欄位"
-                    placement="right"
-                    style="z-index:2000"
-                  >
-                    <el-badge
-                      value="help"
+              <!-- 第十行 -->
+              <el-row :gutter="20" type="flex" class="row-bg">
+                <el-col :span="6" style="position:relative">
+                  <!-- style="position:relative;border-radius:8px" -->
+                  <div>
+                    <el-tooltip
                       class="item"
-                      style="margin-top: 0px;margin-right: 0px;position:absolute;top:0px;right:30px"
+                      effect="dark"
+                      content="運費為必選欄位"
+                      placement="right"
+                      style="z-index:2000"
                     >
-                    </el-badge>
-                  </el-tooltip>
-                </div>
-                <el-form-item prop="delivery_id" label="運費：">
-                  <el-button
-                    v-if="delivery"
-                    type="primary"
-                    size="mini"
-                    class="button"
-                    @click="handleSelectDeliveryOrCarton('delivery')"
-                    >{{ delivery }}</el-button
-                  >
-                  <el-button
-                    v-else
-                    type="primary"
-                    size="mini"
-                    class="button"
-                    @click="handleSelectDeliveryOrCarton('delivery')"
-                    >運費尚未選擇</el-button
-                  >
-                </el-form-item>
-              </el-col>
-              <el-col :span="6" style="position:relative">
-                <!-- style="position:relative;border-radius:8px" -->
-                <div>
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="紙箱為必選欄位"
-                    placement="right"
-                    style="z-index:2000"
-                  >
-                    <el-badge
-                      value="help"
+                      <el-badge
+                        value="help"
+                        class="item"
+                        style="margin-top: 0px;margin-right: 0px;position:absolute;top:0px;right:30px"
+                      >
+                      </el-badge>
+                    </el-tooltip>
+                  </div>
+                  <el-form-item prop="delivery_id" label="運費：">
+                    <el-button
+                      v-if="delivery"
+                      type="primary"
+                      size="mini"
+                      class="button"
+                      @click="handleSelectDeliveryOrCarton('delivery')"
+                      >{{ delivery }}</el-button
+                    >
+                    <el-button
+                      v-else
+                      type="primary"
+                      size="mini"
+                      class="button"
+                      @click="handleSelectDeliveryOrCarton('delivery')"
+                      >運費尚未選擇</el-button
+                    >
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6" style="position:relative">
+                  <!-- style="position:relative;border-radius:8px" -->
+                  <div>
+                    <el-tooltip
                       class="item"
-                      style="margin-top: 0px;margin-right: 0px;position:absolute;top:0px;right:0px"
+                      effect="dark"
+                      content="紙箱為必選欄位"
+                      placement="right"
+                      style="z-index:2000"
                     >
-                    </el-badge>
-                  </el-tooltip>
-                </div>
-                <el-form-item prop="carton_id" label="紙箱：">
-                  <el-button
-                    v-if="carton"
-                    type="primary"
-                    size="mini"
-                    class="button"
-                    @click="handleSelectDeliveryOrCarton('carton')"
-                    >{{ carton }}</el-button
-                  >
-                  <el-button
-                    v-else
-                    type="primary"
-                    size="mini"
-                    class="button"
-                    @click="handleSelectDeliveryOrCarton('carton')"
-                    >紙箱尚未選擇</el-button
-                  >
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="建議售價："
-                    size="mini"
-                    label-width="120px"
-                    prop="selling_price"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="建議市售價"
-                      v-model="levelThreeFormData.selling_price"
-                    ></el-input>
+                      <el-badge
+                        value="help"
+                        class="item"
+                        style="margin-top: 0px;margin-right: 0px;position:absolute;top:0px;right:0px"
+                      >
+                      </el-badge>
+                    </el-tooltip>
+                  </div>
+                  <el-form-item prop="carton_id" label="紙箱：">
+                    <el-button
+                      v-if="carton"
+                      type="primary"
+                      size="mini"
+                      class="button"
+                      @click="handleSelectDeliveryOrCarton('carton')"
+                      >{{ carton }}</el-button
+                    >
+                    <el-button
+                      v-else
+                      type="primary"
+                      size="mini"
+                      class="button"
+                      @click="handleSelectDeliveryOrCarton('carton')"
+                      >紙箱尚未選擇</el-button
+                    >
                   </el-form-item>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div class="grid-content">
-                  <el-form-item
-                    label="簡易規格："
-                    size="mini"
-                    label-width="120px"
-                    prop="specification"
-                  >
-                    <el-input
-                      type="type"
-                      placeholder="9公分*20公分"
-                      v-model="levelThreeFormData.specification"
-                    ></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
-            <!-- 第十行結束 -->
+                </el-col>
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="建議售價："
+                      size="mini"
+                      label-width="120px"
+                      prop="selling_price"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="建議市售價"
+                        v-model="levelThreeFormData.selling_price"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="簡易規格："
+                      size="mini"
+                      label-width="120px"
+                      prop="specification"
+                    >
+                      <el-input
+                        type="type"
+                        placeholder="9公分*20公分"
+                        v-model="levelThreeFormData.specification"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+              </el-row>
+              <!-- 第十行結束 -->
 
-            <!-- 第十一行 -->
-            <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="6"
-                ><div class="grid-content ">
-                  <el-form-item
-                    prop="typesetting"
-                    label="智慧排版："
-                    label-width="110px"
-                  >
-                    <!-- @change="handleTypesettingChange" -->
-                    <el-switch
-                      v-model="levelThreeFormData.typesetting"
-                      active-text="啟用"
-                      inactive-text="禁用"
+              <!-- 第十一行 -->
+              <el-row :gutter="20" type="flex" class="row-bg">
+                <el-col :span="6"
+                  ><div class="grid-content ">
+                    <el-form-item
+                      prop="typesetting"
+                      label="智慧排版："
+                      label-width="110px"
                     >
-                    </el-switch>
-                  </el-form-item></div
-              ></el-col>
-              <el-col :span="8" style="position:relative">
-                <!-- style="position:relative;border-radius:8px" -->
-                <div>
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="轉印紙為必選欄位"
-                    placement="right"
-                    style="z-index:2000"
-                  >
-                    <el-badge
-                      value="help"
+                      <!-- @change="handleTypesettingChange" -->
+                      <el-switch
+                        v-model="levelThreeFormData.typesetting"
+                        active-text="啟用"
+                        inactive-text="禁用"
+                      >
+                      </el-switch>
+                    </el-form-item></div
+                ></el-col>
+                <el-col :span="8" style="position:relative">
+                  <!-- style="position:relative;border-radius:8px" -->
+                  <div>
+                    <el-tooltip
                       class="item"
-                      style="margin-top: 0px;margin-right: 0px;position:absolute;top:0px;right:30px"
+                      effect="dark"
+                      content="轉印紙為必選欄位"
+                      placement="right"
+                      style="z-index:2000"
                     >
-                    </el-badge>
-                  </el-tooltip>
-                </div>
-                <el-form-item prop="paper_id" label="轉印紙：">
-                  <el-button
-                    v-if="paper"
-                    type="primary"
-                    size="mini"
-                    class="button"
-                    @click="handleSelectPaperOrInk('paper')"
-                    >{{ paper }}</el-button
-                  >
-                  <el-button
-                    v-else
-                    type="primary"
-                    size="mini"
-                    class="button"
-                    @click="handleSelectPaperOrInk('paper')"
-                    >轉印紙尚未選擇</el-button
-                  >
-                </el-form-item>
-              </el-col>
-              <el-col :span="8" style="position:relative">
-                <!-- style="position:relative;border-radius:8px" -->
-                <div>
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    content="墨水為必選欄位"
-                    placement="right"
-                    style="z-index:2000"
-                  >
-                    <el-badge
-                      value="help"
+                      <el-badge
+                        value="help"
+                        class="item"
+                        style="margin-top: 0px;margin-right: 0px;position:absolute;top:0px;right:30px"
+                      >
+                      </el-badge>
+                    </el-tooltip>
+                  </div>
+                  <el-form-item prop="paper_id" label="轉印紙：">
+                    <el-button
+                      v-if="paper"
+                      type="primary"
+                      size="mini"
+                      class="button"
+                      @click="handleSelectPaperOrInk('paper')"
+                      >{{ paper }}</el-button
+                    >
+                    <el-button
+                      v-else
+                      type="primary"
+                      size="mini"
+                      class="button"
+                      @click="handleSelectPaperOrInk('paper')"
+                      >轉印紙尚未選擇</el-button
+                    >
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8" style="position:relative">
+                  <!-- style="position:relative;border-radius:8px" -->
+                  <div>
+                    <el-tooltip
                       class="item"
-                      style="margin-top: 0px;margin-right: 0px;position:absolute;top:0px;right:30px"
+                      effect="dark"
+                      content="墨水為必選欄位"
+                      placement="right"
+                      style="z-index:2000"
                     >
-                    </el-badge>
-                  </el-tooltip>
-                </div>
-                <el-form-item prop="ink_id" label="輸出墨水：">
-                  <el-button
-                    v-if="ink"
-                    type="primary"
-                    size="mini"
-                    class="button"
-                    @click="handleSelectPaperOrInk('ink')"
-                    >{{ ink }}</el-button
-                  >
-                  <el-button
-                    v-else
-                    type="primary"
-                    size="mini"
-                    class="button"
-                    @click="handleSelectPaperOrInk('ink')"
-                    >輸出墨水尚未選擇</el-button
-                  >
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <!-- 第十一行結束 -->
-          </el-header>
+                      <el-badge
+                        value="help"
+                        class="item"
+                        style="margin-top: 0px;margin-right: 0px;position:absolute;top:0px;right:30px"
+                      >
+                      </el-badge>
+                    </el-tooltip>
+                  </div>
+                  <el-form-item prop="ink_id" label="輸出墨水：">
+                    <el-button
+                      v-if="ink"
+                      type="primary"
+                      size="mini"
+                      class="button"
+                      @click="handleSelectPaperOrInk('ink')"
+                      >{{ ink }}</el-button
+                    >
+                    <el-button
+                      v-else
+                      type="primary"
+                      size="mini"
+                      class="button"
+                      @click="handleSelectPaperOrInk('ink')"
+                      >輸出墨水尚未選擇</el-button
+                    >
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <!-- 第十一行結束 -->
+            </el-header></el-container
+          >
+          <el-container v-show="levelThreeFormData.switch" style="height:200px">
+            <el-header height="auto">
+              <!-- 優惠活動開始日期 優惠活動結束日期 -->
+              <el-row :gutter="20" type="flex" class="row-bg">
+                <el-col :span="8">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="優惠活動開始："
+                      prop=""
+                      label-width="120px"
+                    >
+                      <el-date-picker
+                        v-model="levelThreeFormData.start_date_of_discount"
+                        type="date"
+                        size="mini"
+                        placeholder="選擇日期"
+                      >
+                      </el-date-picker>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="8">
+                  <div class="grid-content">
+                    <el-form-item
+                      label="優惠活動結束："
+                      prop=""
+                      label-width="120px"
+                    >
+                      <el-date-picker
+                        v-model="levelThreeFormData.end_date_of_discount"
+                        type="date"
+                        size="mini"
+                        placeholder="選擇日期"
+                      >
+                      </el-date-picker>
+                    </el-form-item>
+                  </div>
+                </el-col>
+              </el-row>
+              <!-- 優惠活動描述 levelThreeFormData.sales_event_description  -->
+              <el-row :gutter="20" type="flex" class="row-bg">
+                <el-col :span="12">
+                  <div class="grid-content">
+                    <el-col :span="12">
+                      <div class="grid-content">
+                        <el-form-item
+                          label="優惠活動說明："
+                          prop=""
+                          label-width="120px"
+                        >
+                          <el-input
+                            style="margin-top:10px;width:300px"
+                            type="textarea"
+                            placeholder="请输入内容"
+                            v-model="levelThreeFormData.sales_event_description"
+                            :rows="6"
+                            maxlength="120"
+                            show-word-limit
+                          >
+                          </el-input>
+                        </el-form-item>
+                      </div>
+                    </el-col>
+                  </div>
+                </el-col>
+              </el-row>
+            </el-header>
+          </el-container>
           <!-- 第十二行開始，圖片上傳 -->
           <!-- 圖片上傳的教學 https://segmentfault.com/a/1190000013796215 -->
           <!-- 上傳一張照片的時候隱藏 後面的 + 框框  https://www.twblogs.net/a/5b81a49e2b71772165ad9752 -->
@@ -1268,6 +1354,11 @@ export default {
         feature: this.levelThreeFormData.feature,
         selling_price: this.levelThreeFormData.selling_price,
         specification: this.levelThreeFormData.specification,
+        switch: this.levelThreeFormData.switch,
+        start_date_of_discount: this.levelThreeFormData.start_date_of_discount,
+        end_date_of_discount: this.levelThreeFormData.end_date_of_discount,
+        sales_event_description: this.levelThreeFormData
+          .sales_event_description,
         introduction_video: Object.assign(
           {},
           this.levelThreeFormData.introduction_video
@@ -1471,7 +1562,13 @@ export default {
 .el-form-item {
   margin-bottom: 0px;
 }
-
+.switch {
+  margin-bottom: 0px;
+}
+.el-dialog__body {
+  padding-top: 0px;
+  /* padding-bottom: 20px; */
+}
 /* .hide .el-upload.el-upload--picture-card {
   display: none;
 } */
