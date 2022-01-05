@@ -20,7 +20,7 @@
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="8">
                 <div class="grid-content">
-                  <el-form-item prop="" label="選擇分類：">
+                  <el-form-item prop="choiceLevelTwoValue" label="選擇分類：">
                     <el-cascader
                       class="cascader"
                       @change="onOptionsChange"
@@ -309,6 +309,9 @@ export default {
         kind: [{ required: true, message: '必選，必須正確', trigger: 'blur' }],
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
+        choiceLevelTwoValue: [
+          { required: true, message: '此欄位不能為空', trigger: 'blur' }
+        ],
         web_side_name: [
           { required: true, message: '此欄位不能為空', trigger: 'blur' }
         ],
