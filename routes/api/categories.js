@@ -54,7 +54,10 @@ router.post(
 
     if (req.body.level === 3) {
       const data = _.cloneDeep(req.body)
-      data.imgs = req.body.imgs.split('|')
+      // 確保送來資料的時候，沒有圖片時，不會跳出 split 不存在的錯誤訊息
+      if (req.body.imgs) {
+        data.imgs = req.body.imgs.split('|')
+      }
       CategoriesLevelThree.findOne({ name: req.body.name }).then((category) => {
         if (category) {
           return res.status(400).json('此商品類型(英文)已經存在')

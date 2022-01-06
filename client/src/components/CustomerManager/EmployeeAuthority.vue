@@ -16,16 +16,29 @@
                 <el-table-column
                   prop="type"
                   label="權限代碼"
-                  width="120px"
+                  width="100px"
                   align="center"
                 >
                 </el-table-column>
                 <el-table-column
                   prop="name"
                   label="權限名稱"
-                  width="180"
+                  width="120"
                   align="center"
                 >
+                </el-table-column>
+
+                <el-table-column label="單圖" width="70" align="center">
+                  <template slot-scope="scope">
+                    <!-- v-for="(item, index) in scope.row.imgs" -->
+                    <img
+                      v-if="scope.row.imgs[0]"
+                      width="50px"
+                      height="50px"
+                      :src="scope.row.imgs[0]"
+                      alt=""
+                    />
+                  </template>
                 </el-table-column>
 
                 <el-table-column
@@ -140,6 +153,75 @@
             placeholder="請輸入中文名稱"
           ></el-input>
         </el-form-item>
+        <el-main>
+          <!-- <div class="image-warp"> -->
+          <el-form-item
+            label="圖片上傳："
+            size="mini"
+            label-width="120px"
+            prop="describe"
+          >
+            <!-- :class="{ uoloadSty: showBtnImg, disUoloadSty: noneBtnImg }" -->
+            <div class="upload-wrap">
+              <el-upload
+                :data="uploadData"
+                action="uploadActionUrl"
+                list-type="picture-card"
+                :auto-upload="false"
+                accept="image/jpeg,image/gif,image/png"
+                multiple
+                :limit="limitCountImg"
+                :file-list="files"
+                :on-change="onFileChange"
+              >
+                <el-dialog
+                  :visible.sync="dialogVisible"
+                  append-to-body
+                  width="520px"
+                >
+                  <img
+                    width="480px"
+                    height="480px"
+                    fit="contain"
+                    :src="dialogImageUrl"
+                    alt=""
+                  />
+                </el-dialog>
+                <i slot="default" class="el-icon-plus"></i>
+                <div class="image-content" slot="file" slot-scope="{ file }">
+                  <img
+                    class="el-upload-list__item-thumbnail"
+                    :src="file.url"
+                    alt=""
+                  />
+                  <span class="el-upload-list__item-actions">
+                    <span
+                      class="el-upload-list__item-preview"
+                      @click="handlePictureCardPreview(file)"
+                    >
+                      <i class="el-icon-zoom-in"></i>
+                    </span>
+                    <span
+                      v-if="!disabled"
+                      class="el-upload-list__item-download"
+                      @click="handleDownload(file)"
+                    >
+                      <i class="el-icon-download"></i>
+                    </span>
+                    <!-- v-if="!disabled" -->
+                    <span
+                      class="el-upload-list__item-delete"
+                      @click="handleRemove(file, files)"
+                    >
+                      <i class="el-icon-delete"></i>
+                    </span>
+                  </span>
+                </div>
+              </el-upload>
+            </div>
+          </el-form-item>
+          <!-- </div> -->
+        </el-main>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="employeeAuthorityDialog = false">取消</el-button>
@@ -159,6 +241,19 @@ export default {
   },
   data() {
     return {
+      // 圖片上傳
+      uploadData: {
+        dataType: '0',
+        oldFilePath: ''
+      },
+      files: [],
+      dialogImageUrl: '',
+      dialogVisible: false,
+      disabled: Boolean,
+      limitCountImg: 1, // 圖片隱藏需要
+      showBtnImg: true, // 圖片隱藏需要
+      noneBtnImg: false, // 圖片隱藏需要
+      // 圖片上傳結束
       tableData: [],
       formLabelWidth: '',
       formData: {
@@ -169,6 +264,7 @@ export default {
         type: '',
         name: '',
         _id: '',
+        imgs: [],
         option: ''
       },
       // 管理分頁
@@ -198,6 +294,9 @@ export default {
   },
   watch: {
     employeeAuthorityData() {
+      // if (this._.isEmpty(this.employeeAuthorityData.imgs)) {
+      //   this.getImgs()
+      // }
       // 資料有更新喔
       this.setPaginations()
     }
@@ -208,6 +307,91 @@ export default {
     }
   },
   methods: {
+    // ************************************* 圖片上傳 **********************************
+    // 圖片移除的 function
+    handleRemove(file, fileList) {
+      let _index = 0
+      for (let index = 0; index < fileList.length; index++) {
+        if (fileList[index].uid == file.uid) {
+          this.files.splice(index, 1) //移除数组中要删除的图片
+          _index = index
+        }
+      }
+      // 如果是 edit 狀態的話，要把 this.employeeAuthorityForm 中的 imgs 也移除掉
+      // if (this.dialog.option !== 'edit') return
+      this.noneBtnImg = fileList.length >= this.limitCountImg
+      this.employeeAuthorityForm.imgs.splice(_index, 1)
+    },
+    // 跳出預覽圖片預覽視窗
+    // https://www.codeleading.com/article/29861991468/
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
+    },
+    handleDownload(file) {
+      console.log(file)
+    },
+    // 過濾跟移除掉超過檔案限制的檔案
+    // https://www.jianshu.com/p/840601098d88
+    onFileChange(file, fileList) {
+      const isIMAGE =
+        file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'
+      // 小於 1M 的檔案是 1024 / 1024  這裡設定小於50k ==> 1024 / 50
+      // const isLt1M = file.size / 1024 / 1024 < 1
+      const isLt50K = file.size / 1024 / 50 < 1
+
+      this.noneBtnImg = fileList.length >= this.limitCountImg
+      if (!isIMAGE) {
+        this.$message.error('只能上傳jpg/png圖片!')
+        return false
+      }
+      if (!isLt50K) {
+        this.$message.error('上傳文件大小不能超過 50KB!')
+        for (let index = 0; index < fileList.length; index++) {
+          if (fileList[index].uid == file.uid) {
+            this.files.splice(index, 1) //移除数组中要删除的图片
+          }
+        }
+        return false
+      }
+
+      let reader = new FileReader()
+      const _this = this
+
+      reader.onload = function(e) {
+        // 圖片的 base64 存到 employeeAuthorityForm.imgs 裡面
+        _this.employeeAuthorityForm.imgs.push(e.target.result)
+      }
+      reader.readAsDataURL(file.raw)
+      // 重點，把 file 存到 files 這樣 upload 才有辦法操控元件的移除、下載 等等動作  預覽不用
+      this.files.push(file)
+      // console.log('file', file)
+      // console.log('this.files', this.files)
+    },
+    getImgs() {
+      this.files = []
+      // https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+      // base64toBlob 超強範例！
+      // 編輯商品的時候，要拚接 base64 格式與檔頭，然後 push 到 this.files 裡面會有一個內定的 下面是出處
+      // https://blog.csdn.net/hequhecong10857/article/details/108276022
+      // 秀出圖片
+      // this.dialogImageUrl = obj.url
+      // this.dialogVisible = true
+      console.log(this.employeeAuthorityForm)
+      if (this.employeeAuthorityForm.imgs.length > 0) {
+        this.employeeAuthorityForm.imgs.forEach((img) => {
+          // params[0] 裡面是檔案格式
+          // params[1] 裡面是 base64
+          const params = img.split(',')
+          let obj = {
+            name: '商品照片',
+            url: 'data:image/jpeg;base64,' + params[1]
+          }
+          this.files.push(obj)
+        })
+      }
+    },
+    // ************************************* 圖片上傳結束 **********************************
     // 分頁開始
     setPaginations() {
       this.my_paginations.total = this.employeeAuthorityData.length
@@ -255,6 +439,11 @@ export default {
     },
     handleEdit(row) {
       // 第一層的資料
+      if (row.imgs) {
+        this.employeeAuthorityForm.imgs = row.imgs
+        this.getImgs()
+      }
+      this.getImgs()
       this.employeeAuthorityForm.type = row.type
       this.employeeAuthorityForm.name = row.name
       this.employeeAuthorityForm._id = row._id
@@ -285,6 +474,7 @@ export default {
         this.employeeAuthorityForm.option == 'add'
           ? this.formData
           : this.employeeAuthorityForm
+      console.log('uploadFormData :', uploadFormData)
 
       this.$refs[form].validate((valid) => {
         if (valid && !uploadFormData.type == '') {

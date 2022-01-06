@@ -12,6 +12,9 @@ const EmployeeAuthoritySchema = new Schema({
   },
   name: {
     type: String
+  },
+  imgs: {
+    type: [String]
   }
 })
 

@@ -23,7 +23,6 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     const employeeAuthority = _.cloneDeep(req.body.employeeAuthority)
-    console.log('employeeAuthority :', employeeAuthority)
 
     EmployeeAuthority.findOne({ name: employeeAuthority.name }).then(
       (employeeAuthorityData) => {
