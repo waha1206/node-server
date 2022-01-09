@@ -29,6 +29,7 @@
           >
           </el-switch
         ></el-form-item>
+
         <el-container v-show="!customerFormData.switch">
           <el-header>
             <!-- 第一列，客戶分類，客戶名稱，公司統編，公司電話，公司傳真 -->
@@ -926,7 +927,20 @@
             </el-row>
             <!-- 第十四列，其它備註事項 -->
             <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="6">
+              <el-col :span="5">
+                <el-form-item
+                  label="客戶暱稱："
+                  prop="nick_name"
+                  label-width="120px"
+                >
+                  <el-input
+                    v-model="customerFormData.nick_name"
+                    placeholder="客戶暱稱"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="5">
                 <el-form-item
                   label="服務業務："
                   prop="service_sales"
@@ -940,7 +954,7 @@
                   ></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="18">
+              <el-col :span="14">
                 <el-form-item
                   label="其它備註："
                   prop="remarks"
