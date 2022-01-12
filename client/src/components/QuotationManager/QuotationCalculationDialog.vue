@@ -796,6 +796,10 @@ export default {
         obj = a_obj.cloth_area > b_obj.cloth_area ? b_obj : a_obj
       }
 
+      if (groupKind === 3 && materialKind === 4) {
+        console.log('obj :', obj)
+      }
+
       // 智慧排版，布料需要旋轉90度去找最加的排版輸出方式
       // const obj = a_obj.cloth_area > b_obj.cloth_area ? b_obj : a_obj // 商品使用的布料才數
       // 布料每才的價錢 - 最後存起來的時候要在做小數點後兩位的無條件進入
