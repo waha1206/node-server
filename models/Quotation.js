@@ -176,6 +176,10 @@ const QuotationSchema = new Schema({
   // 簡易規格
   specification: {
     type: String
+  },
+  case_closed: {
+    type: Boolean,
+    default: false
   }
 })
 
