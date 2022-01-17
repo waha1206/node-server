@@ -821,6 +821,7 @@ export default {
           } else {
             this.quotationData = res.data
           }
+
           this.setPaginations()
         })
         .catch((err) => {

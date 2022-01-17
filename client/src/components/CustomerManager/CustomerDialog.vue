@@ -10,24 +10,9 @@
       style="margin-top:-40px"
     >
       <!-- style="margin:10px;width:auto" -->
-      <el-form
-        ref="form"
-        :model="customerFormData"
-        :rules="form_rules"
-        label-width="100px"
-      >
-        <el-form-item
-          label="顯示頁面："
-          prop="switch"
-          label-width="120px"
-          class="switch"
-        >
-          <el-switch
-            v-model="customerFormData.switch"
-            active-text="公司員工"
-            inactive-text="一般會員"
-          >
-          </el-switch
+      <el-form ref="form" :model="customerFormData" :rules="form_rules" label-width="100px">
+        <el-form-item label="顯示頁面：" prop="switch" label-width="120px" class="switch">
+          <el-switch v-model="customerFormData.switch" active-text="公司員工" inactive-text="一般會員"> </el-switch
         ></el-form-item>
 
         <el-container v-show="!customerFormData.switch">
@@ -35,11 +20,7 @@
             <!-- 第一列，客戶分類，客戶名稱，公司統編，公司電話，公司傳真 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="4"
-                ><el-form-item
-                  label="客戶分類："
-                  prop="customer_class"
-                  label-width="120px"
-                >
+                ><el-form-item label="客戶分類：" prop="customer_class" label-width="120px">
                   <el-select
                     @change="customerClassChange"
                     v-model="customerFormData.customer_class"
@@ -58,11 +39,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item
-                  label="客戶名稱："
-                  prop="company"
-                  label-width="120px"
-                >
+                <el-form-item label="客戶名稱：" prop="company" label-width="120px">
                   <el-input
                     v-model="customerFormData.company"
                     placeholder="遠足文化事業股份有限公司(小熊出版社)(禁止交易)"
@@ -71,11 +48,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item
-                  label="公司統編："
-                  prop="tax_id_number"
-                  label-width="120px"
-                >
+                <el-form-item label="公司統編：" prop="tax_id_number" label-width="120px">
                   <el-input
                     v-model="customerFormData.tax_id_number"
                     placeholder="沒有就開二聯發票"
@@ -84,53 +57,25 @@
                 </el-form-item>
               </el-col>
               <el-col :span="5">
-                <el-form-item
-                  label="公司電話："
-                  prop="company_telephone"
-                  label-width="120px"
-                >
-                  <el-input
-                    v-model="customerFormData.company_telephone"
-                    placeholder="公司電話"
-                    size="mini"
-                  ></el-input>
+                <el-form-item label="公司電話：" prop="company_telephone" label-width="120px">
+                  <el-input v-model="customerFormData.company_telephone" placeholder="公司電話" size="mini"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="5">
-                <el-form-item
-                  label="公司傳真："
-                  prop="company_fax"
-                  label-width="120px"
-                >
-                  <el-input
-                    v-model="customerFormData.company_fax"
-                    placeholder="公司傳真"
-                    size="mini"
-                  ></el-input>
+                <el-form-item label="公司傳真：" prop="company_fax" label-width="120px">
+                  <el-input v-model="customerFormData.company_fax" placeholder="公司傳真" size="mini"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <!-- 第二列，客戶網站，FB，IG，PINKOI -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
-                <el-form-item
-                  label="客戶網站："
-                  prop="website"
-                  label-width="120px"
-                >
-                  <el-input
-                    v-model="customerFormData.website"
-                    placeholder="https://myoacg.com/"
-                    size="mini"
-                  ></el-input>
+                <el-form-item label="客戶網站：" prop="website" label-width="120px">
+                  <el-input v-model="customerFormData.website" placeholder="https://myoacg.com/" size="mini"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item
-                  label="facebook："
-                  prop="facebook"
-                  label-width="120px"
-                >
+                <el-form-item label="facebook：" prop="facebook" label-width="120px">
                   <el-input
                     v-model="customerFormData.facebook"
                     placeholder="https://myoacg.com/"
@@ -139,11 +84,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item
-                  label="instagram："
-                  prop="instagram"
-                  label-width="120px"
-                >
+                <el-form-item label="instagram：" prop="instagram" label-width="120px">
                   <el-input
                     v-model="customerFormData.instagram"
                     placeholder="https://myoacg.com/"
@@ -152,40 +93,20 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item
-                  label="pinkoi："
-                  prop="pinkoi"
-                  label-width="120px"
-                >
-                  <el-input
-                    v-model="customerFormData.pinkoi"
-                    placeholder="https://myoacg.com/"
-                    size="mini"
-                  ></el-input>
+                <el-form-item label="pinkoi：" prop="pinkoi" label-width="120px">
+                  <el-input v-model="customerFormData.pinkoi" placeholder="https://myoacg.com/" size="mini"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <!-- 第三列，聯絡人姓名，聯絡人手機，聯絡人市電，聯絡人mail，聯絡人職務，備註 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="4">
-                <el-form-item
-                  label="聯絡人姓名："
-                  prop="contact_person_name"
-                  label-width="120px"
-                >
-                  <el-input
-                    v-model="customerFormData.contact_person_name"
-                    placeholder="楊大大"
-                    size="mini"
-                  ></el-input>
+                <el-form-item label="聯絡人姓名：" prop="contact_person_name" label-width="120px">
+                  <el-input v-model="customerFormData.contact_person_name" placeholder="楊大大" size="mini"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="4"
-                ><el-form-item
-                  label="聯絡人職務："
-                  prop="contact_person_title"
-                  label-width="120px"
-                >
+                ><el-form-item label="聯絡人職務：" prop="contact_person_title" label-width="120px">
                   <el-select
                     @change="customerTitleChange"
                     v-model="customerFormData.contact_person_title"
@@ -205,11 +126,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item
-                  label="聯絡人手機："
-                  prop="contact_person_cell_phone"
-                  label-width="120px"
-                >
+                <el-form-item label="聯絡人手機：" prop="contact_person_cell_phone" label-width="120px">
                   <el-input
                     v-model="customerFormData.contact_person_cell_phone"
                     placeholder="0918-700586"
@@ -218,11 +135,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item
-                  label="聯絡人市話："
-                  prop="contact_person_telephone"
-                  label-width="120px"
-                >
+                <el-form-item label="聯絡人市話：" prop="contact_person_telephone" label-width="120px">
                   <el-input
                     v-model="customerFormData.contact_person_telephone"
                     placeholder="02-89116396#80"
@@ -231,11 +144,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item
-                  label="聯絡人信箱："
-                  prop="contact_person_email"
-                  label-width="120px"
-                >
+                <el-form-item label="聯絡人信箱：" prop="contact_person_email" label-width="120px">
                   <el-input
                     v-model="customerFormData.contact_person_email"
                     placeholder="waha1206@gmail.com"
@@ -244,11 +153,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item
-                  label="備註："
-                  prop="contact_person_memo"
-                  label-width="120px"
-                >
+                <el-form-item label="備註：" prop="contact_person_memo" label-width="120px">
                   <el-input
                     v-model="customerFormData.contact_person_memo"
                     placeholder="早上不要聯繫"
@@ -260,11 +165,7 @@
             <!-- 第四列，會計姓名，會計手機，會計市電，會計mail，會計職務，備註 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="4">
-                <el-form-item
-                  label="會計姓名："
-                  prop="accounting_person_name"
-                  label-width="120px"
-                >
+                <el-form-item label="會計姓名：" prop="accounting_person_name" label-width="120px">
                   <el-input
                     v-model="customerFormData.accounting_person_name"
                     placeholder="楊小小"
@@ -273,11 +174,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4"
-                ><el-form-item
-                  label="選擇職務："
-                  prop="accounting_person_title"
-                  label-width="120px"
-                >
+                ><el-form-item label="選擇職務：" prop="accounting_person_title" label-width="120px">
                   <el-select
                     @change="customerTitleChange"
                     v-model="customerFormData.accounting_person_title"
@@ -296,11 +193,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item
-                  label="會計手機："
-                  prop="accounting_person_cell_phone"
-                  label-width="120px"
-                >
+                <el-form-item label="會計手機：" prop="accounting_person_cell_phone" label-width="120px">
                   <el-input
                     v-model="customerFormData.accounting_person_cell_phone"
                     placeholder="0918-700586"
@@ -309,11 +202,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item
-                  label="會計市話："
-                  prop="accounting_person_telephone"
-                  label-width="120px"
-                >
+                <el-form-item label="會計市話：" prop="accounting_person_telephone" label-width="120px">
                   <el-input
                     v-model="customerFormData.accounting_person_telephone"
                     placeholder="02-89116396#80"
@@ -322,11 +211,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item
-                  label="會計信箱："
-                  prop="accounting_person_email"
-                  label-width="120px"
-                >
+                <el-form-item label="會計信箱：" prop="accounting_person_email" label-width="120px">
                   <el-input
                     v-model="customerFormData.accounting_person_email"
                     placeholder="waha1206@gmail.com"
@@ -335,11 +220,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item
-                  label="備註："
-                  prop="accounting_person_memo"
-                  label-width="120px"
-                >
+                <el-form-item label="備註：" prop="accounting_person_memo" label-width="120px">
                   <el-input
                     v-model="customerFormData.accounting_person_memo"
                     placeholder="早上不要聯繫"
@@ -351,24 +232,12 @@
             <!-- 第五列，其一姓名，其一手機，其一市電，其一mail，其一職務，其一備註 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="4">
-                <el-form-item
-                  label="其一姓名："
-                  prop="other_person_name"
-                  label-width="120px"
-                >
-                  <el-input
-                    v-model="customerFormData.other_person_name"
-                    placeholder="楊小小"
-                    size="mini"
-                  ></el-input>
+                <el-form-item label="其一姓名：" prop="other_person_name" label-width="120px">
+                  <el-input v-model="customerFormData.other_person_name" placeholder="楊小小" size="mini"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="4"
-                ><el-form-item
-                  label="其一職務："
-                  prop="other_person_title"
-                  label-width="120px"
-                >
+                ><el-form-item label="其一職務：" prop="other_person_title" label-width="120px">
                   <el-select
                     @change="customerTitleChange"
                     v-model="customerFormData.other_person_title"
@@ -387,11 +256,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item
-                  label="其一手機："
-                  prop="other_person_cell_phone"
-                  label-width="120px"
-                >
+                <el-form-item label="其一手機：" prop="other_person_cell_phone" label-width="120px">
                   <el-input
                     v-model="customerFormData.other_person_cell_phone"
                     placeholder="0918-700586"
@@ -400,11 +265,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item
-                  label="其一市話："
-                  prop="other_person_telephone"
-                  label-width="120px"
-                >
+                <el-form-item label="其一市話：" prop="other_person_telephone" label-width="120px">
                   <el-input
                     v-model="customerFormData.other_person_telephone"
                     placeholder="02-89116396#80"
@@ -413,11 +274,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item
-                  label="其一信箱："
-                  prop="other_person_email"
-                  label-width="120px"
-                >
+                <el-form-item label="其一信箱：" prop="other_person_email" label-width="120px">
                   <el-input
                     v-model="customerFormData.other_person_email"
                     placeholder="waha1206@gmail.com"
@@ -426,11 +283,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item
-                  label="備註："
-                  prop="other_person_memo"
-                  label-width="120px"
-                >
+                <el-form-item label="備註：" prop="other_person_memo" label-width="120px">
                   <el-input
                     v-model="customerFormData.other_person_memo"
                     placeholder="收件請下午之類"
@@ -442,25 +295,13 @@
             <!-- 第六列，發票收件人，發票收件人地址，發票收件人電話，發票收件人手機 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="4">
-                <el-form-item
-                  label="發票收件人："
-                  prop="invoice_name"
-                  label-width="120px"
-                >
-                  <el-input
-                    v-model="customerFormData.invoice_name"
-                    placeholder="楊小小"
-                    size="mini"
-                  ></el-input>
+                <el-form-item label="發票收件人：" prop="invoice_name" label-width="120px">
+                  <el-input v-model="customerFormData.invoice_name" placeholder="楊小小" size="mini"></el-input>
                 </el-form-item>
               </el-col>
 
               <el-col :span="4">
-                <el-form-item
-                  label="手機："
-                  prop="invoice_cell_phone"
-                  label-width="120px"
-                >
+                <el-form-item label="手機：" prop="invoice_cell_phone" label-width="120px">
                   <el-input
                     v-model="customerFormData.invoice_cell_phone"
                     placeholder="0918-700586"
@@ -469,11 +310,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item
-                  label="市話："
-                  prop="invoice_telephone"
-                  label-width="120px"
-                >
+                <el-form-item label="市話：" prop="invoice_telephone" label-width="120px">
                   <el-input
                     v-model="customerFormData.invoice_telephone"
                     placeholder="02-89116396#80"
@@ -482,12 +319,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4" style="position:relative">
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  placement="right"
-                  style="z-index:2000"
-                >
+                <el-tooltip class="item" effect="dark" placement="right" style="z-index:2000">
                   <el-badge
                     value="help"
                     class="item"
@@ -495,32 +327,15 @@
                   >
                   </el-badge>
                   <div slot="content">
-                    <a
-                      href="https://twzipcode.com/"
-                      target="_blank"
-                      style="color:#fff"
-                      >點我查詢區碼</a
-                    >
+                    <a href="https://twzipcode.com/" target="_blank" style="color:#fff">點我查詢區碼</a>
                   </div>
                 </el-tooltip>
-                <el-form-item
-                  label="區碼："
-                  prop="invoice_postal "
-                  label-width="120px"
-                >
-                  <el-input
-                    v-model="customerFormData.invoice_postal"
-                    placeholder="23145"
-                    size="mini"
-                  ></el-input>
+                <el-form-item label="區碼：" prop="invoice_postal " label-width="120px">
+                  <el-input v-model="customerFormData.invoice_postal" placeholder="23145" size="mini"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item
-                  label="地址："
-                  prop="invoice_address"
-                  label-width="120px"
-                >
+                <el-form-item label="地址：" prop="invoice_address" label-width="120px">
                   <el-input
                     v-model="customerFormData.invoice_address"
                     placeholder="新北市新店區寶興路45巷9弄3號3樓 (警衛室可代收)"
@@ -532,11 +347,7 @@
             <!-- 第七列，發票備註 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="12">
-                <el-form-item
-                  label="發票備註："
-                  prop="invoice_memo"
-                  label-width="120px"
-                >
+                <el-form-item label="發票備註：" prop="invoice_memo" label-width="120px">
                   <el-input
                     v-model="customerFormData.invoice_memo"
                     placeholder="每個月的2月25號前發票要寄送，超過25號的發票就算到隔月"
@@ -575,12 +386,7 @@
                     <el-radio :label="1">現金</el-radio>
                     <el-radio :label="2" style="position:relative"
                       >國內轉帳
-                      <el-tooltip
-                        class="item"
-                        effect="dark"
-                        placement="right"
-                        style="z-index:2000"
-                      >
+                      <el-tooltip class="item" effect="dark" placement="right" style="z-index:2000">
                         <el-badge
                           value="help"
                           class="item"
@@ -598,12 +404,7 @@
                     <el-radio :label="3" style="position:relative"
                       >paypal
 
-                      <el-tooltip
-                        class="item"
-                        effect="dark"
-                        placement="right"
-                        style="z-index:2000"
-                      >
+                      <el-tooltip class="item" effect="dark" placement="right" style="z-index:2000">
                         <el-badge
                           value="help"
                           class="item"
@@ -626,25 +427,13 @@
             <!-- 第九列，樣品收件人，樣品收件人地址，樣品收件人電話，樣品收件人手機 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="4">
-                <el-form-item
-                  label="樣品收件人："
-                  prop="sample_name"
-                  label-width="120px"
-                >
-                  <el-input
-                    v-model="customerFormData.sample_name"
-                    placeholder="楊小小"
-                    size="mini"
-                  ></el-input>
+                <el-form-item label="樣品收件人：" prop="sample_name" label-width="120px">
+                  <el-input v-model="customerFormData.sample_name" placeholder="楊小小" size="mini"></el-input>
                 </el-form-item>
               </el-col>
 
               <el-col :span="4">
-                <el-form-item
-                  label="手機："
-                  prop="sample_cell_phone"
-                  label-width="120px"
-                >
+                <el-form-item label="手機：" prop="sample_cell_phone" label-width="120px">
                   <el-input
                     v-model="customerFormData.sample_cell_phone"
                     placeholder="0918-700586"
@@ -653,11 +442,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item
-                  label="市話："
-                  prop="sample_telephone"
-                  label-width="120px"
-                >
+                <el-form-item label="市話：" prop="sample_telephone" label-width="120px">
                   <el-input
                     v-model="customerFormData.sample_telephone"
                     placeholder="02-89116396#80"
@@ -666,12 +451,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4" style="position:relative">
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  placement="right"
-                  style="z-index:2000"
-                >
+                <el-tooltip class="item" effect="dark" placement="right" style="z-index:2000">
                   <el-badge
                     value="help"
                     class="item"
@@ -679,32 +459,15 @@
                   >
                   </el-badge>
                   <div slot="content">
-                    <a
-                      href="https://twzipcode.com/"
-                      target="_blank"
-                      style="color:#fff"
-                      >點我查詢區碼</a
-                    >
+                    <a href="https://twzipcode.com/" target="_blank" style="color:#fff">點我查詢區碼</a>
                   </div>
                 </el-tooltip>
-                <el-form-item
-                  label="區碼："
-                  prop="sample_postal  "
-                  label-width="120px"
-                >
-                  <el-input
-                    v-model="customerFormData.sample_postal"
-                    placeholder="23145"
-                    size="mini"
-                  ></el-input>
+                <el-form-item label="區碼：" prop="sample_postal  " label-width="120px">
+                  <el-input v-model="customerFormData.sample_postal" placeholder="23145" size="mini"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item
-                  label="地址："
-                  prop="invoice_address"
-                  label-width="120px"
-                >
+                <el-form-item label="地址：" prop="invoice_address" label-width="120px">
                   <el-input
                     v-model="customerFormData.invoice_address"
                     placeholder="新北市新店區寶興路45巷9弄3號3樓 (警衛室可代收)"
@@ -716,11 +479,7 @@
             <!-- 第十列，收件備註 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="12">
-                <el-form-item
-                  label="樣品備註："
-                  prop="sample_memo"
-                  label-width="120px"
-                >
+                <el-form-item label="樣品備註：" prop="sample_memo" label-width="120px">
                   <el-input
                     v-model="customerFormData.sample_memo"
                     placeholder="警衛室有代收，所以配送的時候可以寫在配送單上面"
@@ -729,12 +488,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  placement="right"
-                  style="z-index:2000"
-                >
+                <el-tooltip class="item" effect="dark" placement="right" style="z-index:2000">
                   <el-badge
                     value="查件"
                     class="item"
@@ -742,20 +496,10 @@
                   >
                   </el-badge>
                   <div slot="content">
-                    <a
-                      href="http://www.hiyes.com.tw/?flag=no"
-                      target="_blank"
-                      style="color:#fff"
-                      >點我查詢貨運單號</a
-                    >
+                    <a href="http://www.hiyes.com.tw/?flag=no" target="_blank" style="color:#fff">點我查詢貨運單號</a>
                   </div>
                 </el-tooltip>
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  placement="right"
-                  style="z-index:2000"
-                >
+                <el-tooltip class="item" effect="dark" placement="right" style="z-index:2000">
                   <el-badge
                     value="查件"
                     class="item"
@@ -771,11 +515,7 @@
                     >
                   </div>
                 </el-tooltip>
-                <el-form-item
-                  prop="sample_delivery"
-                  label="樣品配送："
-                  style="position:relative"
-                >
+                <el-form-item prop="sample_delivery" label="樣品配送：" style="position:relative">
                   <el-radio-group v-model="customerFormData.sample_delivery">
                     <el-radio :label="1">郵局</el-radio>
                     <el-radio :label="2">新航快遞</el-radio>
@@ -790,25 +530,13 @@
             <!-- 第十一列，大貨收件人，大貨收件人地址，大貨收件人電話，大貨收件人手機 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="4">
-                <el-form-item
-                  label="大貨收件人："
-                  prop="goods_name"
-                  label-width="120px"
-                >
-                  <el-input
-                    v-model="customerFormData.goods_name"
-                    placeholder="楊小小"
-                    size="mini"
-                  ></el-input>
+                <el-form-item label="大貨收件人：" prop="goods_name" label-width="120px">
+                  <el-input v-model="customerFormData.goods_name" placeholder="楊小小" size="mini"></el-input>
                 </el-form-item>
               </el-col>
 
               <el-col :span="4">
-                <el-form-item
-                  label="手機："
-                  prop="goods_cell_phone"
-                  label-width="120px"
-                >
+                <el-form-item label="手機：" prop="goods_cell_phone" label-width="120px">
                   <el-input
                     v-model="customerFormData.goods_cell_phone"
                     placeholder="0918-700586"
@@ -817,11 +545,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item
-                  label="市話："
-                  prop="goods_telephone"
-                  label-width="120px"
-                >
+                <el-form-item label="市話：" prop="goods_telephone" label-width="120px">
                   <el-input
                     v-model="customerFormData.goods_telephone"
                     placeholder="02-89116396#80"
@@ -830,24 +554,12 @@
                 </el-form-item>
               </el-col>
               <el-col :span="4">
-                <el-form-item
-                  label="區碼："
-                  prop="goods_postal"
-                  label-width="120px"
-                >
-                  <el-input
-                    v-model="customerFormData.goods_postal"
-                    placeholder="23145"
-                    size="mini"
-                  ></el-input>
+                <el-form-item label="區碼：" prop="goods_postal" label-width="120px">
+                  <el-input v-model="customerFormData.goods_postal" placeholder="23145" size="mini"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item
-                  label="地址："
-                  prop="goods_address"
-                  label-width="120px"
-                >
+                <el-form-item label="地址：" prop="goods_address" label-width="120px">
                   <el-input
                     v-model="customerFormData.goods_address"
                     placeholder="新北市新店區寶興路45巷9弄3號3樓 (警衛室可代收)"
@@ -859,11 +571,7 @@
             <!-- 第十二列，大貨備註 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="12">
-                <el-form-item
-                  label="大貨備註："
-                  prop="goods_memo"
-                  label-width="120px"
-                >
+                <el-form-item label="大貨備註：" prop="goods_memo" label-width="120px">
                   <el-input
                     v-model="customerFormData.goods_memo"
                     placeholder="警衛室有代收，所以配送的時候可以寫在配送單上面"
@@ -928,24 +636,12 @@
             <!-- 第十四列，其它備註事項 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="5">
-                <el-form-item
-                  label="客戶暱稱："
-                  prop="nick_name"
-                  label-width="120px"
-                >
-                  <el-input
-                    v-model="customerFormData.nick_name"
-                    placeholder="客戶暱稱"
-                    size="mini"
-                  ></el-input>
+                <el-form-item label="客戶暱稱：" prop="nick_name" label-width="120px">
+                  <el-input v-model="customerFormData.nick_name" placeholder="客戶暱稱" size="mini"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="5">
-                <el-form-item
-                  label="服務業務："
-                  prop="service_sales"
-                  label-width="120px"
-                >
+                <el-form-item label="服務業務：" prop="service_sales" label-width="120px">
                   <el-input
                     :readonly="true"
                     v-model="customerFormData.service_sales"
@@ -955,16 +651,8 @@
                 </el-form-item>
               </el-col>
               <el-col :span="14">
-                <el-form-item
-                  label="其它備註："
-                  prop="remarks"
-                  label-width="120px"
-                >
-                  <el-input
-                    v-model="customerFormData.remarks"
-                    placeholder="其它的備註說明"
-                    size="mini"
-                  ></el-input>
+                <el-form-item label="其它備註：" prop="remarks" label-width="120px">
+                  <el-input v-model="customerFormData.remarks" placeholder="其它的備註說明" size="mini"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -973,16 +661,24 @@
 
           <el-footer>
             <el-form-item class="text_right">
-              <el-button type="warning" @click="dialog.show = false"
-                >取消</el-button
-              >
-              <el-button type="primary" @click="onSubmit('form')"
-                >提交</el-button
-              >
+              <el-button type="warning" @click="dialog.show = false">取消</el-button>
+              <el-button type="primary" @click="onSubmit('form')">提交</el-button>
             </el-form-item>
           </el-footer>
         </el-container>
         <el-container v-show="customerFormData.switch">
+          <el-row :gutter="20" type="flex" class="row-bg">
+            <el-col :span="4">
+              <el-form-item label="是否員工：" prop="" label-width="120px">
+                <el-checkbox v-model="customerFormData.employee_data.is_employee">是否為麥歐公司員工</el-checkbox>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="擔任業務：" prop="" label-width="120px">
+                <el-checkbox v-model="customerFormData.employee_data.is_sales">是否為業務</el-checkbox>
+              </el-form-item>
+            </el-col>
+          </el-row>
           <!-- 這邊是員工資料 開始 -->
           <!-- 第一列 員工權限，占整排 -->
           <el-row :gutter="20" type="flex" class="row-bg">
@@ -998,12 +694,7 @@
                 >
                   <!-- v-for="item in authorityOption" -->
                   <!-- employeeAuthorityData -->
-                  <el-option
-                    v-for="item in employeeAuthorityData"
-                    :key="item._id"
-                    :label="item.name"
-                    :value="item._id"
-                  >
+                  <el-option v-for="item in employeeAuthorityData" :key="item._id" :label="item.name" :value="item._id">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -1031,12 +722,7 @@
                   filterable
                   style="display: block; width: 100%;"
                 >
-                  <el-option
-                    v-for="item in employeeJobClassData"
-                    :key="item._id"
-                    :label="item.name"
-                    :value="item._id"
-                  >
+                  <el-option v-for="item in employeeJobClassData" :key="item._id" :label="item.name" :value="item._id">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -1050,12 +736,7 @@
                   filterable
                   style="display: block; width: 100%;"
                 >
-                  <el-option
-                    v-for="item in employeeJobTitleData"
-                    :key="item._id"
-                    :label="item.name"
-                    :value="item._id"
-                  >
+                  <el-option v-for="item in employeeJobTitleData" :key="item._id" :label="item.name" :value="item._id">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -1094,18 +775,8 @@
             </el-col>
             <el-col :span="4">
               <el-form-item label="性別：" prop="" label-width="120px">
-                <el-select
-                  v-model="customerFormData.employee_data.gender"
-                  placeholder="選擇"
-                  size="mini"
-                  filterable
-                >
-                  <el-option
-                    v-for="item in gender"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
+                <el-select v-model="customerFormData.employee_data.gender" placeholder="選擇" size="mini" filterable>
+                  <el-option v-for="item in gender" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -1122,11 +793,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item
-                label="E-mail："
-                prop="employee_data.email"
-                label-width="120px"
-              >
+              <el-form-item label="E-mail：" prop="employee_data.email" label-width="120px">
                 <el-input
                   v-model="customerFormData.employee_data.email"
                   placeholder="請輸入信箱"
@@ -1194,12 +861,7 @@
                   filterable
                   style="display: block; width: 100%;"
                 >
-                  <el-option
-                    v-for="item in employeePaymentData"
-                    :key="item._id"
-                    :label="item.name"
-                    :value="item._id"
-                  >
+                  <el-option v-for="item in employeePaymentData" :key="item._id" :label="item.name" :value="item._id">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -1228,12 +890,8 @@
 
           <el-footer>
             <el-form-item class="text_right">
-              <el-button type="warning" @click="dialog.show = false"
-                >取消</el-button
-              >
-              <el-button type="primary" @click="onSubmit('form')"
-                >提交</el-button
-              >
+              <el-button type="warning" @click="dialog.show = false">取消</el-button>
+              <el-button type="primary" @click="onSubmit('form')">提交</el-button>
             </el-form-item>
           </el-footer>
         </el-container>
@@ -1273,15 +931,9 @@ export default {
       },
       // customer form_rules
       form_rules: {
-        contact_person_name: [
-          { required: true, message: '必選，必須正確', trigger: 'blur' }
-        ],
-        company: [
-          { required: true, message: '必選，必須正確', trigger: 'blur' }
-        ],
-        'employee_data.email': [
-          { type: 'email', message: '必須要符合email格式', trigger: 'blur' }
-        ]
+        contact_person_name: [{ required: true, message: '必選，必須正確', trigger: 'blur' }],
+        company: [{ required: true, message: '必選，必須正確', trigger: 'blur' }],
+        'employee_data.email': [{ type: 'email', message: '必須要符合email格式', trigger: 'blur' }]
       }
     }
   },
@@ -1291,9 +943,7 @@ export default {
     // 時間轉換
     getDate() {
       if (!this.customerFormData.last_modify_date) return '目前沒有修改過'
-      return this.$moment(this.customerFormData.last_modify_date).format(
-        'YYYY年MM月DD日 - HH：mm'
-      )
+      return this.$moment(this.customerFormData.last_modify_date).format('YYYY年MM月DD日 - HH：mm')
     },
     // 取得修改人的_id 轉換成 name
     getUserNameById() {
@@ -1319,9 +969,7 @@ export default {
       this.customerFormData = this._.cloneDeep(newValue.data)
 
       if (!this.isEmpty(this.customerFormData.delivery_charge_fee)) {
-        this.deliveryChargeFee = Number(
-          this.customerFormData.delivery_charge_fee
-        )
+        this.deliveryChargeFee = Number(this.customerFormData.delivery_charge_fee)
       } else {
         this.deliveryChargeFee = 0
       }
@@ -1345,10 +993,8 @@ export default {
         if (valid) {
           this.customerFormData.last_edit_person = this.user.id
           this.customerFormData.last_modify_date = new Date()
-          const url =
-            this.dialog.option == 'add'
-              ? 'add'
-              : `edit/${this.customerFormData._id}`
+
+          const url = this.dialog.option == 'add' ? 'add' : `edit/${this.customerFormData._id}`
           this.$axios
             .post(`/api/customer/${url}`, this.customerFormData)
             .then((res) => {

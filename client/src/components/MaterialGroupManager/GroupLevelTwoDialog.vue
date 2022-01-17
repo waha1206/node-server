@@ -13,6 +13,7 @@
           ><div class="el-select-wrap">
             <el-select
               @change="filterTableDataChange"
+              g
               v-model="filterTableData.levelOneId"
               placeholder="欲顯示的大分類"
               filterable

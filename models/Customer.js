@@ -304,6 +304,14 @@ const CustomerSchema = new Schema({
     },
     remarks: {
       type: String
+    },
+    is_employee: {
+      type: Boolean,
+      default: false
+    },
+    is_sales: {
+      type: Boolean,
+      default: false
     }
   }
 })

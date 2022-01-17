@@ -43,11 +43,7 @@
               @click="handleProcessingQuotationDialog"
               >進行中訂單總覽</el-button
             >
-            <el-checkbox-group
-              v-model="statusCheckList"
-              size="small"
-              style="margin-top:10px"
-            >
+            <el-checkbox-group v-model="statusCheckList" size="small" style="margin-top:10px">
               <el-checkbox label="無下單"></el-checkbox>
               <el-checkbox label="打樣中"></el-checkbox>
               <el-checkbox label="生產中"></el-checkbox>
@@ -78,42 +74,16 @@
         <el-main>
           <div class="table-container">
             <el-table style="width:100%" :data="tableData" size="mini">
-              <el-table-column
-                prop="quotation_no"
-                label="單號"
-                width="120px"
-                align="center"
-              >
-              </el-table-column>
-              <el-table-column
-                prop="category_name"
-                label="商品名稱"
-                width="250px"
-                align="left"
-              >
-              </el-table-column>
+              <el-table-column prop="quotation_no" label="單號" width="120px" align="center"> </el-table-column>
+              <el-table-column prop="category_name" label="商品名稱" width="250px" align="left"> </el-table-column>
               <el-table-column label="檔案目錄" width="80px" align="center">
                 <template slot-scope="scope">
-                  <el-button
-                    size="mini"
-                    type="primary"
-                    @click="copySpecialTopicUrl(scope.row)"
-                    >複製</el-button
-                  >
+                  <el-button size="mini" type="primary" @click="copySpecialTopicUrl(scope.row)">複製</el-button>
                 </template>
               </el-table-column>
-              <el-table-column
-                prop=""
-                label="交易狀態"
-                width="68px"
-                align="center"
-              >
+              <el-table-column prop="" label="交易狀態" width="68px" align="center">
                 <template v-slot="scope">
-                  <el-popover
-                    width="160"
-                    placement="right"
-                    :ref="`popover-${scope.$index}`"
-                  >
+                  <el-popover width="160" placement="right" :ref="`popover-${scope.$index}`">
                     <p>請選擇交易狀態</p>
                     <el-radio-group v-model="scope.row.trading_status">
                       <el-radio :label="0">無</el-radio><br />
@@ -122,75 +92,35 @@
                       <el-radio :label="3">客戶棄單</el-radio><br />
                     </el-radio-group>
                     <div style="text-align: right; margin: 0">
-                      <el-button
-                        type="text"
-                        size="mini"
-                        @click="handleClose(scope.$index, 'popover')"
-                      >
+                      <el-button type="text" size="mini" @click="handleClose(scope.$index, 'popover')">
                         取消
                       </el-button>
                       <el-button
                         type="danger"
                         size="mini"
-                        @click="
-                          handleChangeTradingStatus(
-                            scope.row,
-                            scope.row.trading_status,
-                            scope.$index
-                          )
-                        "
+                        @click="handleChangeTradingStatus(scope.row, scope.row.trading_status, scope.$index)"
                         >確定</el-button
                       >
                     </div>
                     <!-- slot="reference" 觸發 popover 顯示的 HTML 元素 -->
                     <div slot="reference">
                       <el-tag
-                        :type="
-                          handleTradingStatus(scope.row.trading_status, 'type')
-                        "
-                        :effect="
-                          handleTradingStatus(
-                            scope.row.trading_status,
-                            'effect'
-                          )
-                        "
+                        :type="handleTradingStatus(scope.row.trading_status, 'type')"
+                        :effect="handleTradingStatus(scope.row.trading_status, 'effect')"
                         size="medium"
                       >
-                        {{
-                          handleTradingStatus(scope.row.trading_status, 'label')
-                        }}
+                        {{ handleTradingStatus(scope.row.trading_status, 'label') }}
                       </el-tag>
                     </div>
                   </el-popover>
                 </template>
               </el-table-column>
-              <el-table-column
-                prop=""
-                label="生產狀態"
-                width="70px"
-                align="center"
-              >
-              </el-table-column>
-              <el-table-column
-                prop=""
-                label="會計狀態"
-                width="70px"
-                align="center"
-              >
-              </el-table-column>
-              <el-table-column
-                prop=""
-                label="訂單狀態"
-                width="116px"
-                align="center"
-              >
+              <el-table-column prop="" label="生產狀態" width="70px" align="center"> </el-table-column>
+              <el-table-column prop="" label="會計狀態" width="70px" align="center"> </el-table-column>
+              <el-table-column prop="" label="訂單進度" width="116px" align="center">
                 <template v-slot="scope">
-                  <el-popover
-                    width="160"
-                    placement="right"
-                    :ref="`processing-${scope.$index}`"
-                  >
-                    <p>請選擇訂單狀態</p>
+                  <el-popover width="160" placement="right" :ref="`processing-${scope.$index}`">
+                    <p>請選擇訂單進度狀態</p>
                     <el-radio-group v-model="scope.row.processing_status">
                       <el-radio :label="0">尚未安排</el-radio><br />
                       <el-radio :label="1">等待打樣檔案</el-radio><br />
@@ -203,66 +133,32 @@
                       <el-radio :label="8">已結案</el-radio><br />
                     </el-radio-group>
                     <div style="text-align: right; margin: 0">
-                      <el-button
-                        type="text"
-                        size="mini"
-                        @click="handleClose(scope.$index, 'processing')"
-                      >
+                      <el-button type="text" size="mini" @click="handleClose(scope.$index, 'processing')">
                         取消
                       </el-button>
                       <el-button
                         type="danger"
                         size="mini"
-                        @click="
-                          handleChangeProcessingStatus(
-                            scope.row,
-                            scope.row.processing_status,
-                            scope.$index
-                          )
-                        "
+                        @click="handleChangeProcessingStatus(scope.row, scope.row.processing_status, scope.$index)"
                         >確定</el-button
                       >
                     </div>
                     <!-- slot="reference" 觸發 popover 顯示的 HTML 元素 -->
                     <div slot="reference">
                       <el-tag
-                        :type="
-                          handleProcessingStatus(
-                            scope.row.processing_status,
-                            'type'
-                          )
-                        "
-                        :effect="
-                          handleProcessingStatus(
-                            scope.row.processing_status,
-                            'effect'
-                          )
-                        "
+                        :type="handleProcessingStatus(scope.row.processing_status, 'type')"
+                        :effect="handleProcessingStatus(scope.row.processing_status, 'effect')"
                         size="medium"
                       >
-                        {{
-                          handleProcessingStatus(
-                            scope.row.processing_status,
-                            'label'
-                          )
-                        }}
+                        {{ handleProcessingStatus(scope.row.processing_status, 'label') }}
                       </el-tag>
                     </div>
                   </el-popover>
                 </template>
               </el-table-column>
-              <el-table-column
-                prop=""
-                label="已付打樣費"
-                width="83px"
-                align="center"
-              >
+              <el-table-column prop="" label="已付打樣費" width="83px" align="center">
                 <template slot-scope="scope">
-                  <el-popover
-                    width="860"
-                    placement="top"
-                    :ref="`proofing-payment-${scope.$index}`"
-                  >
+                  <el-popover width="860" placement="top" :ref="`proofing-payment-${scope.$index}`">
                     <p>(更新 / 新增) 打樣費付款紀錄</p>
 
                     <!-- 日期 金額 後五碼 付款方式 -->
@@ -293,10 +189,7 @@
                         </el-date-picker>
                       </el-col>
                       <el-col :span="5">
-                        <span
-                          style="float:left;height:26px;line-height:26px;display:inline-block"
-                          >支付金額：</span
-                        >
+                        <span style="float:left;height:26px;line-height:26px;display:inline-block">支付金額：</span>
                         <my-currency-int-input
                           style="float:left"
                           :isReadyOnly="false"
@@ -309,22 +202,11 @@
                         ></my-currency-int-input>
                       </el-col>
                       <el-col :span="4">
-                        <span
-                          style="float:left;height:26px;line-height:26px;display:inline-block"
-                          >後5碼：</span
-                        >
-                        <el-input
-                          v-model="item.last_five_digits"
-                          size="mini"
-                          style="float:left;width:80px"
-                        >
-                        </el-input>
+                        <span style="float:left;height:26px;line-height:26px;display:inline-block">後5碼：</span>
+                        <el-input v-model="item.last_five_digits" size="mini" style="float:left;width:80px"> </el-input>
                       </el-col>
                       <el-col :span="6">
-                        <span
-                          style="float:left;height:26px;line-height:26px;display:inline-block"
-                          >發票號碼：</span
-                        >
+                        <span style="float:left;height:26px;line-height:26px;display:inline-block">發票號碼：</span>
                         <el-input
                           v-model="item.invoice_no"
                           size="mini"
@@ -339,65 +221,34 @@
                         style="margin:3px 0px"
                         size="mini"
                         type="primary"
-                        @click="
-                          handleUpdatePaymentRecord(
-                            scope.row,
-                            'add',
-                            'proofing-payment'
-                          )
-                        "
+                        @click="handleUpdatePaymentRecord(scope.row, 'add', 'proofing-payment')"
                         >新增</el-button
                       >
-                      <el-button
-                        type="text"
-                        size="mini"
-                        @click="handleClose(scope.$index, 'proofing-payment')"
-                      >
+                      <el-button type="text" size="mini" @click="handleClose(scope.$index, 'proofing-payment')">
                         取消
                       </el-button>
                       <el-button
                         type="danger"
                         size="mini"
-                        @click="
-                          handleUpdatePaymentRecord(
-                            scope.row,
-                            'update',
-                            'proofing-payment'
-                          )
-                        "
+                        @click="handleUpdatePaymentRecord(scope.row, 'update', 'proofing-payment')"
                         >更新</el-button
                       >
                     </div>
                     <!-- slot="reference" 觸發 popover 顯示的 HTML 元素 -->
                     <div slot="reference">
-                      <el-tag size="small">{{
-                        getProofingAmount(scope.row.proofing_payment_record)
-                      }}</el-tag>
+                      <el-tag size="small">{{ getProofingAmount(scope.row.proofing_payment_record) }}</el-tag>
                     </div>
                   </el-popover>
                 </template>
               </el-table-column>
-              <el-table-column
-                prop=""
-                label="訂金與尾款"
-                width="83px"
-                align="center"
-              >
+              <el-table-column prop="" label="訂金與尾款" width="83px" align="center">
                 <template slot-scope="scope">
-                  <el-popover
-                    width="860"
-                    placement="top"
-                    :ref="`proofing-payment-${scope.$index}`"
-                  >
+                  <el-popover width="860" placement="top" :ref="`proofing-payment-${scope.$index}`">
                     <p>(更新 / 新增) 訂金付款紀錄</p>
 
                     <!-- 日期 金額 後五碼 付款方式 -->
 
-                    <el-row
-                      v-for="(item, index) in scope.row.deposit_payment_record"
-                      :key="index"
-                      style="margin:3px 0"
-                    >
+                    <el-row v-for="(item, index) in scope.row.deposit_payment_record" :key="index" style="margin:3px 0">
                       <el-col :span="3">
                         <el-button
                           style="margin:3px 0px"
@@ -419,10 +270,7 @@
                         </el-date-picker>
                       </el-col>
                       <el-col :span="5">
-                        <span
-                          style="float:left;height:26px;line-height:26px;display:inline-block"
-                          >支付金額：</span
-                        >
+                        <span style="float:left;height:26px;line-height:26px;display:inline-block">支付金額：</span>
                         <my-currency-int-input
                           style="float:left"
                           :isReadyOnly="false"
@@ -435,22 +283,11 @@
                         ></my-currency-int-input>
                       </el-col>
                       <el-col :span="4">
-                        <span
-                          style="float:left;height:26px;line-height:26px;display:inline-block"
-                          >後5碼：</span
-                        >
-                        <el-input
-                          v-model="item.last_five_digits"
-                          size="mini"
-                          style="float:left;width:80px"
-                        >
-                        </el-input>
+                        <span style="float:left;height:26px;line-height:26px;display:inline-block">後5碼：</span>
+                        <el-input v-model="item.last_five_digits" size="mini" style="float:left;width:80px"> </el-input>
                       </el-col>
                       <el-col :span="6">
-                        <span
-                          style="float:left;height:26px;line-height:26px;display:inline-block"
-                          >發票號碼：</span
-                        >
+                        <span style="float:left;height:26px;line-height:26px;display:inline-block">發票號碼：</span>
                         <el-input
                           v-model="item.invoice_no"
                           size="mini"
@@ -465,64 +302,34 @@
                         style="margin:3px 0px"
                         size="mini"
                         type="primary"
-                        @click="
-                          handleUpdatePaymentRecord(
-                            scope.row,
-                            'add',
-                            'deposit-payment'
-                          )
-                        "
+                        @click="handleUpdatePaymentRecord(scope.row, 'add', 'deposit-payment')"
                         >新增</el-button
                       >
-                      <el-button
-                        type="text"
-                        size="mini"
-                        @click="handleClose(scope.$index, 'deposit-payment')"
-                      >
+                      <el-button type="text" size="mini" @click="handleClose(scope.$index, 'deposit-payment')">
                         取消
                       </el-button>
                       <el-button
                         type="danger"
                         size="mini"
-                        @click="
-                          handleUpdatePaymentRecord(
-                            scope.row,
-                            'update',
-                            'deposit-payment'
-                          )
-                        "
+                        @click="handleUpdatePaymentRecord(scope.row, 'update', 'deposit-payment')"
                         >更新</el-button
                       >
                     </div>
                     <!-- slot="reference" 觸發 popover 顯示的 HTML 元素 -->
                     <div slot="reference">
-                      <el-tag size="medium">{{
-                        getProofingAmount(scope.row.deposit_payment_record)
-                      }}</el-tag>
+                      <el-tag size="medium">{{ getProofingAmount(scope.row.deposit_payment_record) }}</el-tag>
                     </div>
                   </el-popover>
                 </template>
               </el-table-column>
-              <el-table-column
-                prop=""
-                label="尚未回收"
-                width="110px"
-                align="center"
-              >
+              <el-table-column prop="" label="尚未回收" width="110px" align="center">
                 <template slot-scope="scope">
-                  <el-tag
-                    size="medium"
-                    @click="copyValue(getRecoverableAmount(scope.row))"
-                    >{{ getRecoverableAmount(scope.row) }}</el-tag
-                  >
+                  <el-tag size="medium" @click="copyValue(getRecoverableAmount(scope.row))">{{
+                    getRecoverableAmount(scope.row)
+                  }}</el-tag>
                 </template>
               </el-table-column>
-              <el-table-column
-                prop=""
-                label="大貨交期"
-                width="117px"
-                align="center"
-              >
+              <el-table-column prop="" label="大貨交期" width="117px" align="center">
                 <template v-slot="scope">
                   <el-date-picker
                     style="width:107px"
@@ -531,41 +338,20 @@
                     placeholder="交期"
                     format="M 月 d"
                     size="mini"
-                    @change="
-                      handleDeliveryDateChange(
-                        scope.row,
-                        scope.row.delivery_date
-                      )
-                    "
+                    @change="handleDeliveryDateChange(scope.row, scope.row.delivery_date)"
                   >
                   </el-date-picker>
                 </template>
               </el-table-column>
-              <el-table-column
-                prop=""
-                label="剩天數"
-                width="65px"
-                align="center"
-              >
+              <el-table-column prop="" label="剩天數" width="65px" align="center">
                 <template v-slot="scope">
                   <div style="color:red;font-weight:bold">
                     {{ fewDaysLeft(scope.row.delivery_date) }}
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column
-                prop="proofing_value"
-                label="打樣款"
-                width="56px"
-                align="center"
-              >
-              </el-table-column>
-              <el-table-column
-                prop="proofing_price"
-                label="打樣/單"
-                width="83px"
-                align="center"
-              >
+              <el-table-column prop="proofing_value" label="打樣款" width="56px" align="center"> </el-table-column>
+              <el-table-column prop="proofing_price" label="打樣/單" width="83px" align="center">
                 <template slot-scope="scope">
                   <my-currency-int-input
                     :isReadyOnly="false"
@@ -578,12 +364,7 @@
                   ></my-currency-int-input>
                 </template>
               </el-table-column>
-              <el-table-column
-                prop="proofing_price"
-                label="打樣/總"
-                width="93px"
-                align="center"
-              >
+              <el-table-column prop="proofing_price" label="打樣/總" width="93px" align="center">
                 <template slot-scope="scope">
                   <my-currency-int-input
                     :isReadyOnly="false"
@@ -592,19 +373,11 @@
                     :height="22"
                     :width="53"
                     type="text"
-                    v-model="
-                      scope.row.proofing_price * scope.row.proofing_value
-                    "
+                    v-model="scope.row.proofing_price * scope.row.proofing_value"
                   ></my-currency-int-input>
                 </template>
               </el-table-column>
-              <el-table-column
-                prop="order_value"
-                label="數量"
-                width="50px"
-                align="center"
-              >
-              </el-table-column>
+              <el-table-column prop="order_value" label="數量" width="50px" align="center"> </el-table-column>
               <el-table-column prop="" label="單價" width="72px" align="center">
                 <template slot-scope="scope">
                   <my-currency-int-input
@@ -631,11 +404,7 @@
                   ></my-currency-int-input>
                 </template>
               </el-table-column>
-              <el-table-column
-                prop=""
-                label="總金額含稅"
-                width="110px"
-                align="center"
+              <el-table-column prop="" label="總金額含稅" width="110px" align="center"
                 ><template slot-scope="scope">
                   <my-currency-int-input
                     :isReadyOnly="false"
@@ -782,6 +551,8 @@ export default {
             type: 'success'
           })
           this.quotationData = res.data
+          console.log('res.data :', res.data)
+
           this.setPaginations()
         })
         .catch((err) => {
@@ -826,9 +597,7 @@ export default {
           result.sort(function(a, b) {
             return Number(a.type) - Number(b.type)
           })
-          dataType == 'class'
-            ? (this.customerClassData = result)
-            : (this.customerTitleData = result)
+          dataType == 'class' ? (this.customerClassData = result) : (this.customerTitleData = result)
         })
         .catch((err) => {
           console.log('axios添加數據失敗==>MyDialog.vue==>', err)
@@ -911,9 +680,7 @@ export default {
       this.my_paginations.total = this.quotationData.length
       this.my_paginations.page_index = 1
       if (localStorage[this.my_paginations.localStorage_page_size]) {
-        this.my_paginations.page_size = Number(
-          localStorage[this.my_paginations.localStorage_page_size]
-        )
+        this.my_paginations.page_size = Number(localStorage[this.my_paginations.localStorage_page_size])
       } else {
         this.my_paginations.page_size = 5
       }
@@ -1015,8 +782,7 @@ export default {
       const nowTime = new Date()
 
       let restSec =
-        parseInt(setTime.getTime() / (60 * 60 * 24 * 1000)) -
-        parseInt(nowTime.getTime() / (60 * 60 * 24 * 1000))
+        parseInt(setTime.getTime() / (60 * 60 * 24 * 1000)) - parseInt(nowTime.getTime() / (60 * 60 * 24 * 1000))
 
       restSec = restSec >= 0 ? '剩 ' + restSec + ' 天' : '已截止'
       return restSec
