@@ -339,7 +339,7 @@
                     </el-form-item>
                   </div>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="4">
                   <div class="grid-content">
                     <el-form-item label="拆圖數量：" size="mini" label-width="120px" prop="split_quantity">
                       <el-input
@@ -350,7 +350,7 @@
                     </el-form-item>
                   </div>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="4">
                   <div class="grid-content">
                     <el-form-item label="最低訂量：" size="mini" label-width="120px" prop="mini_order">
                       <el-input
@@ -358,6 +358,13 @@
                         placeholder="商品的最低訂購量"
                         v-model="levelThreeFormData.mini_order"
                       ></el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+                <el-col :span="4">
+                  <div class="grid-content">
+                    <el-form-item label="打樣：" size="mini" label-width="60px" prop="disable_proofing">
+                      <el-checkbox v-model="levelThreeFormData.disable_proofing">允許打樣</el-checkbox>
                     </el-form-item>
                   </div>
                 </el-col>
@@ -551,8 +558,8 @@
               </el-row>
               <!-- 第十行結束 -->
 
-              <!-- 第十一行 -->
-              <el-row :gutter="20" type="flex" class="row-bg">
+              <!-- 第十一行  style="margin-bottom:-90px" 讓下面的商品圖片往上移動-->
+              <el-row :gutter="20" type="flex" class="row-bg" style="margin-bottom:-90px">
                 <el-col :span="6"
                   ><div class="grid-content ">
                     <el-form-item prop="typesetting" label="智慧排版：" label-width="110px">
@@ -661,27 +668,35 @@
                 </el-col>
               </el-row>
               <!-- 優惠活動描述 levelThreeFormData.sales_event_description  -->
-              <el-row :gutter="20" type="flex" class="row-bg">
-                <el-col :span="12">
+              <el-row :gutter="20" type="flex" class="row-bg" style="height:60%; ">
+                <el-col :span="24">
                   <div class="grid-content">
-                    <el-col :span="12">
-                      <div class="grid-content">
-                        <el-form-item label="優惠活動說明：" prop="" label-width="120px">
-                          <el-input
-                            style="margin-top:10px;width:300px"
-                            type="textarea"
-                            placeholder="请输入内容"
-                            v-model="levelThreeFormData.sales_event_description"
-                            :rows="6"
-                            maxlength="120"
-                            show-word-limit
-                          >
-                          </el-input>
-                        </el-form-item>
-                      </div>
-                    </el-col>
+                    <el-form-item label="優惠活動說明：" prop="" label-width="120px">
+                      <el-input
+                        type="textarea"
+                        placeholder="请输入内容"
+                        v-model="levelThreeFormData.sales_event_description"
+                        :rows="3"
+                        maxlength="120"
+                        show-word-limit
+                        style="margin-top:8px"
+                      >
+                      </el-input>
+                    </el-form-item>
                   </div>
                 </el-col>
+              </el-row>
+              <el-row :gutter="20" type="flex" class="row-bg">
+                <el-col :span="24">
+                  <div class="grid-content">
+                    <el-form-item label="新品(banner)：" label-width="120px" prop="">
+                      <UploadBannerImgs
+                        :bannerFiles="getBannerFiles"
+                        @updateAddBannerImgs="updateAddBannerImgs"
+                        @updateRemoveBannerImgs="updateRemoveBannerImgs"
+                      ></UploadBannerImgs>
+                    </el-form-item></div
+                ></el-col>
               </el-row>
             </el-header>
           </el-container>
@@ -691,11 +706,12 @@
           <!-- 另外一種做法：https://blog.csdn.net/zaocha321/article/details/103345423 -->
           <el-main>
             <!-- <div class="image-warp"> -->
-            <el-form-item label="商品圖片：" size="mini" label-width="120px" prop="describe">
+            <!-- :data="uploadData"
+						action="#" 上傳的網址，應該是自動上傳使用的吧-->
+            <el-form-item label="商品圖片：" size="mini" label-width="120px" prop="describe" style="margin-top:100px">
               <div class="upload-wrap">
                 <el-upload
-                  :data="uploadData"
-                  action="uploadActionUrl"
+                  action="#"
                   list-type="picture-card"
                   :auto-upload="false"
                   accept="image/jpeg,image/gif,image/png"
@@ -757,6 +773,7 @@
 import PaperAndInk from '../../components/CategoriesManager/PaperAndInk'
 import CalLayoutDialog from '../../components/CategoriesManager/CalLayoutDialog'
 import DeliveryAndCarton from '../../components/CategoriesManager/DeliveryAndCarton.vue'
+import UploadBannerImgs from './UploadBannerImgs.vue'
 import { isEmpty } from '../../utils/tools'
 import { Message } from 'element-ui'
 
@@ -770,7 +787,7 @@ export default {
     categoriesLevelOneData: Array,
     categoriesLevelTwoData: Array
   },
-  components: { PaperAndInk, CalLayoutDialog, DeliveryAndCarton },
+  components: { PaperAndInk, CalLayoutDialog, DeliveryAndCarton, UploadBannerImgs },
   data() {
     return {
       calLayoutDialog: {
@@ -795,11 +812,12 @@ export default {
         oldFilePath: ''
       },
       files: [],
-      tailorFee: 0,
-      cropFee: 0,
       dialogImageUrl: '',
       dialogVisible: false,
       disabled: Boolean,
+      bannerFiles: [],
+      tailorFee: 0,
+      cropFee: 0,
       updateLevelTwoData: [],
       outsideClothLoss: 0,
       insideClothLoss: 0,
@@ -849,6 +867,9 @@ export default {
     )
   },
   computed: {
+    getBannerFiles() {
+      return this.bannerFiles
+    },
     getDate() {
       if (!this.levelThreeFormData) return '目前沒有修改過'
       return this.$moment(this.levelThreeFormData.last_modify_date).format('YYYY年MM月DD日-HH:mm')
@@ -920,6 +941,13 @@ export default {
     }
   },
   methods: {
+    updateRemoveBannerImgs(index) {
+      this.bannerFiles.splice(index, 1)
+    },
+    // 子元件 bannerImgs 更動
+    updateAddBannerImgs(img) {
+      this.bannerFiles.push(img)
+    },
     // 智慧排版啟用 / 禁止
     // handleTypesettingChange(value) {
     //   this.levelThreeFormData.typesetting = value
@@ -1033,6 +1061,8 @@ export default {
           this.files.push(obj)
         })
       }
+      // 如果 banner_imgs 沒有資料 undefined 就帶入空陣列
+      this.bannerFiles = this.levelThreeFormData.banner_imgs || []
     },
     // 第一層被選中後，就會去更新第二層的資料
     levelOneChang(id) {
@@ -1092,7 +1122,9 @@ export default {
         salting_on_color_video: Object.assign({}, this.levelThreeFormData.salting_on_color_video),
         note_one_video: Object.assign({}, this.levelThreeFormData.note_one_video),
         note_two_video: Object.assign({}, this.levelThreeFormData.note_two_video),
-        sample_order: Object.assign({}, this.levelThreeFormData.sample_order)
+        sample_order: Object.assign({}, this.levelThreeFormData.sample_order),
+        banner_imgs: this.bannerFiles.length > 0 ? this.bannerFiles.join('|') : [], // 如果圖片都除除乾淨，就給空數組
+        disable_proofing: this.levelThreeFormData.disable_proofing
       }
 
       if (uploadFormData.carton_id == undefined || uploadFormData.delivery_id == undefined) {
@@ -1258,7 +1290,7 @@ export default {
   color: #333;
   padding: 0;
   margin: 0;
-  margin-top: 10px;
+  /* margin-top: 10px; */
   /* line-height: 400px; */
   /* position: relative; */
 }
@@ -1276,7 +1308,7 @@ export default {
   margin-bottom: 0px;
 }
 .el-dialog__body {
-  padding-top: 0px;
+  padding-top: 10px;
   /* padding-bottom: 20px; */
 }
 /* .hide .el-upload.el-upload--picture-card {

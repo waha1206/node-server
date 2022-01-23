@@ -14,6 +14,7 @@ const CategroySchema = new Schema({
   img: {
     type: String
   },
+  // 商品圖片
   imgs: {
     type: [String]
   },
@@ -272,18 +273,21 @@ const CategoryLevelThreeSchema = new Schema({
   // 優惠活動的敘述
   sales_event_description: {
     type: String
+  },
+  // banner 圖片
+  banner_imgs: {
+    type: [String]
+  },
+  // 是否允許進行打樣
+  disable_proofing: {
+    type: Boolean,
+    default: true
   }
 })
 
 // eslint-disable-next-line no-undef
 module.exports = {
   Categories: mongoose.model('categroies', CategroySchema),
-  CategoriesLevelTwo: mongoose.model(
-    'categroies_level_two',
-    CategoryLevelTwoSchema
-  ),
-  CategoriesLevelThree: mongoose.model(
-    'categroies_level_three',
-    CategoryLevelThreeSchema
-  )
+  CategoriesLevelTwo: mongoose.model('categroies_level_two', CategoryLevelTwoSchema),
+  CategoriesLevelThree: mongoose.model('categroies_level_three', CategoryLevelThreeSchema)
 }

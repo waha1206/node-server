@@ -13,15 +13,9 @@
             filterable
           ></el-cascader>
         </div>
-        <el-button type="primary" size="small" @click="addLevelOne"
-          >新增第一層分類</el-button
-        >
-        <el-button type="primary" size="small" @click="addLevelTwo"
-          >新增第二層分類</el-button
-        >
-        <el-button type="primary" size="small" @click="addLevelThree"
-          >新增第三層商品</el-button
-        >
+        <el-button type="primary" size="small" @click="addLevelOne">新增第一層分類</el-button>
+        <el-button type="primary" size="small" @click="addLevelTwo">新增第二層分類</el-button>
+        <el-button type="primary" size="small" @click="addLevelThree">新增第三層商品</el-button>
       </el-header>
       <!-- 分頁 -->
       <div class="pagination">
@@ -41,13 +35,7 @@
         <el-table
           size="mini"
           :stripe="true"
-          :data="
-            tableData.filter(
-              (data) =>
-                !search ||
-                data.name.toLowerCase().includes(search.toLowerCase())
-            )
-          "
+          :data="tableData.filter((data) => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
           style="width: 100%"
         >
           <!-- type = "expand" 這個就會把 expand 裡面的 所有值 帶入到 props 裡面 所以可以在裡面找到 quantity_profit 的值，再利用
@@ -65,30 +53,15 @@
                   <el-container>
                     <!-- header 兩個按紐 新增欄位，利潤清單更新 -->
                     <el-header class="profit-btn-wrap">
-                      <el-button
-                        size="mini"
-                        type="primary"
-                        @click="handleAddProfit(props.row)"
-                        >新增欄位</el-button
-                      >
-                      <el-button
-                        size="mini"
-                        type="primary"
-                        @click="handleUpdateProfit(props.row)"
+                      <el-button size="mini" type="primary" @click="handleAddProfit(props.row)">新增欄位</el-button>
+                      <el-button size="mini" type="primary" @click="handleUpdateProfit(props.row)"
                         >利潤清單更新</el-button
                       >
                     </el-header>
                     <el-main>
                       <!-- 這邊會秀出欄位名稱 數量，利潤，刪除按紐 -->
-                      <div
-                        class="profit-wrap"
-                        v-for="(citem, index) in props.row.quantity_profit"
-                        :key="index"
-                      >
-                        <el-input
-                          class="my-input"
-                          v-model="citem.quantity"
-                        ></el-input>
+                      <div class="profit-wrap" v-for="(citem, index) in props.row.quantity_profit" :key="index">
+                        <el-input class="my-input" v-model="citem.quantity"></el-input>
                         <my-percentage-input
                           class="profit"
                           :width="52"
@@ -96,23 +69,13 @@
                           :isReadyOnly="false"
                           v-model="citem.profit"
                         ></my-percentage-input>
-                        <el-input
-                          class="my-input"
-                          placeholder="幾箱"
-                          v-model="citem.carton"
-                        ></el-input>
-                        <el-input
-                          class="my-input"
-                          placeholder="淨重"
-                          v-model="citem.net_weight"
-                        ></el-input>
+                        <el-input class="my-input" placeholder="幾箱" v-model="citem.carton"></el-input>
+                        <el-input class="my-input" placeholder="淨重" v-model="citem.net_weight"></el-input>
                         <el-button
                           class="profit-btn"
                           size="mini"
                           type="danger"
-                          @click="
-                            handleDeleteProfit(index, props.row.quantity_profit)
-                          "
+                          @click="handleDeleteProfit(index, props.row.quantity_profit)"
                           >刪除</el-button
                         >
                       </div>
@@ -123,30 +86,15 @@
             </template>
           </el-table-column>
           <!-- 序號 -->
-          <el-table-column
-            type="index"
-            label="序號"
-            align="center"
-            width="70"
-          ></el-table-column>
+          <el-table-column type="index" label="序號" align="center" width="70"></el-table-column>
           <!-- 添加原料組合 -->
           <!-- ******************************* cascader 選擇原料組 開始 *******************************-->
-          <el-table-column
-            label="添加原料組合"
-            width="400"
-            prop=""
-            align="center"
-          >
+          <el-table-column label="添加原料組合" width="400" prop="" align="center">
             <template slot-scope="props">
               <!-- <el-form label-position="left" inline class="demo-table-expand">
                 <el-form-item label="" class="cascader-item"> -->
               <div class="group-btn">
-                <el-button
-                  size="mini"
-                  type="primary"
-                  @click="handleUpdateGroupMember(props.row)"
-                  >更新</el-button
-                >
+                <el-button size="mini" type="primary" @click="handleUpdateGroupMember(props.row)">更新</el-button>
               </div>
               <div class="group-cascader">
                 <!-- <span class="demonstration">多选可搜索</span> -->
@@ -172,39 +120,18 @@
           </el-table-column>
           <!-- ******************************* cascader 選擇原料組 結束 *******************************-->
           <!-- 商品名稱 -->
-          <el-table-column
-            label="商品名稱"
-            prop="name"
-            align="left"
-            width="250"
-          ></el-table-column>
+          <el-table-column label="商品名稱" prop="name" align="left" width="250"></el-table-column>
           <!-- 商品編號 -->
-          <el-table-column
-            label="商品編號"
-            prop="type"
-            align="center"
-            width="70"
-          >
-          </el-table-column>
+          <el-table-column label="商品編號" prop="type" align="center" width="70"> </el-table-column>
           <!-- 版型商品編號 -->
-          <el-table-column
-            label="版型編號"
-            prop="pattern_no"
-            align="center"
-            width="120"
-          >
-          </el-table-column>
+          <el-table-column label="版型編號" prop="pattern_no" align="center" width="120"> </el-table-column>
           <!-- 啟用/VIP -->
           <el-table-column label="啟用 / VIP" align="center" width="110">
             <template slot-scope="scope">
-              <el-tag v-if="scope.row.status.activated" type="" size="mini"
-                >啟用</el-tag
-              >
+              <el-tag v-if="scope.row.status.activated" type="" size="mini">啟用</el-tag>
               <el-tag v-else type="warning" size="mini">關閉</el-tag>
               &nbsp
-              <el-tag v-if="scope.row.status.vip" type="" size="mini"
-                >啟用</el-tag
-              >
+              <el-tag v-if="scope.row.status.vip" type="" size="mini">啟用</el-tag>
               <el-tag v-else type="warning" size="mini">關閉</el-tag>
             </template>
           </el-table-column>
@@ -212,13 +139,7 @@
           <el-table-column label="單圖" width="70" align="center">
             <template slot-scope="scope">
               <!-- v-for="(item, index) in scope.row.imgs" -->
-              <img
-                v-if="scope.row.imgs[0]"
-                width="50px"
-                height="50px"
-                :src="scope.row.imgs[0]"
-                alt=""
-              />
+              <img v-if="scope.row.imgs[0]" width="50px" height="50px" :src="scope.row.imgs[0]" alt="" />
             </template>
           </el-table-column>
           <!-- 多圖 -->
@@ -249,57 +170,41 @@
                 <p>商品編號：{{ scope.row.type }}</p>
                 <p>商品說明：{{ scope.row.describe }}</p>
                 <p>
-                  商品狀態：<span v-if="scope.row.status.activated"
-                    >已經啟用</span
-                  >
+                  商品狀態：<span v-if="scope.row.status.activated">已經啟用</span>
                   <span v-else>尚未啟用</span>
                   <span>、</span>
                   <span v-if="scope.row.status.vip">VIP已啟用</span>
                   <span v-else>VIP未啟用</span>
                 </p>
                 <p>修改時間：{{ getDate(scope.row.last_modify_date) }}</p>
-                <p>
-                  修改人員：{{ getUserNameById(scope.row.last_edit_person) }}
-                </p>
+                <p>修改人員：{{ getUserNameById(scope.row.last_edit_person) }}</p>
                 <p>影片名稱：{{ scope.row.introduction_video.label }}</p>
                 <p>
-                  影片連結：<a
-                    :href="scope.row.introduction_video.link"
-                    target="_blank"
-                    >{{ scope.row.introduction_video.link }}</a
-                  >
+                  影片連結：<a :href="scope.row.introduction_video.link" target="_blank">{{
+                    scope.row.introduction_video.link
+                  }}</a>
                 </p>
                 <p>布料校色：{{ scope.row.salting_on_color_video.label }}</p>
                 <p>
-                  校色連結：<a
-                    :href="scope.row.salting_on_color_video.link"
-                    target="_blank"
-                    >{{ scope.row.salting_on_color_video.link }}</a
-                  >
+                  校色連結：<a :href="scope.row.salting_on_color_video.link" target="_blank">{{
+                    scope.row.salting_on_color_video.link
+                  }}</a>
                 </p>
                 <p>其它影片(一)：{{ scope.row.note_one_video.label }}</p>
                 <p>
-                  影片連結(一)：<a
-                    :href="scope.row.note_one_video.link"
-                    target="_blank"
-                    >{{ scope.row.note_one_video.link }}</a
-                  >
+                  影片連結(一)：<a :href="scope.row.note_one_video.link" target="_blank">{{
+                    scope.row.note_one_video.link
+                  }}</a>
                 </p>
                 <p>其它影片(二)：{{ scope.row.note_two_video.label }}</p>
                 <p>
-                  影片連結(二)：<a
-                    :href="scope.row.note_two_video.link"
-                    target="_blank"
-                    >{{ scope.row.note_two_video.link }}</a
-                  >
+                  影片連結(二)：<a :href="scope.row.note_two_video.link" target="_blank">{{
+                    scope.row.note_two_video.link
+                  }}</a>
                 </p>
                 <p>版型編號：{{ scope.row.pattern_no }}</p>
                 <p>
-                  版型連結：<a
-                    :href="scope.row.pattern_download"
-                    target="_blank"
-                    >{{ scope.row.pattern_download }}</a
-                  >
+                  版型連結：<a :href="scope.row.pattern_download" target="_blank">{{ scope.row.pattern_download }}</a>
                 </p>
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="mini">完整說明</el-tag>
@@ -308,35 +213,18 @@
             </template>
           </el-table-column>
           <!-- 商品說明 -->
-          <el-table-column
-            label="商品說明"
-            prop="describe"
-            align="center"
-            width="310"
-          >
-          </el-table-column>
+          <el-table-column label="商品說明" prop="describe" align="center" width="310"> </el-table-column>
 
           <!-- 搜尋欄位 -->
           <el-table-column align="center" width="150">
             <!-- header 代表放到列的說明文字那邊 -->
             <template slot="header" slot-scope="scope">
-              <el-input
-                v-model="search"
-                size="mini"
-                placeholder="輸入關鍵字搜尋"
-              />
+              <el-input v-model="search" size="mini" placeholder="輸入關鍵字搜尋" />
             </template>
             <!-- slot 崁入兩個按鈕 -->
             <template slot-scope="scope">
-              <el-button
-                size="mini"
-                @click="handleEditCategory(scope.$index, scope.row)"
-                >編輯</el-button
-              >
-              <el-button
-                size="mini"
-                type="danger"
-                @click="handleDeleteCategory(scope.$index, scope.row)"
+              <el-button size="mini" @click="handleEditCategory(scope.$index, scope.row)">編輯</el-button>
+              <el-button size="mini" type="danger" @click="handleDeleteCategory(scope.$index, scope.row)"
                 >刪除</el-button
               >
             </template>
@@ -430,7 +318,9 @@ export default {
       },
       formData: {},
       categoriesLevelThreeFormData: {
-        imgs: [],
+        imgs: [], // 商品圖片的 imgs
+        banner_imgs: [], // banner 的 imgs
+        disable_proofing: false, // 不提供打樣，類似纜股頭類的超級高單價
         level_one_id: '',
         level_two_id: '',
         name: '',
@@ -525,30 +415,15 @@ export default {
   watch: {
     // 讀取完 level three data / level one class / level two class
     groupLevelOneData() {
-      if (
-        !this.groupLevelOneData.length &&
-        !this.groupLevelTwoData.length &&
-        !this.groupLevelThreeData.length
-      )
-        return
+      if (!this.groupLevelOneData.length && !this.groupLevelTwoData.length && !this.groupLevelThreeData.length) return
       this.getMaterialGroupOptions()
     },
     groupLevelTwoData() {
-      if (
-        !this.groupLevelOneData.length &&
-        !this.groupLevelTwoData.length &&
-        !this.groupLevelThreeData.length
-      )
-        return
+      if (!this.groupLevelOneData.length && !this.groupLevelTwoData.length && !this.groupLevelThreeData.length) return
       this.getMaterialGroupOptions()
     },
     groupLevelThreeData() {
-      if (
-        !this.groupLevelOneData.length &&
-        !this.groupLevelTwoData.length &&
-        !this.groupLevelThreeData.length
-      )
-        return
+      if (!this.groupLevelOneData.length && !this.groupLevelTwoData.length && !this.groupLevelThreeData.length) return
       this.getMaterialGroupOptions()
     },
     // 如果 level one 跟 level two 都有資料的時候，就更動 cascader 的聯集選擇器
@@ -784,10 +659,7 @@ export default {
     },
     setCascaderOptions() {
       // ，就讀回來上次的紀錄
-      if (
-        localStorage.choiceLevelTwoValue &&
-        localStorage.choiceLevelOneValue
-      ) {
+      if (localStorage.choiceLevelTwoValue && localStorage.choiceLevelOneValue) {
         this.choiceLevelTwoValue[0] = localStorage.choiceLevelOneValue
         this.choiceLevelTwoValue[1] = localStorage.choiceLevelTwoValue
       }
@@ -897,18 +769,13 @@ export default {
     },
     // 刪除第一層的 class 目前不開放
     handleDeleteCategory(index, row) {
-      MessageBox.confirm(
-        '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
-        '嚴重警告！！！'
-      )
+      MessageBox.confirm('注意！資料刪除會不可挽回！請確認此資料無其他應用！', '嚴重警告！！！')
         .then(() => {
-          this.$axios
-            .delete(`/api/categories/delete-level-three/${row._id}`)
-            .then((res) => {
-              this.$message('刪除成功！')
-              this.getCategoriesLevelTwoData()
-              this.setPaginations()
-            })
+          this.$axios.delete(`/api/categories/delete-level-three/${row._id}`).then((res) => {
+            this.$message('刪除成功！')
+            this.getCategoriesLevelTwoData()
+            this.setPaginations()
+          })
         })
         .catch(() => {
           this.$message('您取消刪除了～鬆一口氣')
@@ -921,9 +788,7 @@ export default {
       this.my_paginations.total = this.categoriesLevelThreeData.length
       this.my_paginations.page_index = 1
       if (localStorage.categories_page_size) {
-        this.my_paginations.page_size = Number(
-          localStorage.categories_page_size
-        )
+        this.my_paginations.page_size = Number(localStorage.categories_page_size)
       } else {
         this.my_paginations.page_size = 5
       }
