@@ -17,17 +17,8 @@
           label-width="120px"
           style="margin:10px;width:auto"
         >
-          <el-form-item
-            label="顯示頁面："
-            prop="switch"
-            label-width="120px"
-            class="switch"
-          >
-            <el-switch
-              v-model="levelThreeFormData.switch"
-              active-text="優惠商品"
-              inactive-text="商品目錄"
-            >
+          <el-form-item label="顯示頁面：" prop="switch" label-width="120px" class="switch">
+            <el-switch v-model="levelThreeFormData.switch" active-text="優惠商品/新品專區" inactive-text="商品目錄">
             </el-switch
           ></el-form-item>
           <el-container v-show="!levelThreeFormData.switch">
@@ -35,12 +26,7 @@
               <el-row :gutter="20" type="flex" class="row-bg">
                 <el-col :span="8"
                   ><div class="grid-content">
-                    <el-form-item
-                      label="先選擇大分類："
-                      size="mini"
-                      prop="level_one_id"
-                      label-width="120px"
-                    >
+                    <el-form-item label="先選擇大分類：" size="mini" prop="level_one_id" label-width="120px">
                       <!-- v-model 通常會指定到 formData (要提交的表單) 裡面的某個屬性 這邊是再 data return 裡面的 levelThreeData.level_one_id -->
                       <el-select
                         v-model="levelThreeFormData.level_one_id"
@@ -58,10 +44,7 @@
                           :value="item._id"
                         >
                           <span style="float: left">{{ item.type }}</span>
-                          <span
-                            style="float: right; color: #8492a6; font-size: 13px"
-                            >{{ item.name }}</span
-                          >
+                          <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>
                         </el-option>
                       </el-select>
                     </el-form-item>
@@ -72,12 +55,7 @@
                 <!-- ********************* 兩種做法，2.v-if 去判斷資料要不要顯示出來  *********************-->
                 <el-col :span="8"
                   ><div class="grid-content">
-                    <el-form-item
-                      label="選擇中分類："
-                      size="mini"
-                      prop="level_two_id"
-                      label-width="120px"
-                    >
+                    <el-form-item label="選擇中分類：" size="mini" prop="level_two_id" label-width="120px">
                       <!-- 可複選的 select 要加入這三個屬性 allow-create default-first-option multiple -->
                       <!-- v-model="levelThreeFormData.level_two_id" -->
                       <el-select
@@ -94,10 +72,7 @@
                           :value="citem._id"
                         >
                           <span style="float: left">{{ citem.type }}</span>
-                          <span
-                            style="float: right; color: #8492a6; font-size: 13px"
-                            >{{ citem.name }}</span
-                          >
+                          <span style="float: right; color: #8492a6; font-size: 13px">{{ citem.name }}</span>
                         </el-option>
                       </el-select>
                     </el-form-item>
@@ -106,17 +81,8 @@
                 <!-- 輸入商品名稱 -->
                 <el-col :span="8">
                   <div class="grid-content">
-                    <el-form-item
-                      label="商品名稱："
-                      size="mini"
-                      label-width="120px"
-                      prop="name"
-                    >
-                      <el-input
-                        placeholder="造型圓形側背包"
-                        type="name"
-                        v-model="levelThreeFormData.name"
-                      ></el-input>
+                    <el-form-item label="商品名稱：" size="mini" label-width="120px" prop="name">
+                      <el-input placeholder="造型圓形側背包" type="name" v-model="levelThreeFormData.name"></el-input>
                     </el-form-item>
                   </div>
                 </el-col>
@@ -126,12 +92,7 @@
               <el-row :gutter="20" type="flex" class="row-bg">
                 <el-col :span="24">
                   <div class="grid-content">
-                    <el-form-item
-                      label="備註說明："
-                      size="mini"
-                      label-width="120px"
-                      prop="describe"
-                    >
+                    <el-form-item label="備註說明：" size="mini" label-width="120px" prop="describe">
                       <el-input
                         placeholder="(無耳朵)直徑約25x厚7公分(外口袋+8吋拉鍊內口袋)-仿帆布10安造型圓形側背包(轉印仿帆布10安內裡)(轉印可調背帶2.5X150公分)(10吋)50個"
                         type="name"
@@ -145,12 +106,7 @@
               <el-row :gutter="20" type="flex" class="row-bg">
                 <el-col :span="24">
                   <div class="grid-content">
-                    <el-form-item
-                      label="加工說明："
-                      size="mini"
-                      label-width="120px"
-                      prop="processing_describe"
-                    >
+                    <el-form-item label="加工說明：" size="mini" label-width="120px" prop="processing_describe">
                       <el-input
                         placeholder="給自己人看的加工說明"
                         type="name"
@@ -164,59 +120,26 @@
               <el-row :gutter="20" type="flex" class="row-bg">
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="商品編號："
-                      size="mini"
-                      label-width="120px"
-                      prop="type"
-                    >
-                      <el-input
-                        type="type"
-                        placeholder="0001 (四碼)"
-                        v-model="levelThreeFormData.type"
-                      ></el-input>
+                    <el-form-item label="商品編號：" size="mini" label-width="120px" prop="type">
+                      <el-input type="type" placeholder="0001 (四碼)" v-model="levelThreeFormData.type"></el-input>
                     </el-form-item>
                   </div>
                 </el-col>
                 <el-col :span="11">
                   <div class="grid-content">
-                    <el-form-item
-                      label="商品狀態："
-                      size="mini"
-                      label-width="120px"
-                      prop="status.activated"
-                    >
-                      <el-checkbox v-model="levelThreeFormData.status.activated"
-                        >啟用</el-checkbox
-                      >
-                      <el-checkbox v-model="levelThreeFormData.status.vip"
-                        >VIP</el-checkbox
-                      >
-                      <el-checkbox v-model="levelThreeFormData.status.new"
-                        >NEW</el-checkbox
-                      >
-                      <el-checkbox v-model="levelThreeFormData.status.hot"
-                        >HOT</el-checkbox
-                      >
-                      <el-checkbox v-model="levelThreeFormData.status.discount"
-                        >優惠</el-checkbox
-                      >
+                    <el-form-item label="商品狀態：" size="mini" label-width="120px" prop="status.activated">
+                      <el-checkbox v-model="levelThreeFormData.status.activated">啟用</el-checkbox>
+                      <el-checkbox v-model="levelThreeFormData.status.vip">VIP</el-checkbox>
+                      <el-checkbox v-model="levelThreeFormData.status.new">NEW</el-checkbox>
+                      <el-checkbox v-model="levelThreeFormData.status.hot">HOT</el-checkbox>
+                      <el-checkbox v-model="levelThreeFormData.status.discount">優惠</el-checkbox>
                     </el-form-item>
                   </div>
                 </el-col>
                 <el-col :span="7">
                   <div class="grid-content">
-                    <el-form-item
-                      label="商品特色："
-                      size="mini"
-                      label-width="120px"
-                      prop="feature"
-                    >
-                      <el-input
-                        type="type"
-                        placeholder="最多10個字"
-                        v-model="levelThreeFormData.feature"
-                      ></el-input>
+                    <el-form-item label="商品特色：" size="mini" label-width="120px" prop="feature">
+                      <el-input type="type" placeholder="最多10個字" v-model="levelThreeFormData.feature"></el-input>
                     </el-form-item>
                   </div>
                 </el-col>
@@ -226,12 +149,7 @@
               <el-row :gutter="20" type="flex" class="row-bg">
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="影片名稱："
-                      size="mini"
-                      label-width="120px"
-                      prop="introduction_video.label"
-                    >
+                    <el-form-item label="影片名稱：" size="mini" label-width="120px" prop="introduction_video.label">
                       <el-input
                         type="type"
                         placeholder="零錢包的製作影片"
@@ -242,12 +160,7 @@
                 </el-col>
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="影片連結："
-                      size="mini"
-                      label-width="120px"
-                      prop="introduction_video.link"
-                    >
+                    <el-form-item label="影片連結：" size="mini" label-width="120px" prop="introduction_video.link">
                       <el-input
                         type="type"
                         placeholder="https://youtu.be/Olm_oOCY_2Y"
@@ -267,21 +180,14 @@
                       <el-input
                         type="type"
                         placeholder="布料校色"
-                        v-model="
-                          levelThreeFormData.salting_on_color_video.label
-                        "
+                        v-model="levelThreeFormData.salting_on_color_video.label"
                       ></el-input>
                     </el-form-item>
                   </div>
                 </el-col>
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="校色連結："
-                      size="mini"
-                      label-width="120px"
-                      prop="salting_on_color_video.link"
-                    >
+                    <el-form-item label="校色連結：" size="mini" label-width="120px" prop="salting_on_color_video.link">
                       <el-input
                         type="type"
                         placeholder="https://youtu.be/Olm_oOCY_2Y"
@@ -295,12 +201,7 @@
               <el-row :gutter="20" type="flex" class="row-bg">
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="其它(一)："
-                      size="mini"
-                      label-width="120px"
-                      prop="note_one_video.label"
-                    >
+                    <el-form-item label="其它(一)：" size="mini" label-width="120px" prop="note_one_video.label">
                       <el-input
                         type="type"
                         placeholder="影片(一)"
@@ -311,12 +212,7 @@
                 </el-col>
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="連結(一)："
-                      size="mini"
-                      label-width="120px"
-                      prop="note_one_video.link"
-                    >
+                    <el-form-item label="連結(一)：" size="mini" label-width="120px" prop="note_one_video.link">
                       <el-input
                         type="type"
                         placeholder="https://youtu.be/Olm_oOCY_2Y"
@@ -327,12 +223,7 @@
                 </el-col>
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="其它(二)："
-                      size="mini"
-                      label-width="120px"
-                      prop="note_two_video.label"
-                    >
+                    <el-form-item label="其它(二)：" size="mini" label-width="120px" prop="note_two_video.label">
                       <el-input
                         type="type"
                         placeholder="影片(二)"
@@ -343,12 +234,7 @@
                 </el-col>
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="連結(二)："
-                      size="mini"
-                      label-width="120px"
-                      prop="note_two_video.link"
-                    >
+                    <el-form-item label="連結(二)：" size="mini" label-width="120px" prop="note_two_video.link">
                       <el-input
                         type="type"
                         placeholder="https://youtu.be/Olm_oOCY_2Y"
@@ -363,12 +249,7 @@
               <el-row :gutter="20" type="flex" class="row-bg">
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="購買樣品："
-                      size="mini"
-                      label-width="120px"
-                      prop="sample_order.name"
-                    >
+                    <el-form-item label="購買樣品：" size="mini" label-width="120px" prop="sample_order.name">
                       <el-input
                         type="type"
                         placeholder="購買樣品"
@@ -379,12 +260,7 @@
                 </el-col>
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="販售網址："
-                      size="mini"
-                      label-width="120px"
-                      prop="sample_order.url"
-                    >
+                    <el-form-item label="販售網址：" size="mini" label-width="120px" prop="sample_order.url">
                       <el-input
                         type="type"
                         placeholder="https://youtu.be/Olm_oOCY_2Y"
@@ -395,33 +271,15 @@
                 </el-col>
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="最後修改時間："
-                      size="mini"
-                      label-width="120px"
-                      prop=""
-                    >
-                      <el-input
-                        type=""
-                        v-model="getDate"
-                        :readonly="true"
-                      ></el-input>
+                    <el-form-item label="最後修改時間：" size="mini" label-width="120px" prop="">
+                      <el-input type="" v-model="getDate" :readonly="true"></el-input>
                     </el-form-item>
                   </div>
                 </el-col>
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="最後修改人員："
-                      size="mini"
-                      label-width="120px"
-                      prop=""
-                    >
-                      <el-input
-                        type=""
-                        v-model="getUserNameById"
-                        :readonly="true"
-                      ></el-input>
+                    <el-form-item label="最後修改人員：" size="mini" label-width="120px" prop="">
+                      <el-input type="" v-model="getUserNameById" :readonly="true"></el-input>
                     </el-form-item>
                   </div>
                 </el-col>
@@ -431,12 +289,7 @@
               <el-row :gutter="20" type="flex" class="row-bg">
                 <el-col :span="12">
                   <div class="grid-content">
-                    <el-form-item
-                      label="版型編號："
-                      size="mini"
-                      label-width="120px"
-                      prop="pattern_no"
-                    >
+                    <el-form-item label="版型編號：" size="mini" label-width="120px" prop="pattern_no">
                       <el-input
                         type="type"
                         placeholder="版型編號範例尚未制定"
@@ -447,12 +300,7 @@
                 </el-col>
                 <el-col :span="12">
                   <div class="grid-content">
-                    <el-form-item
-                      label="版型下載："
-                      size="mini"
-                      label-width="120px"
-                      prop="pattern_download"
-                    >
+                    <el-form-item label="版型下載：" size="mini" label-width="120px" prop="pattern_download">
                       <el-input
                         type="type"
                         placeholder="雲端的下載連結網址，通常是一個google雲端目錄"
@@ -467,12 +315,7 @@
               <el-row :gutter="20" type="flex" class="row-bg">
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="平車費用"
-                      size="mini"
-                      label-width="120px"
-                      prop="tailor_fee"
-                    >
+                    <el-form-item label="平車費用" size="mini" label-width="120px" prop="tailor_fee">
                       <my-currency-input
                         :height="24"
                         :width="130"
@@ -485,12 +328,7 @@
                 </el-col>
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="裁切費用："
-                      size="mini"
-                      label-width="120px"
-                      prop="crop_fee"
-                    >
+                    <el-form-item label="裁切費用：" size="mini" label-width="120px" prop="crop_fee">
                       <my-currency-input
                         :height="24"
                         :width="130"
@@ -503,12 +341,7 @@
                 </el-col>
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="拆圖數量："
-                      size="mini"
-                      label-width="120px"
-                      prop="split_quantity"
-                    >
+                    <el-form-item label="拆圖數量：" size="mini" label-width="120px" prop="split_quantity">
                       <el-input
                         type="type"
                         placeholder="可拆圖的最低數量"
@@ -519,12 +352,7 @@
                 </el-col>
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="最低訂量："
-                      size="mini"
-                      label-width="120px"
-                      prop="mini_order"
-                    >
+                    <el-form-item label="最低訂量：" size="mini" label-width="120px" prop="mini_order">
                       <el-input
                         type="type"
                         placeholder="商品的最低訂購量"
@@ -700,12 +528,7 @@
                 </el-col>
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="建議售價："
-                      size="mini"
-                      label-width="120px"
-                      prop="selling_price"
-                    >
+                    <el-form-item label="建議售價：" size="mini" label-width="120px" prop="selling_price">
                       <el-input
                         type="type"
                         placeholder="建議市售價"
@@ -716,12 +539,7 @@
                 </el-col>
                 <el-col :span="6">
                   <div class="grid-content">
-                    <el-form-item
-                      label="簡易規格："
-                      size="mini"
-                      label-width="120px"
-                      prop="specification"
-                    >
+                    <el-form-item label="簡易規格：" size="mini" label-width="120px" prop="specification">
                       <el-input
                         type="type"
                         placeholder="9公分*20公分"
@@ -737,17 +555,9 @@
               <el-row :gutter="20" type="flex" class="row-bg">
                 <el-col :span="6"
                   ><div class="grid-content ">
-                    <el-form-item
-                      prop="typesetting"
-                      label="智慧排版："
-                      label-width="110px"
-                    >
+                    <el-form-item prop="typesetting" label="智慧排版：" label-width="110px">
                       <!-- @change="handleTypesettingChange" -->
-                      <el-switch
-                        v-model="levelThreeFormData.typesetting"
-                        active-text="啟用"
-                        inactive-text="禁用"
-                      >
+                      <el-switch v-model="levelThreeFormData.typesetting" active-text="啟用" inactive-text="禁用">
                       </el-switch>
                     </el-form-item></div
                 ></el-col>
@@ -778,12 +588,7 @@
                       @click="handleSelectPaperOrInk('paper')"
                       >{{ paper }}</el-button
                     >
-                    <el-button
-                      v-else
-                      type="primary"
-                      size="mini"
-                      class="button"
-                      @click="handleSelectPaperOrInk('paper')"
+                    <el-button v-else type="primary" size="mini" class="button" @click="handleSelectPaperOrInk('paper')"
                       >轉印紙尚未選擇</el-button
                     >
                   </el-form-item>
@@ -815,12 +620,7 @@
                       @click="handleSelectPaperOrInk('ink')"
                       >{{ ink }}</el-button
                     >
-                    <el-button
-                      v-else
-                      type="primary"
-                      size="mini"
-                      class="button"
-                      @click="handleSelectPaperOrInk('ink')"
+                    <el-button v-else type="primary" size="mini" class="button" @click="handleSelectPaperOrInk('ink')"
                       >輸出墨水尚未選擇</el-button
                     >
                   </el-form-item>
@@ -835,11 +635,7 @@
               <el-row :gutter="20" type="flex" class="row-bg">
                 <el-col :span="8">
                   <div class="grid-content">
-                    <el-form-item
-                      label="優惠活動開始："
-                      prop=""
-                      label-width="120px"
-                    >
+                    <el-form-item label="優惠活動開始：" prop="" label-width="120px">
                       <el-date-picker
                         v-model="levelThreeFormData.start_date_of_discount"
                         type="date"
@@ -852,11 +648,7 @@
                 </el-col>
                 <el-col :span="8">
                   <div class="grid-content">
-                    <el-form-item
-                      label="優惠活動結束："
-                      prop=""
-                      label-width="120px"
-                    >
+                    <el-form-item label="優惠活動結束：" prop="" label-width="120px">
                       <el-date-picker
                         v-model="levelThreeFormData.end_date_of_discount"
                         type="date"
@@ -874,11 +666,7 @@
                   <div class="grid-content">
                     <el-col :span="12">
                       <div class="grid-content">
-                        <el-form-item
-                          label="優惠活動說明："
-                          prop=""
-                          label-width="120px"
-                        >
+                        <el-form-item label="優惠活動說明：" prop="" label-width="120px">
                           <el-input
                             style="margin-top:10px;width:300px"
                             type="textarea"
@@ -903,12 +691,7 @@
           <!-- 另外一種做法：https://blog.csdn.net/zaocha321/article/details/103345423 -->
           <el-main>
             <!-- <div class="image-warp"> -->
-            <el-form-item
-              label="圖片上傳："
-              size="mini"
-              label-width="120px"
-              prop="describe"
-            >
+            <el-form-item label="商品圖片：" size="mini" label-width="120px" prop="describe">
               <div class="upload-wrap">
                 <el-upload
                   :data="uploadData"
@@ -921,45 +704,21 @@
                   :file-list="files"
                   :on-change="onFileChange"
                 >
-                  <el-dialog
-                    :visible.sync="dialogVisible"
-                    append-to-body
-                    width="520px"
-                  >
-                    <img
-                      width="480px"
-                      height="480px"
-                      fit="contain"
-                      :src="dialogImageUrl"
-                      alt=""
-                    />
+                  <el-dialog :visible.sync="dialogVisible" append-to-body width="520px">
+                    <img width="480px" height="480px" fit="contain" :src="dialogImageUrl" alt="" />
                   </el-dialog>
                   <i slot="default" class="el-icon-plus"></i>
                   <div class="image-content" slot="file" slot-scope="{ file }">
-                    <img
-                      class="el-upload-list__item-thumbnail"
-                      :src="file.url"
-                      alt=""
-                    />
+                    <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
                     <span class="el-upload-list__item-actions">
-                      <span
-                        class="el-upload-list__item-preview"
-                        @click="handlePictureCardPreview(file)"
-                      >
+                      <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
                         <i class="el-icon-zoom-in"></i>
                       </span>
-                      <span
-                        v-if="!disabled"
-                        class="el-upload-list__item-download"
-                        @click="handleDownload(file)"
-                      >
+                      <span v-if="!disabled" class="el-upload-list__item-download" @click="handleDownload(file)">
                         <i class="el-icon-download"></i>
                       </span>
                       <!-- v-if="!disabled" -->
-                      <span
-                        class="el-upload-list__item-delete"
-                        @click="handleRemove(file, files)"
-                      >
+                      <span class="el-upload-list__item-delete" @click="handleRemove(file, files)">
                         <i class="el-icon-delete"></i>
                       </span>
                     </span>
@@ -976,20 +735,10 @@
             <!-- 這裡有個問題點，沒有清除浮動 -->
             <el-col :span="24">
               <div class="grid-content">
-                <el-form-item
-                  class="text_right"
-                  label-width="110px"
-                  style="margin-top:10px"
-                >
-                  <el-button type="warning" @click="dialog.show = false"
-                    >取消</el-button
-                  >
-                  <el-button type="primary" @click="onSubmit('levelThreeForm')"
-                    >提交</el-button
-                  >
-                  <el-button @click="resetForm('levelThreeForm')"
-                    >重置</el-button
-                  >
+                <el-form-item class="text_right" label-width="110px" style="margin-top:10px">
+                  <el-button type="warning" @click="dialog.show = false">取消</el-button>
+                  <el-button type="primary" @click="onSubmit('levelThreeForm')">提交</el-button>
+                  <el-button @click="resetForm('levelThreeForm')">重置</el-button>
                 </el-form-item>
               </div>
             </el-col>
@@ -998,13 +747,8 @@
         <!-- 表單結束 -->
       </el-container>
     </el-dialog>
-    <PaperAndInk :dialog="paperAndInkDialog" @update="updatePaperAndInk">
-    </PaperAndInk>
-    <DeliveryAndCarton
-      :dialog="deliveryAndCartonDialog"
-      @update="updateDeliveryAndCarton"
-    >
-    </DeliveryAndCarton>
+    <PaperAndInk :dialog="paperAndInkDialog" @update="updatePaperAndInk"> </PaperAndInk>
+    <DeliveryAndCarton :dialog="deliveryAndCartonDialog" @update="updateDeliveryAndCarton"> </DeliveryAndCarton>
     <CalLayoutDialog :dialog="calLayoutDialog"></CalLayoutDialog>
   </div>
 </template>
@@ -1064,18 +808,10 @@ export default {
       delivery: '', // 選擇的運費 _id
       carton: '', // 選擇的紙箱
       form_rules: {
-        ink_id: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
-        ],
-        paper_id: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
-        ],
-        delivery_id: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
-        ],
-        carton_id: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
-        ],
+        ink_id: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
+        paper_id: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
+        delivery_id: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
+        carton_id: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }]
       }
@@ -1115,16 +851,13 @@ export default {
   computed: {
     getDate() {
       if (!this.levelThreeFormData) return '目前沒有修改過'
-      return this.$moment(this.levelThreeFormData.last_modify_date).format(
-        'YYYY年MM月DD日-HH:mm'
-      )
+      return this.$moment(this.levelThreeFormData.last_modify_date).format('YYYY年MM月DD日-HH:mm')
     },
     getUserNameById() {
       if (!this.levelThreeFormData.last_edit_person) return '目前沒有修改過'
       let name = ''
       this.allUserNameId.forEach((item, index) => {
-        if (item._id == this.levelThreeFormData.last_edit_person)
-          name = item.name
+        if (item._id == this.levelThreeFormData.last_edit_person) name = item.name
       })
       return name
     },
@@ -1175,10 +908,7 @@ export default {
         this.getMaterialNameById(this.levelThreeFormData.ink_id, 'ink')
       }
       if (this.levelThreeFormData.delivery_id) {
-        this.getMaterialNameById(
-          this.levelThreeFormData.delivery_id,
-          'delivery'
-        )
+        this.getMaterialNameById(this.levelThreeFormData.delivery_id, 'delivery')
       }
       if (this.levelThreeFormData.carton_id) {
         this.getMaterialNameById(this.levelThreeFormData.carton_id, 'carton')
@@ -1357,31 +1087,15 @@ export default {
         switch: this.levelThreeFormData.switch,
         start_date_of_discount: this.levelThreeFormData.start_date_of_discount,
         end_date_of_discount: this.levelThreeFormData.end_date_of_discount,
-        sales_event_description: this.levelThreeFormData
-          .sales_event_description,
-        introduction_video: Object.assign(
-          {},
-          this.levelThreeFormData.introduction_video
-        ),
-        salting_on_color_video: Object.assign(
-          {},
-          this.levelThreeFormData.salting_on_color_video
-        ),
-        note_one_video: Object.assign(
-          {},
-          this.levelThreeFormData.note_one_video
-        ),
-        note_two_video: Object.assign(
-          {},
-          this.levelThreeFormData.note_two_video
-        ),
+        sales_event_description: this.levelThreeFormData.sales_event_description,
+        introduction_video: Object.assign({}, this.levelThreeFormData.introduction_video),
+        salting_on_color_video: Object.assign({}, this.levelThreeFormData.salting_on_color_video),
+        note_one_video: Object.assign({}, this.levelThreeFormData.note_one_video),
+        note_two_video: Object.assign({}, this.levelThreeFormData.note_two_video),
         sample_order: Object.assign({}, this.levelThreeFormData.sample_order)
       }
 
-      if (
-        uploadFormData.carton_id == undefined ||
-        uploadFormData.delivery_id == undefined
-      ) {
+      if (uploadFormData.carton_id == undefined || uploadFormData.delivery_id == undefined) {
         this.$message({
           message: '紙箱跟運費欄位必填！',
           type: 'error'
@@ -1397,10 +1111,7 @@ export default {
             this.$message('請重新選擇第一層分類，您不能選擇全部分類')
             return
           }
-          const url =
-            this.dialog.option == 'add'
-              ? 'add'
-              : `edit/${this.levelThreeFormData._id}`
+          const url = this.dialog.option == 'add' ? 'add' : `edit/${this.levelThreeFormData._id}`
           this.$axios
             .post(`/api/categories/${url}`, uploadFormData)
             .then((res) => {
@@ -1459,8 +1170,7 @@ export default {
     // 過濾跟移除掉超過檔案限制的檔案
     // https://www.jianshu.com/p/840601098d88
     onFileChange(file, fileList) {
-      const isIMAGE =
-        file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'
+      const isIMAGE = file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'
       // 小於 1M 的檔案是 1024 / 1024  這裡設定小於50k ==> 1024 / 50
       // const isLt1M = file.size / 1024 / 1024 < 1
       const isLt50K = file.size / 1024 / 50 < 1
