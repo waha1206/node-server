@@ -180,6 +180,11 @@ const QuotationSchema = new Schema({
   case_closed: {
     type: Boolean,
     default: false
+  },
+  // 是否允許進行打樣
+  disable_proofing: {
+    type: Boolean,
+    default: false
   }
 })
 

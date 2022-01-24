@@ -364,7 +364,7 @@
                 <el-col :span="4">
                   <div class="grid-content">
                     <el-form-item label="打樣：" size="mini" label-width="60px" prop="disable_proofing">
-                      <el-checkbox v-model="levelThreeFormData.disable_proofing">允許打樣</el-checkbox>
+                      <el-checkbox v-model="levelThreeFormData.disable_proofing">不允許打樣</el-checkbox>
                     </el-form-item>
                   </div>
                 </el-col>
@@ -559,7 +559,7 @@
               <!-- 第十行結束 -->
 
               <!-- 第十一行  style="margin-bottom:-90px" 讓下面的商品圖片往上移動-->
-              <el-row :gutter="20" type="flex" class="row-bg" style="margin-bottom:-90px">
+              <el-row :gutter="20" type="flex" class="row-bg" style="margin-bottom:-180px">
                 <el-col :span="6"
                   ><div class="grid-content ">
                     <el-form-item prop="typesetting" label="智慧排版：" label-width="110px">
@@ -668,14 +668,33 @@
                 </el-col>
               </el-row>
               <!-- 優惠活動描述 levelThreeFormData.sales_event_description  -->
-              <el-row :gutter="20" type="flex" class="row-bg" style="height:60%; ">
+              <el-row :gutter="20" type="flex" class="row-bg" style="height:36%">
                 <el-col :span="24">
                   <div class="grid-content">
                     <el-form-item label="優惠活動說明：" prop="" label-width="120px">
                       <el-input
                         type="textarea"
-                        placeholder="请输入内容"
+                        placeholder="請輸入優惠活動說明"
                         v-model="levelThreeFormData.sales_event_description"
+                        :rows="3"
+                        maxlength="120"
+                        show-word-limit
+                        style="margin-top:8px"
+                      >
+                      </el-input>
+                    </el-form-item>
+                  </div>
+                </el-col>
+              </el-row>
+              <!-- 新品說明或是商品完整描述 levelThreeFormData.new_product_description  -->
+              <el-row :gutter="20" type="flex" class="row-bg" style="height:40%; ">
+                <el-col :span="24">
+                  <div class="grid-content">
+                    <el-form-item label="新品說明：" prop="" label-width="120px">
+                      <el-input
+                        type="textarea"
+                        placeholder="請輸入新品介紹，也是一般商品的詳細說明"
+                        v-model="levelThreeFormData.new_product_description"
                         :rows="3"
                         maxlength="120"
                         show-word-limit
@@ -708,7 +727,7 @@
             <!-- <div class="image-warp"> -->
             <!-- :data="uploadData"
 						action="#" 上傳的網址，應該是自動上傳使用的吧-->
-            <el-form-item label="商品圖片：" size="mini" label-width="120px" prop="describe" style="margin-top:100px">
+            <el-form-item label="商品圖片：" size="mini" label-width="120px" prop="describe" style="margin-top:190px">
               <div class="upload-wrap">
                 <el-upload
                   action="#"
@@ -1124,7 +1143,8 @@ export default {
         note_two_video: Object.assign({}, this.levelThreeFormData.note_two_video),
         sample_order: Object.assign({}, this.levelThreeFormData.sample_order),
         banner_imgs: this.bannerFiles.length > 0 ? this.bannerFiles.join('|') : [], // 如果圖片都除除乾淨，就給空數組
-        disable_proofing: this.levelThreeFormData.disable_proofing
+        disable_proofing: this.levelThreeFormData.disable_proofing,
+        new_product_description: this.levelThreeFormData.new_product_description
       }
 
       if (uploadFormData.carton_id == undefined || uploadFormData.delivery_id == undefined) {

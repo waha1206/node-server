@@ -371,7 +371,8 @@ export default {
         switch: false, // 切換 商品目錄或市優惠商品
         start_date_of_discount: Date,
         end_date_of_discount: Date,
-        sales_event_description: ''
+        sales_event_description: '', // 促銷商品的說明
+        new_product_description: '' // 新品說明，或是完整的商品介紹
       },
       categoriesLevelOneDialog: {
         show: false,

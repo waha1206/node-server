@@ -274,6 +274,10 @@ const CategoryLevelThreeSchema = new Schema({
   sales_event_description: {
     type: String
   },
+  // 新品的敘述，或是商品完整說明
+  new_product_description: {
+    type: String
+  },
   // banner 圖片
   banner_imgs: {
     type: [String]
@@ -281,7 +285,7 @@ const CategoryLevelThreeSchema = new Schema({
   // 是否允許進行打樣
   disable_proofing: {
     type: Boolean,
-    default: true
+    default: false
   }
 })
 
