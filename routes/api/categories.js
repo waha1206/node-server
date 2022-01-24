@@ -51,9 +51,12 @@ router.post('/add', passport.authenticate('jwt', { session: false }), (req, res)
     if (req.body.imgs) {
       data.imgs = req.body.imgs.split('|')
     }
-    if (req.body.banner_imgs) {
+    if (req.body.banner_imgs !== undefined && req.body.banner_imgs.length > 0) {
       data.banner_imgs = req.body.banner_imgs.split('|')
+    } else {
+      data.banner_imgs = []
     }
+
     CategoriesLevelThree.findOne({ name: req.body.name }).then((category) => {
       if (category) {
         return res.status(400).json('此商品類型(英文)已經存在')
@@ -255,7 +258,7 @@ router.post('/edit/:id', passport.authenticate('jwt', { session: false }), (req,
     if (req.body.imgs) {
       data.imgs = req.body.imgs.split('|')
     }
-    if (req.body.banner_imgs.length > 0) {
+    if (req.body.banner_imgs !== undefined && req.body.banner_imgs.length > 0) {
       data.banner_imgs = req.body.banner_imgs.split('|')
     } else {
       data.banner_imgs = []
