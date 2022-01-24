@@ -53,8 +53,6 @@ router.post('/add', passport.authenticate('jwt', { session: false }), (req, res)
     }
     if (req.body.banner_imgs !== undefined && req.body.banner_imgs.length > 0) {
       data.banner_imgs = req.body.banner_imgs.split('|')
-    } else {
-      data.banner_imgs = []
     }
 
     CategoriesLevelThree.findOne({ name: req.body.name }).then((category) => {
@@ -260,8 +258,6 @@ router.post('/edit/:id', passport.authenticate('jwt', { session: false }), (req,
     }
     if (req.body.banner_imgs !== undefined && req.body.banner_imgs.length > 0) {
       data.banner_imgs = req.body.banner_imgs.split('|')
-    } else {
-      data.banner_imgs = []
     }
     CategoriesLevelThree.findByIdAndUpdate({ _id: req.params.id }, { $set: data }, { new: false }).then((catrgory) =>
       res.json(catrgory)
