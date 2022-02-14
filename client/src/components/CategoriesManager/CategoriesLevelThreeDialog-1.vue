@@ -287,7 +287,7 @@
 
               <!-- 第七行開始，版型編號-->
               <el-row :gutter="20" type="flex" class="row-bg">
-                <el-col :span="12">
+                <el-col :span="8">
                   <div class="grid-content">
                     <el-form-item label="版型編號：" size="mini" label-width="120px" prop="pattern_no">
                       <el-input
@@ -298,6 +298,15 @@
                     </el-form-item>
                   </div>
                 </el-col>
+
+                <el-col :span="4">
+                  <div class="grid-content">
+                    <el-form-item label="版型下載：" size="mini" label-width="120px" prop="pattern_free">
+                      <el-checkbox v-model="levelThreeFormData.pattern_free">允許下載</el-checkbox>
+                    </el-form-item>
+                  </div>
+                </el-col>
+
                 <el-col :span="12">
                   <div class="grid-content">
                     <el-form-item label="版型下載：" size="mini" label-width="120px" prop="pattern_download">
@@ -1125,6 +1134,7 @@ export default {
         last_edit_person: this.user.id,
         status: Object.assign({}, this.levelThreeFormData.status),
         pattern_no: this.levelThreeFormData.pattern_no,
+        pattern_free: this.levelThreeFormData.pattern_free,
         pattern_download: this.levelThreeFormData.pattern_download,
         tailor_fee: this.levelThreeFormData.tailor_fee,
         crop_fee: this.levelThreeFormData.crop_fee,

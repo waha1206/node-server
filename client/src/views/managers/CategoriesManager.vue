@@ -328,6 +328,7 @@ export default {
         describe: '',
         level: 0,
         pattern_no: '', // 版型編號
+        pattern_free: true, // 版型是否允許下載
         pattern_download: '', // 雲端下載連結，存放雲端資料夾的網址
         pattern_height: 0,
         pattern_width: 0,

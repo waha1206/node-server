@@ -94,6 +94,11 @@ const CategoryLevelThreeSchema = new Schema({
   pattern_no: {
     type: String
   },
+  // 是否允許版型下載
+  pattern_free: {
+    type: Boolean,
+    default: false
+  },
   // 版型下載
   pattern_download: {
     type: String
