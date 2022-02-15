@@ -136,21 +136,16 @@ const MaterialGroupMemberSchema = new Schema({
   // 原物料組分類，很重要
   kind: {
     type: Number
+  },
+  // 客戶選擇原料的時候所看到的說明
+  select_description: {
+    type: String
   }
 })
 
 // eslint-disable-next-line no-undef
 module.exports = {
-  MaterialGroupOne: mongoose.model(
-    'material-group-ones',
-    MaterialGroupOneSchema
-  ),
-  MaterialGroupTwo: mongoose.model(
-    'material-group-twos',
-    MaterialGroupTwoSchema
-  ),
-  MaterialGroupMember: mongoose.model(
-    'material_group_members',
-    MaterialGroupMemberSchema
-  )
+  MaterialGroupOne: mongoose.model('material-group-ones', MaterialGroupOneSchema),
+  MaterialGroupTwo: mongoose.model('material-group-twos', MaterialGroupTwoSchema),
+  MaterialGroupMember: mongoose.model('material_group_members', MaterialGroupMemberSchema)
 }

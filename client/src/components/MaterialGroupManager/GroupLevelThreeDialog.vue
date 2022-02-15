@@ -37,12 +37,7 @@
               <!-- 原料組名稱 -->
               <el-col :span="10">
                 <div class="grid-content">
-                  <el-form-item
-                    label="原料組名稱："
-                    size="mini"
-                    label-width="120px"
-                    prop="name"
-                  >
+                  <el-form-item label="原料組名稱：" size="mini" label-width="120px" prop="name">
                     <el-input
                       placeholder="12吋圓包專用拉鍊 or 御守專用井字結"
                       type="name"
@@ -54,12 +49,7 @@
               <!-- 客戶端看的 -->
               <el-col :span="6">
                 <div class="grid-content">
-                  <el-form-item
-                    label="客戶端看的："
-                    size="mini"
-                    label-width="120px"
-                    prop="web_side_name"
-                  >
+                  <el-form-item label="客戶端看的：" size="mini" label-width="120px" prop="web_side_name">
                     <el-input
                       placeholder="給客戶看的，簡短名稱"
                       type="web_side_name"
@@ -74,12 +64,7 @@
           <el-row :gutter="20" type="flex" class="row-bg">
             <el-col :span="6">
               <div class="grid-content">
-                <el-form-item
-                  label="加工費-暫時沒用："
-                  size="mini"
-                  label-width="120px"
-                  prop="processing_fee"
-                >
+                <el-form-item label="加工費-暫時沒用：" size="mini" label-width="120px" prop="processing_fee">
                   <my-currency-input
                     :width="132"
                     :height="24"
@@ -92,17 +77,8 @@
             </el-col>
             <el-col :span="18">
               <div class="grid-content">
-                <el-form-item
-                  label="備註："
-                  size="mini"
-                  label-width="120px"
-                  prop="describe"
-                >
-                  <el-input
-                    :isReadyOnly="false"
-                    type="describe"
-                    v-model="levelThreeFormData.describe"
-                  ></el-input>
+                <el-form-item label="備註：" size="mini" label-width="120px" prop="describe">
+                  <el-input :isReadyOnly="false" type="describe" v-model="levelThreeFormData.describe"></el-input>
                 </el-form-item>
               </div>
             </el-col>
@@ -111,49 +87,22 @@
           <el-row :gutter="20" type="flex" class="row-bg">
             <el-col :span="6">
               <div class="grid-content">
-                <el-form-item
-                  label="組合編號："
-                  size="mini"
-                  label-width="120px"
-                  prop="type"
-                >
-                  <el-input
-                    type="type"
-                    placeholder="4碼，例如：0001"
-                    v-model="levelThreeFormData.type"
-                  ></el-input>
+                <el-form-item label="組合編號：" size="mini" label-width="120px" prop="type">
+                  <el-input type="type" placeholder="4碼，例如：0001" v-model="levelThreeFormData.type"></el-input>
                 </el-form-item>
               </div>
             </el-col>
             <el-col :span="6">
               <div class="grid-content">
-                <el-form-item
-                  label="修改時間："
-                  size="mini"
-                  label-width="120px"
-                  prop=""
-                >
-                  <el-input
-                    :readonly="true"
-                    type=""
-                    v-model="getDate"
-                  ></el-input>
+                <el-form-item label="修改時間：" size="mini" label-width="120px" prop="">
+                  <el-input :readonly="true" type="" v-model="getDate"></el-input>
                 </el-form-item>
               </div>
             </el-col>
             <el-col :span="6">
               <div class="grid-content">
-                <el-form-item
-                  label="修改人員："
-                  size="mini"
-                  label-width="120px"
-                  prop=""
-                >
-                  <el-input
-                    :readonly="true"
-                    type=""
-                    v-model="getUserNameById"
-                  ></el-input>
+                <el-form-item label="修改人員：" size="mini" label-width="120px" prop="">
+                  <el-input :readonly="true" type="" v-model="getUserNameById"></el-input>
                 </el-form-item>
               </div>
             </el-col>
@@ -171,8 +120,27 @@
             </el-col>
           </el-row>
           <!-- 第四列結束 -->
+          <!-- 第五列 客戶選擇配件說明  -->
+          <el-row :gutter="20" type="flex" class="row-bg" style="height:20%; ">
+            <el-col :span="24">
+              <div class="grid-content">
+                <el-form-item label="配件選擇說明：" prop="" label-width="120px">
+                  <el-input
+                    type="textarea"
+                    placeholder="請輸入配件選擇說明"
+                    v-model="levelThreeFormData.select_description"
+                    :rows="3"
+                    maxlength="120"
+                    show-word-limit
+                    style="margin-top:8px"
+                  >
+                  </el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+          </el-row>
 
-          <!-- 第五行開始，圖片上傳 -->
+          <!-- 第六行開始，圖片上傳 -->
           <!-- 圖片上傳的教學 https://segmentfault.com/a/1190000013796215 -->
           <!-- 上傳一張照片的時候隱藏 後面的 + 框框  https://www.twblogs.net/a/5b81a49e2b71772165ad9752 -->
           <!-- 另外一種做法：https://blog.csdn.net/zaocha321/article/details/103345423 -->
@@ -183,6 +151,7 @@
               size="mini"
               label-width="120px"
               prop="imgs"
+              style="margin-top:10px;margin-bottom:00px"
             >
               <div class="upload-wrap">
                 <el-upload
@@ -196,45 +165,21 @@
                   :file-list="files"
                   :on-change="onFileChange"
                 >
-                  <el-dialog
-                    :visible.sync="dialogVisible"
-                    append-to-body
-                    width="520px"
-                  >
-                    <img
-                      width="480px"
-                      height="480px"
-                      fit="contain"
-                      :src="dialogImageUrl"
-                      alt=""
-                    />
+                  <el-dialog :visible.sync="dialogVisible" append-to-body width="520px">
+                    <img width="480px" height="480px" fit="contain" :src="dialogImageUrl" alt="" />
                   </el-dialog>
                   <i slot="default" class="el-icon-plus"></i>
                   <div class="image-content" slot="file" slot-scope="{ file }">
-                    <img
-                      class="el-upload-list__item-thumbnail"
-                      :src="file.url"
-                      alt=""
-                    />
+                    <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
                     <span class="el-upload-list__item-actions">
-                      <span
-                        class="el-upload-list__item-preview"
-                        @click="handlePictureCardPreview(file)"
-                      >
+                      <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
                         <i class="el-icon-zoom-in"></i>
                       </span>
-                      <span
-                        v-if="!disabled"
-                        class="el-upload-list__item-download"
-                        @click="handleDownload(file)"
-                      >
+                      <span v-if="!disabled" class="el-upload-list__item-download" @click="handleDownload(file)">
                         <i class="el-icon-download"></i>
                       </span>
                       <!-- v-if="!disabled" -->
-                      <span
-                        class="el-upload-list__item-delete"
-                        @click="handleRemove(file, files)"
-                      >
+                      <span class="el-upload-list__item-delete" @click="handleRemove(file, files)">
                         <i class="el-icon-delete"></i>
                       </span>
                     </span>
@@ -250,20 +195,10 @@
             <!-- 這裡有個問題點，沒有清除浮動 -->
             <el-col :span="24">
               <div class="grid-content">
-                <el-form-item
-                  class="text_right"
-                  label-width="110px"
-                  style="margin-top:10px"
-                >
-                  <el-button type="warning" @click="dialog.show = false"
-                    >取消</el-button
-                  >
-                  <el-button type="primary" @click="onSubmit('levelThreeForm')"
-                    >提交</el-button
-                  >
-                  <el-button @click="resetForm('levelThreeForm')"
-                    >重置</el-button
-                  >
+                <el-form-item class="text_right" label-width="110px" style="margin-top:10px">
+                  <el-button type="warning" @click="dialog.show = false">取消</el-button>
+                  <el-button type="primary" @click="onSubmit('levelThreeForm')">提交</el-button>
+                  <el-button @click="resetForm('levelThreeForm')">重置</el-button>
                 </el-form-item>
               </div>
             </el-col>
@@ -309,15 +244,9 @@ export default {
         kind: [{ required: true, message: '必選，必須正確', trigger: 'blur' }],
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
-        choiceLevelTwoValue: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
-        ],
-        web_side_name: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
-        ],
-        describe: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
-        ]
+        choiceLevelTwoValue: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
+        web_side_name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
+        describe: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }]
       },
       // cascader
       choiceLevelTwoValue: [], // 存放第一層與第二層的值，改變的時候要塞到 levelThreeDormData.choiceLevelTwoValue 裡面
@@ -370,10 +299,7 @@ export default {
         this.choiceLevelTwoValue = []
         this.emptyLevelThreeFormData.imgs = []
         console.log(this.emptyLevelThreeFormData)
-        this.levelThreeFormData = Object.assign(
-          {},
-          this.emptyLevelThreeFormData
-        )
+        this.levelThreeFormData = Object.assign({}, this.emptyLevelThreeFormData)
       }
       if (this.dialog.option === 'edit') {
         this.levelThreeFormData = Object.assign({}, this.editFormData)
@@ -391,16 +317,13 @@ export default {
   computed: {
     getDate() {
       if (!this.levelThreeFormData.last_modify_date) return '目前沒有修改過'
-      return this.$moment(this.levelThreeFormData.last_modify_date).format(
-        'YYYY年MM月DD日 - HH：mm'
-      )
+      return this.$moment(this.levelThreeFormData.last_modify_date).format('YYYY年MM月DD日 - HH：mm')
     },
     getUserNameById() {
       if (!this.levelThreeFormData.last_edit_person) return '您是第一個'
       let name = ''
       this.allUserNameId.forEach((item, index) => {
-        if (item._id == this.levelThreeFormData.last_edit_person)
-          name = item.name
+        if (item._id == this.levelThreeFormData.last_edit_person) name = item.name
       })
       return name
     },
@@ -425,16 +348,14 @@ export default {
         processing_fee: String(this.processingFee),
         choiceLevelTwoValue: this.choiceLevelTwoValue,
         level_one_id: this.levelThreeFormData.level_one_id,
-        level_two_id: this.levelThreeFormData.level_two_id
+        level_two_id: this.levelThreeFormData.level_two_id,
+        select_description: this.levelThreeFormData.select_description
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 紀錄最後修改的使用者，最後修改的時間放到了 server 端去紀錄
           uploadFormData.level = 3
-          const url =
-            this.dialog.option == 'add'
-              ? 'add'
-              : `edit/${this.levelThreeFormData._id}`
+          const url = this.dialog.option == 'add' ? 'add' : `edit/${this.levelThreeFormData._id}`
           this.$axios
             .post(`/api/material-group/${url}`, uploadFormData)
             .then((res) => {
@@ -459,10 +380,7 @@ export default {
     },
     // cascader 選擇內容的時候，把內容存起來到 表單裡面
     onOptionsChange() {
-      this.levelThreeFormData.choiceLevelTwoValue = this.choiceLevelTwoValue.slice(
-        0,
-        this.choiceLevelTwoValue.length
-      )
+      this.levelThreeFormData.choiceLevelTwoValue = this.choiceLevelTwoValue.slice(0, this.choiceLevelTwoValue.length)
       this.levelThreeFormData.level_one_id = this.choiceLevelTwoValue[0]
       this.levelThreeFormData.level_two_id = this.choiceLevelTwoValue[1]
     },
@@ -498,14 +416,8 @@ export default {
       this.files = []
       this.processingFee = 0
       this.choiceLevelTwoValue = []
-      this.levelThreeFormData.imgs.splice(
-        0,
-        this.levelThreeFormData.imgs.length
-      )
-      this.levelThreeFormData.choiceLevelTwoValue.splice(
-        0,
-        this.levelThreeFormData.choiceLevelTwoValue.length
-      )
+      this.levelThreeFormData.imgs.splice(0, this.levelThreeFormData.imgs.length)
+      this.levelThreeFormData.choiceLevelTwoValue.splice(0, this.levelThreeFormData.choiceLevelTwoValue.length)
     },
     // 這邊開始為圖片的部分 **********************************************************************************************************
     // 圖片移除的 function
@@ -534,8 +446,7 @@ export default {
     // 過濾跟移除掉超過檔案限制的檔案
     // https://www.jianshu.com/p/840601098d88
     onFileChange(file, fileList) {
-      const isIMAGE =
-        file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'
+      const isIMAGE = file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'
       // 小於 1M 的檔案是 1024 / 1024  這裡設定小於50k ==> 1024 / 50
       // const isLt1M = file.size / 1024 / 1024 < 1
       const isLt50K = file.size / 1024 / 50 < 1

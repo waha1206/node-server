@@ -15,15 +15,9 @@
             filterable
           ></el-cascader>
         </div>
-        <el-button type="primary" size="small" @click="addGroupLevelOne"
-          >新增第一層分類</el-button
-        >
-        <el-button type="primary" size="small" @click="addGroupLevelTwo"
-          >新增第二層分類</el-button
-        >
-        <el-button type="primary" size="small" @click="addGroupLevelThree"
-          >新增原物料容器</el-button
-        >
+        <el-button type="primary" size="small" @click="addGroupLevelOne">新增第一層分類</el-button>
+        <el-button type="primary" size="small" @click="addGroupLevelTwo">新增第二層分類</el-button>
+        <el-button type="primary" size="small" @click="addGroupLevelThree">新增原物料容器</el-button>
       </el-header>
       <!-- 分頁 -->
       <div class="pagination">
@@ -45,13 +39,7 @@
         <el-table
           size="mini"
           :stripe="true"
-          :data="
-            tableData.filter(
-              (data) =>
-                !search ||
-                data.name.toLowerCase().includes(search.toLowerCase())
-            )
-          "
+          :data="tableData.filter((data) => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
           style="width: 100%"
         >
           <!-- 表格的往下拓展選單 -->
@@ -78,10 +66,7 @@
                       filterable
                     ></el-cascader>
                   </div>
-                  <el-button
-                    size="mini"
-                    type="primary"
-                    @click="handleUpdateGroupMember(props.row)"
+                  <el-button size="mini" type="primary" @click="handleUpdateGroupMember(props.row)"
                     >更新原料清單</el-button
                   >
                 </el-form-item>
@@ -89,51 +74,20 @@
             </template>
           </el-table-column>
           <!-- 序號 -->
-          <el-table-column
-            type="index"
-            label="序號"
-            align="center"
-            width="70"
-          ></el-table-column>
+          <el-table-column type="index" label="序號" align="center" width="70"></el-table-column>
           <!-- 原物組料名稱 -->
-          <el-table-column
-            label="原物料組名稱"
-            prop="name"
-            align="left"
-            width="200"
-          ></el-table-column>
+          <el-table-column label="原物料組名稱" prop="name" align="left" width="200"></el-table-column>
           <!-- 編號 -->
-          <el-table-column
-            label="編號"
-            prop="type"
-            align="center"
-            width="70"
-          ></el-table-column>
+          <el-table-column label="編號" prop="type" align="center" width="70"></el-table-column>
           <!-- 加工費 -->
-          <el-table-column
-            label="加工費"
-            prop="processing_fee"
-            align="center"
-            width="70"
-          ></el-table-column>
+          <el-table-column label="加工費" prop="processing_fee" align="center" width="70"></el-table-column>
           <!-- 加工費 -->
-          <el-table-column
-            label="客戶端顯示"
-            prop="web_side_name"
-            align="center"
-            width="140"
-          ></el-table-column>
+          <el-table-column label="客戶端顯示" prop="web_side_name" align="center" width="140"></el-table-column>
           <!-- 多圖 -->
           <el-table-column label="縮圖" width="70" align="center">
             <template slot-scope="scope">
               <!-- v-for="(item, index) in scope.row.imgs" -->
-              <img
-                v-if="scope.row.imgs[0]"
-                width="50px"
-                height="50px"
-                :src="scope.row.imgs[0]"
-                alt=""
-              />
+              <img v-if="scope.row.imgs[0]" width="50px" height="50px" :src="scope.row.imgs[0]" alt="" />
             </template>
           </el-table-column>
           <!-- 多圖 -->
@@ -155,35 +109,19 @@
             </template>
           </el-table-column>
           <!-- 備註 -->
-          <el-table-column
-            label="備註"
-            prop="describe"
-            align="left"
-            width="820"
-          ></el-table-column>
+          <el-table-column label="備註" prop="describe" align="left" width="820"></el-table-column>
 
           <!-- 搜尋欄位、編輯與刪除的按扭 -->
           <!-- 搜尋欄位 -->
           <el-table-column align="center" width="150">
             <!-- header 代表放到列的說明文字那邊 -->
             <template slot="header" slot-scope="scope">
-              <el-input
-                v-model="search"
-                size="mini"
-                placeholder="輸入關鍵字搜尋"
-              />
+              <el-input v-model="search" size="mini" placeholder="輸入關鍵字搜尋" />
             </template>
             <!-- slot 崁入兩個按鈕 -->
             <template slot-scope="scope">
-              <el-button
-                size="mini"
-                @click="handleEditGroupMember(scope.$index, scope.row)"
-                >編輯</el-button
-              >
-              <el-button
-                size="mini"
-                type="danger"
-                @click="handleDeleteGroupMember(scope.$index, scope.row)"
+              <el-button size="mini" @click="handleEditGroupMember(scope.$index, scope.row)">編輯</el-button>
+              <el-button size="mini" type="danger" @click="handleDeleteGroupMember(scope.$index, scope.row)"
                 >刪除</el-button
               >
             </template>
@@ -284,7 +222,8 @@ export default {
         level_one_id: '',
         last_edit_person: '',
         last_modify_date: new Date(),
-        kind: 1
+        kind: 1,
+        select_description: ''
       },
       // 控制分頁
       my_paginations: {
@@ -381,13 +320,11 @@ export default {
     // watch 不能同時判讀兩個值的變化，所以兩個值發生變化的時候，就都去判斷兩個值是否都有資料
     // 當資料都存在的時候，在去運算要得到的結果 這邊是 左上的 cascader option 所需要的兩層資料
     groupLevelOneData() {
-      if (!this.groupLevelOneData.length && !this.groupLevelTwoData.length)
-        return
+      if (!this.groupLevelOneData.length && !this.groupLevelTwoData.length) return
       this.setLevelOneTowOption()
     },
     groupLevelTwoData() {
-      if (!this.groupLevelOneData.length && !this.groupLevelTwoData.length)
-        return
+      if (!this.groupLevelOneData.length && !this.groupLevelTwoData.length) return
       this.setLevelOneTowOption()
     }
   },
@@ -449,10 +386,7 @@ export default {
     },
     setCascaderOptions() {
       // ，就讀回來上次的紀錄
-      if (
-        localStorage.choiceGroupLevelTwoValue &&
-        localStorage.choiceGroupLevelOneValue
-      ) {
+      if (localStorage.choiceGroupLevelTwoValue && localStorage.choiceGroupLevelOneValue) {
         this.choiceLevelTwoValue[0] = localStorage.choiceGroupLevelOneValue
         this.choiceLevelTwoValue[1] = localStorage.choiceGroupLevelTwoValue
       }
@@ -607,21 +541,15 @@ export default {
         option: 'edit'
       }
       this.levelThreeEditTableData = Object.assign({}, row)
-      if (typeof row.processing_fee === 'undefined')
-        this.levelThreeEditTableData.processing_fee = ''
+      if (typeof row.processing_fee === 'undefined') this.levelThreeEditTableData.processing_fee = ''
     },
     handleDeleteGroupMember(index, row) {
-      MessageBox.confirm(
-        '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
-        '嚴重警告！！！'
-      )
+      MessageBox.confirm('注意！資料刪除會不可挽回！請確認此資料無其他應用！', '嚴重警告！！！')
         .then(() => {
-          this.$axios
-            .delete(`/api/material-group/delete/${row._id}`)
-            .then((res) => {
-              this.$message('刪除成功！')
-              this.getGroupLevelThreeData()
-            })
+          this.$axios.delete(`/api/material-group/delete/${row._id}`).then((res) => {
+            this.$message('刪除成功！')
+            this.getGroupLevelThreeData()
+          })
         })
         .catch(() => {
           this.$message('您取消刪除了～鬆一口氣')
@@ -632,9 +560,7 @@ export default {
       this.my_paginations.total = this.groupLevelThreeData.length
       this.my_paginations.page_index = 1
       if (localStorage.material_group_page_size) {
-        this.my_paginations.page_size = Number(
-          localStorage.material_group_page_size
-        )
+        this.my_paginations.page_size = Number(localStorage.material_group_page_size)
       } else {
         this.my_paginations.page_size = 5
       }
