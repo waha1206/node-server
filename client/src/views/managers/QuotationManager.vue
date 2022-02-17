@@ -2,31 +2,17 @@
   <div class="quotatuin-manager">
     <el-container>
       <el-header>
-        <el-button type="primary" size="small" @click="handleQuotationInquire"
-          >報價單管理與查詢</el-button
-        >
-        <el-button type="primary" size="small" @click="handelQuotationSetting"
-          >基本設定</el-button
-        >
+        <el-button type="primary" size="small" @click="handleQuotationInquire">報價單管理與查詢</el-button>
+        <el-button type="primary" size="small" @click="handelQuotationSetting">基本設定</el-button>
 
-        <el-button
-          type="primary"
-          size="small"
-          breadList
-          @click="handleProcessingQuotationDialog"
+        <el-button type="primary" size="small" breadList @click="handleProcessingQuotationDialog"
           >進行中訂單總覽</el-button
         >
       </el-header>
       <el-main>
         <el-breadcrumb class="breadcrumb" separator=">">
-          <el-breadcrumb-item :to="{ path: '/quotation-manager' }"
-            >回到首頁</el-breadcrumb-item
-          >
-          <el-breadcrumb-item
-            v-for="(item, index) in breadList"
-            :key="index"
-            :to="{ path: item.path }"
-          >
+          <el-breadcrumb-item :to="{ path: '/quotation-manager' }">回到首頁</el-breadcrumb-item>
+          <el-breadcrumb-item v-for="(item, index) in breadList" :key="index" :to="{ path: item.path }">
             {{ item.title }}
 
             <!-- <router-link v-if="item.url" :to="item.url">{{
@@ -42,10 +28,7 @@
     <!-- 子元件 -->
     <QuotationInquireDialog :dialog="inquireDialog"> </QuotationInquireDialog>
     <QuotationSettingDialog :dialog="settingDialog"> </QuotationSettingDialog>
-    <QuotationInProcessingDialog
-      :dialog="processingQuotationDialog"
-      @update=""
-    ></QuotationInProcessingDialog>
+    <QuotationInProcessingDialog :dialog="processingQuotationDialog" @update=""></QuotationInProcessingDialog>
     <!-- 子元件結束 -->
   </div>
 </template>

@@ -1,20 +1,16 @@
 <template>
   <div class="quotatuin-level-three">
     <el-row v-if="categoriesLevelThreeData.length > 0">
-      <el-col
-        :span="4"
-        v-for="(item, index) in categoriesLevelThreeData"
-        :key="index"
-      >
+      <el-col :span="4" v-for="(item, index) in categoriesLevelThreeData" :key="index">
         <el-card :body-style="{ padding: '0px', margin: '0px' }">
           <img :src="item.imgs[0]" class="image" @click="updatePath(item)" />
           <div class="info-wrap">
             <span>{{ item.name }}</span>
+            <br />
+            <span>{{ item.pattern_no }}</span>
             <div class="bottom clearfix">
               <time class="time">{{ currentDate }}</time>
-              <el-button type="text" class="button" @click="updatePath(item)"
-                >點我看分類</el-button
-              >
+              <el-button type="text" class="button" @click="updatePath(item)">點我看分類</el-button>
             </div>
           </div>
         </el-card>
