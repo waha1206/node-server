@@ -696,7 +696,7 @@
                 </el-col>
               </el-row>
               <!-- 新品說明或是商品完整描述 levelThreeFormData.new_product_description  -->
-              <el-row :gutter="20" type="flex" class="row-bg" style="height:40%; ">
+              <el-row :gutter="20" type="flex" class="row-bg" style="height:45%;">
                 <el-col :span="24">
                   <div class="grid-content">
                     <el-form-item label="新品說明：" prop="" label-width="120px">
@@ -714,18 +714,32 @@
                   </div>
                 </el-col>
               </el-row>
-              <el-row :gutter="20" type="flex" class="row-bg">
-                <el-col :span="24">
-                  <div class="grid-content">
-                    <el-form-item label="新品(banner)：" label-width="120px" prop="">
-                      <UploadBannerImgs
-                        :bannerFiles="getBannerFiles"
-                        @updateAddBannerImgs="updateAddBannerImgs"
-                        @updateRemoveBannerImgs="updateRemoveBannerImgs"
-                      ></UploadBannerImgs>
-                    </el-form-item></div
-                ></el-col>
-              </el-row>
+              <div style="margin:0px; padding:0px; margin-top:-10px">
+                <el-row :gutter="20" type="flex" class="row-bg">
+                  <el-col :span="12">
+                    <div class="grid-content">
+                      <el-form-item label="新品(banner)：" label-width="120px" prop="">
+                        <UploadBannerImgs
+                          :bannerFiles="getBannerFiles"
+                          @updateAddBannerImgs="updateAddBannerImgs"
+                          @updateRemoveBannerImgs="updateRemoveBannerImgs"
+                        ></UploadBannerImgs>
+                      </el-form-item></div
+                  ></el-col>
+                  <!-- </el-row>
+              <el-row :gutter="20" type="flex" class="row-bg"> -->
+                  <el-col :span="12">
+                    <div class="grid-content">
+                      <el-form-item label="縮圖(180pix)：" label-width="120px" prop="">
+                        <UploadBannerImgs
+                          :bannerFiles="getThumbnailFiles"
+                          @updateAddBannerImgs="updateAddThumbnailImgs"
+                          @updateRemoveBannerImgs="updateRemoveThumbnailImgs"
+                        ></UploadBannerImgs>
+                      </el-form-item></div
+                  ></el-col>
+                </el-row>
+              </div>
             </el-header>
           </el-container>
           <!-- 第十二行開始，圖片上傳 -->
@@ -736,7 +750,7 @@
             <!-- <div class="image-warp"> -->
             <!-- :data="uploadData"
 						action="#" 上傳的網址，應該是自動上傳使用的吧-->
-            <el-form-item label="商品圖片：" size="mini" label-width="120px" prop="describe" style="margin-top:190px">
+            <el-form-item label="商品圖片：" size="mini" label-width="120px" prop="describe" style="margin-top:180px">
               <div class="upload-wrap">
                 <el-upload
                   action="#"
@@ -843,7 +857,8 @@ export default {
       dialogImageUrl: '',
       dialogVisible: false,
       disabled: Boolean,
-      bannerFiles: [],
+      bannerFiles: [], // banner 1280*335
+      thumbnailFiles: [], // 縮落圖 180*180
       tailorFee: 0,
       cropFee: 0,
       updateLevelTwoData: [],
@@ -897,6 +912,9 @@ export default {
   computed: {
     getBannerFiles() {
       return this.bannerFiles
+    },
+    getThumbnailFiles() {
+      return this.thumbnailFiles
     },
     getDate() {
       if (!this.levelThreeFormData) return '目前沒有修改過'
@@ -975,6 +993,13 @@ export default {
     // 子元件 bannerImgs 更動
     updateAddBannerImgs(img) {
       this.bannerFiles.push(img)
+    },
+    updateRemoveThumbnailImgs(index) {
+      this.thumbnailFiles.splice(index, 1)
+    },
+    // 子元件 thumbnailImgs 更動
+    updateAddThumbnailImgs(img) {
+      this.thumbnailFiles.push(img)
     },
     // 智慧排版啟用 / 禁止
     // handleTypesettingChange(value) {
@@ -1091,6 +1116,8 @@ export default {
       }
       // 如果 banner_imgs 沒有資料 undefined 就帶入空陣列
       this.bannerFiles = this.levelThreeFormData.banner_imgs || []
+      // 如果 thumbnail 沒有資料 undefined 就帶入空陣列
+      this.thumbnailFiles = this.levelThreeFormData.thumbnail || []
     },
     // 第一層被選中後，就會去更新第二層的資料
     levelOneChang(id) {
@@ -1154,7 +1181,8 @@ export default {
         sample_order: Object.assign({}, this.levelThreeFormData.sample_order),
         banner_imgs: this.bannerFiles.length > 0 ? this.bannerFiles.join('|') : [], // 如果圖片都除除乾淨，就給空數組
         disable_proofing: this.levelThreeFormData.disable_proofing,
-        new_product_description: this.levelThreeFormData.new_product_description
+        new_product_description: this.levelThreeFormData.new_product_description,
+        thumbnail: this.thumbnailFiles.length > 0 ? this.thumbnailFiles.join('|') : [] // 如果圖片都除除乾淨，就給空數組
       }
 
       if (uploadFormData.carton_id == undefined || uploadFormData.delivery_id == undefined) {

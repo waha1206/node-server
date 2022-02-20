@@ -320,6 +320,7 @@ export default {
       categoriesLevelThreeFormData: {
         imgs: [], // 商品圖片的 imgs
         banner_imgs: [], // banner 的 imgs
+        thumbnail: [], // 縮落圖 180*180 pixel
         disable_proofing: false, // 不提供打樣，類似纜股頭類的超級高單價
         level_one_id: '',
         level_two_id: '',

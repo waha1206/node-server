@@ -291,6 +291,10 @@ const CategoryLevelThreeSchema = new Schema({
   disable_proofing: {
     type: Boolean,
     default: false
+  },
+  // 縮略圖 180*180 pix
+  thumbnail: {
+    type: [String]
   }
 })
 
