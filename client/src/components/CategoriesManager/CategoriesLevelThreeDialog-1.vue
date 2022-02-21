@@ -720,6 +720,7 @@
                     <div class="grid-content">
                       <el-form-item label="新品(banner)：" label-width="120px" prop="">
                         <UploadBannerImgs
+                          :imgSize="500"
                           :bannerFiles="getBannerFiles"
                           @updateAddBannerImgs="updateAddBannerImgs"
                           @updateRemoveBannerImgs="updateRemoveBannerImgs"
@@ -732,6 +733,7 @@
                     <div class="grid-content">
                       <el-form-item label="縮圖(180pix)：" label-width="120px" prop="">
                         <UploadBannerImgs
+                          :imgSize="100"
                           :bannerFiles="getThumbnailFiles"
                           @updateAddBannerImgs="updateAddThumbnailImgs"
                           @updateRemoveBannerImgs="updateRemoveThumbnailImgs"

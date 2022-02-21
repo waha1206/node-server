@@ -37,7 +37,7 @@
 
 <script>
 export default {
-  props: ['bannerFiles'],
+  props: ['bannerFiles', 'imgSize'],
   data() {
     return {
       // files: [],
@@ -70,13 +70,14 @@ export default {
       const isIMAGE = file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'
       // 小於 1M 的檔案是 1024 / 1024  這裡設定小於50k ==> 1024 / 50
       // const isLt1M = file.size / 1024 / 1024 < 1
-      const isLt500K = file.size / 1024 / 500 < 1
+      const size = parseInt(this.imgSize) || 100
+      const isLt500K = file.size / 1024 / size < 1
       if (!isIMAGE) {
         this.$message.error('只能上傳jpg/png圖片!')
         return false
       }
       if (!isLt500K) {
-        this.$message.error('上傳文件大小不能超過 500KB!')
+        this.$message.error(`上傳文件大小不能超過 ${size / 10}KB!`)
         for (let index = 0; index < fileList.length; index++) {
           if (fileList[index].uid == file.uid) {
             this.bannerImgs.splice(index, 1) //移除数组中要删除的图片
