@@ -314,7 +314,8 @@ export default {
         last_modify_user: '',
         id: '',
         level: 2,
-        level_one_id: ''
+        level_one_id: '',
+        thumbnail: []
       },
       formData: {},
       categoriesLevelThreeFormData: {

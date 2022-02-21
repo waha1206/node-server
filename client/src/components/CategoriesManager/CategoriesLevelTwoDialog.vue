@@ -28,9 +28,7 @@
                 :label="levelOneData.name"
               >
                 <span style="float: left">{{ levelOneData.type }}</span>
-                <span style="float: right; color: #8492a6; font-size: 13px">{{
-                  levelOneData.name
-                }}</span></el-option
+                <span style="float: right; color: #8492a6; font-size: 13px">{{ levelOneData.name }}</span></el-option
               >
             </el-select>
           </div></el-col
@@ -43,20 +41,8 @@
           <el-aside width="65%" class="grid-content bg-purple">
             <div class="table-container">
               <el-table :data="tableData" style="width: 100%" size="mini">
-                <el-table-column
-                  prop="type"
-                  label="第二層編號"
-                  width="120px"
-                  align="center"
-                >
-                </el-table-column>
-                <el-table-column
-                  prop="name"
-                  label="第二層中文"
-                  width="120px"
-                  align="center"
-                >
-                </el-table-column>
+                <el-table-column prop="type" label="第二層編號" width="120px" align="center"> </el-table-column>
+                <el-table-column prop="name" label="第二層中文" width="120px" align="center"> </el-table-column>
                 <el-table-column label="大分類" align="center" width="180">
                   <template slot-scope="scope">
                     {{ getLevelOneNameById(scope.row) }}
@@ -66,35 +52,14 @@
                 <el-table-column label="單圖" width="70" align="center">
                   <template slot-scope="scope">
                     <!-- v-for="(item, index) in scope.row.imgs" -->
-                    <img
-                      v-if="scope.row.imgs[0]"
-                      width="50px"
-                      height="50px"
-                      :src="scope.row.imgs[0]"
-                      alt=""
-                    />
+                    <img v-if="scope.row.imgs[0]" width="50px" height="50px" :src="scope.row.imgs[0]" alt="" />
                   </template>
                 </el-table-column>
 
-                <el-table-column
-                  prop="operation"
-                  label="操作"
-                  width="220"
-                  align="center"
-                >
+                <el-table-column prop="operation" label="操作" width="220" align="center">
                   <template slot-scope="scope">
-                    <el-button
-                      type="warning"
-                      icon="edit"
-                      size="small"
-                      @click="handleEdit(scope.row)"
-                      >編輯</el-button
-                    >
-                    <el-button
-                      type="danger"
-                      icon="delete"
-                      size="small"
-                      @click="handleDelete(scope.row)"
+                    <el-button type="warning" icon="edit" size="small" @click="handleEdit(scope.row)">編輯</el-button>
+                    <el-button type="danger" icon="delete" size="small" @click="handleDelete(scope.row)"
                       >刪除</el-button
                     >
                   </template>
@@ -130,10 +95,7 @@
                     :label="levelOneData.name"
                   >
                     <span style="float: left">{{ levelOneData.type }}</span>
-                    <span
-                      style="float: right; color: #8492a6; font-size: 13px"
-                      >{{ levelOneData.name }}</span
-                    >
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ levelOneData.name }}</span>
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -153,12 +115,8 @@
               </el-form-item>
               <!--提交與取消鍵 -->
               <el-form-item class="text_right">
-                <el-button type="warning" @click="dialog.show = false"
-                  >取消</el-button
-                >
-                <el-button type="primary" @click="handleAdd('form')"
-                  >提交</el-button
-                >
+                <el-button type="warning" @click="dialog.show = false">取消</el-button>
+                <el-button type="primary" @click="handleAdd('form')">提交</el-button>
               </el-form-item>
             </el-form>
           </el-aside>
@@ -182,11 +140,7 @@
         <!-- 分頁結束 -->
       </div>
     </el-dialog>
-    <el-dialog
-      title="編輯中分類"
-      :visible.sync="categoriesEditDialog"
-      width="25%"
-    >
+    <el-dialog title="編輯中分類" :visible.sync="categoriesEditDialog" width="50%">
       <el-form
         ref="editForm"
         :model="categoriesEditForm"
@@ -221,35 +175,13 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          prop="type"
-          size="mini"
-          label="第二層編號"
-          :label-width="formLabelWidth"
-        >
-          <el-input
-            v-model="categoriesEditForm.type"
-            autocomplete="off"
-            placeholder="英文或數字"
-          ></el-input>
+        <el-form-item prop="type" size="mini" label="第二層編號" :label-width="formLabelWidth">
+          <el-input v-model="categoriesEditForm.type" autocomplete="off" placeholder="英文或數字"></el-input>
         </el-form-item>
-        <el-form-item
-          prop="name"
-          size="mini"
-          label="第二層中文"
-          :label-width="formLabelWidth"
-        >
-          <el-input
-            v-model="categoriesEditForm.name"
-            autocomplete="off"
-            placeholder="請輸入大寫英文"
-          ></el-input>
+        <el-form-item prop="name" size="mini" label="第二層中文" :label-width="formLabelWidth">
+          <el-input v-model="categoriesEditForm.name" autocomplete="off" placeholder="請輸入大寫英文"></el-input>
         </el-form-item>
-        <el-form-item
-          prop="describe"
-          label="商品敘述 (中文)"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item prop="describe" label="商品敘述 (中文)" :label-width="formLabelWidth">
           <el-input
             v-model="categoriesEditForm.describe"
             autocomplete="off"
@@ -259,77 +191,64 @@
             size="mini"
           ></el-input>
         </el-form-item>
-        <el-main>
+        <el-main style="margin-top:-20px">
           <!-- <div class="image-warp"> -->
-          <el-form-item
-            label="圖片上傳："
-            size="mini"
-            label-width="120px"
-            prop="describe"
-          >
+          <el-form-item label="圖片上傳：" size="mini" label-width="120px" prop="">
             <!-- :class="{ uoloadSty: showBtnImg, disUoloadSty: noneBtnImg }" -->
-            <div class="upload-wrap">
-              <el-upload
-                :data="uploadData"
-                action="uploadActionUrl"
-                list-type="picture-card"
-                :auto-upload="false"
-                accept="image/jpeg,image/gif,image/png"
-                multiple
-                :limit="limitCountImg"
-                :file-list="files"
-                :on-change="onFileChange"
-              >
-                <el-dialog
-                  :visible.sync="dialogVisible"
-                  append-to-body
-                  width="520px"
-                >
-                  <img
-                    width="480px"
-                    height="480px"
-                    fit="contain"
-                    :src="dialogImageUrl"
-                    alt=""
-                  />
-                </el-dialog>
-                <i slot="default" class="el-icon-plus"></i>
-                <div class="image-content" slot="file" slot-scope="{ file }">
-                  <img
-                    class="el-upload-list__item-thumbnail"
-                    :src="file.url"
-                    alt=""
-                  />
-                  <span class="el-upload-list__item-actions">
-                    <span
-                      class="el-upload-list__item-preview"
-                      @click="handlePictureCardPreview(file)"
-                    >
-                      <i class="el-icon-zoom-in"></i>
-                    </span>
-                    <span
-                      v-if="!disabled"
-                      class="el-upload-list__item-download"
-                      @click="handleDownload(file)"
-                    >
-                      <i class="el-icon-download"></i>
-                    </span>
-                    <!-- v-if="!disabled" -->
-                    <span
-                      class="el-upload-list__item-delete"
-                      @click="handleRemove(file, files)"
-                    >
-                      <i class="el-icon-delete"></i>
-                    </span>
-                  </span>
-                </div>
-              </el-upload>
-            </div>
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="12">
+                <div class="upload-wrap">
+                  <el-upload
+                    :data="uploadData"
+                    action="uploadActionUrl"
+                    list-type="picture-card"
+                    :auto-upload="false"
+                    accept="image/jpeg,image/gif,image/png"
+                    multiple
+                    :limit="limitCountImg"
+                    :file-list="files"
+                    :on-change="onFileChange"
+                  >
+                    <el-dialog :visible.sync="dialogVisible" append-to-body width="520px">
+                      <img width="480px" height="480px" fit="contain" :src="dialogImageUrl" alt="" />
+                    </el-dialog>
+                    <i slot="default" class="el-icon-plus"></i>
+                    <div class="image-content" slot="file" slot-scope="{ file }">
+                      <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                      <span class="el-upload-list__item-actions">
+                        <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
+                          <i class="el-icon-zoom-in"></i>
+                        </span>
+                        <span v-if="!disabled" class="el-upload-list__item-download" @click="handleDownload(file)">
+                          <i class="el-icon-download"></i>
+                        </span>
+                        <!-- v-if="!disabled" -->
+                        <span class="el-upload-list__item-delete" @click="handleRemove(file, files)">
+                          <i class="el-icon-delete"></i>
+                        </span>
+                      </span>
+                    </div>
+                  </el-upload></div
+              ></el-col>
+
+              <el-col :span="12">
+                <div class="grid-content">
+                  <el-form-item label="縮圖(180pix)：" label-width="120px" prop="">
+                    <UploadBannerImgs
+                      :key="key"
+                      :imgSize="100"
+                      :bannerFiles="getThumbnailFiles"
+                      @updateAddBannerImgs="updateAddThumbnailImgs"
+                      @updateRemoveBannerImgs="updateRemoveThumbnailImgs"
+                    ></UploadBannerImgs>
+                  </el-form-item></div
+              ></el-col>
+            </el-row>
           </el-form-item>
           <!-- </div> -->
         </el-main>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer" style="margin-top:-20px">
         <el-button @click="categoriesEditDialog = false">取消</el-button>
         <el-button type="primary" @click="onSubmit('editForm')">修改</el-button>
       </div>
@@ -339,6 +258,8 @@
 
 <script>
 import { MessageBox } from 'element-ui'
+import UploadBannerImgs from './UploadBannerImgs.vue'
+
 export default {
   name: 'categories-level-two-dialog',
   props: {
@@ -347,8 +268,13 @@ export default {
     categoriesLevelTwoData: Array,
     categoriesLevelOneData: Array
   },
+  components: {
+    UploadBannerImgs
+  },
   data() {
     return {
+      key: 0,
+      thumbnailFiles: [], // 縮落圖 180*180
       dontRemove: '5fd54071cbcb7757640a7ee7',
       filterTableData: {
         tableData: [],
@@ -363,7 +289,8 @@ export default {
         imgs: [],
         level_one_id: '',
         _id: '',
-        level_one_name: ''
+        level_one_name: '',
+        thumbnail: []
       },
       // 圖片上傳
       uploadData: {
@@ -414,11 +341,21 @@ export default {
     }
   },
   computed: {
+    getThumbnailFiles() {
+      return this.thumbnailFiles
+    },
     user() {
       return this.$store.getters.user
     }
   },
   methods: {
+    updateRemoveThumbnailImgs(index) {
+      this.thumbnailFiles.splice(index, 1)
+    },
+    // 子元件 thumbnailImgs 更動
+    updateAddThumbnailImgs(img) {
+      this.thumbnailFiles.push(img)
+    },
     getLevelOneNameById(row) {
       let levelOneName = ''
       this.categoriesLevelOneData.forEach((e) => {
@@ -444,11 +381,9 @@ export default {
       if (this.filterTableData.levelOneId == this.dontRemove) {
         this.filterTableData.tableData = this.categoriesLevelTwoData
       } else {
-        this.filterTableData.tableData = this.categoriesLevelTwoData.filter(
-          (item) => {
-            return item.level_one_id == this.filterTableData.levelOneId
-          }
-        )
+        this.filterTableData.tableData = this.categoriesLevelTwoData.filter((item) => {
+          return item.level_one_id == this.filterTableData.levelOneId
+        })
       }
       this.setPaginations()
     },
@@ -463,9 +398,7 @@ export default {
       this.my_paginations.total = this.filterTableData.tableData.length
       this.my_paginations.page_index = 1
       if (localStorage.categories_level_two_class_page_size) {
-        this.my_paginations.page_size = Number(
-          localStorage.categories_level_two_class_page_size
-        )
+        this.my_paginations.page_size = Number(localStorage.categories_level_two_class_page_size)
       } else {
         this.my_paginations.page_size = 5
       }
@@ -501,6 +434,7 @@ export default {
       this.dialog.option = 'add'
       this.onSubmit(form)
     },
+    // setPaginations 把 table 的資料都設定好了，再來點 edit 的時候，就把 所以所有資料都讀近來
     handleEdit(row) {
       this.categoriesEditDialog = true
       this.categoriesEditForm.type = row.type
@@ -508,24 +442,25 @@ export default {
       this.categoriesEditForm.describe = row.describe
       this.categoriesEditForm._id = row._id
       this.categoriesEditForm.level_one_name = this.getLevelOneNameById(row)
+
       if (row.imgs) {
         this.categoriesEditForm.imgs = row.imgs
-        this.getImgs()
       }
+      if (row.thumbnail) {
+        this.categoriesEditForm.thumbnail = row.thumbnail
+        this.thumbnailFiles = row.thumbnail // 使用元件的話，要提早存起來
+      }
+      this.getImgs() // 把 imgs 切一切，使用元件 的 upload 不需要切喔
+
       this.dialog.option = 'edit'
     },
     handleDelete(row) {
-      MessageBox.confirm(
-        '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
-        '嚴重警告！！！'
-      )
+      MessageBox.confirm('注意！資料刪除會不可挽回！請確認此資料無其他應用！', '嚴重警告！！！')
         .then(() => {
-          this.$axios
-            .delete(`/api/categories/delete-level-two/${row._id}`)
-            .then((res) => {
-              this.$message('刪除成功！')
-              this.$emit('update')
-            })
+          this.$axios.delete(`/api/categories/delete-level-two/${row._id}`).then((res) => {
+            this.$message('刪除成功！')
+            this.$emit('update')
+          })
         })
         .catch(() => {
           this.$message('您取消刪除了～鬆一口氣')
@@ -533,17 +468,14 @@ export default {
     },
     // 新增商品類別代號
     onSubmit(form) {
-      const uploadFormData =
-        this.dialog.option == 'add' ? this.formData : this.categoriesEditForm
+      const uploadFormData = this.dialog.option == 'add' ? this.formData : this.categoriesEditForm
 
       uploadFormData.imgs = this.categoriesEditForm.imgs.join('|')
+      uploadFormData.thumbnail = this.categoriesEditForm.thumbnail.join('|')
 
       this.$refs[form].validate((valid) => {
         if (valid && !uploadFormData.type == '') {
-          const url =
-            this.dialog.option == 'add'
-              ? 'add'
-              : `edit/${this.categoriesEditForm._id}`
+          const url = this.dialog.option == 'add' ? 'add' : `edit/${this.categoriesEditForm._id}`
           uploadFormData.level = 2
           if (uploadFormData.level_one_id === this.dontRemove) {
             this.$message('請重新選擇第一層分類，您不能選擇全部分類')
@@ -597,8 +529,7 @@ export default {
     // 過濾跟移除掉超過檔案限制的檔案
     // https://www.jianshu.com/p/840601098d88
     onFileChange(file, fileList) {
-      const isIMAGE =
-        file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'
+      const isIMAGE = file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'
       // 小於 1M 的檔案是 1024 / 1024  這裡設定小於50k ==> 1024 / 50
       // const isLt1M = file.size / 1024 / 1024 < 1
       const isLt50K = file.size / 1024 / 50 < 1

@@ -71,6 +71,10 @@ const CategoryLevelTwoSchema = new Schema({
   },
   last_modify_date: {
     type: Date
+  },
+  // 縮略圖 180*180 pix
+  thumbnail: {
+    type: [String]
   }
 })
 

@@ -51,6 +51,11 @@ router.post('/add', passport.authenticate('jwt', { session: false }), (req, res)
     if (req.body.imgs) {
       data.imgs = req.body.imgs.split('|')
     }
+
+    if (req.body.thumbnail) {
+      data.thumbnail = req.body.thumbnail.split('|')
+    }
+
     if (req.body.banner_imgs !== undefined && req.body.banner_imgs.length > 0) {
       data.banner_imgs = req.body.banner_imgs.split('|')
     }
@@ -70,6 +75,10 @@ router.post('/add', passport.authenticate('jwt', { session: false }), (req, res)
       }
     })
     return
+  }
+
+  if (req.body.thumbnail) {
+    categoriesFields.thumbnail = req.body.thumbnail
   }
   // console.log(categoriesFields)
   CategoryLevel.findOne({ name: req.body.name }).then((category) => {
@@ -265,6 +274,9 @@ router.post('/edit/:id', passport.authenticate('jwt', { session: false }), (req,
     return
   }
 
+  if (req.body.thumbnail) {
+    categoryFields.thumbnail = req.body.thumbnail
+  }
   CategoryLevel.findByIdAndUpdate({ _id: req.params.id }, { $set: categoryFields }, { new: false }).then((catrgory) =>
     res.json(catrgory)
   )
