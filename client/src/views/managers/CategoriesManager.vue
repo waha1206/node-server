@@ -235,6 +235,9 @@
         <!-- <el-main>Main</el-main> -->
       </el-container>
     </el-container>
+    <footer class="footer">
+      <div></div>
+    </footer>
 
     <!-- 新增第一層商品的 dialog -->
     <CategoriesLevelOneDialog
@@ -947,5 +950,11 @@ body > .el-container {
 }
 .profit {
   margin-bottom: 10px;
+}
+
+.footer {
+  /* background: #b3c0d1; */
+  width: 100%;
+  height: 150px;
 }
 </style>
