@@ -133,6 +133,9 @@
         <!-- <el-main>Main</el-main> -->
       </el-container>
     </el-container>
+    <footer class="footer">
+      <div></div>
+    </footer>
     <!-- 第一層的 dialog -- group level one -->
     <GroupLevelOneDialog
       v-if="groupLevelOneData[0]"
@@ -659,5 +662,11 @@ body > .el-container {
 }
 .cascader-item {
   margin-bottom: 0px;
+}
+
+.footer {
+  /* background: #b3c0d1; */
+  width: 100%;
+  height: 150px;
 }
 </style>
