@@ -18,7 +18,7 @@ const quotation = require('./routes/api/quotation')
 const employee = require('./routes/api/employee')
 
 // db config
-const db = require('./config/keys').mongoURI
+const db = require('./config/keys').mongoURI2
 
 // 使用 body-parser 中間件
 // app.use(bodyParser.json())
