@@ -7,7 +7,7 @@
       :close-on-press-escape="false"
       :modal-append-to-body="false"
       width="1600px"
-      style="margin-top:-40px"
+      style="margin-top:-60px"
     >
       <!-- style="margin:10px;width:auto" -->
       <el-form ref="form" :model="customerFormData" :rules="form_rules" label-width="100px">
@@ -39,7 +39,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="客戶名稱：" prop="company" label-width="120px">
+                <el-form-item label="公司名稱：" prop="company" label-width="120px">
                   <el-input
                     v-model="customerFormData.company"
                     placeholder="遠足文化事業股份有限公司(小熊出版社)(禁止交易)"
@@ -64,6 +64,37 @@
               <el-col :span="5">
                 <el-form-item label="公司傳真：" prop="company_fax" label-width="120px">
                   <el-input v-model="customerFormData.company_fax" placeholder="公司傳真" size="mini"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- 插入列，客戶姓，客戶名，客戶姓名 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="6">
+                <el-form-item label="客戶姓：" prop="company_sumame" label-width="120px">
+                  <el-input
+                    v-model="customerFormData.company_sumame"
+                    placeholder="代表人姓氏(家族名 ex.Yang)"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="客戶名：" prop="company_name" label-width="120px">
+                  <el-input
+                    v-model="customerFormData.company_name"
+                    placeholder="代表人名字 (ex.Leo)"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="客戶姓名：" prop="" label-width="120px">
+                  <el-input
+                    placeholder="代表人完整姓名 (ex.Leo Yang)"
+                    v-model="getFullName"
+                    :disabled="true"
+                    size="mini"
+                  ></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -938,6 +969,9 @@ export default {
     }
   },
   computed: {
+    getFullName() {
+      return this.customerFormData.company_name + ' ' + this.customerFormData.company_sumame
+    },
     // 取得使用者資料
     ...mapGetters(['user']),
     // 時間轉換
@@ -989,10 +1023,14 @@ export default {
     customerClassChange() {},
     customerTitleChange() {},
     onSubmit(form) {
+      // fullname = 合成 company_sumame + ' ' + company_name
+
       this.$refs[form].validate((valid) => {
         if (valid) {
           this.customerFormData.last_edit_person = this.user.id
           this.customerFormData.last_modify_date = new Date()
+          this.customerFormData.company_fullname =
+            this.customerFormData.company_name + ' ' + this.customerFormData.company_sumame
 
           const url = this.dialog.option == 'add' ? 'add' : `edit/${this.customerFormData._id}`
           this.$axios

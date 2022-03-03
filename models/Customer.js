@@ -45,6 +45,15 @@ const CustomerSchema = new Schema({
   tax_id_number: {
     type: String
   },
+  company_name: {
+    type: String
+  },
+  company_sumame: {
+    type: String
+  },
+  company_fullname: {
+    type: String
+  },
   contact_person_name: {
     type: String
   },
