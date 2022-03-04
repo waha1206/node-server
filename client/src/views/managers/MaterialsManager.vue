@@ -2,15 +2,9 @@
   <div class="materials-manager">
     <el-container>
       <el-header>
-        <el-button type="primary" size="small" @click="addMaterialLevelOneClass"
-          >新增第一層分類</el-button
-        >
-        <el-button type="primary" size="small" @click="addMaterialLevelTwoClass"
-          >新增第二層分類</el-button
-        >
-        <el-button type="primary" size="small" @click="handleAddMaterial"
-          >新增原物料</el-button
-        >
+        <el-button type="primary" size="small" @click="addMaterialLevelOneClass">新增第一層分類</el-button>
+        <el-button type="primary" size="small" @click="addMaterialLevelTwoClass">新增第二層分類</el-button>
+        <el-button type="primary" size="small" @click="handleAddMaterial">新增原物料</el-button>
         <div class="materal-class-container">
           <el-cascader
             @change="onOptionsChange"
@@ -60,30 +54,13 @@
         <el-table
           size="mini"
           :stripe="true"
-          :data="
-            tableData.filter(
-              (data) =>
-                !search ||
-                data.product_name.toLowerCase().includes(search.toLowerCase())
-            )
-          "
+          :data="tableData.filter((data) => !search || data.product_name.toLowerCase().includes(search.toLowerCase()))"
           style="width: 100%"
         >
           <!-- 序號 -->
-          <el-table-column
-            type="index"
-            label="序號"
-            align="center"
-            width="70"
-          ></el-table-column>
+          <el-table-column type="index" label="序號" align="center" width="70"></el-table-column>
           <!-- 原物料名稱 -->
-          <el-table-column
-            label="原物料名稱"
-            prop="product_name"
-            align="left"
-            width="300"
-          >
-          </el-table-column>
+          <el-table-column label="原物料名稱" prop="product_name" align="left" width="300"> </el-table-column>
           <!-- 商品說明 -->
           <!-- 說明跳出來對話框的區塊 -->
           <el-table-column label="說明" width="70" align="center">
@@ -103,11 +80,7 @@
                 <p>供應商：{{ scope.row.supplier }}</p>
                 <p>版型編號：{{ scope.row.pattern_no }}</p>
                 <p>
-                  版型連結：<a
-                    :href="scope.row.pattern_download"
-                    target="_blank"
-                    >{{ scope.row.pattern_download }}</a
-                  >
+                  版型連結：<a :href="scope.row.pattern_download" target="_blank">{{ scope.row.pattern_download }}</a>
                 </p>
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="mini">完整說明</el-tag>
@@ -134,15 +107,8 @@
             </template>
           </el-table-column>
           <!-- 顏色 -->
-          <el-table-column
-            label="顏色"
-            prop="product_color"
-            align="center"
-            width="160"
-          >
-          </el-table-column>
-          <el-table-column label="編號" prop="type" align="center" width="70">
-          </el-table-column>
+          <el-table-column label="顏色" prop="product_color" align="center" width="160"> </el-table-column>
+          <el-table-column label="編號" prop="type" align="center" width="70"> </el-table-column>
           <!-- 原物料分類，從分類ID回傳分類名稱 -->
           <el-table-column label="分類" align="center" width="80">
             <template slot-scope="scope">
@@ -150,153 +116,67 @@
             </template>
           </el-table-column>
           <!-- 售價 -->
-          <el-table-column
-            label="售價"
-            prop="retail_price"
-            align="center"
-            width="70"
-          >
-          </el-table-column>
+          <el-table-column label="售價" prop="retail_price" align="center" width="70"> </el-table-column>
           <!-- 單位售價 -->
-          <el-table-column
-            label="單位售價"
-            prop="unit_price"
-            align="center"
-            width="70"
-          >
-          </el-table-column>
+          <el-table-column label="單位售價" prop="unit_price" align="center" width="70"> </el-table-column>
 
           <!-- 平車費用 -->
-          <el-table-column
-            label="平車費用"
-            prop="tailor_fee"
-            align="center"
-            width="70"
-          >
-          </el-table-column>
+          <el-table-column label="平車費用" prop="tailor_fee" align="center" width="70"> </el-table-column>
           <!-- 裁切費用 -->
-          <el-table-column
-            label="裁切費用"
-            prop="crop_fee"
-            align="center"
-            width="70"
-          >
-          </el-table-column>
+          <el-table-column label="裁切費用" prop="crop_fee" align="center" width="70"> </el-table-column>
           <!-- 加工費用 -->
-          <el-table-column
-            label="加工費用"
-            prop="processing_fee"
-            align="center"
-            width="70"
-          >
+          <el-table-column label="加工費用" prop="processing_fee" align="center" width="70">
             <template slot-scope="scope">
-              <div v-if="scope.row.processing_fee">
-                <span>$ </span>{{ scope.row.processing_fee }}<span> 元</span>
-              </div>
+              <div v-if="scope.row.processing_fee"><span>$ </span>{{ scope.row.processing_fee }}<span> 元</span></div>
             </template>
           </el-table-column>
           <!-- 多圖 -->
           <el-table-column label="加工費" width="70" align="center">
             <template slot-scope="scope">
-              <el-checkbox
-                v-model="scope.row.processing_fee_flag"
-                @change="checkboxChange(scope.row)"
-              ></el-checkbox>
+              <el-checkbox v-model="scope.row.processing_fee_flag" @change="checkboxChange(scope.row)"></el-checkbox>
             </template>
           </el-table-column>
           <!-- 商品材質 -->
-          <el-table-column
-            label="商品材質"
-            prop="raw_material"
-            align="center"
-            width="150"
-          >
-          </el-table-column>
+          <el-table-column label="商品材質" prop="raw_material" align="center" width="150"> </el-table-column>
           <!-- 供應商資料 -->
           <el-table-column label="供應商" width="180" align="center">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="left">
                 <div v-if="scope.row.supplier_id">
                   <p>供應商名稱: {{ getSupplierById(scope.row).company }}</p>
-                  <p>
-                    公司統編：{{ getSupplierById(scope.row).tax_id_number }}
-                  </p>
-                  <p>
-                    資本額：{{ getSupplierById(scope.row).registered_capital }}
-                  </p>
+                  <p>公司統編：{{ getSupplierById(scope.row).tax_id_number }}</p>
+                  <p>資本額：{{ getSupplierById(scope.row).registered_capital }}</p>
                   <p>匯款帳號：{{ getSupplierById(scope.row).bank_account }}</p>
                   <p>業務姓名：{{ getSupplierById(scope.row).sales_name }}</p>
-                  <p>
-                    業務手機：{{ getSupplierById(scope.row).sales_cell_phone }}
-                  </p>
-                  <p>
-                    業務電話：{{ getSupplierById(scope.row).sales_telephone }}
-                  </p>
+                  <p>業務手機：{{ getSupplierById(scope.row).sales_cell_phone }}</p>
+                  <p>業務電話：{{ getSupplierById(scope.row).sales_telephone }}</p>
                   <p>業務MAIL：{{ getSupplierById(scope.row).sales_email }}</p>
-                  <p>
-                    會計姓名：{{ getSupplierById(scope.row).accounting_name }}
-                  </p>
-                  <p>
-                    會計手機：{{
-                      getSupplierById(scope.row).accounting_cell_phone
-                    }}
-                  </p>
-                  <p>
-                    會計電話：{{
-                      getSupplierById(scope.row).accounting_telephone
-                    }}
-                  </p>
-                  <p>
-                    會計MAIL：{{ getSupplierById(scope.row).accounting_mail }}
-                  </p>
-                  <p>
-                    公司電話：{{ getSupplierById(scope.row).company_telephone }}
-                  </p>
+                  <p>會計姓名：{{ getSupplierById(scope.row).accounting_name }}</p>
+                  <p>會計手機：{{ getSupplierById(scope.row).accounting_cell_phone }}</p>
+                  <p>會計電話：{{ getSupplierById(scope.row).accounting_telephone }}</p>
+                  <p>會計MAIL：{{ getSupplierById(scope.row).accounting_mail }}</p>
+                  <p>公司電話：{{ getSupplierById(scope.row).company_telephone }}</p>
                   <p>公司傳真：{{ getSupplierById(scope.row).company_fax }}</p>
+                  <p>公司地址：{{ getSupplierById(scope.row).company_address }}</p>
+                  <p>店面電話：{{ getSupplierById(scope.row).storefront_telephone }}</p>
+                  <p>店面傳真：{{ getSupplierById(scope.row).storefront_fax }}</p>
+                  <p>店面地址：{{ getSupplierById(scope.row).storefront_address }}</p>
                   <p>
-                    公司地址：{{ getSupplierById(scope.row).company_address }}
+                    官網：<a :href="getSupplierById(scope.row).website" target="_blank">{{
+                      getSupplierById(scope.row).website
+                    }}</a>
                   </p>
-                  <p>
-                    店面電話：{{
-                      getSupplierById(scope.row).storefront_telephone
-                    }}
-                  </p>
-                  <p>
-                    店面傳真：{{ getSupplierById(scope.row).storefront_fax }}
-                  </p>
-                  <p>
-                    店面地址：{{
-                      getSupplierById(scope.row).storefront_address
-                    }}
-                  </p>
-                  <p>
-                    官網：<a
-                      :href="getSupplierById(scope.row).website"
-                      target="_blank"
-                      >{{ getSupplierById(scope.row).website }}</a
-                    >
-                  </p>
-                  <p>
-                    付款條件：{{ getSupplierById(scope.row).payment_terms }}
-                  </p>
+                  <p>付款條件：{{ getSupplierById(scope.row).payment_terms }}</p>
                   <p>商品交期：{{ getSupplierById(scope.row).delivery }}</p>
                   <p>廠長備註：{{ getSupplierById(scope.row).remarks }}</p>
-                  <p>
-                    會計備註：{{
-                      getSupplierById(scope.row).accounting_remarks
-                    }}
-                  </p>
+                  <p>會計備註：{{ getSupplierById(scope.row).accounting_remarks }}</p>
                 </div>
                 <div v-else>
                   <p>請先建立建立供應商</p>
                 </div>
 
                 <div slot="reference" class="name-wrapper">
-                  <el-tag
-                    size="mini"
-                    v-if="scope.row.supplier_id"
-                    @click="handleEditSupplier(scope.row)"
-                  >
+                  <el-tag size="mini" v-if="scope.row.supplier_id" @click="handleEditSupplier(scope.row)">
                     <!-- {{ scope.row.supplier_id }} -->
                     {{ getSupplierNameById(scope.row) }}
                   </el-tag>
@@ -315,21 +195,12 @@
           <el-table-column align="center" width="150">
             <!-- header 代表放到列的說明文字那邊 -->
             <template slot="header" slot-scope="scope">
-              <el-input
-                v-model="search"
-                size="mini"
-                placeholder="輸入關鍵字搜尋"
-              />
+              <el-input v-model="search" size="mini" placeholder="輸入關鍵字搜尋" />
             </template>
             <!-- slot 崁入兩個按鈕 -->
             <template slot-scope="scope">
-              <el-button size="mini" @click="handleEditMaterial(scope.row)"
-                >編輯</el-button
-              >
-              <el-button
-                size="mini"
-                type="danger"
-                @click="handleDeleteMaterial(scope.$index, scope.row)"
+              <el-button size="mini" @click="handleEditMaterial(scope.row)">編輯</el-button>
+              <el-button size="mini" type="danger" @click="handleDeleteMaterial(scope.$index, scope.row)"
                 >刪除</el-button
               >
             </template>
@@ -457,7 +328,10 @@ export default {
         pattern_no: '',
         processing_fee: '',
         additional_height: '',
-        typesetting: false
+        typesetting: false,
+        pattern_free: false,
+        inside_pattern_no: '',
+        inside_pattern_download: ''
       },
       // 編輯原物料的分類跳出視窗
       formData: {
@@ -531,29 +405,18 @@ export default {
   },
   watch: {
     materialClassData() {
-      if (
-        !this.materialClassData.length &&
-        !this.materialLevelTwoClassData.length
-      )
-        return
+      if (!this.materialClassData.length && !this.materialLevelTwoClassData.length) return
       this.setLevelOneTowOption()
     },
     materialLevelTwoClassData() {
-      if (
-        !this.materialClassData.length &&
-        !this.materialLevelTwoClassData.length
-      )
-        return
+      if (!this.materialClassData.length && !this.materialLevelTwoClassData.length) return
       this.setLevelOneTowOption()
     }
   },
   methods: {
     setCascaderOptions() {
       // ，就讀回來上次的紀錄
-      if (
-        localStorage.MaterialLevelOneValue &&
-        localStorage.MaterialLevelTwoValue
-      ) {
+      if (localStorage.MaterialLevelOneValue && localStorage.MaterialLevelTwoValue) {
         this.choiceLevelTwoValue[0] = localStorage.MaterialLevelOneValue
         this.choiceLevelTwoValue[1] = localStorage.MaterialLevelTwoValue
       }
@@ -709,17 +572,11 @@ export default {
           })
         })
         .catch((err) => {
-          console.log(
-            'axios添加數據失敗==>MaterialManage.vue 修改加工費的 flag 失敗！==>',
-            err
-          )
+          console.log('axios添加數據失敗==>MaterialManage.vue 修改加工費的 flag 失敗！==>', err)
         })
     },
     handleDeleteMaterial(index, row) {
-      MessageBox.confirm(
-        '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
-        '嚴重警告！！！'
-      )
+      MessageBox.confirm('注意！資料刪除會不可挽回！請確認此資料無其他應用！', '嚴重警告！！！')
         .then(() => {
           this.$axios.delete(`/api/material/delete/${row._id}`).then((res) => {
             this.$message('刪除成功！')

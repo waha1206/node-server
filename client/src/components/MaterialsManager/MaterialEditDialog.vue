@@ -7,15 +7,10 @@
       :close-on-press-escape="false"
       :modal-append-to-body="false"
       width="1200px"
-      style="margin-top:-40px"
+      style="margin-top:-90px"
     >
       <!-- style="margin:10px;width:auto" -->
-      <el-form
-        ref="form"
-        :model="materialDataForm"
-        :rules="form_rules"
-        label-width="100px"
-      >
+      <el-form ref="form" :model="materialDataForm" :rules="form_rules" label-width="100px">
         <el-container>
           <el-header>
             <!-- 布局測試 -->
@@ -163,38 +158,22 @@
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
                 <el-form-item prop="storage" label="現有庫存：">
-                  <el-input
-                    size="mini"
-                    type="storage"
-                    v-model="materialDataForm.storage"
-                  ></el-input>
+                  <el-input size="mini" type="storage" v-model="materialDataForm.storage"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item prop="stock_alert" label="最低庫存：">
-                  <el-input
-                    size="mini"
-                    type="stock_alert"
-                    v-model="materialDataForm.stock_alert"
-                  ></el-input>
+                  <el-input size="mini" type="stock_alert" v-model="materialDataForm.stock_alert"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item prop="lead_time" label="採購天數：">
-                  <el-input
-                    size="mini"
-                    type="lead_time"
-                    v-model="materialDataForm.lead_time"
-                  ></el-input>
+                  <el-input size="mini" type="lead_time" v-model="materialDataForm.lead_time"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item prop="unit" label="商品單位：">
-                  <el-input
-                    size="mini"
-                    type="unit"
-                    v-model="materialDataForm.unit"
-                  ></el-input>
+                  <el-input size="mini" type="unit" v-model="materialDataForm.unit"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -203,21 +182,13 @@
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
                 <el-form-item prop="raw_material" label="商品材質：">
-                  <el-input
-                    size="mini"
-                    type="raw_material"
-                    v-model="materialDataForm.raw_material"
-                  ></el-input>
+                  <el-input size="mini" type="raw_material" v-model="materialDataForm.raw_material"></el-input>
                 </el-form-item>
               </el-col>
 
               <el-col :span="6">
                 <el-form-item prop="product_color" label="商品顏色：">
-                  <el-input
-                    size="mini"
-                    type="product_color"
-                    v-model="materialDataForm.product_color"
-                  ></el-input>
+                  <el-input size="mini" type="product_color" v-model="materialDataForm.product_color"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -254,32 +225,18 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item prop="extra_freight" label="額外運費：">
-                  <el-input
-                    size="mini"
-                    type="extra_freight"
-                    v-model="materialDataForm.extra_freight"
-                  ></el-input>
+                  <el-input size="mini" type="extra_freight" v-model="materialDataForm.extra_freight"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item prop="" label="修改時間：">
-                  <el-input
-                    :disabled="true"
-                    size="mini"
-                    type=""
-                    v-model="getDate"
-                  ></el-input>
+                  <el-input :disabled="true" size="mini" type="" v-model="getDate"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <!-- type 跟 prop不用綁定到表單裡面，因為此 修改人員ID 會在送出儲存的時候，把操作者的ID寫到 formData.last_edit_person -->
                 <el-form-item prop="" label="修改人員：">
-                  <el-input
-                    :disabled="true"
-                    size="mini"
-                    type=""
-                    v-model="getUserNameById"
-                  ></el-input>
+                  <el-input :disabled="true" size="mini" type="" v-model="getUserNameById"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -288,21 +245,12 @@
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
                 <el-form-item prop="" label="供應商：">
-                  <el-input
-                    :readonly="true"
-                    size="mini"
-                    type=""
-                    v-model="getSupplierNameById"
-                  ></el-input>
+                  <el-input :readonly="true" size="mini" type="" v-model="getSupplierNameById"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="remark" label="備註：">
-                  <el-input
-                    size="mini"
-                    type="remark"
-                    v-model="materialDataForm.remark"
-                  ></el-input>
+                  <el-input size="mini" type="remark" v-model="materialDataForm.remark"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -327,9 +275,7 @@
                 </el-tooltip>
 
                 <el-form-item prop="processing_fee_flag" label="加工費用：">
-                  <el-checkbox v-model="materialDataForm.processing_fee_flag"
-                    >有加工費用</el-checkbox
-                  >
+                  <el-checkbox v-model="materialDataForm.processing_fee_flag">有加工費用</el-checkbox>
                 </el-form-item>
               </el-col>
               <el-col :span="18">
@@ -404,7 +350,38 @@
               </el-col>
             </el-row>
             <!-- 第八列結束 -->
+            <!-- 插入 配件版型位置 配件編號 配件是否允許下載 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="6">
+                <el-form-item prop="inside_pattern_no" label="內版型編號：">
+                  <el-input
+                    placeholder="內用版型編號"
+                    size="mini"
+                    type="type"
+                    v-model="materialDataForm.inside_pattern_no"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
 
+              <el-col :span="10">
+                <el-form-item prop="inside_pattern_download" label="內版型位置：">
+                  <el-input
+                    placeholder="內用版型位置-工廠內部用"
+                    size="mini"
+                    type="type"
+                    v-model="materialDataForm.inside_pattern_download"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4" style="margin-top:8px">
+                <div class="grid-content">
+                  <el-form-item label="版型下載：" size="mini" label-width="120px" prop="pattern_free">
+                    <el-checkbox v-model="materialDataForm.pattern_free">允許下載</el-checkbox>
+                  </el-form-item>
+                </div>
+              </el-col>
+            </el-row>
+            <!-- 插入 配件版型位置 配件編號 配件是否允許下載 結束 -->
             <!-- 第九列 -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="24">
@@ -413,9 +390,7 @@
                     <el-radio :label="1">一般原料</el-radio>
                     <el-radio :label="2">轉印布料</el-radio>
                     <el-radio :label="3">現成布料</el-radio>
-                    <el-radio :label="4"
-                      >配件專用，需版型寬，版型高，布料種類，平車費用，裁切費用</el-radio
-                    >
+                    <el-radio :label="4">配件專用，需版型寬，版型高，布料種類，平車費用，裁切費用</el-radio>
                     <el-radio :label="5">紙</el-radio>
                     <el-radio :label="6">墨</el-radio>
                     <el-radio :label="7">紙箱</el-radio>
@@ -502,16 +477,8 @@
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
                 <div class="grid-content">
-                  <el-form-item
-                    prop="typesetting"
-                    label="智慧排版："
-                    label-width="110px"
-                  >
-                    <el-switch
-                      v-model="materialDataForm.typesetting"
-                      active-text="啟用"
-                      inactive-text="禁用"
-                    >
+                  <el-form-item prop="typesetting" label="智慧排版：" label-width="110px">
+                    <el-switch v-model="materialDataForm.typesetting" active-text="啟用" inactive-text="禁用">
                     </el-switch>
                   </el-form-item>
                 </div>
@@ -543,23 +510,13 @@
                     @click="handleSelectAccessoryCloth"
                     >{{ accessoryClothName }}</el-button
                   >
-                  <el-button
-                    v-else
-                    type="primary"
-                    size="mini"
-                    class="button"
-                    @click="handleSelectAccessoryCloth"
+                  <el-button v-else type="primary" size="mini" class="button" @click="handleSelectAccessoryCloth"
                     >點我選擇配件布料</el-button
                   >
                 </el-form-item>
               </el-col>
               <el-col :span="5" style="position:relative">
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  placement="right"
-                  style="z-index:2000"
-                >
+                <el-tooltip class="item" effect="dark" placement="right" style="z-index:2000">
                   <el-badge
                     value="說明"
                     class="item"
@@ -567,9 +524,7 @@
                   >
                   </el-badge>
                   <div slot="content">
-                    <span
-                      >10安仿帆布會追加的紙跟布的長度，紙跟布請設定一樣長度</span
-                    ><br />
+                    <span>10安仿帆布會追加的紙跟布的長度，紙跟布請設定一樣長度</span><br />
                     <span>目前得知大概要預留2碼長度</span>
                   </div>
                 </el-tooltip>
@@ -646,45 +601,21 @@
                 :file-list="files"
                 :on-change="onFileChange"
               >
-                <el-dialog
-                  :visible.sync="dialogVisible"
-                  append-to-body
-                  width="520px"
-                >
-                  <img
-                    width="480px"
-                    height="480px"
-                    fit="contain"
-                    :src="dialogImageUrl"
-                    alt=""
-                  />
+                <el-dialog :visible.sync="dialogVisible" append-to-body width="520px">
+                  <img width="480px" height="480px" fit="contain" :src="dialogImageUrl" alt="" />
                 </el-dialog>
                 <i slot="default" class="el-icon-plus"></i>
                 <div class="image-content" slot="file" slot-scope="{ file }">
-                  <img
-                    class="el-upload-list__item-thumbnail"
-                    :src="file.url"
-                    alt=""
-                  />
+                  <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
                   <span class="el-upload-list__item-actions">
-                    <span
-                      class="el-upload-list__item-preview"
-                      @click="handlePictureCardPreview(file)"
-                    >
+                    <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
                       <i class="el-icon-zoom-in"></i>
                     </span>
-                    <span
-                      v-if="!disabled"
-                      class="el-upload-list__item-download"
-                      @click="handleDownload(file)"
-                    >
+                    <span v-if="!disabled" class="el-upload-list__item-download" @click="handleDownload(file)">
                       <i class="el-icon-download"></i>
                     </span>
                     <!-- v-if="!disabled" -->
-                    <span
-                      class="el-upload-list__item-delete"
-                      @click="handleRemove(file, files)"
-                    >
+                    <span class="el-upload-list__item-delete" @click="handleRemove(file, files)">
                       <i class="el-icon-delete"></i>
                     </span>
                   </span>
@@ -696,12 +627,8 @@
 
           <el-footer>
             <el-form-item class="text_right">
-              <el-button type="warning" @click="dialog.show = false"
-                >取消</el-button
-              >
-              <el-button type="primary" @click="onSubmit('form')"
-                >提交</el-button
-              >
+              <el-button type="warning" @click="dialog.show = false">取消</el-button>
+              <el-button type="primary" @click="onSubmit('form')">提交</el-button>
             </el-form-item>
           </el-footer>
         </el-container>
@@ -774,15 +701,9 @@ export default {
       form_rules: {
         kind: [{ required: true, message: '必選，必須正確', trigger: 'blur' }],
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
-        product_name: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
-        ],
-        material_class: [
-          { required: true, message: '請選擇分類', trigger: 'blur' }
-        ],
-        level_two_id: [
-          { required: true, message: '請選擇分類', trigger: 'blur' }
-        ]
+        product_name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
+        material_class: [{ required: true, message: '請選擇分類', trigger: 'blur' }],
+        level_two_id: [{ required: true, message: '請選擇分類', trigger: 'blur' }]
 
         // retail_price: [
         //   { required: true, message: '此欄位不能為空', trigger: 'blur' }
@@ -809,9 +730,7 @@ export default {
     // 時間轉換
     getDate() {
       if (!this.materialDataForm.last_modify_date) return '目前沒有修改過'
-      return this.$moment(this.materialDataForm.last_modify_date).format(
-        'YYYY年MM月DD日 - HH：mm'
-      )
+      return this.$moment(this.materialDataForm.last_modify_date).format('YYYY年MM月DD日 - HH：mm')
     },
     // 取得修改人的_id 轉換成 name
     getUserNameById() {
@@ -919,9 +838,7 @@ export default {
         if (isNaN(this.materialDataForm.accessory_cloth_loss)) {
           this.accessoryClothLoss = 0
         } else {
-          this.accessoryClothLoss = Number(
-            this.materialDataForm.accessory_cloth_loss
-          )
+          this.accessoryClothLoss = Number(this.materialDataForm.accessory_cloth_loss)
         }
         if (isNaN(this.materialDataForm.retail_price)) {
           this.retailPrice = 0
@@ -1006,8 +923,7 @@ export default {
     // 過濾跟移除掉超過檔案限制的檔案
     // https://www.jianshu.com/p/840601098d88
     onFileChange(file, fileList) {
-      const isIMAGE =
-        file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'
+      const isIMAGE = file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'
       // 小於 1M 的檔案是 1024 / 1024  這裡設定小於50k ==> 1024 / 50
       // const isLt1M = file.size / 1024 / 1024 < 1
       const isLt50K = file.size / 1024 / 50 < 1
@@ -1059,10 +975,7 @@ export default {
           this.materialDataForm.last_edit_person = this.user.id
           this.materialDataForm.last_modify_date = new Date()
           this.materialDataForm.imgs = this.materialDataForm.imgs.join('|')
-          const url =
-            this.dialog.option == 'add'
-              ? 'add'
-              : `edit/${this.materialDataForm._id}`
+          const url = this.dialog.option == 'add' ? 'add' : `edit/${this.materialDataForm._id}`
           this.$axios
             .post(`/api/material/${url}`, this.materialDataForm)
             .then((res) => {

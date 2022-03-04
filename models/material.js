@@ -180,6 +180,15 @@ const MaterialSchema = new Schema({
   },
   accessory_cloth_loss: {
     type: String
+  },
+  pattern_free: {
+    type: Boolean
+  },
+  inside_pattern_no: {
+    type: String
+  },
+  inside_pattern_download: {
+    type: String
   }
 })
 

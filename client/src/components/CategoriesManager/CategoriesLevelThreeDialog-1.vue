@@ -716,7 +716,7 @@
               </el-row>
               <div style="margin:0px; padding:0px; margin-top:-10px">
                 <el-row :gutter="20" type="flex" class="row-bg">
-                  <el-col :span="12">
+                  <el-col :span="8">
                     <div class="grid-content">
                       <el-form-item label="新品(banner)：" label-width="120px" prop="">
                         <UploadBannerImgs
@@ -729,14 +729,27 @@
                   ></el-col>
                   <!-- </el-row>
               <el-row :gutter="20" type="flex" class="row-bg"> -->
-                  <el-col :span="12">
+                  <el-col :span="8">
                     <div class="grid-content">
                       <el-form-item label="縮圖(180pix)：" label-width="120px" prop="">
                         <UploadBannerImgs
+                          :key="key"
                           :imgSize="100"
                           :bannerFiles="getThumbnailFiles"
                           @updateAddBannerImgs="updateAddThumbnailImgs"
                           @updateRemoveBannerImgs="updateRemoveThumbnailImgs"
+                        ></UploadBannerImgs>
+                      </el-form-item></div
+                  ></el-col>
+                  <el-col :span="8">
+                    <div class="grid-content">
+                      <el-form-item label="優惠(720x600)：" label-width="120px" prop="">
+                        <UploadBannerImgs
+                          :key="key"
+                          :imgSize="1000"
+                          :bannerFiles="getDiscountFiles"
+                          @updateAddBannerImgs="updateAddDiscountImgs"
+                          @updateRemoveBannerImgs="updateRemoveDiscountImgs"
                         ></UploadBannerImgs>
                       </el-form-item></div
                   ></el-col>
@@ -752,7 +765,13 @@
             <!-- <div class="image-warp"> -->
             <!-- :data="uploadData"
 						action="#" 上傳的網址，應該是自動上傳使用的吧-->
-            <el-form-item label="商品圖片：" size="mini" label-width="120px" prop="describe" style="margin-top:180px">
+            <el-form-item
+              label="商品圖(480pix)："
+              size="mini"
+              label-width="120px"
+              prop="describe"
+              style="margin-top:180px"
+            >
               <div class="upload-wrap">
                 <el-upload
                   action="#"
@@ -834,6 +853,7 @@ export default {
   components: { PaperAndInk, CalLayoutDialog, DeliveryAndCarton, UploadBannerImgs },
   data() {
     return {
+      key: 0,
       calLayoutDialog: {
         show: false,
         title: '試算版型尺寸'
@@ -861,6 +881,7 @@ export default {
       disabled: Boolean,
       bannerFiles: [], // banner 1280*335
       thumbnailFiles: [], // 縮落圖 180*180
+      discountFiles: [], // 優惠專用 720*600
       tailorFee: 0,
       cropFee: 0,
       updateLevelTwoData: [],
@@ -917,6 +938,9 @@ export default {
     },
     getThumbnailFiles() {
       return this.thumbnailFiles
+    },
+    getDiscountFiles() {
+      return this.discountFiles
     },
     getDate() {
       if (!this.levelThreeFormData) return '目前沒有修改過'
@@ -1002,6 +1026,13 @@ export default {
     // 子元件 thumbnailImgs 更動
     updateAddThumbnailImgs(img) {
       this.thumbnailFiles.push(img)
+    },
+    // 子元件 discountImgs 更動
+    updateAddDiscountImgs(img) {
+      this.discountFiles.push(img)
+    },
+    updateRemoveDiscountImgs(index) {
+      this.discountFiles.splice(index, 1)
     },
     // 智慧排版啟用 / 禁止
     // handleTypesettingChange(value) {
@@ -1116,10 +1147,15 @@ export default {
           this.files.push(obj)
         })
       }
+      console.log(' this.levelThreeFormData :', this.levelThreeFormData)
+
       // 如果 banner_imgs 沒有資料 undefined 就帶入空陣列
       this.bannerFiles = this.levelThreeFormData.banner_imgs || []
       // 如果 thumbnail 沒有資料 undefined 就帶入空陣列
       this.thumbnailFiles = this.levelThreeFormData.thumbnail || []
+      // 如果 discount 沒有資料 undefined 就帶入空陣列
+      this.discountFiles = this.levelThreeFormData.discount || []
+      this.key += 1
     },
     // 第一層被選中後，就會去更新第二層的資料
     levelOneChang(id) {
@@ -1184,7 +1220,8 @@ export default {
         banner_imgs: this.bannerFiles.length > 0 ? this.bannerFiles.join('|') : [], // 如果圖片都除除乾淨，就給空數組
         disable_proofing: this.levelThreeFormData.disable_proofing,
         new_product_description: this.levelThreeFormData.new_product_description,
-        thumbnail: this.thumbnailFiles.length > 0 ? this.thumbnailFiles.join('|') : [] // 如果圖片都除除乾淨，就給空數組
+        thumbnail: this.thumbnailFiles.length > 0 ? this.thumbnailFiles.join('|') : [], // 如果圖片都除除乾淨，就給空數組
+        discount: this.discountFiles.length > 0 ? this.discountFiles.join('|') : [] // 如果圖片都除除乾淨，就給空數組
       }
 
       if (uploadFormData.carton_id == undefined || uploadFormData.delivery_id == undefined) {

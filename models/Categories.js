@@ -299,6 +299,10 @@ const CategoryLevelThreeSchema = new Schema({
   // 縮略圖 180*180 pix
   thumbnail: {
     type: [String]
+  },
+  // 縮略圖 720*600 pix
+  discount: {
+    type: [String]
   }
 })
 
