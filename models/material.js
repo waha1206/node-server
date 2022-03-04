@@ -182,7 +182,8 @@ const MaterialSchema = new Schema({
     type: String
   },
   pattern_free: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   inside_pattern_no: {
     type: String
