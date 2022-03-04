@@ -52,13 +52,15 @@ router.post('/add', passport.authenticate('jwt', { session: false }), (req, res)
       data.imgs = req.body.imgs.split('|')
     }
 
-    if (req.body.thumbnail) {
+    if (req.body.banner_imgs !== undefined && req.body.banner_imgs.length > 0) {
+      data.banner_imgs = req.body.banner_imgs.split('|')
+    }
+    if (req.body.thumbnail !== undefined && req.body.thumbnail.length > 0) {
       data.thumbnail = req.body.thumbnail.split('|')
     }
-    if (req.body.discount) {
+    if (req.body.discount !== undefined && req.body.discount.length > 0) {
       data.discount = req.body.discount.split('|')
     }
-
     if (req.body.banner_imgs !== undefined && req.body.banner_imgs.length > 0) {
       data.banner_imgs = req.body.banner_imgs.split('|')
     }
@@ -271,12 +273,14 @@ router.post('/edit/:id', passport.authenticate('jwt', { session: false }), (req,
     if (req.body.banner_imgs !== undefined && req.body.banner_imgs.length > 0) {
       data.banner_imgs = req.body.banner_imgs.split('|')
     }
-    if (req.body.thumbnail) {
+
+    if (req.body.thumbnail !== undefined && req.body.thumbnail.length > 0) {
       data.thumbnail = req.body.thumbnail.split('|')
     }
-    if (req.body.discount) {
+    if (req.body.discount !== undefined && req.body.discount.length > 0) {
       data.discount = req.body.discount.split('|')
     }
+
     CategoriesLevelThree.findByIdAndUpdate({ _id: req.params.id }, { $set: data }, { new: false }).then((catrgory) =>
       res.json(catrgory)
     )
