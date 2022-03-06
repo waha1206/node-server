@@ -51,6 +51,12 @@ const CustomerSchema = new Schema({
   company_sumame: {
     type: String
   },
+  company_cellphone: {
+    type: String
+  },
+  company_email: {
+    type: String
+  },
   company_fullname: {
     type: String
   },
@@ -118,9 +124,6 @@ const CustomerSchema = new Schema({
     type: String
   },
   company_fax: {
-    type: String
-  },
-  company_email: {
     type: String
   },
   company_address: {

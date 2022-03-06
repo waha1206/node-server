@@ -69,7 +69,7 @@
             </el-row>
             <!-- 插入列，客戶姓，客戶名，客戶姓名 -->
             <el-row :gutter="20" type="flex" class="row-bg">
-              <el-col :span="6">
+              <el-col :span="4">
                 <el-form-item label="客戶姓：" prop="company_sumame" label-width="120px">
                   <el-input
                     v-model="customerFormData.company_sumame"
@@ -78,7 +78,7 @@
                   ></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="4">
                 <el-form-item label="客戶名：" prop="company_name" label-width="120px">
                   <el-input
                     v-model="customerFormData.company_name"
@@ -87,7 +87,7 @@
                   ></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="4">
                 <el-form-item label="客戶姓名：" prop="" label-width="120px">
                   <el-input
                     placeholder="代表人完整姓名 (ex.Leo Yang)"
@@ -95,6 +95,20 @@
                     :disabled="true"
                     size="mini"
                   ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item label="客戶手機：" prop="" label-width="120px">
+                  <el-input
+                    placeholder="客戶的手機"
+                    v-model="customerFormData.company_cellphone"
+                    size="mini"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="客戶信箱：" prop="" label-width="120px">
+                  <el-input placeholder="客戶的信箱" v-model="customerFormData.company_email" size="mini"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
