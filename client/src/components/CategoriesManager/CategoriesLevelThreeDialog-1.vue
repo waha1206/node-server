@@ -719,12 +719,12 @@
                   <el-col :span="8">
                     <div class="grid-content">
                       <el-form-item label="新品(banner)：" label-width="120px" prop="">
-                        <UploadBannerImgs
-                          :imgSize="500"
-                          :bannerFiles="getBannerFiles"
+                        <upload-img
+                          :img-size="500"
+                          :image="getBannerFiles"
                           @updateAddBannerImgs="updateAddBannerImgs"
                           @updateRemoveBannerImgs="updateRemoveBannerImgs"
-                        ></UploadBannerImgs>
+                        ></upload-img>
                       </el-form-item></div
                   ></el-col>
                   <!-- </el-row>
@@ -732,25 +732,25 @@
                   <el-col :span="8">
                     <div class="grid-content">
                       <el-form-item label="縮圖(180pix)：" label-width="120px" prop="">
-                        <UploadBannerImgs
+                        <upload-img
                           :key="key"
-                          :imgSize="100"
-                          :bannerFiles="getThumbnailFiles"
+                          :img-size="500"
+                          :image="getThumbnailFiles"
                           @updateAddBannerImgs="updateAddThumbnailImgs"
                           @updateRemoveBannerImgs="updateRemoveThumbnailImgs"
-                        ></UploadBannerImgs>
+                        ></upload-img>
                       </el-form-item></div
                   ></el-col>
                   <el-col :span="8">
                     <div class="grid-content">
                       <el-form-item label="優惠(720x600)：" label-width="120px" prop="">
-                        <UploadBannerImgs
+                        <upload-img
                           :key="key"
-                          :imgSize="1000"
-                          :bannerFiles="getDiscountFiles"
+                          :img-size="1000"
+                          :image="getDiscountFiles"
                           @updateAddBannerImgs="updateAddDiscountImgs"
                           @updateRemoveBannerImgs="updateRemoveDiscountImgs"
-                        ></UploadBannerImgs>
+                        ></upload-img>
                       </el-form-item></div
                   ></el-col>
                 </el-row>
@@ -836,7 +836,7 @@
 import PaperAndInk from '../../components/CategoriesManager/PaperAndInk'
 import CalLayoutDialog from '../../components/CategoriesManager/CalLayoutDialog'
 import DeliveryAndCarton from '../../components/CategoriesManager/DeliveryAndCarton.vue'
-import UploadBannerImgs from './UploadBannerImgs.vue'
+// import UploadBannerImgs from '../global/UploadImgs.vue'
 import { isEmpty } from '../../utils/tools'
 import { Message } from 'element-ui'
 
@@ -850,7 +850,7 @@ export default {
     categoriesLevelOneData: Array,
     categoriesLevelTwoData: Array
   },
-  components: { PaperAndInk, CalLayoutDialog, DeliveryAndCarton, UploadBannerImgs },
+  components: { PaperAndInk, CalLayoutDialog, DeliveryAndCarton },
   data() {
     return {
       key: 0,
@@ -934,9 +934,12 @@ export default {
   },
   computed: {
     getBannerFiles() {
+      console.log('this.bannerFiles :', this.bannerFiles)
+
       return this.bannerFiles
     },
-    getThumbnailFiles() {
+    getThumbnailFiles: function() {
+      console.log('this.thumbnailFiles :', this.thumbnailFiles)
       return this.thumbnailFiles
     },
     getDiscountFiles() {
@@ -1152,6 +1155,7 @@ export default {
       // 如果 banner_imgs 沒有資料 undefined 就帶入空陣列
       this.bannerFiles = this.levelThreeFormData.banner_imgs || []
       // 如果 thumbnail 沒有資料 undefined 就帶入空陣列
+
       this.thumbnailFiles = this.levelThreeFormData.thumbnail || []
       // 如果 discount 沒有資料 undefined 就帶入空陣列
       this.discountFiles = this.levelThreeFormData.discount || []

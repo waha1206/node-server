@@ -8,6 +8,8 @@ import locale from 'element-ui/lib/locale/lang/zh-TW'
 import 'element-ui/lib/theme-chalk/index.css'
 import router from './router'
 import store from './store'
+import UploadImg from './components/global/UploadImgs.vue'
+
 import _ from 'lodash'
 // https://www.cnblogs.com/yck123/p/11212979.html
 // 滑鼠事件控制台警告 - 使用的插件
@@ -23,6 +25,8 @@ Vue.prototype.$axios = axios
 
 Vue.prototype._ = _
 
+Vue.component('upload-img', UploadImg)
+
 // 局部註冊的自定義指令，把值轉換成為有千位符號的逗號
 // https://medium.com/itsems-frontend/vue-custom-directives-c991ce456748
 // 使用方式 → <span id="number" v-price:currency="temp"></span>
@@ -30,11 +34,7 @@ Vue.directive('price', {
   bind: function(el, binding) {
     el.innerHTML = binding.value
       .toString()
-      .replace(/^(-?\d+?)((?:\d{3})+)(?=\.\d+$|$)/, function(
-        all,
-        pre,
-        groupOf3Digital
-      ) {
+      .replace(/^(-?\d+?)((?:\d{3})+)(?=\.\d+$|$)/, function(all, pre, groupOf3Digital) {
         return pre + groupOf3Digital.replace(/\d{3}/g, ',$&')
       })
   }

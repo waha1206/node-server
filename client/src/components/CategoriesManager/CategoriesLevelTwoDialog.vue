@@ -258,7 +258,7 @@
 
 <script>
 import { MessageBox } from 'element-ui'
-import UploadBannerImgs from './UploadBannerImgs.vue'
+import UploadBannerImgs from '../global/UploadImgs.vue'
 
 export default {
   name: 'categories-level-two-dialog',

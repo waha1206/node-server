@@ -32,12 +32,14 @@
         </div>
       </el-upload>
     </div>
+    {{ getImage }}
   </div>
 </template>
 
 <script>
 export default {
-  props: ['bannerFiles', 'imgSize'],
+  name: 'upload-img',
+  props: ['image', 'imgSize'],
   data() {
     return {
       // files: [],
@@ -47,12 +49,13 @@ export default {
       disabled: Boolean
     }
   },
-  watch: {
-    // 每當有新的 banner img 進來時觸發
-    bannerFiles(newVal) {
+  computed: {
+    getImage() {
+      console.log('this.image :', this.image)
+      if (this.image === undefined) return
       this.bannerImgs = []
-      if (newVal.length > 0) {
-        newVal.forEach((img) => {
+      if (this.image.length > 0) {
+        this.image.forEach((img) => {
           // params[0] 裡面是檔案格式
           // params[1] 裡面是 base64
           const params = img.split(',')
@@ -64,6 +67,38 @@ export default {
         })
       }
     }
+  },
+  watch: {
+    // 每當有新的 banner img 進來時觸發
+    imageaa: {
+      deep: true,
+      handler: function(val) {
+        console.log('val :', val)
+        console.log('this.bannerImgs :', this.bannerImgs)
+
+        if (val === undefined) return
+        this.bannerImgs = []
+        if (val.length > 0) {
+          val.forEach((img) => {
+            // params[0] 裡面是檔案格式
+            // params[1] 裡面是 base64
+            const params = img.split(',')
+            let obj = {
+              name: '商品照片',
+              url: 'data:image/jpeg;base64,' + params[1]
+            }
+            this.bannerImgs.push(obj)
+          })
+        }
+      }
+    }
+
+    // image(newVal, oldVal) {
+    //   console.log('newVal :', newVal)
+    //   console.log('oldVal :', oldVal)
+
+    //   if (newVal === undefined) return
+    // }
   },
   methods: {
     onFileChange(file, fileList) {
