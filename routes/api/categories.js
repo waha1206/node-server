@@ -287,9 +287,8 @@ router.post('/edit/:id', passport.authenticate('jwt', { session: false }), (req,
     return
   }
 
-  if (req.body.thumbnail) {
-    categoryFields.thumbnail = req.body.thumbnail
-  }
+  categoryFields.thumbnail = req.body.thumbnail ? req.body.thumbnail : []
+
   CategoryLevel.findByIdAndUpdate({ _id: req.params.id }, { $set: categoryFields }, { new: false }).then((catrgory) =>
     res.json(catrgory)
   )

@@ -234,13 +234,20 @@
               <el-col :span="12">
                 <div class="grid-content">
                   <el-form-item label="縮圖(180pix)：" label-width="120px" prop="">
-                    <UploadBannerImgs
+                    <!-- <UploadBannerImgs
                       :key="key"
                       :imgSize="100"
                       :bannerFiles="getThumbnailFiles"
                       @updateAddBannerImgs="updateAddThumbnailImgs"
                       @updateRemoveBannerImgs="updateRemoveThumbnailImgs"
-                    ></UploadBannerImgs>
+                    ></UploadBannerImgs> -->
+                    <upload-img
+                      :key="key"
+                      :img-size="1000"
+                      :image="getThumbnailFiles"
+                      @updateAddBannerImgs="updateAddThumbnailImgs"
+                      @updateRemoveBannerImgs="updateRemoveThumbnailImgs"
+                    ></upload-img>
                   </el-form-item></div
               ></el-col>
             </el-row>
@@ -258,7 +265,7 @@
 
 <script>
 import { MessageBox } from 'element-ui'
-import UploadBannerImgs from '../global/UploadImgs.vue'
+// import UploadBannerImgs from '../global/UploadImgs.vue'
 
 export default {
   name: 'categories-level-two-dialog',
@@ -268,9 +275,7 @@ export default {
     categoriesLevelTwoData: Array,
     categoriesLevelOneData: Array
   },
-  components: {
-    UploadBannerImgs
-  },
+  components: {},
   data() {
     return {
       key: 0,
@@ -446,6 +451,7 @@ export default {
       if (row.imgs) {
         this.categoriesEditForm.imgs = row.imgs
       }
+      console.log('row :', row)
       if (row.thumbnail) {
         this.categoriesEditForm.thumbnail = row.thumbnail
         this.thumbnailFiles = row.thumbnail // 使用元件的話，要提早存起來
