@@ -256,8 +256,9 @@ const CustomerSchema = new Schema({
   switch: {
     type: Boolean
   },
-  service_sales: {
-    type: String
+  service_sales_uid: {
+    type: String,
+    default: ''
   },
   nick_name: {
     type: String
