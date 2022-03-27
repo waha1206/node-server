@@ -112,6 +112,24 @@
                 </el-form-item>
               </el-col>
             </el-row>
+            <!-- 插入列 -->
+            <el-row :gutter="20" type="flex" class="row-bg">
+              <el-col :span="4">
+                <el-form-item label="區碼：" prop="website" label-width="120px">
+                  <el-input v-model="customerFormData.company_postal" placeholder="23145" size="mini"></el-input>
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="8">
+                <el-form-item label="公司地址：" prop="website" label-width="120px">
+                  <el-input
+                    v-model="customerFormData.company_address"
+                    placeholder="新店區寶興路45巷9弄3號3樓"
+                    size="mini"
+                  ></el-input>
+                </el-form-item> </el-col
+            ></el-row>
+
             <!-- 第二列，客戶網站，FB，IG，PINKOI -->
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">

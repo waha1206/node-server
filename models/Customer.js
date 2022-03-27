@@ -126,6 +126,9 @@ const CustomerSchema = new Schema({
   company_fax: {
     type: String
   },
+  company_postal: {
+    type: String
+  },
   company_address: {
     type: String
   },
