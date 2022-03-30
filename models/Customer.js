@@ -264,7 +264,8 @@ const CustomerSchema = new Schema({
     default: ''
   },
   nick_name: {
-    type: String
+    type: String,
+    default: ''
   },
   employee_data: {
     authority: {

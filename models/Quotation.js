@@ -185,7 +185,32 @@ const QuotationSchema = new Schema({
   disable_proofing: {
     type: Boolean,
     default: false
-  }
+  },
+  // 款項是否結清，true 結清，false 尚未結清
+  // 注意，有可能款項結清但是案子尚未結束，所以要同步檢查 case_close
+  settle_account: {
+    type: Boolean,
+    default: true
+  },
+  code: { type: Number, default: 1000 }, // 目前這張報價單的狀態
+  // 訂單流程資料欄位
+  order_process: [
+    {
+      index: { type: Number }, // 流水號
+      order_close: { type: Boolean }, // 此訂單是否關閉 A
+      close_date: { type: Date }, // 訂單關閉的時間 B
+      code: { type: Number },
+      created_date: { type: Date },
+      update_date: { type: Date },
+      customer_notes: { type: String },
+      staff_notes: { type: String },
+      staff_uid: { type: String },
+      unit_price_off: { type: Number },
+      product_delivery_date: { type: Number },
+      proofing_delivery_date: { type: Number },
+      notesIsRead: { type: Boolean, default: false }
+    }
+  ]
 })
 
 // eslint-disable-next-line no-undef
