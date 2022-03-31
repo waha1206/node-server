@@ -692,6 +692,8 @@
                     <el-radio :label="3">正常</el-radio>
                     <el-radio :label="4">觀察名單</el-radio>
                     <el-radio :label="5">拒絕往來</el-radio>
+                    <el-radio :label="6">期約客戶</el-radio>
+                    <el-radio :label="7">政府</el-radio>
                   </el-radio-group>
                 </el-form-item>
               </el-col>
