@@ -55,7 +55,9 @@
             <!-- 序號 -->
             <el-table-column type="index" label="序號" align="center" width="70"></el-table-column>
             <!-- 客戶名稱 -->
-            <el-table-column prop="company" label="公司名稱" align="left" width="250"></el-table-column>
+            <el-table-column prop="company" label="公司名稱" align="left" width="150"></el-table-column>
+            <!-- 客戶暱稱 -->
+            <el-table-column prop="nick_name" label="客戶暱稱" align="left" width="80"></el-table-column>
             <!-- 客戶名稱 -->
             <el-table-column prop="contact_person_name" label="聯絡人" align="center" width="100"></el-table-column>
             <!-- 完整資料 -->
@@ -64,6 +66,12 @@
                 <el-popover trigger="hover" placement="right">
                   <p>公司名稱：{{ scope.row.company }}</p>
                   <p>統一編號：{{ scope.row.tax_id_number }}</p>
+                  <p>客戶名稱：{{ scope.row.company_fullname }}</p>
+                  <p>客戶MAIL：{{ scope.row.company_email }}</p>
+                  <p>客戶市話：{{ scope.row.company_telephone }}</p>
+                  <p>客戶手機：{{ scope.row.company_cellphone }}</p>
+                  <p>客戶暱稱：{{ scope.row.nick_name }}</p>
+                  <p>客戶Line：{{ scope.row.company_line }}</p>
                   <p>發票地址：{{ scope.row.invoice_postal }}{{ scope.row.invoice_address }}</p>
                   <p>樣品地址：{{ scope.row.sample_postal }}{{ scope.row.sample_address }}</p>
                   <p>倉庫地址：{{ scope.row.goods_postal }}{{ scope.row.goods_address }}</p>
@@ -110,7 +118,7 @@
               </template>
             </el-table-column>
             <!-- 款項票期 -->
-            <el-table-column prop="" label="款項票期" align="center" width="145">
+            <el-table-column prop="" label="款項票期" align="center" width="110">
               <template slot-scope="scope">
                 <el-tag size="mini" v-if="scope.row.payment_date">{{ getPaymentDate(scope.row.payment_date) }}</el-tag>
                 <span v-else></span>

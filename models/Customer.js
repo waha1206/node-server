@@ -48,6 +48,10 @@ const CustomerSchema = new Schema({
   company_name: {
     type: String
   },
+  company_line: {
+    type: String,
+    default: ''
+  },
   company_sumame: {
     type: String
   },

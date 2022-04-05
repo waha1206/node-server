@@ -115,7 +115,7 @@ const QuotationSchema = new Schema({
       {
         date: Date, // 轉帳時間
         amount: Number, // 轉帳總金額 NT 計算，無小數點
-        last_five_digits: Number, // 轉出帳號的後五碼
+        last_five_digits: String, // 轉出帳號的後五碼
         invoice_no: String, // 發票號碼
         payment_kind: Number // 0.現金 1.國內轉帳 2.paypal 3.信用卡支付 4.載具支付
       }
@@ -127,7 +127,7 @@ const QuotationSchema = new Schema({
       {
         date: Date, // 支付訂金日期
         amount: Number, // 轉帳總金額 NT 計算，無小數點
-        last_five_digits: Number, // 轉出帳號的後五碼
+        last_five_digits: String, // 轉出帳號的後五碼
         invoice_no: String, // 發票號碼
         payment_kind: Number // 0.現金 1.國內轉帳 2.paypal 3.信用卡支付 4.載具支付
       }
@@ -208,7 +208,9 @@ const QuotationSchema = new Schema({
       unit_price_off: { type: Number },
       product_delivery_date: { type: Number },
       proofing_delivery_date: { type: Number },
-      notesIsRead: { type: Boolean, default: false }
+      notesIsRead: { type: Boolean, default: false },
+      last_five_digits: { type: String, default: '' },
+      buyer_paypal_email: { type: String, default: '' }
     }
   ]
 })

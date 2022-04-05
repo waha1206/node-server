@@ -127,8 +127,14 @@
                     placeholder="新店區寶興路45巷9弄3號3樓"
                     size="mini"
                   ></el-input>
-                </el-form-item> </el-col
-            ></el-row>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="LINE：" prop="website" label-width="120px">
+                  <el-input v-model="customerFormData.company_line" placeholder="leopharmanex" size="mini"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
 
             <!-- 第二列，客戶網站，FB，IG，PINKOI -->
             <el-row :gutter="20" type="flex" class="row-bg">
