@@ -192,6 +192,22 @@ const QuotationSchema = new Schema({
     type: Boolean,
     default: true
   },
+  // 付款過幾次
+  payment_times: {
+    type: Number,
+    default: 0
+  },
+  payment_record: [
+    {
+      index: { type: Number }, // 流水號
+      created_date: { type: Date }, // 會計輸入時間
+      amount: { type: Number }, // 付款金額，不給他小數點
+      payment_kind: { type: Number }, // 0.現金 1.國內轉帳 2.paypal 3.信用卡支付 4.載具支付
+      invoice_no: { type: String }, // 發票號碼
+      staff_uid: { type: String }, // 填表人員
+      memo: { type: String } // 備註
+    }
+  ],
   code: { type: Number, default: 1000 }, // 目前這張報價單的狀態
   // 訂單流程資料欄位
   order_process: [
