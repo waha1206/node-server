@@ -186,29 +186,50 @@ const QuotationSchema = new Schema({
     type: Boolean,
     default: false
   },
-  // 款項是否結清，true 結清，false 尚未結清
-  // 注意，有可能款項結清但是案子尚未結束，所以要同步檢查 case_close
-  settle_account: {
-    type: Boolean,
-    default: true
+  // 會計頁面的所有操作請參考這個欄位
+  accounting: {
+    // 款項是否結清，true 結清，false 尚未結清。代表有未回收款項存在
+    // 注意，有可能款項結清但是案子尚未結束，所以要同步檢查 case_close
+    // 當進入打樣或是生產的時候，會設定此欄位為未結清款項 false
+    // 會計可以透過此欄位抓出來所有尚未結清款項的訂單
+    settle_account: {
+      type: Boolean,
+      default: true
+    },
+    // 付款過幾次
+    payment_times: {
+      type: Number,
+      default: 0
+    },
+    // 0:尚未決定 1:ATM 2:PayPal 3:月結之類 4:信用卡 5:現金 6:載具
+    // 這個是細分類
+    charge_method: {
+      type: Number,
+      default: 0
+    },
+    // 1000:尚未分類 1001:使用 ATM PayPal 1002:使用月結之類的 (大分類)
+    // 目前把 ATM 與 PayPal 歸為 1001  月結類的歸為 1002  其他，還沒想到
+    charge_class: { type: Number, default: 1000 },
+    code: { type: Number }, // 屬於 accounting 自己的 code
+    last_five_digits: { type: String, default: '' }, // 存 ATM 後五碼
+    buyer_paypal_email: { type: String, default: '' }, // 存 PayPal 的信箱
+    proofing_price_tax: { type: Number, default: 0 }, // 打樣費用
+    product_price_tax: { type: Number, default: 0 }, // 生產費用
+    total_price_tax: { type: Number, default: 0 }, // 總金額
+    isProofing: { type: Boolean }, // 要進行打樣，還是生產 (打樣完如果要進入生產，是由客戶選擇的，非會計或業務)
+    payment_record: [
+      {
+        index: { type: Number }, // 流水號
+        created_date: { type: Date }, // 會計輸入時間
+        amount: { type: Number }, // 付款金額，不給他小數點
+        payment_kind: { type: Number }, // 0.現金 1.國內轉帳 2.paypal 3.信用卡支付 4.載具支付
+        invoice_no: { type: String }, // 發票號碼
+        staff_uid: { type: String }, // 填表人員 uid
+        staff_name: { type: String }, // 填表人員中文姓名
+        memo: { type: String } // 備註
+      }
+    ]
   },
-  // 付款過幾次
-  payment_times: {
-    type: Number,
-    default: 0
-  },
-  payment_record: [
-    {
-      index: { type: Number }, // 流水號
-      created_date: { type: Date }, // 會計輸入時間
-      amount: { type: Number }, // 付款金額，不給他小數點
-      payment_kind: { type: Number }, // 0.現金 1.國內轉帳 2.paypal 3.信用卡支付 4.載具支付
-      invoice_no: { type: String }, // 發票號碼
-      staff_uid: { type: String }, // 填表人員
-      staff_name: { type: String }, // 填表人員中文姓名
-      memo: { type: String } // 備註
-    }
-  ],
   code: { type: Number, default: 1000 }, // 目前這張報價單的狀態
   // 訂單流程資料欄位
   order_process: [
