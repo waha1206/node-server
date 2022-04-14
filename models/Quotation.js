@@ -205,6 +205,7 @@ const QuotationSchema = new Schema({
       payment_kind: { type: Number }, // 0.現金 1.國內轉帳 2.paypal 3.信用卡支付 4.載具支付
       invoice_no: { type: String }, // 發票號碼
       staff_uid: { type: String }, // 填表人員
+      staff_name: { type: String }, // 填表人員中文姓名
       memo: { type: String } // 備註
     }
   ],
