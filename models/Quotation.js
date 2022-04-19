@@ -203,20 +203,20 @@ const QuotationSchema = new Schema({
     },
     // 0:尚未決定 1:ATM 2:PayPal 3:月結之類 4:信用卡 5:現金 6:載具
     // 這個是細分類
-    charge_method: {
-      type: Number,
-      default: 0
-    },
+    charge_method: { type: Number, default: 0 },
+    charge_method_name: { type: String },
     // 1000:尚未分類 1001:使用 ATM PayPal 1002:使用月結之類的 (大分類)
     // 目前把 ATM 與 PayPal 歸為 1001  月結類的歸為 1002  其他，還沒想到
-    charge_class: { type: Number, default: 1000 },
-    code: { type: Number }, // 屬於 accounting 自己的 code
+    charge_class: { type: Number, default: 0 },
+    charge_class_name: { type: String },
+    code: { type: Number, default: Number(2001) }, // 屬於 accounting 自己的 code
     last_five_digits: { type: String, default: '' }, // 存 ATM 後五碼
     buyer_paypal_email: { type: String, default: '' }, // 存 PayPal 的信箱
     proofing_price_tax: { type: Number, default: 0 }, // 打樣費用
     product_price_tax: { type: Number, default: 0 }, // 生產費用
     total_price_tax: { type: Number, default: 0 }, // 總金額
-    isProofing: { type: Boolean }, // 要進行打樣，還是生產 (打樣完如果要進入生產，是由客戶選擇的，非會計或業務)
+    // proofing_or_product submit 的時候是自動選擇判斷，到後期進行的時候會根據流程做改變
+    proofing_or_product: { type: Boolean }, // true = proofing  false = product
     payment_record: [
       {
         index: { type: Number }, // 流水號
