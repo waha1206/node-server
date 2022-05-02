@@ -64,6 +64,18 @@ const CustomerSchema = new Schema({
   company_fullname: {
     type: String
   },
+  // 城市
+  company_city: {
+    type: String
+  },
+  // 國家 / 地區
+  company_country: {
+    type: String
+  },
+  // 新店區
+  company_region: {
+    type: String
+  },
   contact_person_name: {
     type: String
   },
@@ -136,6 +148,22 @@ const CustomerSchema = new Schema({
   company_address: {
     type: String
   },
+  invoice_sumame: {
+    type: String
+  },
+  invoice_tax_id: {
+    type: String
+  },
+  invoice_company: {
+    type: String
+  },
+  invoice_fullname: {
+    type: String
+  },
+  invoice_delivery: {
+    type: Number,
+    default: 0
+  },
   invoice_address: {
     type: String
   },
@@ -154,11 +182,79 @@ const CustomerSchema = new Schema({
   invoice_memo: {
     type: String
   },
+  // 城市
+  invoice_city: {
+    type: String
+  },
+  // 國家 / 地區
+  invoice_country: {
+    type: String
+  },
+  // 新店區
+  invoice_region: {
+    type: String
+  },
+  product_invoice_tax_id: {
+    type: String
+  },
+  product_invoice_company: {
+    type: String
+  },
+  product_invoice_sumame: {
+    type: String
+  },
+  product_invoice_fullname: {
+    type: String
+  },
+  product_invoice_delivery: {
+    type: Number,
+    default: 0
+  },
+  product_invoice_type: {
+    type: Number,
+    default: 0
+  },
+  product_invoice_address: {
+    type: String
+  },
+  product_invoice_postal: {
+    type: String
+  },
+  product_invoice_name: {
+    type: String
+  },
+  product_invoice_cell_phone: {
+    type: String
+  },
+  product_invoice_telephone: {
+    type: String
+  },
+  product_invoice_memo: {
+    type: String
+  },
+  // 城市
+  product_invoice_city: {
+    type: String
+  },
+  // 國家 / 地區
+  product_invoice_country: {
+    type: String
+  },
+  // 新店區
+  product_invoice_region: {
+    type: String
+  },
   payment: {
     type: Number
   },
   payment_date: {
     type: Number
+  },
+  sample_sumame: {
+    type: String
+  },
+  sample_fullname: {
+    type: String
   },
   sample_address: {
     type: String
@@ -181,6 +277,12 @@ const CustomerSchema = new Schema({
   sample_delivery: {
     type: Number
   },
+  goods_sumame: {
+    type: String
+  },
+  goods_fullname: {
+    type: String
+  },
   goods_address: {
     type: String
   },
@@ -201,6 +303,18 @@ const CustomerSchema = new Schema({
   },
   goods_delivery: {
     type: Number
+  },
+  // 城市
+  goods_city: {
+    type: String
+  },
+  // 國家 / 地區
+  goods_country: {
+    type: String
+  },
+  // 新店區
+  goods_region: {
+    type: String
   },
   delivery_charge: {
     type: Number

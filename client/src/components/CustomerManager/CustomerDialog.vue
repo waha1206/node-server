@@ -538,7 +538,7 @@
               <el-col :span="8">
                 <el-form-item label="地址：" prop="invoice_address" label-width="120px">
                   <el-input
-                    v-model="customerFormData.invoice_address"
+                    v-model="customerFormData.sample_address"
                     placeholder="新北市新店區寶興路45巷9弄3號3樓 (警衛室可代收)"
                     size="mini"
                   ></el-input>
