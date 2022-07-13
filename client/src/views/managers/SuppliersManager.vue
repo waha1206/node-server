@@ -2,12 +2,8 @@
   <div class="materials-manager">
     <el-container>
       <el-header>
-        <el-button type="primary" size="small" @click="handleAddSupplierClass"
-          >新增供應商分類</el-button
-        >
-        <el-button type="primary" size="small" @click="handleAddSupplier"
-          >新增供應商</el-button
-        >
+        <el-button type="primary" size="small" @click="handleAddSupplierClass">新增供應商分類</el-button>
+        <el-button type="primary" size="small" @click="handleAddSupplier">新增供應商</el-button>
         <div class="materal-class-container">
           <el-select
             v-model="supplierClassName"
@@ -17,12 +13,7 @@
             placeholder="可以透過關鍵字搜尋"
           >
             <!-- 我的理解 option 裡面的 :value 所綁定的值，會往上傳遞到 el-select 裡面的 v-model="data return 裡面設定的變數名稱" -->
-            <el-option
-              v-for="item in supplierClassData"
-              :key="item.type"
-              :label="item.name"
-              :value="item._id"
-            >
+            <el-option v-for="item in supplierClassData" :key="item.type" :label="item.name" :value="item._id">
             </el-option>
           </el-select>
         </div>
@@ -47,38 +38,15 @@
         <el-table
           size="mini"
           :stripe="true"
-          :data="
-            tableData.filter(
-              (data) =>
-                !search ||
-                data.company.toLowerCase().includes(search.toLowerCase())
-            )
-          "
+          :data="tableData.filter((data) => !search || data.company.toLowerCase().includes(search.toLowerCase()))"
           style="width: 100%"
         >
           <!-- 序號 -->
-          <el-table-column
-            type="index"
-            label="序號"
-            align="center"
-            width="70"
-          ></el-table-column>
+          <el-table-column type="index" label="序號" align="center" width="70"></el-table-column>
           <!-- 供應商公司抬頭 -->
-          <el-table-column
-            label="供應商公司抬頭"
-            prop="company"
-            align="left"
-            width="180"
-          >
-          </el-table-column>
+          <el-table-column label="供應商公司抬頭" prop="company" align="left" width="180"> </el-table-column>
           <!-- 統編 -->
-          <el-table-column
-            label="統編"
-            prop="tax_id_number"
-            align="center"
-            width="70"
-          >
-          </el-table-column>
+          <el-table-column label="統編" prop="tax_id_number" align="center" width="70"> </el-table-column>
           <!-- 分類 -->
           <el-table-column label="分類" align="center" width="120">
             <template slot-scope="scope">
@@ -111,9 +79,7 @@
                 <p>店面傳真：{{ scope.row.storefront_fax }}</p>
                 <p>店面地址：{{ scope.row.storefront_address }}</p>
                 <p>
-                  官網：<a :href="scope.row.website" target="_blank">{{
-                    scope.row.website
-                  }}</a>
+                  官網：<a :href="scope.row.website" target="_blank">{{ scope.row.website }}</a>
                 </p>
                 <p>付款條件：{{ scope.row.payment_terms }}</p>
                 <p>商品交期：{{ scope.row.delivery }}</p>
@@ -128,13 +94,7 @@
           </el-table-column>
 
           <!-- 匯款帳號 -->
-          <el-table-column
-            label="匯款帳號"
-            prop="bank_account"
-            align="center"
-            width="140"
-          >
-          </el-table-column>
+          <el-table-column label="匯款帳號" prop="bank_account" align="center" width="140"> </el-table-column>
           <!-- 原物料分類，從分類ID回傳分類名稱 -->
           <!-- <el-table-column label="分類" align="center" width="120">
             <template slot-scope="scope">
@@ -142,75 +102,28 @@
             </template>
           </el-table-column> -->
           <!-- 業務名稱 -->
-          <el-table-column
-            label="業務名稱"
-            prop="sales_name"
-            align="center"
-            width="90"
-          >
-          </el-table-column>
+          <el-table-column label="業務名稱" prop="sales_name" align="center" width="90"> </el-table-column>
           <!-- 業務手機 -->
-          <el-table-column
-            label="業務電話"
-            prop="sales_cell_phone"
-            align="center"
-            width="100"
-          >
-          </el-table-column>
+          <el-table-column label="業務電話" prop="sales_cell_phone" align="center" width="100"> </el-table-column>
           <!-- 業務分機 -->
-          <el-table-column
-            label="業務分機"
-            prop="sales_telephone"
-            align="center"
-            width="110"
-          >
-          </el-table-column>
+          <el-table-column label="業務分機" prop="sales_telephone" align="center" width="110"> </el-table-column>
           <!-- 公司地址 -->
-          <el-table-column
-            label="公司地址"
-            prop="company_address"
-            align="center"
-            width="320"
-          >
-          </el-table-column>
+          <el-table-column label="公司地址" prop="company_address" align="center" width="320"> </el-table-column>
           <!-- 付款條件 -->
-          <el-table-column
-            label="訂購天數"
-            prop="payment_terms"
-            align="center"
-            width="100"
-          >
-          </el-table-column>
+          <el-table-column label="訂購天數" prop="payment_terms" align="center" width="100"> </el-table-column>
           <!-- 訂貨交期 -->
-          <el-table-column
-            label="訂貨交期"
-            prop="delivery"
-            align="center"
-            width="150"
-          >
-          </el-table-column>
+          <el-table-column label="訂貨交期" prop="delivery" align="center" width="150"> </el-table-column>
 
           <!-- 搜尋欄位 -->
           <el-table-column align="center" width="150">
             <!-- header 代表放到列的說明文字那邊 -->
             <template slot="header" slot-scope="scope">
-              <el-input
-                v-model="search"
-                size="mini"
-                placeholder="輸入關鍵字搜尋"
-              />
+              <el-input v-model="search" size="mini" placeholder="輸入關鍵字搜尋" />
             </template>
             <!-- slot 崁入兩個按鈕 -->
             <template slot-scope="scope">
-              <el-button
-                size="mini"
-                @click="handleEditMaterial(scope.$index, scope.row)"
-                >編輯</el-button
-              >
-              <el-button
-                size="mini"
-                type="danger"
-                @click="handleDeleteMaterial(scope.$index, scope.row)"
+              <el-button size="mini" @click="handleEditMaterial(scope.$index, scope.row)">編輯</el-button>
+              <el-button size="mini" type="danger" @click="handleDeleteMaterial(scope.$index, scope.row)"
                 >刪除</el-button
               >
             </template>
