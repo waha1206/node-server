@@ -9,58 +9,26 @@
     >
       <div class="form">
         <el-container>
-          <el-aside width="50%" class="grid-content bg-purple">
+          <el-aside width="60%" class="grid-content bg-purple">
             <div class="table-container">
               <!-- ***********************  manager 裡面的表單   ***********************-->
               <el-table :data="tableData" style="width: 100%" size="mini">
-                <el-table-column
-                  prop="type"
-                  label="權限代碼"
-                  width="100px"
-                  align="center"
-                >
-                </el-table-column>
-                <el-table-column
-                  prop="name"
-                  label="權限名稱"
-                  width="120"
-                  align="center"
-                >
-                </el-table-column>
+                <el-table-column prop="type" label="權限代碼" width="100px" align="center"> </el-table-column>
+                <el-table-column prop="name" label="權限名稱" width="120" align="center"> </el-table-column>
+                <el-table-column prop="kind" label="0舊1新" width="80" align="center"> </el-table-column>
 
                 <el-table-column label="單圖" width="70" align="center">
                   <template slot-scope="scope">
                     <!-- v-for="(item, index) in scope.row.imgs" -->
-                    <img
-                      v-if="scope.row.imgs[0]"
-                      width="50px"
-                      height="50px"
-                      :src="scope.row.imgs[0]"
-                      alt=""
-                    />
+                    <img v-if="scope.row.imgs[0]" width="50px" height="50px" :src="scope.row.imgs[0]" alt="" />
                   </template>
                 </el-table-column>
 
-                <el-table-column
-                  prop="operation"
-                  label="操作"
-                  width="150"
-                  align="center"
-                >
+                <el-table-column prop="operation" label="操作" width="150" align="center">
                   <!-- 編輯、刪除 第一層的分類 -->
                   <template slot-scope="scope">
-                    <el-button
-                      type="warning"
-                      icon="edit"
-                      size="small"
-                      @click="handleEdit(scope.row)"
-                      >編輯</el-button
-                    >
-                    <el-button
-                      type="danger"
-                      icon="delete"
-                      size="small"
-                      @click="handleDelete(scope.row)"
+                    <el-button type="warning" icon="edit" size="small" @click="handleEdit(scope.row)">編輯</el-button>
+                    <el-button type="danger" icon="delete" size="small" @click="handleDelete(scope.row)"
                       >刪除</el-button
                     >
                   </template>
@@ -71,7 +39,7 @@
           </el-aside>
 
           <!-- 右半邊的新增第一層分類 -->
-          <el-aside width="50%" class="grid-content bg-purple-light">
+          <el-aside width="40%" class="grid-content bg-purple-light">
             <el-form
               ref="form"
               :model="formData"
@@ -88,12 +56,8 @@
               </el-form-item>
               <!--提交與取消鍵 -->
               <el-form-item class="text_right">
-                <el-button type="warning" @click="dialog.show = false"
-                  >取消</el-button
-                >
-                <el-button type="primary" @click="handleAdd('form')"
-                  >提交</el-button
-                >
+                <el-button type="warning" @click="dialog.show = false">取消</el-button>
+                <el-button type="primary" @click="handleAdd('form')">提交</el-button>
               </el-form-item>
             </el-form>
           </el-aside>
@@ -117,11 +81,7 @@
         <!-- 分頁結束 -->
       </div>
     </el-dialog>
-    <el-dialog
-      title="編輯權限內容"
-      :visible.sync="employeeAuthorityDialog"
-      width="25%"
-    >
+    <el-dialog title="編輯權限內容" :visible.sync="employeeAuthorityDialog" width="25%">
       <el-form
         ref="editForm"
         :model="employeeAuthorityForm"
@@ -129,23 +89,10 @@
         label-width="120px"
         style="margin:10px;width:auto"
       >
-        <el-form-item
-          prop="type"
-          label="權限代碼"
-          :label-width="formLabelWidth"
-        >
-          <el-input
-            v-model="employeeAuthorityForm.type"
-            autocomplete="off"
-            size="mini"
-            placeholder="A0001"
-          ></el-input>
+        <el-form-item prop="type" label="權限代碼" :label-width="formLabelWidth">
+          <el-input v-model="employeeAuthorityForm.type" autocomplete="off" size="mini" placeholder="A0001"></el-input>
         </el-form-item>
-        <el-form-item
-          prop="name"
-          label="權限名稱"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item prop="name" label="權限名稱" :label-width="formLabelWidth">
           <el-input
             v-model="employeeAuthorityForm.name"
             autocomplete="off"
@@ -153,14 +100,17 @@
             placeholder="請輸入中文名稱"
           ></el-input>
         </el-form-item>
+        <el-form-item prop="kind" label="新舊系統" :label-width="formLabelWidth">
+          <el-input
+            v-model="employeeAuthorityForm.kind"
+            autocomplete="off"
+            size="mini"
+            placeholder="0:舊管理系統 1:新管理系統"
+          ></el-input>
+        </el-form-item>
         <el-main>
           <!-- <div class="image-warp"> -->
-          <el-form-item
-            label="圖片上傳："
-            size="mini"
-            label-width="120px"
-            prop="describe"
-          >
+          <el-form-item label="圖片上傳：" size="mini" label-width="120px" prop="describe">
             <!-- :class="{ uoloadSty: showBtnImg, disUoloadSty: noneBtnImg }" -->
             <div class="upload-wrap">
               <el-upload
@@ -174,45 +124,21 @@
                 :file-list="files"
                 :on-change="onFileChange"
               >
-                <el-dialog
-                  :visible.sync="dialogVisible"
-                  append-to-body
-                  width="520px"
-                >
-                  <img
-                    width="480px"
-                    height="480px"
-                    fit="contain"
-                    :src="dialogImageUrl"
-                    alt=""
-                  />
+                <el-dialog :visible.sync="dialogVisible" append-to-body width="520px">
+                  <img width="480px" height="480px" fit="contain" :src="dialogImageUrl" alt="" />
                 </el-dialog>
                 <i slot="default" class="el-icon-plus"></i>
                 <div class="image-content" slot="file" slot-scope="{ file }">
-                  <img
-                    class="el-upload-list__item-thumbnail"
-                    :src="file.url"
-                    alt=""
-                  />
+                  <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
                   <span class="el-upload-list__item-actions">
-                    <span
-                      class="el-upload-list__item-preview"
-                      @click="handlePictureCardPreview(file)"
-                    >
+                    <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
                       <i class="el-icon-zoom-in"></i>
                     </span>
-                    <span
-                      v-if="!disabled"
-                      class="el-upload-list__item-download"
-                      @click="handleDownload(file)"
-                    >
+                    <span v-if="!disabled" class="el-upload-list__item-download" @click="handleDownload(file)">
                       <i class="el-icon-download"></i>
                     </span>
                     <!-- v-if="!disabled" -->
-                    <span
-                      class="el-upload-list__item-delete"
-                      @click="handleRemove(file, files)"
-                    >
+                    <span class="el-upload-list__item-delete" @click="handleRemove(file, files)">
                       <i class="el-icon-delete"></i>
                     </span>
                   </span>
@@ -263,6 +189,7 @@ export default {
       employeeAuthorityForm: {
         type: '',
         name: '',
+        kind: Number(),
         _id: '',
         imgs: [],
         option: ''
@@ -334,8 +261,7 @@ export default {
     // 過濾跟移除掉超過檔案限制的檔案
     // https://www.jianshu.com/p/840601098d88
     onFileChange(file, fileList) {
-      const isIMAGE =
-        file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'
+      const isIMAGE = file.raw.type === 'image/jpeg' || file.raw.type === 'image/png'
       // 小於 1M 的檔案是 1024 / 1024  這裡設定小於50k ==> 1024 / 50
       // const isLt1M = file.size / 1024 / 1024 < 1
       const isLt50K = file.size / 1024 / 50 < 1
@@ -377,7 +303,7 @@ export default {
       // 秀出圖片
       // this.dialogImageUrl = obj.url
       // this.dialogVisible = true
-      console.log(this.employeeAuthorityForm)
+
       if (this.employeeAuthorityForm.imgs.length > 0) {
         this.employeeAuthorityForm.imgs.forEach((img) => {
           // params[0] 裡面是檔案格式
@@ -397,9 +323,7 @@ export default {
       this.my_paginations.total = this.employeeAuthorityData.length
       this.my_paginations.page_index = 1
       if (localStorage[this.my_paginations.localStorage_page_size]) {
-        this.my_paginations.page_size = Number(
-          localStorage[this.my_paginations.localStorage_page_size]
-        )
+        this.my_paginations.page_size = Number(localStorage[this.my_paginations.localStorage_page_size])
       } else {
         this.my_paginations.page_size = 5
       }
@@ -407,6 +331,7 @@ export default {
       this.tableData = this.employeeAuthorityData.filter((item, index) => {
         return index < this.my_paginations.page_size
       })
+      // console.log('this.tableData :', this.tableData)
     },
     handleSizeChange(page_size) {
       // 切換每頁有幾條數據
@@ -438,6 +363,8 @@ export default {
       this.onSubmit(form)
     },
     handleEdit(row) {
+      console.log('row :', row)
+
       // 第一層的資料
       if (row.imgs) {
         this.employeeAuthorityForm.imgs = row.imgs
@@ -447,22 +374,18 @@ export default {
       this.employeeAuthorityForm.type = row.type
       this.employeeAuthorityForm.name = row.name
       this.employeeAuthorityForm._id = row._id
+      this.employeeAuthorityForm.kind = row.kind
       this.employeeAuthorityForm.option = 'edit'
       this.employeeAuthorityDialog = true
     },
     handleDelete(row) {
       // 讓全部分類無法刪除
-      MessageBox.confirm(
-        '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
-        '嚴重警告！！！'
-      )
+      MessageBox.confirm('注意！資料刪除會不可挽回！請確認此資料無其他應用！', '嚴重警告！！！')
         .then(() => {
-          this.$axios
-            .delete(`/api/employee/authority/delete/${row._id}`)
-            .then((res) => {
-              this.$message('刪除成功！')
-              this.$emit('update')
-            })
+          this.$axios.delete(`/api/employee/authority/delete/${row._id}`).then((res) => {
+            this.$message('刪除成功！')
+            this.$emit('update')
+          })
         })
         .catch(() => {
           this.$message('您取消刪除了～鬆一口氣')
@@ -470,18 +393,12 @@ export default {
     },
     // 新增商品類別代號
     onSubmit(form) {
-      const uploadFormData =
-        this.employeeAuthorityForm.option == 'add'
-          ? this.formData
-          : this.employeeAuthorityForm
+      const uploadFormData = this.employeeAuthorityForm.option == 'add' ? this.formData : this.employeeAuthorityForm
       console.log('uploadFormData :', uploadFormData)
 
       this.$refs[form].validate((valid) => {
         if (valid && !uploadFormData.type == '') {
-          const url =
-            this.employeeAuthorityForm.option == 'add'
-              ? 'add'
-              : `edit/${this.employeeAuthorityForm._id}`
+          const url = this.employeeAuthorityForm.option == 'add' ? 'add' : `edit/${this.employeeAuthorityForm._id}`
           this.$axios
             .post(`/api/employee/authority/${url}`, {
               employeeAuthority: uploadFormData

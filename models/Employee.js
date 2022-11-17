@@ -15,6 +15,10 @@ const EmployeeAuthoritySchema = new Schema({
   },
   imgs: {
     type: [String]
+  },
+  kind: {
+    type: Number,
+    default: 0
   }
 })
 
@@ -62,17 +66,8 @@ const EmployeePaymentSchema = new Schema({
 
 // eslint-disable-next-line no-undef
 module.exports = {
-  EmployeeAuthority: mongoose.model(
-    'employee_authority',
-    EmployeeAuthoritySchema
-  ),
-  EmployeeJobClass: mongoose.model(
-    'employee_job_class',
-    EmployeeJobClassSchema
-  ),
-  EmployeeJobTitle: mongoose.model(
-    'employee_job_title',
-    EmployeeJobTitleSchema
-  ),
+  EmployeeAuthority: mongoose.model('employee_authority', EmployeeAuthoritySchema),
+  EmployeeJobClass: mongoose.model('employee_job_class', EmployeeJobClassSchema),
+  EmployeeJobTitle: mongoose.model('employee_job_title', EmployeeJobTitleSchema),
   EmployeePayment: mongoose.model('employee_payment', EmployeePaymentSchema)
 }
