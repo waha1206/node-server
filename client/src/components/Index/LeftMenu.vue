@@ -23,19 +23,11 @@
               <i :class="'fa fa-margin ' + item.icon"></i>
               <span slot="title">{{ item.name }}</span>
             </template>
-            <router-link
-              v-for="(citem, cindex) in item.children"
-              :to="citem.path"
-              :key="cindex"
-            >
+            <router-link v-for="(citem, cindex) in item.children" :to="citem.path" :key="cindex">
               <!-- 判斷權限要放在這邊 -v-permision 這個是第二層 -->
               <!-- 這邊有個技術點，重新渲染 :key="componentKey" 透過改變 componentKey 的值，讓這個組件重新渲染-->
               <!-- 我這邊觀察了 permissionList 的數組變化，要是有異動，就會重新的把有權限的連結消失或是隱藏 -->
-              <el-menu-item
-                :index="citem.path"
-                v-permission="citem.meta.permission"
-                :key="componentKey"
-              >
+              <el-menu-item :index="citem.path" v-permission="citem.meta.permission" :key="componentKey">
                 <span slot="title">{{ citem.name }}</span>
               </el-menu-item>
             </router-link>
@@ -119,6 +111,13 @@ export default {
             {
               path: '/materials-manager',
               name: '原物料管理',
+              meta: {
+                permission: ['material_authority_r']
+              }
+            },
+            {
+              path: '/material-storage-manager',
+              name: '原料倉庫管理',
               meta: {
                 permission: ['material_authority_r']
               }
@@ -209,7 +208,7 @@ export default {
 <style scoped>
 .menu_page {
   position: fixed;
-  top: 71px;
+  top: 60px;
   left: 0;
   min-height: 100%;
   background-color: #324057;

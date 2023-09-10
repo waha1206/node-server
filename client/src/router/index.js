@@ -105,8 +105,7 @@ const router = new VueRouter({
             {
               path: '/',
               name: 'quotation-level-one',
-              component: () =>
-                import('../components/QuotationManager/QuotationLevelOne.vue'),
+              component: () => import('../components/QuotationManager/QuotationLevelOne.vue'),
               meta: {
                 title: '第一層分類',
                 class: 'quotation',
@@ -116,8 +115,7 @@ const router = new VueRouter({
             {
               path: '/quotation-level-two/:id',
               name: 'quotation-level-two',
-              component: () =>
-                import('../components/QuotationManager/QuotationLevelTwo.vue'),
+              component: () => import('../components/QuotationManager/QuotationLevelTwo.vue'),
               meta: {
                 title: '第二層分類',
                 class: 'quotation',
@@ -127,10 +125,7 @@ const router = new VueRouter({
             {
               path: '/quotation-level-three/:id',
               name: 'quotation-level-three',
-              component: () =>
-                import(
-                  '../components/QuotationManager/QuotationLevelThree.vue'
-                ),
+              component: () => import('../components/QuotationManager/QuotationLevelThree.vue'),
               meta: {
                 title: '第三層分類',
                 class: 'quotation',
@@ -140,8 +135,7 @@ const router = new VueRouter({
             {
               path: '/quotation-level-four',
               name: 'quotation-level-four',
-              component: () =>
-                import('../components/QuotationManager/QuotationLevelFour.vue'),
+              component: () => import('../components/QuotationManager/QuotationLevelFour.vue'),
               meta: {
                 title: '選中的商品',
                 class: 'quotation',
@@ -161,8 +155,7 @@ const router = new VueRouter({
         {
           path: '/materials-group-manager', // 原物料組管理
           name: 'material-group-manager',
-          component: () =>
-            import('../views/managers/MaterialsGroupManager.vue'),
+          component: () => import('../views/managers/MaterialsGroupManager.vue'),
           meta: {
             permission: ['material_authority_r']
           }
@@ -171,6 +164,14 @@ const router = new VueRouter({
           path: '/materials-manager', // 原物料管理
           name: 'materials-manager',
           component: () => import('../views/managers/MaterialsManager.vue'),
+          meta: {
+            permission: ['material_authority_r']
+          }
+        },
+        {
+          path: '/material-storage-manager', // 原物料管理
+          name: 'material-storage-manager',
+          component: () => import('../views/managers/MaterialStorageManager.vue'),
           meta: {
             permission: ['material_authority_r']
           }

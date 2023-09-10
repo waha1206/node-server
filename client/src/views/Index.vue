@@ -1,4 +1,5 @@
 <template>
+  <!-- 我是首頁 首頁 -->
   <div class="index">
     <HeadNav></HeadNav>
     <LeftMenu></LeftMenu>
@@ -34,7 +35,7 @@ export default {
   left: 180px;
   /* width: calc(100%-180px); */
   /* height: calc(100%-71px); */
-  width: 100%;
+  width: 1740px%;
   height: 100%;
   overflow: auto;
 }
