@@ -779,6 +779,8 @@ export default {
     handleDeleteCategory(index, row) {
       MessageBox.confirm('注意！資料刪除會不可挽回！請確認此資料無其他應用！', '嚴重警告！！！')
         .then(() => {
+          // 防止誤刪除
+          return
           this.$axios.delete(`/api/categories/delete-level-three/${row._id}`).then((res) => {
             this.$message('刪除成功！')
             this.getCategoriesLevelTwoData()

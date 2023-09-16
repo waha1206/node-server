@@ -13,41 +13,14 @@
             <div class="table-container">
               <!-- ***********************  manager 裡面的表單   ***********************-->
               <el-table :data="tableData" style="width: 100%" size="mini">
-                <el-table-column
-                  prop="type"
-                  label="第一層編號"
-                  width="120px"
-                  align="center"
-                >
-                </el-table-column>
-                <el-table-column
-                  prop="name"
-                  label="第一層中文"
-                  width="180"
-                  align="center"
-                >
-                </el-table-column>
+                <el-table-column prop="type" label="第一層編號" width="120px" align="center"> </el-table-column>
+                <el-table-column prop="name" label="第一層中文" width="180" align="center"> </el-table-column>
 
-                <el-table-column
-                  prop="operation"
-                  label="操作"
-                  width="150"
-                  align="center"
-                >
+                <el-table-column prop="operation" label="操作" width="150" align="center">
                   <!-- 編輯、刪除 第一層的分類 -->
                   <template slot-scope="scope">
-                    <el-button
-                      type="warning"
-                      icon="edit"
-                      size="small"
-                      @click="handleEdit(scope.row)"
-                      >編輯</el-button
-                    >
-                    <el-button
-                      type="danger"
-                      icon="delete"
-                      size="small"
-                      @click="handleDelete(scope.row)"
+                    <el-button type="warning" icon="edit" size="small" @click="handleEdit(scope.row)">編輯</el-button>
+                    <el-button type="danger" icon="delete" size="small" @click="handleDelete(scope.row)"
                       >刪除</el-button
                     >
                   </template>
@@ -76,12 +49,8 @@
 
               <!--提交與取消鍵 -->
               <el-form-item class="text_right">
-                <el-button type="warning" @click="dialog.show = false"
-                  >取消</el-button
-                >
-                <el-button type="primary" @click="handleAdd('form')"
-                  >提交</el-button
-                >
+                <el-button type="warning" @click="dialog.show = false">取消</el-button>
+                <el-button type="primary" @click="handleAdd('form')">提交</el-button>
               </el-form-item>
             </el-form>
           </el-aside>
@@ -105,11 +74,7 @@
         <!-- 分頁結束 -->
       </div>
     </el-dialog>
-    <el-dialog
-      title="編輯商品代號"
-      :visible.sync="levelOneEditDialog"
-      width="25%"
-    >
+    <el-dialog title="編輯商品代號" :visible.sync="levelOneEditDialog" width="25%">
       <el-form
         ref="editForm"
         :model="levelOneEditForm"
@@ -117,11 +82,7 @@
         label-width="120px"
         style="margin:10px;width:auto"
       >
-        <el-form-item
-          prop="type"
-          label="商品代號 (英文)"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item prop="type" label="商品代號 (英文)" :label-width="formLabelWidth">
           <el-input
             v-model="levelOneEditForm.type"
             autocomplete="off"
@@ -129,11 +90,7 @@
             placeholder="請輸入大寫英文"
           ></el-input>
         </el-form-item>
-        <el-form-item
-          prop="name"
-          label="商品名稱 (中文)"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item prop="name" label="商品名稱 (中文)" :label-width="formLabelWidth">
           <el-input
             v-model="levelOneEditForm.name"
             autocomplete="off"
@@ -193,9 +150,7 @@ export default {
       form_rules: {
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
-        describe: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
-        ]
+        describe: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }]
       }
     }
   },
@@ -219,9 +174,7 @@ export default {
       this.my_paginations.total = this.groupLevelOneData.length
       this.my_paginations.page_index = 1
       if (localStorage.group_level_one_page_size) {
-        this.my_paginations.page_size = Number(
-          localStorage.group_level_one_page_size
-        )
+        this.my_paginations.page_size = Number(localStorage.group_level_one_page_size)
       } else {
         this.my_paginations.page_size = 5
       }
@@ -270,17 +223,14 @@ export default {
     },
     handleDelete(row) {
       // 讓全部分類無法刪除
-      MessageBox.confirm(
-        '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
-        '嚴重警告！！！'
-      )
+      MessageBox.confirm('注意！資料刪除會不可挽回！請確認此資料無其他應用！', '嚴重警告！！！')
         .then(() => {
-          this.$axios
-            .delete(`/api/material-group/delete-level-one/${row._id}`)
-            .then((res) => {
-              this.$message('刪除成功！')
-              this.$emit('update')
-            })
+          // 防止誤刪除，所以先關閉
+          return
+          this.$axios.delete(`/api/material-group/delete-level-one/${row._id}`).then((res) => {
+            this.$message('刪除成功！')
+            this.$emit('update')
+          })
         })
         .catch(() => {
           this.$message('您取消刪除了～鬆一口氣')
@@ -288,17 +238,11 @@ export default {
     },
     // 新增商品類別代號
     onSubmit(form) {
-      const uploadFormData =
-        this.levelOneEditForm.option == 'add'
-          ? this.formData
-          : this.levelOneEditForm
+      const uploadFormData = this.levelOneEditForm.option == 'add' ? this.formData : this.levelOneEditForm
 
       this.$refs[form].validate((valid) => {
         if (valid && !uploadFormData.type == '') {
-          const url =
-            this.levelOneEditForm.option == 'add'
-              ? 'add'
-              : `edit/${this.levelOneEditForm._id}`
+          const url = this.levelOneEditForm.option == 'add' ? 'add' : `edit/${this.levelOneEditForm._id}`
           uploadFormData.level = this.levelOneEditForm.level
           this.$axios
             .post(`/api/material-group/${url}`, uploadFormData)

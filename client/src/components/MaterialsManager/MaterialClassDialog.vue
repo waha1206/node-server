@@ -15,20 +15,8 @@
             <div class="table-container">
               <!-- <el-table :data="materialClassData" style="width: 100%" size="mini"> -->
               <el-table :data="tableData" style="width: 100%" size="mini">
-                <el-table-column
-                  prop="type"
-                  label="編號"
-                  width="70px"
-                  align="center"
-                >
-                </el-table-column>
-                <el-table-column
-                  prop="name"
-                  label="原料分類名稱"
-                  width="240px"
-                  align="center"
-                >
-                </el-table-column>
+                <el-table-column prop="type" label="編號" width="70px" align="center"> </el-table-column>
+                <el-table-column prop="name" label="原料分類名稱" width="240px" align="center"> </el-table-column>
 
                 <!-- 說明跳出來對話框的區塊 -->
                 <el-table-column label="說明" width="70" align="center">
@@ -45,25 +33,10 @@
                   </template>
                 </el-table-column>
 
-                <el-table-column
-                  prop="operation"
-                  label="操作"
-                  width="200"
-                  align="center"
-                >
+                <el-table-column prop="operation" label="操作" width="200" align="center">
                   <template slot-scope="scope">
-                    <el-button
-                      type="warning"
-                      icon="edit"
-                      size="small"
-                      @click="handleEdit(scope.row)"
-                      >編輯</el-button
-                    >
-                    <el-button
-                      type="danger"
-                      icon="delete"
-                      size="small"
-                      @click="handleDelete(scope.row)"
+                    <el-button type="warning" icon="edit" size="small" @click="handleEdit(scope.row)">編輯</el-button>
+                    <el-button type="danger" icon="delete" size="small" @click="handleDelete(scope.row)"
                       >刪除</el-button
                     >
                   </template>
@@ -82,18 +55,10 @@
             >
               <!-- 這邊開始新增 -->
               <el-form-item prop="type" label="編號(數字)：">
-                <el-input
-                  type="type"
-                  v-model="formData.type"
-                  size="mini"
-                ></el-input>
+                <el-input type="type" v-model="formData.type" size="mini"></el-input>
               </el-form-item>
               <el-form-item prop="name" label="類型(中文)：">
-                <el-input
-                  type="name"
-                  v-model="formData.name"
-                  size="mini"
-                ></el-input>
+                <el-input type="name" v-model="formData.name" size="mini"></el-input>
               </el-form-item>
               <el-form-item prop="describe" label="分類說明：">
                 <el-input
@@ -105,12 +70,8 @@
               </el-form-item>
               <!--提交與取消鍵 -->
               <el-form-item class="text_right">
-                <el-button type="warning" @click="dialog.show = false"
-                  >取消</el-button
-                >
-                <el-button type="primary" @click="handleAdd('form')"
-                  >提交</el-button
-                >
+                <el-button type="warning" @click="dialog.show = false">取消</el-button>
+                <el-button type="primary" @click="handleAdd('form')">提交</el-button>
               </el-form-item>
             </el-form>
           </el-aside>
@@ -134,11 +95,7 @@
         <!-- 分頁結束 -->
       </div>
     </el-dialog>
-    <el-dialog
-      title="編輯商品代號"
-      :visible.sync="materialClassEditDialog"
-      width="25%"
-    >
+    <el-dialog title="編輯商品代號" :visible.sync="materialClassEditDialog" width="25%">
       <el-form
         ref="editForm"
         :model="materialClassEditForm"
@@ -146,34 +103,14 @@
         label-width="120px"
         style="margin:10px;width:auto"
       >
-        <el-form-item
-          prop="type"
-          label="商品代號 (英文)"
-          :label-width="formLabelWidth"
-        >
-          <el-input
-            v-model="materialClassEditForm.type"
-            autocomplete="off"
-            placeholder="請輸入大寫英文"
-          ></el-input>
+        <el-form-item prop="type" label="商品代號 (英文)" :label-width="formLabelWidth">
+          <el-input v-model="materialClassEditForm.type" autocomplete="off" placeholder="請輸入大寫英文"></el-input>
         </el-form-item>
-        <el-form-item
-          prop="name"
-          label="商品名稱 (中文)"
-          :label-width="formLabelWidth"
-        >
-          <el-input
-            v-model="materialClassEditForm.name"
-            autocomplete="off"
-            placeholder="請輸入大寫英文"
-          ></el-input>
+        <el-form-item prop="name" label="商品名稱 (中文)" :label-width="formLabelWidth">
+          <el-input v-model="materialClassEditForm.name" autocomplete="off" placeholder="請輸入大寫英文"></el-input>
         </el-form-item>
 
-        <el-form-item
-          prop="describe"
-          label="分類說明"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item prop="describe" label="分類說明" :label-width="formLabelWidth">
           <el-input
             v-model="materialClassEditForm.describe"
             autocomplete="off"
@@ -221,9 +158,7 @@ export default {
       materialClassEditFormRules: {
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
-        describe: [
-          { required: false, message: '此欄位可以為空', trigger: 'blur' }
-        ]
+        describe: [{ required: false, message: '此欄位可以為空', trigger: 'blur' }]
       },
       materialClassEditDialog: false,
       // 下拉選單的 opation
@@ -232,9 +167,7 @@ export default {
       form_rules: {
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
-        describe: [
-          { required: false, message: '此欄位可以為空', trigger: 'blur' }
-        ]
+        describe: [{ required: false, message: '此欄位可以為空', trigger: 'blur' }]
       }
     }
   },
@@ -264,9 +197,7 @@ export default {
       this.my_paginations.total = this.materialClassData.length
       this.my_paginations.page_index = 1
       if (localStorage.material_supplier_class_page_size) {
-        this.my_paginations.page_size = Number(
-          localStorage.material_supplier_class_page_size
-        )
+        this.my_paginations.page_size = Number(localStorage.material_supplier_class_page_size)
       } else {
         this.my_paginations.page_size = 5
       }
@@ -316,17 +247,14 @@ export default {
     },
     handleDelete(row) {
       if (row._id === '5fec461dd3bbbc0ca84cb458') return
-      MessageBox.confirm(
-        '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
-        '嚴重警告！！！'
-      )
+      MessageBox.confirm('注意！資料刪除會不可挽回！請確認此資料無其他應用！', '嚴重警告！！！')
         .then(() => {
-          this.$axios
-            .delete(`/api/material-class/delete-level-one/${row._id}`)
-            .then((res) => {
-              this.$message('刪除成功！')
-              this.$emit('update')
-            })
+          // 防止誤刪除，所以先關閉
+          return
+          this.$axios.delete(`/api/material-class/delete-level-one/${row._id}`).then((res) => {
+            this.$message('刪除成功！')
+            this.$emit('update')
+          })
         })
         .catch(() => {
           this.$message('您取消刪除了～鬆一口氣')
@@ -335,16 +263,12 @@ export default {
     // 新增商品類別代號
     onSubmit(form) {
       // this.dialog.option = edit 代表要上傳的是 material class 的資料更新
-      const uploadFormData =
-        this.dialog.option == 'add' ? this.formData : this.materialClassEditForm
+      const uploadFormData = this.dialog.option == 'add' ? this.formData : this.materialClassEditForm
       uploadFormData.level = 1
       console.log(uploadFormData)
       this.$refs[form].validate((valid) => {
         if (valid && !uploadFormData.type == '') {
-          const url =
-            this.dialog.option == 'add'
-              ? 'add'
-              : `edit/${this.materialClassEditForm._id}`
+          const url = this.dialog.option == 'add' ? 'add' : `edit/${this.materialClassEditForm._id}`
 
           this.$axios
             .post(`/api/material-class/${url}`, uploadFormData)
