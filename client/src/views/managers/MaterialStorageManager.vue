@@ -2,8 +2,8 @@
   <div class="materials-manager">
     <el-container>
       <el-header>
-        <el-button type="primary" size="small" @click="addMaterialLevelOneClass">新增第一層分類</el-button>
-        <el-button type="primary" size="small" @click="addMaterialLevelTwoClass">新增第二層分類</el-button>
+        <el-button type="primary" size="small" @click="addStorageLevelOneClass">新增第一層倉庫分類</el-button>
+        <el-button type="primary" size="small" @click="addStorageLevelTwoClass">新增第二層倉庫分類</el-button>
         <el-button type="primary" size="small" @click="handleAddMaterial">新增原物料</el-button>
         <div class="materal-class-container">
           <!-- <el-cascader
@@ -39,12 +39,18 @@
 </template>
 
 <script>
+import StorageClassLevelOneModal from '../../components/MaterialStorageManage/StorageClassLevelOneModal.vue'
+// import StorageClassLevelTwoModal from '../../components/MaterialStorageManage/StorageClassLevelTwoModal.vue'
+
 export default {
   name: 'material-storage-manager',
   data() {
-    return {}
+    return {
+      levelOneModalVisible: false,
+      levelTwoModalVisible: false
+    }
   },
-  computed: {},
+  computed: { StorageClassLevelOneModal },
   components: {},
   beforeRouteEnter(to, from, next) {
     // console.log('元件內的 beforeRouterEnter，不能使用this,因為此時尚未創建成功')
@@ -57,7 +63,14 @@ export default {
   created() {},
   mounted() {},
   watch: {},
-  methods: {}
+  methods: {
+    addStorageLevelOneClass() {
+      this.levelOneModalVisible = true
+    },
+    addStorageLevelTwoClass() {
+      this.levelTwoModalVisible = true
+    }
+  }
 }
 </script>
 
