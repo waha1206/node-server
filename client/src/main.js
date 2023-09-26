@@ -9,6 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import router from './router'
 import store from './store'
 import UploadImg from './components/global/UploadImgs.vue'
+import MyPagination from './components/global/MyPagination.vue'
 
 import _ from 'lodash'
 // https://www.cnblogs.com/yck123/p/11212979.html
@@ -26,6 +27,8 @@ Vue.prototype.$axios = axios
 Vue.prototype._ = _
 
 Vue.component('upload-img', UploadImg)
+
+Vue.component('MyPagination', MyPagination)
 
 // 局部註冊的自定義指令，把值轉換成為有千位符號的逗號
 // https://medium.com/itsems-frontend/vue-custom-directives-c991ce456748

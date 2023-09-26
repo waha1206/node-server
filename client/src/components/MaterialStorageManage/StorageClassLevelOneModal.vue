@@ -185,12 +185,15 @@ export default {
         type: '', // 編號 英文+數字
         name: '' // 中文名稱
         // 這邊要來個屬於哪個公司或供應商的 0:麥歐 1:其他a 2:其他b 以此類推
-      }
+      },
+      tableData: []
     }
   },
   watch: {
-    visiable: {
+    visible: {
       handler(val) {
+        console.log('val :', val)
+
         let el = document.getElementById('storage-class-level-one-modal')
         if (el) el.classList.toggle('hidden')
       }
@@ -235,8 +238,11 @@ export default {
 
     // 關閉視窗
     closeStorageClassLevelOneModal() {
-      this.$emit('update:visiable', false)
-    }
+      this.$emit('update:visible', false)
+    },
+
+    // 暫時沒用
+    handleCurrentChange() {}
   }
 }
 </script>

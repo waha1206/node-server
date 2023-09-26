@@ -4,7 +4,7 @@
       <el-header>
         <el-button type="primary" size="small" @click="addStorageLevelOneClass">新增第一層倉庫分類</el-button>
         <el-button type="primary" size="small" @click="addStorageLevelTwoClass">新增第二層倉庫分類</el-button>
-        <el-button type="primary" size="small" @click="handleAddMaterial">新增原物料</el-button>
+        <!-- <el-button type="primary" size="small" @click="handleAddMaterial">新增原物料</el-button> -->
         <div class="materal-class-container">
           <!-- <el-cascader
             @change="onOptionsChange"
@@ -35,11 +35,15 @@
 		判斷式大概如下：v-if="allSupplierlData[0]"
 		詳細的說明網頁連結：https://bit.ly/2LCp1CV
 		 -->
+
+    <!-- 這邊放的是元件 新增第一層，新增第二層 ... -->
+    <StorageClassLevelOneModal :visible.sync="levelOneModalVisible"></StorageClassLevelOneModal>
   </div>
 </template>
 
 <script>
 import StorageClassLevelOneModal from '../../components/MaterialStorageManage/StorageClassLevelOneModal.vue'
+
 // import StorageClassLevelTwoModal from '../../components/MaterialStorageManage/StorageClassLevelTwoModal.vue'
 
 export default {
@@ -50,8 +54,8 @@ export default {
       levelTwoModalVisible: false
     }
   },
-  computed: { StorageClassLevelOneModal },
-  components: {},
+
+  components: { StorageClassLevelOneModal },
   beforeRouteEnter(to, from, next) {
     // console.log('元件內的 beforeRouterEnter，不能使用this,因為此時尚未創建成功')
     next()
@@ -63,6 +67,7 @@ export default {
   created() {},
   mounted() {},
   watch: {},
+  computed: {},
   methods: {
     addStorageLevelOneClass() {
       this.levelOneModalVisible = true
