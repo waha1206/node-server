@@ -61,7 +61,7 @@
                     label="編號"
                     header-align="left"
                     align="left"
-                    width="265"
+                    width="100"
                   ></el-table-column>
 
                   <!-- 主題 -->
@@ -106,7 +106,7 @@
                   </el-table-column> -->
 
                   <!-- 刪除 main banner 會有防刪功能 -->
-                  <el-table-column prop="" label="刪除" header-align="center" align="center" width="90">
+                  <el-table-column prop="" label="刪除" header-align="center" align="center" width="60">
                     <template slot-scope="scope">
                       <span
                         @click="handleDeleteStorageLevelOne(scope.row)"
@@ -136,7 +136,7 @@
 
             <!-- 右邊的輸入區，這邊輸入完成後會清空表單內容 -->
             <div class="ml-2 pl-3 py-2 pr-2 basis-1/4 border-l">
-              <p class="mb-4 text-lg text-gray-600 font-bold">新增 left side banner 主題</p>
+              <p class="mb-4 text-lg text-gray-600 font-bold">新增第一層分類</p>
 
               <!-- 表格 -->
               <form @submit.prevent="addStorageLevelOneClass">

@@ -1,5 +1,5 @@
 <template>
-  <div class="materials-manager">
+  <div class="materials-manager bg-colorD62872">
     <el-container>
       <el-header>
         <el-button type="primary" size="small" @click="addStorageLevelOneClass">新增第一層倉庫分類</el-button>
