@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+// 引入 API 統一 constants.js 裡面定義去跟資料庫要資料的對應方式
+import API from '../api'
 
 Vue.use(Vuex)
 
@@ -65,15 +67,37 @@ const actions = {
       .post('/api/user/permission', { _id: state.user.id })
       .then((res) => {
         // 提交到 state.permissionList
-        commit(
-          types.UPDATE_PERMISSIOM_LIST,
-          res.data.permission.permission_list
-        )
+        commit(types.UPDATE_PERMISSIOM_LIST, res.data.permission.permission_list)
       })
       .catch((err) => {
         console.log('routerindex.js 獲取 permission 失敗', err)
       })
   }
+
+  // --------------------- storage material ---------------------
+  // async [this._M.SERVER_ADD_MATERIAL_STORAGE_DATA]({ commit }, materialStorageData) {
+  //   console.log('materialStorageData :', materialStorageData)
+
+  //   return await axios({
+  //     // baseURL: process.env.server_url,
+  //     method: API.materialStorage.addNewData.method,
+  //     url: API.materialStorage.addNewData.url,
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     data: {
+  //       materialStorageData
+  //     }
+  //   })
+  //     .then((data) => {
+  //       return data
+  //     })
+  //     .catch((error) => {
+  //       console.log('error :', error)
+  //       console.log('客戶資料更新出現異常！ SERVER_ADD_MATERIAL_STORAGE_DATA')
+  //       return error
+  //     })
+  // }
 }
 
 export default new Vuex.Store({

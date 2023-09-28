@@ -140,10 +140,23 @@
 
               <!-- 表格 -->
               <form @submit.prevent="addStorageLevelOneClass">
-                <div class="grid grid-cols-6 gap-6">
+                <div class="grid grid-cols-6 gap-6 ">
                   <div class="col-span-6 sm:col-span-6">
-                    <label for="storage-class-level-one-modal-name" class="m-0 block text-sm font-medium text-gray-700"
-                      >名稱 (此欄位不能重複)</label
+                    <label for="storage-class-level-one-modal-name" class="m-0 block text-xs font-medium text-gray-700"
+                      >編號 (A0001)</label
+                    >
+                    <input
+                      type="text"
+                      name="storage-class-level-one-modal-name"
+                      id="storage-class-level-one-modal-name"
+                      autocomplete=""
+                      v-model="basicForm.type"
+                      class="mt-1  w-full shadow-sm sm:text-xs border-gray-300 rounded-md focus:outline-dashed px-2 bg-gray-100"
+                    />
+                  </div>
+                  <div class="col-span-6 sm:col-span-6">
+                    <label for="storage-class-level-one-modal-name" class="m-0 block text-xs font-medium text-gray-700"
+                      >名稱 (拉鍊)</label
                     >
                     <input
                       type="text"
@@ -151,7 +164,7 @@
                       id="storage-class-level-one-modal-name"
                       autocomplete=""
                       v-model="basicForm.name"
-                      class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      class="mt-1  w-full shadow-sm sm:text-xs border-gray-300 rounded-md focus:outline-dashed px-2 bg-gray-100"
                     />
                   </div>
                 </div>
@@ -226,9 +239,15 @@ export default {
     // 新增一筆倉庫分類資料
     async addStorageLevelOneClass() {
       if (this.checkFiledIsEmpty) {
-        this.showMessage('所有欄位都需要填寫！', 'error')
+        this.$message({
+          message: '有星號的欄位都必須要填寫喔！',
+          type: 'error'
+        })
         return
       }
+      console.log('全局 _M 成功', this._M.SERVER_ADD_MATERIAL_STORAGE_DATA)
+
+      // this.$store.dispatch(this._M.SERVER_ADD_MATERIAL_STORAGE_DATA, { hello: 'hello' })
     },
 
     // 刪除這筆資料
