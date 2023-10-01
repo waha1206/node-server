@@ -1,6 +1,6 @@
 module.exports = {
   mode: 'jit',
-  content: ['./client/src/components/**/*.{js,vue,ts,html}', './client/src/view/**/*.{js,vue,ts,html}'],
+  content: ['./components/**/*.{js,vue,ts,html}', './view/**/*.{js,vue,ts,html}'],
 
   variants: {
     extend: {

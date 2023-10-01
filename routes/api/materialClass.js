@@ -7,7 +7,9 @@ const passport = require('passport')
 
 const {
   MaterialClass,
-  MaterialLevelTwoClass
+  MaterialLevelTwoClass,
+  StorageLevelOneClass,
+  StorageLevelTwoClass
 } = require('../../models/MaterialClass')
 
 // $router GET api/material-class/test
@@ -208,4 +210,62 @@ router.delete(
       .catch((_err) => res.status(404).json('刪除失敗'))
   }
 )
+
+// ---------------------  這邊是 Storage 的部分 ---------------------
+// $router post api/material-class/add-storage-level-one-class
+// @desc   創建訊息接口
+// @access private
+// 使用 hander 要驗證 token
+// 使用 body 要放創建的資料 key:value
+// 使用方式 SERVER_ADD_LEVEL_ONE_STORAGE_DATA, materialStorageLevelOneData
+router.post(
+  '/add-storage-level-one-class',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // const query = [{ name: req.body.name }, { name: req.body.type }]
+    const { name } = req.body.materialStorageLevelOneData
+    console.log('materialStorageLevelOneData :', materialStorageLevelOneData)
+    res.status(200).json('卡拉雞腿堡')
+    return
+    const query = [{ name: name }]
+    const options = {}
+
+    StorageLevelOneClass.findOne(query, options).then((storageLevelOneClass) => {
+      if (storageLevelOneClass) {
+        res.status(403).json('Material Storage Level One 的名稱已經存在')
+      } else {
+        new StorageLevelOneClass(req.body.materialStorageLevelOneData)
+          .save()
+          .then((storageLevelOneClass) => {
+            res.status(200).json(storageLevelOneClass)
+          })
+      }
+    })
+  }
+)
+
+// $router get api/material-class/get-storage-level-one-class
+// @desc   獲取所有分類資訊
+// @access private
+// 使用 hander 要驗證 token
+// body 不用放，因為他會獲取所有訊息
+// 使用方式 SERVER_GET_STORAGE_LEVEL_ONE_DATA
+router.get(
+  '/get-storage-level-one-class',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    StorageLevelOneClass.find()
+      .sort({ type: 1 })
+      .then((allStorageLevelOneClass) => {
+        if (!allStorageLevelOneClass) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(allStorageLevelOneClass)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
 module.exports = router

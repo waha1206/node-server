@@ -3,6 +3,8 @@ import Vuex from 'vuex'
 import axios from 'axios'
 // 引入 API 統一 constants.js 裡面定義去跟資料庫要資料的對應方式
 import API from '../api'
+// 導入全局變量
+import _M from '../constants'
 
 Vue.use(Vuex)
 
@@ -72,32 +74,48 @@ const actions = {
       .catch((err) => {
         console.log('routerindex.js 獲取 permission 失敗', err)
       })
-  }
+  },
 
   // --------------------- storage material ---------------------
-  // async [this._M.SERVER_ADD_MATERIAL_STORAGE_DATA]({ commit }, materialStorageData) {
-  //   console.log('materialStorageData :', materialStorageData)
-
-  //   return await axios({
-  //     // baseURL: process.env.server_url,
-  //     method: API.materialStorage.addNewData.method,
-  //     url: API.materialStorage.addNewData.url,
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     data: {
-  //       materialStorageData
-  //     }
-  //   })
-  //     .then((data) => {
-  //       return data
-  //     })
-  //     .catch((error) => {
-  //       console.log('error :', error)
-  //       console.log('客戶資料更新出現異常！ SERVER_ADD_MATERIAL_STORAGE_DATA')
-  //       return error
-  //     })
-  // }
+  async [_M.SERVER_ADD_LEVEL_ONE_STORAGE_DATA]({}, materialStorageLevelOneData) {
+    return await axios({
+      baseURL: 'http://localhost:8080',
+      method: API.materialStorage.addLevelOneData.method,
+      url: API.materialStorage.addLevelOneData.url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        materialStorageLevelOneData
+      }
+    })
+      .then((data) => {
+        return data
+      })
+      .catch((error) => {
+        console.log('error :', error)
+        console.log('新增資料出現異常！ SERVER_ADD_MATERIAL_STORAGE_DATA')
+        return error
+      })
+  },
+  async [_M.SERVER_GET_STORAGE_LEVEL_ONE_DATA]({}) {
+    return await axios({
+      // baseURL: process.env.server_url,
+      method: API.materialStorage.getAllLevelOneData.method,
+      url: API.materialStorage.getAllLevelOneData.url,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((data) => {
+        return data
+      })
+      .catch((error) => {
+        console.log('error :', error)
+        console.log('讀取資料出現異常！ SERVER_GET_STORAGE_LEVEL_ONE_DATA')
+        return error
+      })
+  }
 }
 
 export default new Vuex.Store({

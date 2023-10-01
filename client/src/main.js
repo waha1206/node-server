@@ -18,8 +18,6 @@ import constants from './constants'
 
 // 將 _M 添加到 vue 原型上面
 Vue.prototype._M = constants
-console.log('Vue.prototype._M :', Vue.prototype._M)
-console.log('_M :', _M)
 
 // https://www.cnblogs.com/yck123/p/11212979.html
 // 滑鼠事件控制台警告 - 使用的插件

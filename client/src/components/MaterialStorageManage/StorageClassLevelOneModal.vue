@@ -245,9 +245,12 @@ export default {
         })
         return
       }
-      console.log('全局 _M 成功', this._M.SERVER_ADD_MATERIAL_STORAGE_DATA)
 
-      // this.$store.dispatch(this._M.SERVER_ADD_MATERIAL_STORAGE_DATA, { hello: 'hello' })
+      let data = await this.$store.dispatch(this._M.SERVER_ADD_LEVEL_ONE_STORAGE_DATA, this.basicForm)
+      console.log('data :', data)
+      return
+      let data2 = await this.$store.dispatch(this._M.SERVER_GET_STORAGE_LEVEL_ONE_DATA)
+      console.log('data2 :', data2)
     },
 
     // 刪除這筆資料
