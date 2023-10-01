@@ -77,9 +77,10 @@ const actions = {
   },
 
   // --------------------- storage material ---------------------
+  // 新增一筆 storage level one class 資料
   async [_M.SERVER_ADD_LEVEL_ONE_STORAGE_DATA]({}, materialStorageLevelOneData) {
     return await axios({
-      baseURL: 'http://localhost:8080',
+      // baseURL: 'http://localhost:8080/',
       method: API.materialStorage.addLevelOneData.method,
       url: API.materialStorage.addLevelOneData.url,
       headers: {
@@ -98,9 +99,11 @@ const actions = {
         return error
       })
   },
+
+  // 取得所有的 storage level one class 資料
   async [_M.SERVER_GET_STORAGE_LEVEL_ONE_DATA]({}) {
     return await axios({
-      // baseURL: process.env.server_url,
+      // baseURL: 'http://127.0.0.1:5000/',
       method: API.materialStorage.getAllLevelOneData.method,
       url: API.materialStorage.getAllLevelOneData.url,
       headers: {

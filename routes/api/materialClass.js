@@ -12,6 +12,31 @@ const {
   StorageLevelTwoClass
 } = require('../../models/MaterialClass')
 
+// $router get api/material-class/get-storage-level-one-class
+// @desc   獲取所有分類資訊
+// @access private
+// 使用 hander 要驗證 token
+// body 不用放，因為他會獲取所有訊息
+// 使用方式 SERVER_GET_STORAGE_LEVEL_ONE_DATA
+
+router.get(
+  '/get-storage-level-one-class',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    StorageLevelOneClass.find()
+      .sort({ type: 1 })
+      .then((aaa) => {
+        if (!aaa) {
+          return res.status(200).json('沒有任何內容')
+        }
+        res.json(aaa)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
 // $router GET api/material-class/test
 // @desc   返回的請求的 json 數據
 // @access public
@@ -222,49 +247,26 @@ router.post(
   '/add-storage-level-one-class',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    // const query = [{ name: req.body.name }, { name: req.body.type }]
-    const { name } = req.body.materialStorageLevelOneData
-    console.log('materialStorageLevelOneData :', materialStorageLevelOneData)
-    res.status(200).json('卡拉雞腿堡')
-    return
-    const query = [{ name: name }]
+    const {
+      materialStorageLevelOneData,
+      materialStorageLevelOneData: {
+        name
+      }
+    } = req.body
+    const query = { name: name }
     const options = {}
 
     StorageLevelOneClass.findOne(query, options).then((storageLevelOneClass) => {
       if (storageLevelOneClass) {
         res.status(403).json('Material Storage Level One 的名稱已經存在')
       } else {
-        new StorageLevelOneClass(req.body.materialStorageLevelOneData)
+        new StorageLevelOneClass(materialStorageLevelOneData)
           .save()
           .then((storageLevelOneClass) => {
             res.status(200).json(storageLevelOneClass)
           })
       }
     })
-  }
-)
-
-// $router get api/material-class/get-storage-level-one-class
-// @desc   獲取所有分類資訊
-// @access private
-// 使用 hander 要驗證 token
-// body 不用放，因為他會獲取所有訊息
-// 使用方式 SERVER_GET_STORAGE_LEVEL_ONE_DATA
-router.get(
-  '/get-storage-level-one-class',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    StorageLevelOneClass.find()
-      .sort({ type: 1 })
-      .then((allStorageLevelOneClass) => {
-        if (!allStorageLevelOneClass) {
-          return res.status(400).json('沒有任何內容')
-        }
-        res.json(allStorageLevelOneClass)
-      })
-      .catch((err) => {
-        res.status(404).json(err)
-      })
   }
 )
 

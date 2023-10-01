@@ -202,6 +202,10 @@ export default {
       tableData: []
     }
   },
+  async mounted() {
+    await this.getAllStorageLevelOneData()
+  },
+
   watch: {
     visible: {
       handler(val) {
@@ -236,6 +240,17 @@ export default {
     }
   },
   methods: {
+    // 取得倉庫第一層的所有分類
+    async getAllStorageLevelOneData() {
+      let data = await this.$store.dispatch(this._M.SERVER_GET_STORAGE_LEVEL_ONE_DATA)
+      console.log('data :', data)
+
+      // { data, status }
+      // console.log('typeof status :', typeof status)
+
+      // this.storageLevelOneData = status === 200 ? data : []
+    },
+
     // 新增一筆倉庫分類資料
     async addStorageLevelOneClass() {
       if (this.checkFiledIsEmpty) {
@@ -246,9 +261,7 @@ export default {
         return
       }
 
-      let data = await this.$store.dispatch(this._M.SERVER_ADD_LEVEL_ONE_STORAGE_DATA, this.basicForm)
-      console.log('data :', data)
-      return
+      await this.$store.dispatch(this._M.SERVER_ADD_LEVEL_ONE_STORAGE_DATA, this.basicForm)
       let data2 = await this.$store.dispatch(this._M.SERVER_GET_STORAGE_LEVEL_ONE_DATA)
       console.log('data2 :', data2)
     },

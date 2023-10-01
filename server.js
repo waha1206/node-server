@@ -4,6 +4,10 @@ const bodyParser = require('body-parser')
 const passport = require('passport')
 const app = express()
 
+// const cors = require('cors') // 引入 cors 套件
+// 處理 cors 的檔頭問題！ 這個就是 middleware
+// app.use('/*', cors)
+
 // 引入 users.js
 const users = require('./routes/api/users.js')
 const profiles = require('./routes/api/profiles.js')
