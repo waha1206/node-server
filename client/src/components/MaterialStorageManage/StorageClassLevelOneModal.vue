@@ -39,7 +39,7 @@
                   stripe
                   size="medium"
                   highlight-current-row
-                  ref="leftSideBannerData"
+                  ref="storageLevelOneClassTable"
                   @current-change="handleCurrentChange"
                 >
                   <!-- 讓表格左邊的 > 點下去會展開 -->
@@ -70,7 +70,7 @@
                     label="中文名稱"
                     header-align="left"
                     align="left"
-                    width="265"
+                    width="200"
                   ></el-table-column>
 
                   <!-- 備註說明 -->
@@ -79,11 +79,11 @@
                     label="備註說明 (內容說明)"
                     header-align="left"
                     align="left"
-                    width="265"
+                    width=""
                   ></el-table-column>
 
                   <!-- 是否啟用，多的 main banner 會變成輪播狀態 -->
-                  <el-table-column prop="" label="歸屬" header-align="center" align="center" width="90">
+                  <el-table-column prop="" label="歸屬" header-align="center" align="center" width="92">
                     <template slot-scope="scope">
                       <!-- 這邊會放　屬於 myoacg 還是 ooxx 的公司擁有的資料 多供應商的概念 -->
                       <!-- <span v-if="scope.row.activate" class="bg-yellow-100 border px-[2px] py-[1px] text-blue-600">
@@ -94,23 +94,23 @@
                   </el-table-column>
 
                   <!-- 展開 expand -->
-                  <!-- <el-table-column prop="" label="編輯" header-align="center" align="center" width="90">
+                  <el-table-column prop="" label="編輯" header-align="center" align="center" width="92">
                     <template slot-scope="scope">
                       <span
-                        @click="editLeftSideBannerData(scope.row)"
-                        class="btn hover:bg-gradient-to-r hover:from-yellow-500 hover:to-pink-500 text-white bg-gradient-to-r from-sky-500 to-indigo-500 focus:ring-4 font-xs rounded-sm text-xs px-2 py-1 text-center mr-2 cursor-pointer m-auto"
+                        @click="editStorageLevelOneData(scope.row)"
+                        class="btn hover:bg-gradient-to-r hover:from-yellow-500 hover:to-pink-500 text-white bg-gradient-to-r from-sky-500 to-indigo-500 focus:ring-4 font-xs rounded-sm text-xs px-2 py-1 text-center cursor-pointer m-auto"
                       >
                         編輯
                       </span>
                     </template>
-                  </el-table-column> -->
+                  </el-table-column>
 
                   <!-- 刪除 main banner 會有防刪功能 -->
-                  <el-table-column prop="" label="刪除" header-align="center" align="center" width="60">
+                  <el-table-column prop="" label="刪除" header-align="center" align="center" width="80">
                     <template slot-scope="scope">
                       <span
                         @click="handleDeleteStorageLevelOne(scope.row)"
-                        class="text-white bg-gradient-to-r from-red-500 via-red-600 to-red-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800 shadow-md shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-xs rounded-sm text-xs px-2 py-1 text-center mr-2 cursor-pointer m-auto hover:from-yellow-500 hover:to-pink-500"
+                        class="text-white bg-gradient-to-r from-red-500 via-red-600 to-red-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800 shadow-md shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-xs rounded-sm text-xs px-2 py-1 text-center cursor-pointer m-auto hover:from-yellow-500 hover:to-pink-500"
                       >
                         刪除
                       </span>
@@ -240,15 +240,16 @@ export default {
     }
   },
   methods: {
+    // 開啟 expand 根據 ref
+    editStorageLevelOneData(row) {
+      this.$refs.storageLevelOneClassTable.toggleRowExpansion(row)
+    },
+
     // 取得倉庫第一層的所有分類
     async getAllStorageLevelOneData() {
-      let data = await this.$store.dispatch(this._M.SERVER_GET_STORAGE_LEVEL_ONE_DATA)
-      console.log('data :', data)
+      const { data, status } = await this.$store.dispatch(this._M.SERVER_GET_STORAGE_LEVEL_ONE_DATA)
 
-      // { data, status }
-      // console.log('typeof status :', typeof status)
-
-      // this.storageLevelOneData = status === 200 ? data : []
+      this.storageLevelOneData = status === 200 ? data : []
     },
 
     // 新增一筆倉庫分類資料
@@ -281,3 +282,35 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+/deep/.el-table .cell,
+.el-table th div {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+/deep/.el-table th.el-table__cell > .cell {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+/deep/.my-popper {
+  .el-popconfirm__action {
+    .el-button:nth-child(1) {
+      background: white;
+    }
+    .el-button:nth-child(2) {
+      background: blue;
+    }
+  }
+}
+
+/deep/.el-table__body td.el-table__cell {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+/deep/.el-table__body tr:hover > td {
+  background-color: yellow !important;
+}
+</style>
