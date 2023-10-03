@@ -67,5 +67,5 @@
 	"prettier.semi": false,
 	"prettier.trailingComma": "none",
 	"vetur.validation.template": false,
-	"prettier.printWidth": 120,
+	"prettier.printWidth": 90,
 }

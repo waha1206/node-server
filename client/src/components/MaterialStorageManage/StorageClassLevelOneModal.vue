@@ -7,19 +7,31 @@
       @click.stop="closeStorageClassLevelOneModal"
     >
       <!-- 主體 -->
-      <div class="relative px-4 w-[1280px] h-full md:h-auto m-auto top-[50px]" @click.stop="">
+      <div
+        class="relative px-4 w-[1280px] h-full md:h-auto m-auto top-[50px]"
+        @click.stop=""
+      >
         <!-- Modal content -->
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
           <!-- Modal header -->
-          <div class="flex justify-between items-center p-2 rounded-t border-b dark:border-gray-600">
-            <h3 class="text-xl font-medium text-gray-900 dark:text-white">新增原物料倉庫第一層： {{ getModalInfo }}</h3>
+          <div
+            class="flex justify-between items-center p-2 rounded-t border-b dark:border-gray-600"
+          >
+            <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+              新增原物料倉庫第一層： {{ getModalInfo }}
+            </h3>
             <button
               @click.stop="closeStorageClassLevelOneModal"
               type="button"
               class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
               data-modal-toggle="extralarge-modal"
             >
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                class="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   fill-rule="evenodd"
                   d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -47,12 +59,21 @@
                     <!-- 這邊使用 slot 把元件塞進去，讓程式碼比較簡潔乾淨 -->
                     <template slot-scope="props">
                       <!-- 這邊可以放元件，如果需要的話 -->
-                    </template></el-table-column
-                  >
+                      <UpdateStorageLevelOneForm
+                        :storageLevelOne="props.row"
+                        @updateStorageLevelOneData="updateStorageLevelOneData"
+                      ></UpdateStorageLevelOneForm> </template
+                  ></el-table-column>
                   <!-- 左邊的表格 很多 main banner 資料 -->
 
                   <!-- 序號 -->
-                  <el-table-column type="index" label="序號" width="50" align="center" header-align="center">
+                  <el-table-column
+                    type="index"
+                    label="序號"
+                    width="50"
+                    align="center"
+                    header-align="center"
+                  >
                   </el-table-column>
 
                   <!-- 主題 -->
@@ -83,7 +104,13 @@
                   ></el-table-column>
 
                   <!-- 是否啟用，多的 main banner 會變成輪播狀態 -->
-                  <el-table-column prop="" label="歸屬" header-align="center" align="center" width="92">
+                  <el-table-column
+                    prop=""
+                    label="歸屬"
+                    header-align="center"
+                    align="center"
+                    width="92"
+                  >
                     <template slot-scope="scope">
                       <!-- 這邊會放　屬於 myoacg 還是 ooxx 的公司擁有的資料 多供應商的概念 -->
                       <!-- <span v-if="scope.row.activate" class="bg-yellow-100 border px-[2px] py-[1px] text-blue-600">
@@ -94,7 +121,13 @@
                   </el-table-column>
 
                   <!-- 展開 expand -->
-                  <el-table-column prop="" label="編輯" header-align="center" align="center" width="92">
+                  <el-table-column
+                    prop=""
+                    label="編輯"
+                    header-align="center"
+                    align="center"
+                    width="92"
+                  >
                     <template slot-scope="scope">
                       <span
                         @click="editStorageLevelOneData(scope.row)"
@@ -106,7 +139,13 @@
                   </el-table-column>
 
                   <!-- 刪除 main banner 會有防刪功能 -->
-                  <el-table-column prop="" label="刪除" header-align="center" align="center" width="80">
+                  <el-table-column
+                    prop=""
+                    label="刪除"
+                    header-align="center"
+                    align="center"
+                    width="80"
+                  >
                     <template slot-scope="scope">
                       <span
                         @click="handleDeleteStorageLevelOne(scope.row)"
@@ -142,30 +181,32 @@
               <form @submit.prevent="addStorageLevelOneClass">
                 <div class="grid grid-cols-6 gap-6 ">
                   <div class="col-span-6 sm:col-span-6">
-                    <label for="storage-class-level-one-modal-name" class="m-0 block text-xs font-medium text-gray-700"
-                      >編號 (A0001)</label
+                    <label
+                      for="storage-class-level-one-modal-name"
+                      class="m-0 block text-xs font-medium text-gray-700"
+                      >分類編號 (例如：G0001)</label
                     >
-                    <input
-                      type="text"
-                      name="storage-class-level-one-modal-name"
-                      id="storage-class-level-one-modal-name"
-                      autocomplete=""
+                    <el-input
+                      class="mt-2"
+                      size="mini"
+                      type="type"
                       v-model="basicForm.type"
-                      class="mt-1  w-full shadow-sm sm:text-xs border-gray-300 rounded-md focus:outline-dashed px-2 bg-gray-100"
-                    />
+                      placeholder="請輸入4碼數字 例如：0001"
+                    ></el-input>
                   </div>
                   <div class="col-span-6 sm:col-span-6">
-                    <label for="storage-class-level-one-modal-name" class="m-0 block text-xs font-medium text-gray-700"
-                      >名稱 (拉鍊)</label
+                    <label
+                      for="storage-class-level-one-modal-name"
+                      class="m-0 block text-xs font-medium text-gray-700"
+                      >分類名稱 (例如：拉鍊)</label
                     >
-                    <input
-                      type="text"
-                      name="storage-class-level-one-modal-name"
-                      id="storage-class-level-one-modal-name"
-                      autocomplete=""
+                    <el-input
+                      class="mt-2"
+                      size="mini"
+                      type="type"
                       v-model="basicForm.name"
-                      class="mt-1  w-full shadow-sm sm:text-xs border-gray-300 rounded-md focus:outline-dashed px-2 bg-gray-100"
-                    />
+                      placeholder="請輸入中文名稱"
+                    ></el-input>
                   </div>
                 </div>
                 <div class="mt-8 text-right">
@@ -188,8 +229,11 @@
 </template>
 
 <script>
+import UpdateStorageLevelOneForm from './StorageLevelOneChild/UpdateStorageLevelOneForm.vue'
+
 export default {
   props: ['visible'],
+  components: { UpdateStorageLevelOneForm },
   data() {
     return {
       path: 'storage_class_level_one_modal', // MyPagination
@@ -236,7 +280,7 @@ export default {
 
     // modal 最上面的那個顯示資訊
     getModalInfo() {
-      return '想寫的資訊'
+      return '刪除功能已經關閉，要刪除請找 Leo'
     }
   },
   methods: {
@@ -247,7 +291,9 @@ export default {
 
     // 取得倉庫第一層的所有分類
     async getAllStorageLevelOneData() {
-      const { data, status } = await this.$store.dispatch(this._M.SERVER_GET_STORAGE_LEVEL_ONE_DATA)
+      const { data, status } = await this.$store.dispatch(
+        this._M.SERVER_GET_STORAGE_LEVEL_ONE_DATA
+      )
 
       this.storageLevelOneData = status === 200 ? data : []
     },
@@ -262,7 +308,10 @@ export default {
         return
       }
 
-      await this.$store.dispatch(this._M.SERVER_ADD_LEVEL_ONE_STORAGE_DATA, this.basicForm)
+      await this.$store.dispatch(
+        this._M.SERVER_ADD_LEVEL_ONE_STORAGE_DATA,
+        this.basicForm
+      )
       let data2 = await this.$store.dispatch(this._M.SERVER_GET_STORAGE_LEVEL_ONE_DATA)
       console.log('data2 :', data2)
     },
@@ -278,7 +327,21 @@ export default {
     },
 
     // 暫時沒用
-    handleCurrentChange() {}
+    handleCurrentChange() {},
+
+    // emit
+    updateStorageLevelOneData(storageLevelOne) {
+      let itemToModify = this.storageLevelOneData.find(
+        (item) => item._id === storageLevelOne._id
+      )
+      if (itemToModify) {
+        // itemToModify.name = storageLevelOne.name
+        // itemToModify.type = storageLevelOne.type
+        // itemToModify.describe = storageLevelOne.describe
+        const { name, type, describe } = storageLevelOne
+        Object.assign(itemToModify, { name, type, describe })
+      }
+    }
   }
 }
 </script>
@@ -311,6 +374,12 @@ export default {
 }
 
 /deep/.el-table__body tr:hover > td {
-  background-color: yellow !important;
+  background-color: #ffffa0 !important;
+}
+
+/deep/.el-table tr {
+  .el-table__expanded-cell {
+    padding: 0;
+  }
 }
 </style>

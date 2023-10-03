@@ -81,8 +81,8 @@ const actions = {
   async [_M.SERVER_ADD_LEVEL_ONE_STORAGE_DATA]({}, materialStorageLevelOneData) {
     return await axios({
       // baseURL: 'http://localhost:8080/',
-      method: API.materialStorage.addLevelOneData.method,
-      url: API.materialStorage.addLevelOneData.url,
+      method: API.materialStorage.addLevelOneClass.method,
+      url: API.materialStorage.addLevelOneClass.url,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -104,8 +104,8 @@ const actions = {
   async [_M.SERVER_GET_STORAGE_LEVEL_ONE_DATA]({}) {
     return await axios({
       // baseURL: 'http://127.0.0.1:5000/',
-      method: API.materialStorage.getAllLevelOneData.method,
-      url: API.materialStorage.getAllLevelOneData.url,
+      method: API.materialStorage.getAllLevelOneClass.method,
+      url: API.materialStorage.getAllLevelOneClass.url,
       headers: {
         'Content-Type': 'application/json'
       }
@@ -116,6 +116,29 @@ const actions = {
       .catch((error) => {
         console.log('error :', error)
         console.log('讀取資料出現異常！ SERVER_GET_STORAGE_LEVEL_ONE_DATA')
+        return error
+      })
+  },
+
+  // 取得所有的 storage level one class 資料
+  async [_M.SERVER_PUT_STORAGE_LEVEL_ONE_DATA]({}, materialStorageLevelOneData) {
+    return await axios({
+      // baseURL: 'http://127.0.0.1:5000/',
+      method: API.materialStorage.putLevelOneClass.method,
+      url: API.materialStorage.putLevelOneClass.url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        materialStorageLevelOneData
+      }
+    })
+      .then((data) => {
+        return data
+      })
+      .catch((error) => {
+        console.log('error :', error)
+        console.log('讀取資料出現異常！ SERVER_PUT_STORAGE_LEVEL_ONE_DATA')
         return error
       })
   }
