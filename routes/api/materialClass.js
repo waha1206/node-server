@@ -12,6 +12,8 @@ const {
   StorageLevelTwoClass
 } = require('../../models/MaterialClass')
 
+// ---------------------------------- storage material ----------------------------------
+
 // $router get api/material-class/get-storage-level-one-class
 // @desc   獲取所有分類資訊
 // @access private
@@ -56,6 +58,87 @@ router.get(
       })
   }
 )
+
+// -------- 二層
+// $router get api/material-class/get-storage-level-two-class
+// @desc   獲取所有分類資訊
+// @access private
+// 使用 hander 要驗證 token
+// body 不用放，因為他會獲取所有訊息
+// 使用方式 SERVER_GET_STORAGE_LEVEL_TWO_DATA
+router.put(
+  '/put-storage-level-two-class',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { materialStorageLevelTwoData } = req.body
+    const { _id } = materialStorageLevelTwoData
+
+    StorageLevelTwoClass.findByIdAndUpdate(
+      { _id: _id },
+      { $set: materialStorageLevelTwoData },
+      { new: false }
+    ).then((classLevelTwoData) => res.json(classLevelTwoData))
+  }
+)
+
+// $router get api/material-class/get-storage-level-two-class
+// @desc   獲取所有分類資訊
+// @access private
+// 使用 hander 要驗證 token
+// body 不用放，因為他會獲取所有訊息
+// 使用方式 SERVER_GET_STORAGE_LEVEL_TWO_DATA
+router.get(
+  '/get-storage-level-two-class',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    StorageLevelTwoClass.find()
+      .sort({ type: 1 })
+      .then((aaa) => {
+        if (!aaa) {
+          return res.status(200).json('沒有任何內容')
+        }
+        res.json(aaa)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
+// $router post api/material-class/add-storage-level-two-class
+// @desc   創建訊息接口
+// @access private
+// 使用 hander 要驗證 token
+// 使用 body 要放創建的資料 key:value
+// 使用方式 SERVER_ADD_LEVEL_TWO_STORAGE_DATA, materialStorageLevelTwoData
+router.post(
+  '/add-storage-level-two-class',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const {
+      materialStorageLevelTwoData,
+      materialStorageLevelTwoData: { name }
+    } = req.body
+    const query = { name: name }
+    const options = {}
+
+    StorageLevelTwoClass.findOne(query, options).then((storageLevelTwoClass) => {
+      if (storageLevelTwoClass) {
+        res.status(403).json('Material Storage Level One 的名稱已經存在')
+      } else {
+        new StorageLevelTwoClass(materialStorageLevelTwoData)
+          .save()
+          .then((storageLevelOneClass) => {
+            res.status(200).json(storageLevelTwoClass)
+          })
+      }
+    })
+  }
+)
+
+// -------- 二層 end
+
+// ---------------------------------- storage material end ----------------------------------
 
 // $router GET api/material-class/test
 // @desc   返回的請求的 json 數據
@@ -263,5 +346,6 @@ router.post(
     })
   }
 )
+// ---------------------  這邊是 Storage end ---------------------
 
 module.exports = router

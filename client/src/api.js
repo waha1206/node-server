@@ -15,6 +15,21 @@ const API = {
     putLevelOneClass: {
       url: '/api/material-class/put-storage-level-one-class',
       method: 'put'
+    },
+    // 新增一筆 material storage 資料
+    addLevelTwoClass: {
+      url: '/api/material-class/add-storage-level-two-class',
+      method: 'post'
+    },
+    // 新增一筆 material storage 資料
+    getAllLevelTwoClass: {
+      url: '/api/material-class/get-storage-level-two-class',
+      method: 'get'
+    },
+    // 新增一筆 material storage 資料
+    putLevelTwoClass: {
+      url: '/api/material-class/put-storage-level-two-class',
+      method: 'put'
     }
   }
 }

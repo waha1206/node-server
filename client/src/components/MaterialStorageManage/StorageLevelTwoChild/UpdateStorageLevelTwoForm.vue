@@ -6,7 +6,7 @@
       <div class="basis-1/12 pr-2">
         <div class=" flex justify-center items-center h-full w-full">
           <span
-            @click="updataStorageLevelOneData()"
+            @click="updataStorageLevelTwoData()"
             class="text-xs  hover:bg-gradient-to-r hover:from-yellow-500 hover:to-pink-500 text-white bg-gradient-to-r from-sky-500 to-indigo-500 focus:ring-4 font-xs rounded-sm  px-2 py-1 text-center cursor-pointer m-auto"
           >
             更新
@@ -25,7 +25,7 @@
           <el-input
             size="mini"
             type="type"
-            v-model="copyStorageLevelOneData.type"
+            v-model="copyStorageLevelTwoData.type"
           ></el-input>
         </div>
       </div>
@@ -40,11 +40,11 @@
           <el-input
             size="mini"
             type="type"
-            v-model="copyStorageLevelOneData.name"
+            v-model="copyStorageLevelTwoData.name"
           ></el-input>
           <!-- <input
             type="text"
-            v-model="copyStorageLevelOneData.name"
+            v-model="copyStorageLevelTwoData.name"
             class="block p-2 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           /> -->
         </div>
@@ -65,7 +65,7 @@
         <el-input
           size="mini"
           type="type"
-          v-model="copyStorageLevelOneData.describe"
+          v-model="copyStorageLevelTwoData.describe"
         ></el-input>
       </div>
 
@@ -84,16 +84,16 @@
 
 <script>
 export default {
-  props: ['storageLevelOne'],
+  props: ['storageLevelTwo'],
   data() {
     return {
-      copyStorageLevelOneData: {}
+      copyStorageLevelTwoData: {}
     }
   },
   watch: {
-    storageLevelOne: {
+    storageLevelTwo: {
       handler(val) {
-        this.copyStorageLevelOneData = _.cloneDeep(val)
+        this.copyStorageLevelTwoData = _.cloneDeep(val)
       },
       deep: true,
       immediate: true
@@ -102,21 +102,17 @@ export default {
 
   mounted() {},
 
-  computed: {
-    getActivateLeftSideBannerNum() {
-      return this.activateLeftSideBannerNum
-    }
-  },
+  computed: {},
   methods: {
     // 更新 left side banner 的資料
-    async updataStorageLevelOneData() {
+    async updataStorageLevelTwoData() {
       const { status } = await this.$store.dispatch(
         this._M.SERVER_PUT_STORAGE_LEVEL_ONE_DATA,
-        this.copyStorageLevelOneData
+        this.copyStorageLevelTwoData
       )
       if (status === 200) {
         // 這邊是 emit 的用法
-        this.$emit('updateStorageLevelOneData', this.copyStorageLevelOneData)
+        this.$emit('updateStorageLevelTwoData', this.copyStorageLevelTwoData)
       }
     }
   }

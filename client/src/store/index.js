@@ -95,7 +95,7 @@ const actions = {
       })
       .catch((error) => {
         console.log('error :', error)
-        console.log('新增資料出現異常！ SERVER_ADD_MATERIAL_STORAGE_DATA')
+        console.log('新增資料出現異常！ SERVER_ADD_LEVEL_ONE_STORAGE_DATA')
         return error
       })
   },
@@ -139,6 +139,72 @@ const actions = {
       .catch((error) => {
         console.log('error :', error)
         console.log('讀取資料出現異常！ SERVER_PUT_STORAGE_LEVEL_ONE_DATA')
+        return error
+      })
+  },
+
+  // 新增一筆 storage level two class 資料
+  async [_M.SERVER_ADD_LEVEL_TWO_STORAGE_DATA]({}, materialStorageLevelTwoData) {
+    return await axios({
+      // baseURL: 'http://localhost:8080/',
+      method: API.materialStorage.addLevelTwoClass.method,
+      url: API.materialStorage.addLevelTwoClass.url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        materialStorageLevelTwoData
+      }
+    })
+      .then((data) => {
+        return data
+      })
+      .catch((error) => {
+        console.log('error :', error)
+        console.log('新增資料出現異常！ SERVER_ADD_LEVEL_TWO_STORAGE_DATA')
+        return error
+      })
+  },
+
+  // 取得所有的 storage level two class 資料
+  async [_M.SERVER_GET_STORAGE_LEVEL_TWO_DATA]({}) {
+    return await axios({
+      // baseURL: 'http://127.0.0.1:5000/',
+      method: API.materialStorage.getAllLevelTwoClass.method,
+      url: API.materialStorage.getAllLevelTwoClass.url,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((data) => {
+        return data
+      })
+      .catch((error) => {
+        console.log('error :', error)
+        console.log('讀取資料出現異常！ SERVER_GET_STORAGE_LEVEL_TWO_DATA')
+        return error
+      })
+  },
+
+  // 取得所有的 storage level one class 資料
+  async [_M.SERVER_PUT_STORAGE_LEVEL_TWO_DATA]({}, materialStorageLevelTwoData) {
+    return await axios({
+      // baseURL: 'http://127.0.0.1:5000/',
+      method: API.materialStorage.putLevelTwoClass.method,
+      url: API.materialStorage.putLevelTwoClass.url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        materialStorageLevelTwoData
+      }
+    })
+      .then((data) => {
+        return data
+      })
+      .catch((error) => {
+        console.log('error :', error)
+        console.log('讀取資料出現異常！ SERVER_PUT_STORAGE_LEVEL_TWO_DATA')
         return error
       })
   }

@@ -22,7 +22,6 @@
               <!-- value 這邊綁定的是此 陣列裡面，要傳給 select v-mode 的值 -->
               <!-- label 就單純的顯示再 input 上面可以看到的文字 -->
               <el-option
-                <el-option
                 v-for="(levelOneData, index) in materialLevelOneClassData"
                 :key="index"
                 :value="levelOneData._id"
@@ -44,31 +43,16 @@
               <!-- *************************** 左邊區塊 *************************** -->
               <!-- *************************** table 區塊 裡面編輯跟刪除 *************************** -->
               <el-table :data="tableData" style="width: 100%" size="mini">
-                <el-table-column
-                  prop="type"
-                  label="編號"
-                  width="80px"
-                  align="center"
-                >
+                <el-table-column prop="type" label="編號" width="80px" align="center">
                 </el-table-column>
-                <el-table-column
-                  prop="name"
-                  label="分類名"
-                  width="180px"
-                  align="center"
-                >
+                <el-table-column prop="name" label="分類名" width="180px" align="center">
                 </el-table-column>
                 <el-table-column label="大分類" align="center" width="180px">
                   <template slot-scope="scope">
                     {{ getLevelOneNameById(scope.row.level_one_id) }}
                   </template>
                 </el-table-column>
-                <el-table-column
-                  prop="operation"
-                  label="操作"
-                  width="150"
-                  align="center"
-                >
+                <el-table-column prop="operation" label="操作" width="150" align="center">
                   <!-- 編輯、刪除 第一層的分類 -->
                   <template slot-scope="scope">
                     <el-button
@@ -120,10 +104,9 @@
                   >
                     <!-- 下拉的選單，左邊放 type 右邊放 name -->
                     <span style="float: left">{{ levelOneData.type }}</span>
-                    <span
-                      style="float: right; color: #8492a6; font-size: 13px"
-                      >{{ levelOneData.name }}</span
-                    >
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{
+                      levelOneData.name
+                    }}</span>
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -144,12 +127,8 @@
               </el-form-item>
               <!--提交與取消鍵 -->
               <el-form-item class="text_right">
-                <el-button type="warning" @click="dialog.show = false"
-                  >取消</el-button
-                >
-                <el-button type="primary" @click="handleAdd('form')"
-                  >提交</el-button
-                >
+                <el-button type="warning" @click="dialog.show = false">取消</el-button>
+                <el-button type="primary" @click="handleAdd('form')">提交</el-button>
               </el-form-item>
             </el-form>
           </el-aside>
@@ -176,11 +155,7 @@
 
     <!-- ****************************** 這個 dialog 是 點擊左邊的 編輯 / 刪除 的區塊 ****************************** -->
     <!-- ****************************** 只有這邊會使用到 editForm levelTwoEditForm ****************************** -->
-    <el-dialog
-      title="編輯商品代號"
-      :visible.sync="levelTwoEditDialog"
-      width="25%"
-    >
+    <el-dialog title="編輯商品代號" :visible.sync="levelTwoEditDialog" width="25%">
       <el-form
         ref="editForm"
         :model="levelTwoEditForm"
@@ -216,11 +191,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          prop="type"
-          label="商品代號 (數字)"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item prop="type" label="商品代號 (數字)" :label-width="formLabelWidth">
           <el-input
             size="mini"
             v-model="levelTwoEditForm.type"
@@ -228,11 +199,7 @@
             placeholder="請輸入大寫英文"
           ></el-input>
         </el-form-item>
-        <el-form-item
-          prop="name"
-          label="商品名稱 (中文)"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item prop="name" label="商品名稱 (中文)" :label-width="formLabelWidth">
           <el-input
             size="mini"
             v-model="levelTwoEditForm.name"
@@ -304,14 +271,10 @@ export default {
       },
       // 驗證表單，form_rules 這個是驗證 addForm 的欄位
       formDataRules: {
-        level_one_id: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
-        ],
+        level_one_id: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
-        describe: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
-        ]
+        describe: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }]
       }
     }
   },
@@ -351,11 +314,9 @@ export default {
       if (this.filterTableData.levelOneId == this.dontRemove) {
         this.filterTableData.tableData = this.materialLevelTwoClassData
       } else {
-        this.filterTableData.tableData = this.materialLevelTwoClassData.filter(
-          (item) => {
-            return item.level_one_id == this.filterTableData.levelOneId
-          }
-        )
+        this.filterTableData.tableData = this.materialLevelTwoClassData.filter((item) => {
+          return item.level_one_id == this.filterTableData.levelOneId
+        })
       }
       this.setPaginations()
     },
@@ -438,9 +399,7 @@ export default {
       this.levelTwoEditForm.level_one_id = row.level_one_id
       this.levelTwoEditDialog = true
       // 按了 table 裡面的編輯按鈕後 這邊會把 row 裡面的 level_one_id 轉換成為 name 賦值給 this.levelTwoEditForm.level_one_name
-      this.levelTwoEditForm.level_one_name = this.getLevelOneNameById(
-        row.level_one_id
-      )
+      this.levelTwoEditForm.level_one_name = this.getLevelOneNameById(row.level_one_id)
       this.dialogOption = 'edit'
     },
     handleDelete(row) {
@@ -477,9 +436,7 @@ export default {
       this.$refs[form].validate((valid) => {
         if (valid) {
           const url =
-            uploadFormData.option === 'add'
-              ? 'add'
-              : `edit/${this.levelTwoEditForm._id}`
+            uploadFormData.option === 'add' ? 'add' : `edit/${this.levelTwoEditForm._id}`
           this.$axios
             .post(`/api/material-class/${url}`, uploadFormData)
             .then((res) => {

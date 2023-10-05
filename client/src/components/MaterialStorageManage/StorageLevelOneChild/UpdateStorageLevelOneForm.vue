@@ -102,11 +102,7 @@ export default {
 
   mounted() {},
 
-  computed: {
-    getActivateLeftSideBannerNum() {
-      return this.activateLeftSideBannerNum
-    }
-  },
+  computed: {},
   methods: {
     // 更新 left side banner 的資料
     async updataStorageLevelOneData() {
