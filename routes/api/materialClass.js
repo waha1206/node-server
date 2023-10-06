@@ -60,12 +60,12 @@ router.get(
 )
 
 // -------- 二層
-// $router get api/material-class/get-storage-level-two-class
+// $router get api/material-class/put-storage-level-two-class
 // @desc   獲取所有分類資訊
 // @access private
 // 使用 hander 要驗證 token
 // body 不用放，因為他會獲取所有訊息
-// 使用方式 SERVER_GET_STORAGE_LEVEL_TWO_DATA
+// 使用方式 SERVER_PUT_STORAGE_LEVEL_TWO_DATA
 router.put(
   '/put-storage-level-two-class',
   passport.authenticate('jwt', { session: false }),
@@ -91,13 +91,14 @@ router.get(
   '/get-storage-level-two-class',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
+    console.log('有喔')
     StorageLevelTwoClass.find()
       .sort({ type: 1 })
-      .then((aaa) => {
-        if (!aaa) {
+      .then((storageLevelTwoClass) => {
+        if (!storageLevelTwoClass) {
           return res.status(200).json('沒有任何內容')
         }
-        res.json(aaa)
+        res.json(storageLevelTwoClass)
       })
       .catch((err) => {
         res.status(404).json(err)

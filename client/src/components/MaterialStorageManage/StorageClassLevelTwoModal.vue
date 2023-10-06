@@ -20,6 +20,7 @@
             <h3 class="text-xl font-medium text-gray-900 dark:text-white">
               新增原物料倉庫第二層： {{ getModalInfo }}
             </h3>
+
             <button
               @click.stop="closeStorageClassLevelTwoModal"
               type="button"
@@ -179,32 +180,35 @@
 
               <!-- 表格 -->
               <form @submit.prevent="addStorageLevelTwoClass">
-                <!-- <el-form-item label="第一層分類：">
-                <el-select
-                  @change="formDataSelectChang"
-                  v-model="formData.level_one_id"
-                  placeholder="選擇第一層的分類"
-                  filterable
-                  size="mini"
-                >
-
-                  <el-option
-                    v-for="(levelOneData, index) in groupLevelOneData"
-                    :key="index"
-                    :value="levelOneData._id"
-                    :label="levelOneData.name"
-                  >
-
-                    <span style="float: left">{{ levelOneData.type }}</span>
-                    <span
-                      style="float: right; color: #8492a6; font-size: 13px"
-                      >{{ levelOneData.name }}</span
-                    >
-                  </el-option>
-                </el-select>
-              </el-form-item> -->
-
                 <div class="grid grid-cols-6 gap-6 ">
+                  <div class="col-span-6 sm:col-span-6">
+                    <label
+                      for="storage-class-level-two-modal-name"
+                      class="m-0 block text-xs font-medium text-gray-700"
+                      >大分類 (必選)</label
+                    >
+                    <el-select
+                      @change="formDataSelectChang"
+                      v-model="basicForm.level_one_id"
+                      placeholder="選擇第一層的分類"
+                      filterable
+                      size="mini"
+                    >
+                      <el-option
+                        v-for="(levelOneData, index) in getStorageLevelOneClass"
+                        :key="index"
+                        :value="levelOneData._id"
+                        :label="levelOneData.name"
+                      >
+                        <!-- 編號靠左邊 -->
+                        <span style="float: left">{{ levelOneData.type }}</span>
+                        <!-- 分類名稱靠右邊 -->
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{
+                          levelOneData.name
+                        }}</span>
+                      </el-option>
+                    </el-select>
+                  </div>
                   <div class="col-span-6 sm:col-span-6">
                     <label
                       for="storage-class-level-two-modal-name"
@@ -262,8 +266,11 @@ export default {
   data() {
     return {
       path: 'storage_class_level_two_modal', // MyPagination
-      storageLevelTwoData: [], // 倉庫第一層分類的全部資料
+      storageLevelOneData: [], // 倉庫第一層分類的全部資料
+      storageLevelTwoData: [], // 倉庫第二層分類的全部資料
       basicForm: {
+        level_one_id: '', // 第一層的 _id
+        level_one_name: '', // 第一層的 名稱 (有疑慮，如果第一層更改名稱，那這裡面會失效)
         type: '', // 編號 英文+數字
         name: '' // 中文名稱
         // 這邊要來個屬於哪個公司或供應商的 0:麥歐 1:其他a 2:其他b 以此類推
@@ -287,8 +294,15 @@ export default {
     }
   },
   computed: {
+    // 新增第二層的時候，下拉選單用的，這邊是第一層的資料
+    getStorageLevelOneClass() {
+      return this.storageLevelOneData
+    },
+
     // 檢查是否所有欄位都有填寫
     checkFiledIsEmpty() {
+      console.log('this.basicForm :', this.basicForm)
+
       return Object.values(this.basicForm).some((val) => {
         return _.isEmpty(val)
       })
@@ -331,6 +345,7 @@ export default {
       )
 
       this.storageLevelTwoData = status === 200 ? data : []
+      console.log('this.storageLevelTwoData :', this.storageLevelTwoData)
     },
 
     // 新增一筆倉庫分類資料
@@ -342,13 +357,14 @@ export default {
         })
         return
       }
-
       await this.$store.dispatch(
-        this._M.SERVER_ADD_LEVEL_ONE_STORAGE_DATA,
+        this._M.SERVER_ADD_LEVEL_TWO_STORAGE_DATA,
         this.basicForm
       )
-      let data2 = await this.$store.dispatch(this._M.SERVER_GET_STORAGE_LEVEL_ONE_DATA)
-      console.log('data2 :', data2)
+      let { status } = await this.$store.dispatch(
+        this._M.SERVER_GET_STORAGE_LEVEL_TWO_DATA
+      )
+      if (status === 200) await this.getAllStorageLevelTwoData()
     },
 
     // 刪除這筆資料
@@ -363,6 +379,15 @@ export default {
 
     // 暫時沒用
     handleCurrentChange() {},
+
+    // 暫時沒用 當選擇 level one 的那個下拉式選單資料改變後會觸發
+    formDataSelectChang(selectedLevelOneId) {
+      const selectedLevelOne = this.getStorageLevelOneClass.find(
+        (levelOneData) => levelOneData._id === selectedLevelOneId
+      )
+      this.basicForm.level_one_name = ''
+      if (selectedLevelOne) this.basicForm.level_one_name = selectedLevelOne.name
+    },
 
     // emit
     updateStorageLevelTwoData(storageLevelOne) {

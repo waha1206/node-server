@@ -23,7 +23,6 @@
               <!-- value 這邊綁定的是此 陣列裡面，要傳給 select v-mode 的值 -->
               <!-- label 就單純的顯示再 input 上面可以看到的文字 -->
               <el-option
-                <el-option
                 v-for="(levelOneData, index) in groupLevelOneData"
                 :key="index"
                 :value="levelOneData._id"
@@ -45,31 +44,16 @@
               <!-- *************************** 左邊區塊 *************************** -->
               <!-- *************************** table 區塊 裡面編輯跟刪除 *************************** -->
               <el-table :data="tableData" style="width: 100%" size="mini">
-                <el-table-column
-                  prop="type"
-                  label="編號"
-                  width="80px"
-                  align="center"
-                >
+                <el-table-column prop="type" label="編號" width="80px" align="center">
                 </el-table-column>
-                <el-table-column
-                  prop="name"
-                  label="分類名"
-                  width="180px"
-                  align="center"
-                >
+                <el-table-column prop="name" label="分類名" width="180px" align="center">
                 </el-table-column>
                 <el-table-column label="大分類" align="center" width="180px">
                   <template slot-scope="scope">
                     {{ getLevelOneNameById(scope.row) }}
                   </template>
                 </el-table-column>
-                <el-table-column
-                  prop="operation"
-                  label="操作"
-                  width="150"
-                  align="center"
-                >
+                <el-table-column prop="operation" label="操作" width="150" align="center">
                   <!-- 編輯、刪除 第一層的分類 -->
                   <template slot-scope="scope">
                     <el-button
@@ -121,10 +105,9 @@
                   >
                     <!-- 下拉的選單，左邊放 type 右邊放 name -->
                     <span style="float: left">{{ levelOneData.type }}</span>
-                    <span
-                      style="float: right; color: #8492a6; font-size: 13px"
-                      >{{ levelOneData.name }}</span
-                    >
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{
+                      levelOneData.name
+                    }}</span>
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -145,12 +128,8 @@
               </el-form-item>
               <!--提交與取消鍵 -->
               <el-form-item class="text_right">
-                <el-button type="warning" @click="dialog.show = false"
-                  >取消</el-button
-                >
-                <el-button type="primary" @click="handleAdd('form')"
-                  >提交</el-button
-                >
+                <el-button type="warning" @click="dialog.show = false">取消</el-button>
+                <el-button type="primary" @click="handleAdd('form')">提交</el-button>
               </el-form-item>
             </el-form>
           </el-aside>
@@ -177,11 +156,7 @@
 
     <!-- ****************************** 這個 dialog 是 點擊左邊的 編輯 / 刪除 的區塊 ****************************** -->
     <!-- ****************************** 只有這邊會使用到 editForm levelTwoEditForm ****************************** -->
-    <el-dialog
-      title="編輯商品代號"
-      :visible.sync="levelTwoEditDialog"
-      width="25%"
-    >
+    <el-dialog title="編輯商品代號" :visible.sync="levelTwoEditDialog" width="25%">
       <el-form
         ref="editForm"
         :model="levelTwoEditForm"
@@ -217,11 +192,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          prop="type"
-          label="商品代號 (英文)"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item prop="type" label="商品代號 (英文)" :label-width="formLabelWidth">
           <el-input
             size="mini"
             v-model="levelTwoEditForm.type"
@@ -229,11 +200,7 @@
             placeholder="請輸入大寫英文"
           ></el-input>
         </el-form-item>
-        <el-form-item
-          prop="name"
-          label="商品名稱 (中文)"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item prop="name" label="商品名稱 (中文)" :label-width="formLabelWidth">
           <el-input
             size="mini"
             v-model="levelTwoEditForm.name"
@@ -305,9 +272,7 @@ export default {
       formDataRules: {
         type: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
         name: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }],
-        describe: [
-          { required: true, message: '此欄位不能為空', trigger: 'blur' }
-        ]
+        describe: [{ required: true, message: '此欄位不能為空', trigger: 'blur' }]
       }
     }
   },
@@ -331,8 +296,7 @@ export default {
     // 開場先初始化 讀取 localStorage
     initFilterData() {
       if (localStorage.material_group_level_one_id) {
-        this.filterTableData.levelOneId =
-          localStorage.material_group_level_one_id
+        this.filterTableData.levelOneId = localStorage.material_group_level_one_id
         this.filterTableDataChange(this.filterTableData.levelOneId)
       }
     },
@@ -373,9 +337,7 @@ export default {
       this.my_paginations.total = this.filterTableData.tableData.length
       this.my_paginations.page_index = 1
       if (localStorage.group_level_two_page_size) {
-        this.my_paginations.page_size = Number(
-          localStorage.group_level_two_page_size
-        )
+        this.my_paginations.page_size = Number(localStorage.group_level_two_page_size)
       } else {
         this.my_paginations.page_size = 5
       }
@@ -448,9 +410,7 @@ export default {
     // 新增商品類別代號
     onSubmit(form) {
       const uploadFormData =
-        this.levelTwoEditForm.option == 'add'
-          ? this.formData
-          : this.levelTwoEditForm
+        this.levelTwoEditForm.option == 'add' ? this.formData : this.levelTwoEditForm
 
       this.$refs[form].validate((valid) => {
         if (valid && !uploadFormData.type == '') {
