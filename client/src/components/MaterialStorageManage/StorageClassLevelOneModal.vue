@@ -253,8 +253,6 @@ export default {
   watch: {
     visible: {
       handler(val) {
-        console.log('val :', val)
-
         let el = document.getElementById('storage-class-level-one-modal')
         if (el) el.classList.toggle('hidden')
       }

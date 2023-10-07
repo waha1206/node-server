@@ -29,24 +29,19 @@
           ></el-input>
         </div>
       </div>
-      <!-- 商品名稱 (第一層) -->
+      <!-- 商品名稱 (第二層) -->
       <div class="basis-6/12 pr-2">
         <div>
           <label
             for="small-input"
             class="block text-xs font-medium text-gray-900 dark:text-gray-300"
-            >分類名稱 (第一層)</label
+            >分類名稱 (第二層)</label
           >
           <el-input
             size="mini"
             type="type"
             v-model="copyStorageLevelTwoData.name"
           ></el-input>
-          <!-- <input
-            type="text"
-            v-model="copyStorageLevelTwoData.name"
-            class="block p-2 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          /> -->
         </div>
       </div>
     </div>
@@ -69,9 +64,34 @@
         ></el-input>
       </div>
 
-      <!-- 0:影片 1:圖片 2:轉址 -->
+      <!-- 換第一層分類 -->
       <div class="basis-5/12 pr-2">
-        <!-- 空出來 -->
+        <label
+          for="storage-class-level-two-modal-name"
+          class="m-0 block text-xs font-medium text-gray-700"
+          >大分類 (更換)</label
+        >
+        <el-select
+          @change="formDataSelectChang"
+          v-model="copyStorageLevelTwoData.level_one_id"
+          placeholder="選擇第一層的分類"
+          filterable
+          size="mini"
+        >
+          <el-option
+            v-for="(levelOneData, index) in getStorageLevelOneClass"
+            :key="index"
+            :value="levelOneData._id"
+            :label="levelOneData.name"
+          >
+            <!-- 編號靠左邊 -->
+            <span style="float: left">{{ levelOneData.type }}</span>
+            <!-- 分類名稱靠右邊 -->
+            <span style="float: right; color: #8492a6; font-size: 13px">{{
+              levelOneData.name
+            }}</span>
+          </el-option>
+        </el-select>
       </div>
 
       <!-- 是否啟用，無上限，超過一個會變成輪播 -->
@@ -84,16 +104,24 @@
 
 <script>
 export default {
-  props: ['storageLevelTwo'],
+  props: ['storageLevelTwo', 'storageLevelOne'],
   data() {
     return {
+      copyStorageLevelOneData: {},
       copyStorageLevelTwoData: {}
     }
   },
   watch: {
     storageLevelTwo: {
-      handler(val) {
-        this.copyStorageLevelTwoData = _.cloneDeep(val)
+      handler(newData) {
+        this.copyStorageLevelTwoData = _.cloneDeep(newData)
+      },
+      deep: true,
+      immediate: true
+    },
+    storageLevelOne: {
+      handler(newData) {
+        this.copyStorageLevelOneData = _.cloneDeep(newData)
       },
       deep: true,
       immediate: true
@@ -102,18 +130,43 @@ export default {
 
   mounted() {},
 
-  computed: {},
+  computed: {
+    // 新增第二層的時候，下拉選單用的，這邊是第一層的資料
+    getStorageLevelOneClass() {
+      return this.storageLevelOne
+    }
+  },
   methods: {
+    // 當更換第一層分類的時候會觸發
+    formDataSelectChang(selectedLevelOneId) {
+      const selectedLevelOne = this.getStorageLevelOneClass.find(
+        (levelOneData) => levelOneData._id === selectedLevelOneId
+      )
+      this.copyStorageLevelTwoData.level_one_name = ''
+      if (selectedLevelOne)
+        this.copyStorageLevelTwoData.level_one_name = selectedLevelOne.name
+    },
+
     // 更新 left side banner 的資料
     async updataStorageLevelTwoData() {
       const { status } = await this.$store.dispatch(
-        this._M.SERVER_PUT_STORAGE_LEVEL_ONE_DATA,
+        this._M.SERVER_PUT_STORAGE_LEVEL_TWO_DATA,
         this.copyStorageLevelTwoData
       )
+      // 如果成功，通知父元件
       if (status === 200) {
-        // 這邊是 emit 的用法
+        this.$message({
+          message: '修改第二層分類成功',
+          type: 'success'
+        })
         this.$emit('updateStorageLevelTwoData', this.copyStorageLevelTwoData)
       }
+
+      if (status !== 200)
+        this.$message({
+          message: '修改第二層分類失敗',
+          type: 'error'
+        })
     }
   }
 }

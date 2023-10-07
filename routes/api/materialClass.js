@@ -91,7 +91,6 @@ router.get(
   '/get-storage-level-two-class',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    console.log('有喔')
     StorageLevelTwoClass.find()
       .sort({ type: 1 })
       .then((storageLevelTwoClass) => {

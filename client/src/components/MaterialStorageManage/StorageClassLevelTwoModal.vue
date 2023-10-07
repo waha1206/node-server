@@ -44,8 +44,38 @@
           <!-- Modal body -->
           <div class="p-2 flex flex-row">
             <!-- main -->
+
             <!-- 左邊表格，列出所有的問答的的清單列表 -->
             <div class="ml-2 basis-3/4">
+              <!-- 選擇大分類，決定表格的內容 -->
+              <div class="flex flex-row items-center">
+                <label
+                  for="storage-class-level-two-modal-name"
+                  class="m-0 block text-xs font-medium text-gray-700 mx-2"
+                  >大分類 (過濾)</label
+                >
+                <el-select
+                  @change="selectRuleChange"
+                  v-model="selectLevelOneDataId"
+                  placeholder="選擇第一層的分類"
+                  filterable
+                  size="mini"
+                >
+                  <el-option
+                    v-for="(levelOneSelectData, index) in getSelectLevelOneClass"
+                    :key="`${levelOneSelectData._id}+${index}`"
+                    :value="levelOneSelectData._id"
+                    :label="levelOneSelectData.name"
+                  >
+                    <!-- 編號靠左邊 -->
+                    <span style="float: left">{{ levelOneSelectData.type }}</span>
+                    <!-- 分類名稱靠右邊 -->
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{
+                      levelOneSelectData.name
+                    }}</span>
+                  </el-option>
+                </el-select>
+              </div>
               <div>
                 <el-table
                   :data="getTableData"
@@ -61,7 +91,8 @@
                     <template slot-scope="props">
                       <!-- 這邊可以放元件，如果需要的話 -->
                       <UpdateStorageLevelTwoForm
-                        :storageLevelOne="props.row"
+                        :storageLevelTwo="props.row"
+                        :storageLevelOne="getStorageLevelOneClass"
                         @updateStorageLevelTwoData="updateStorageLevelTwoData"
                       ></UpdateStorageLevelTwoForm> </template
                   ></el-table-column>
@@ -93,6 +124,15 @@
                     header-align="left"
                     align="left"
                     width="200"
+                  ></el-table-column>
+
+                  <!-- 主題 -->
+                  <el-table-column
+                    prop="level_one_name"
+                    label="一層分類"
+                    header-align="left"
+                    align="left"
+                    width="100"
                   ></el-table-column>
 
                   <!-- 備註說明 -->
@@ -265,7 +305,11 @@ export default {
   components: { UpdateStorageLevelTwoForm },
   data() {
     return {
+      // localStorage 的初始化設定
+      getSelectLevelOneDataIdPath: '', // 定義路徑
+      selectLevelOneDataId: '', // 初始化的值，這邊是指第一層分類的 _id，要透過上面的路徑讀取去初始化
       path: 'storage_class_level_two_modal', // MyPagination
+      selectLevelOneData: [], // 第一層的選單，包含全部的分類選項
       storageLevelOneData: [], // 倉庫第一層分類的全部資料
       storageLevelTwoData: [], // 倉庫第二層分類的全部資料
       basicForm: {
@@ -281,19 +325,23 @@ export default {
   async mounted() {
     await this.getAllStorageLevelOneData()
     await this.getAllStorageLevelTwoData()
+    this.initSeleceLevelOneDataAndId()
   },
 
   watch: {
     visible: {
       handler(val) {
-        console.log('val :', val)
-
         let el = document.getElementById('storage-class-level-two-modal')
         if (el) el.classList.toggle('hidden')
       }
     }
   },
   computed: {
+    // 左邊的表單選擇要揭示的是哪個分類
+    getSelectLevelOneClass() {
+      return this.selectLevelOneData
+    },
+
     // 新增第二層的時候，下拉選單用的，這邊是第一層的資料
     getStorageLevelOneClass() {
       return this.storageLevelOneData
@@ -301,16 +349,18 @@ export default {
 
     // 檢查是否所有欄位都有填寫
     checkFiledIsEmpty() {
-      console.log('this.basicForm :', this.basicForm)
-
       return Object.values(this.basicForm).some((val) => {
         return _.isEmpty(val)
       })
     },
 
-    // 取得 倉庫第一層的所有資料
+    // 把資料餵給 pagaination 元件 順便過濾一下資料用
     getStorageLevelTwoData() {
-      return this.storageLevelTwoData
+      const fillterData = this.storageLevelTwoData.filter((item) => {
+        if (this.selectLevelOneDataId === 'ffffffff') return item
+        if (item.level_one_id === this.selectLevelOneDataId) return item
+      })
+      return fillterData
     },
 
     // 返回表單需要的資料
@@ -324,6 +374,32 @@ export default {
     }
   },
   methods: {
+    // 當過濾表格的規則改變後到這邊
+    selectRuleChange() {
+      localStorage.setItem(
+        this.getSelectLevelOneDataIdPath,
+        JSON.stringify(this.selectLevelOneDataId)
+      )
+    },
+
+    // 初始化第一層的選擇，包含全部的分類，另外對於 localStorage 做初始化
+    initSeleceLevelOneDataAndId() {
+      // 如果沒有 _id 紀錄，那就給他預設值 ffffffff 代表全部商品
+      this.selectLevelOneDataId = localStorage.getItem(this.getSelectLevelOneDataIdPath)
+        ? JSON.parse(localStorage.getItem(this.getSelectLevelOneDataIdPath))
+        : 'ffffffff'
+      // if (_.isEmpty(this.storageLevelOneData)) return []
+      // 解構，複製陣列的方式之一
+      this.selectLevelOneData = [...this.storageLevelOneData]
+      const obj = {
+        name: '全部分類',
+        type: '00000',
+        _id: 'ffffffff'
+      }
+      // 於陣列的第一個位置塞進去一個物件
+      this.selectLevelOneData.unshift(obj)
+    },
+
     // 開啟 expand 根據 ref
     editStorageLevelTwoData(row) {
       this.$refs.storageLevelTwoClassTable.toggleRowExpansion(row)
@@ -345,7 +421,6 @@ export default {
       )
 
       this.storageLevelTwoData = status === 200 ? data : []
-      console.log('this.storageLevelTwoData :', this.storageLevelTwoData)
     },
 
     // 新增一筆倉庫分類資料
@@ -390,16 +465,30 @@ export default {
     },
 
     // emit
+    // 編輯完資料後，更新父元件裡面的資料
     updateStorageLevelTwoData(storageLevelOne) {
-      let itemToModify = this.storageLevelTwoData.find(
+      // 使用 $set 更新資料，可以使用 index 或是 'key' 兩種方式，我這邊使用 index 的方式
+      let storageLevelTwoDataIndex = this.storageLevelTwoData.findIndex(
         (item) => item._id === storageLevelOne._id
       )
-      if (itemToModify) {
-        // itemToModify.name = storageLevelOne.name
-        // itemToModify.type = storageLevelOne.type
-        // itemToModify.describe = storageLevelOne.describe
-        const { name, type, describe } = storageLevelOne
-        Object.assign(itemToModify, { name, type, describe })
+
+      if (storageLevelTwoDataIndex !== -1) {
+        // $set 會產生響應觸發 computed 這是我的目的，然後會讓 html 的部分重新渲染
+        this.$set(this.storageLevelTwoData, storageLevelTwoDataIndex, storageLevelOne)
+
+        // 更新資料後，把父元件的資料也更新完，找到 tableData 中該筆資料，然後再重新展開
+        // 為什麼要重新展開呢？因為方便閱讀
+        // 為什麼展開的時候會被關閉呢？因為 tableData 資料更新後，畫面會重新渲染，然後把已經打開的expand 關閉
+        // 所以我們要重新打開他，讓操作的視覺上看起來是舒服的，體驗也更好
+        this.$nextTick(() => {
+          // 在這裡可以處理 DOM 已更新後的操作
+          let tableDataRef = this.tableData.find(
+            (item) => item._id === storageLevelOne._id
+          )
+          if (tableDataRef) {
+            this.$refs.storageLevelTwoClassTable.toggleRowExpansion(tableDataRef)
+          }
+        })
       }
     }
   }
