@@ -190,6 +190,24 @@ const MaterialSchema = new Schema({
   },
   inside_pattern_download: {
     type: String
+  },
+  // 共使用了幾個原料
+  // 1.要先把單位切到最小，例如：公分，個，組 .. 等等
+  // 2.這邊代表使用了幾個最小單位
+  count: {
+    type: Number,
+    default: Number(1)
+  },
+  // 初始化 0:麥歐
+  // 這邊是代表管理頁面，那個供應商可以看到
+  onwer: {
+    type: Number,
+    default: Number(0)
+  },
+  // 倉庫的關聯欄位
+  storage_id: {
+    type: String,
+    default: ''
   }
 })
 

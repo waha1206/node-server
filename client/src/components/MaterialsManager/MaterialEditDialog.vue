@@ -10,7 +10,12 @@
       style="margin-top:-90px"
     >
       <!-- style="margin:10px;width:auto" -->
-      <el-form ref="form" :model="materialDataForm" :rules="form_rules" label-width="100px">
+      <el-form
+        ref="form"
+        :model="materialDataForm"
+        :rules="form_rules"
+        label-width="100px"
+      >
         <el-container>
           <el-header>
             <!-- 布局測試 -->
@@ -158,22 +163,38 @@
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
                 <el-form-item prop="storage" label="現有庫存：">
-                  <el-input size="mini" type="storage" v-model="materialDataForm.storage"></el-input>
+                  <el-input
+                    size="mini"
+                    type="storage"
+                    v-model="materialDataForm.storage"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item prop="stock_alert" label="最低庫存：">
-                  <el-input size="mini" type="stock_alert" v-model="materialDataForm.stock_alert"></el-input>
+                  <el-input
+                    size="mini"
+                    type="stock_alert"
+                    v-model="materialDataForm.stock_alert"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item prop="lead_time" label="採購天數：">
-                  <el-input size="mini" type="lead_time" v-model="materialDataForm.lead_time"></el-input>
+                  <el-input
+                    size="mini"
+                    type="lead_time"
+                    v-model="materialDataForm.lead_time"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item prop="unit" label="商品單位：">
-                  <el-input size="mini" type="unit" v-model="materialDataForm.unit"></el-input>
+                  <el-input
+                    size="mini"
+                    type="unit"
+                    v-model="materialDataForm.unit"
+                  ></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -182,22 +203,30 @@
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
                 <el-form-item prop="raw_material" label="商品材質：">
-                  <el-input size="mini" type="raw_material" v-model="materialDataForm.raw_material"></el-input>
+                  <el-input
+                    size="mini"
+                    type="raw_material"
+                    v-model="materialDataForm.raw_material"
+                  ></el-input>
                 </el-form-item>
               </el-col>
 
               <el-col :span="6">
                 <el-form-item prop="product_color" label="商品顏色：">
-                  <el-input size="mini" type="product_color" v-model="materialDataForm.product_color"></el-input>
+                  <el-input
+                    size="mini"
+                    type="product_color"
+                    v-model="materialDataForm.product_color"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item prop="length" label="商品長度：">
+                <el-form-item prop="count" label="原料用量：">
                   <el-input
                     size="mini"
-                    type="length"
+                    type="count"
                     placeholder="一般原料專用欄位"
-                    v-model="materialDataForm.length"
+                    v-model="materialDataForm.count"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -225,18 +254,32 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item prop="extra_freight" label="額外運費：">
-                  <el-input size="mini" type="extra_freight" v-model="materialDataForm.extra_freight"></el-input>
+                  <el-input
+                    size="mini"
+                    type="extra_freight"
+                    v-model="materialDataForm.extra_freight"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item prop="" label="修改時間：">
-                  <el-input :disabled="true" size="mini" type="" v-model="getDate"></el-input>
+                  <el-input
+                    :disabled="true"
+                    size="mini"
+                    type=""
+                    v-model="getDate"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <!-- type 跟 prop不用綁定到表單裡面，因為此 修改人員ID 會在送出儲存的時候，把操作者的ID寫到 formData.last_edit_person -->
                 <el-form-item prop="" label="修改人員：">
-                  <el-input :disabled="true" size="mini" type="" v-model="getUserNameById"></el-input>
+                  <el-input
+                    :disabled="true"
+                    size="mini"
+                    type=""
+                    v-model="getUserNameById"
+                  ></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -245,12 +288,21 @@
             <el-row :gutter="20" type="flex" class="row-bg">
               <el-col :span="6">
                 <el-form-item prop="" label="供應商：">
-                  <el-input :readonly="true" size="mini" type="" v-model="getSupplierNameById"></el-input>
+                  <el-input
+                    :readonly="true"
+                    size="mini"
+                    type=""
+                    v-model="getSupplierNameById"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="remark" label="備註：">
-                  <el-input size="mini" type="remark" v-model="materialDataForm.remark"></el-input>
+                  <el-input
+                    size="mini"
+                    type="remark"
+                    v-model="materialDataForm.remark"
+                  ></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -275,7 +327,9 @@
                 </el-tooltip>
 
                 <el-form-item prop="processing_fee_flag" label="加工費用：">
-                  <el-checkbox v-model="materialDataForm.processing_fee_flag">有加工費用</el-checkbox>
+                  <el-checkbox v-model="materialDataForm.processing_fee_flag"
+                    >有加工費用</el-checkbox
+                  >
                 </el-form-item>
               </el-col>
               <el-col :span="18">
@@ -375,8 +429,15 @@
               </el-col>
               <el-col :span="4" style="margin-top:8px">
                 <div class="grid-content">
-                  <el-form-item label="版型下載：" size="mini" label-width="120px" prop="pattern_free">
-                    <el-checkbox v-model="materialDataForm.pattern_free">允許下載</el-checkbox>
+                  <el-form-item
+                    label="版型下載："
+                    size="mini"
+                    label-width="120px"
+                    prop="pattern_free"
+                  >
+                    <el-checkbox v-model="materialDataForm.pattern_free"
+                      >允許下載</el-checkbox
+                    >
                   </el-form-item>
                 </div>
               </el-col>
@@ -390,7 +451,9 @@
                     <el-radio :label="1">一般原料</el-radio>
                     <el-radio :label="2">轉印布料</el-radio>
                     <el-radio :label="3">現成布料</el-radio>
-                    <el-radio :label="4">配件專用，需版型寬，版型高，布料種類，平車費用，裁切費用</el-radio>
+                    <el-radio :label="4"
+                      >配件專用，需版型寬，版型高，布料種類，平車費用，裁切費用</el-radio
+                    >
                     <el-radio :label="5">紙</el-radio>
                     <el-radio :label="6">墨</el-radio>
                     <el-radio :label="7">紙箱</el-radio>
@@ -478,7 +541,11 @@
               <el-col :span="6">
                 <div class="grid-content">
                   <el-form-item prop="typesetting" label="智慧排版：" label-width="110px">
-                    <el-switch v-model="materialDataForm.typesetting" active-text="啟用" inactive-text="禁用">
+                    <el-switch
+                      v-model="materialDataForm.typesetting"
+                      active-text="啟用"
+                      inactive-text="禁用"
+                    >
                     </el-switch>
                   </el-form-item>
                 </div>
@@ -510,13 +577,23 @@
                     @click="handleSelectAccessoryCloth"
                     >{{ accessoryClothName }}</el-button
                   >
-                  <el-button v-else type="primary" size="mini" class="button" @click="handleSelectAccessoryCloth"
+                  <el-button
+                    v-else
+                    type="primary"
+                    size="mini"
+                    class="button"
+                    @click="handleSelectAccessoryCloth"
                     >點我選擇配件布料</el-button
                   >
                 </el-form-item>
               </el-col>
               <el-col :span="5" style="position:relative">
-                <el-tooltip class="item" effect="dark" placement="right" style="z-index:2000">
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  placement="right"
+                  style="z-index:2000"
+                >
                   <el-badge
                     value="說明"
                     class="item"
@@ -524,7 +601,8 @@
                   >
                   </el-badge>
                   <div slot="content">
-                    <span>10安仿帆布會追加的紙跟布的長度，紙跟布請設定一樣長度</span><br />
+                    <span>10安仿帆布會追加的紙跟布的長度，紙跟布請設定一樣長度</span
+                    ><br />
                     <span>目前得知大概要預留2碼長度</span>
                   </div>
                 </el-tooltip>
@@ -602,20 +680,36 @@
                 :on-change="onFileChange"
               >
                 <el-dialog :visible.sync="dialogVisible" append-to-body width="520px">
-                  <img width="480px" height="480px" fit="contain" :src="dialogImageUrl" alt="" />
+                  <img
+                    width="480px"
+                    height="480px"
+                    fit="contain"
+                    :src="dialogImageUrl"
+                    alt=""
+                  />
                 </el-dialog>
                 <i slot="default" class="el-icon-plus"></i>
                 <div class="image-content" slot="file" slot-scope="{ file }">
                   <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
                   <span class="el-upload-list__item-actions">
-                    <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
+                    <span
+                      class="el-upload-list__item-preview"
+                      @click="handlePictureCardPreview(file)"
+                    >
                       <i class="el-icon-zoom-in"></i>
                     </span>
-                    <span v-if="!disabled" class="el-upload-list__item-download" @click="handleDownload(file)">
+                    <span
+                      v-if="!disabled"
+                      class="el-upload-list__item-download"
+                      @click="handleDownload(file)"
+                    >
                       <i class="el-icon-download"></i>
                     </span>
                     <!-- v-if="!disabled" -->
-                    <span class="el-upload-list__item-delete" @click="handleRemove(file, files)">
+                    <span
+                      class="el-upload-list__item-delete"
+                      @click="handleRemove(file, files)"
+                    >
                       <i class="el-icon-delete"></i>
                     </span>
                   </span>
@@ -730,7 +824,9 @@ export default {
     // 時間轉換
     getDate() {
       if (!this.materialDataForm.last_modify_date) return '目前沒有修改過'
-      return this.$moment(this.materialDataForm.last_modify_date).format('YYYY年MM月DD日 - HH：mm')
+      return this.$moment(this.materialDataForm.last_modify_date).format(
+        'YYYY年MM月DD日 - HH：mm'
+      )
     },
     // 取得修改人的_id 轉換成 name
     getUserNameById() {
@@ -975,7 +1071,8 @@ export default {
           this.materialDataForm.last_edit_person = this.user.id
           this.materialDataForm.last_modify_date = new Date()
           this.materialDataForm.imgs = this.materialDataForm.imgs.join('|')
-          const url = this.dialog.option == 'add' ? 'add' : `edit/${this.materialDataForm._id}`
+          const url =
+            this.dialog.option == 'add' ? 'add' : `edit/${this.materialDataForm._id}`
           this.$axios
             .post(`/api/material/${url}`, this.materialDataForm)
             .then((res) => {
