@@ -128,7 +128,7 @@ router.post(
       } else {
         new StorageLevelTwoClass(materialStorageLevelTwoData)
           .save()
-          .then((storageLevelOneClass) => {
+          .then((storageLevelTwoClass) => {
             res.status(200).json(storageLevelTwoClass)
           })
       }
@@ -214,24 +214,6 @@ router.get('/two', passport.authenticate('jwt', { session: false }), (req, res) 
         return res.status(400).json('沒有任何內容')
       }
       res.json(materialLevelTwoClass)
-    })
-    .catch((err) => {
-      res.status(404).json(err)
-    })
-})
-
-// $router get api/material-class/:id
-// @desc   獲取單個訊息
-// @access private
-// 使用 hander 要驗證 token
-// 使用 params
-router.get('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  MaterialClass.findOne({ _id: req.params._id })
-    .then((materialClass) => {
-      if (!materialClass) {
-        return res.status(400).json('沒有任何內容')
-      }
-      res.json(materialClass)
     })
     .catch((err) => {
       res.status(404).json(err)
@@ -347,5 +329,27 @@ router.post(
   }
 )
 // ---------------------  這邊是 Storage end ---------------------
+
+// 這個必須要放到最後面，因為會引發錯誤
+// 這邊的程式是從上面比對到最下面這個
+// /:id 會吃掉所有 api 例如 /get-storage-level-one-class 也會吃掉
+// 所以這種類型的 api (這邊指的是 /:id) 要特別注意
+// $router get api/material-class/:id
+// @desc   獲取單個訊息
+// @access private
+// 使用 hander 要驗證 token
+// 使用 params
+router.get('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+  MaterialClass.findOne({ _id: req.params._id })
+    .then((materialClass) => {
+      if (!materialClass) {
+        return res.status(400).json('沒有任何內容')
+      }
+      res.json(materialClass)
+    })
+    .catch((err) => {
+      res.status(404).json(err)
+    })
+})
 
 module.exports = router
