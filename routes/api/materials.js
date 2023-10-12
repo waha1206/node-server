@@ -4,7 +4,7 @@ const router = express.Router()
 const passport = require('passport')
 
 // 引入 User 才可以做查詢
-const Material = require('../../models/Material')
+const { Material, MaterialStorage } = require('../../models/Material')
 
 // $router GET api/users/test
 // @desc   返回的請求的 json 數據
@@ -240,20 +240,24 @@ router.get('/carton', passport.authenticate('jwt', { session: false }), (req, re
 // 有看到 post 就代表他會使用到 body 傳遞 數據 {}
 // 有看到 /:id 就代表要從 params 接收一個 id 進來
 // 這個接口是根據 _id 返回 該原料的 product_name
-router.get('/get-material-name-by-id/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  // query 選擇的條件
-  // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
-  const query = { _id: req.params.id }
-  const options = { product_name: 1 }
+router.get(
+  '/get-material-name-by-id/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // query 選擇的條件
+    // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
+    const query = { _id: req.params.id }
+    const options = { product_name: 1 }
 
-  Material.findOne(query, options).then((materials) => {
-    // Material.find().then((materials) => {
-    if (!materials) {
-      return res.status(400).json('沒有任何原物料資訊')
-    }
-    res.json(materials)
-  })
-})
+    Material.findOne(query, options).then((materials) => {
+      // Material.find().then((materials) => {
+      if (!materials) {
+        return res.status(400).json('沒有任何原物料資訊')
+      }
+      res.json(materials)
+    })
+  }
+)
 
 // $router post api/material/get-from-class/:class
 // @desc   編輯訊息接口
@@ -262,25 +266,29 @@ router.get('/get-material-name-by-id/:id', passport.authenticate('jwt', { sessio
 // 有看到 post 就代表他會使用到 body 傳遞 數據 {}
 // 有看到 /:id 就代表要從 params 接收一個 id 進來
 // 這個接口是根據 class 返回 符合該分類的原料資訊 class = _id
-router.get('/get-from-class/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  if (req.params.id !== '6030d6473ef72612c87842b4') {
-    Material.find({ level_two_id: req.params.id }, null, {}).then((materials) => {
-      // Material.find().then((materials) => {
-      if (!materials) {
-        return res.status(400).json('沒有任何原物料資訊')
-      }
-      res.json(materials)
-    })
-  } else {
-    Material.find({}, null, {}).then((materials) => {
-      // Material.find().then((materials) => {
-      if (!materials) {
-        return res.status(400).json('沒有任何原物料資訊')
-      }
-      res.json(materials)
-    })
+router.get(
+  '/get-from-class/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    if (req.params.id !== '6030d6473ef72612c87842b4') {
+      Material.find({ level_two_id: req.params.id }, null, {}).then((materials) => {
+        // Material.find().then((materials) => {
+        if (!materials) {
+          return res.status(400).json('沒有任何原物料資訊')
+        }
+        res.json(materials)
+      })
+    } else {
+      Material.find({}, null, {}).then((materials) => {
+        // Material.find().then((materials) => {
+        if (!materials) {
+          return res.status(400).json('沒有任何原物料資訊')
+        }
+        res.json(materials)
+      })
+    }
   }
-})
+)
 
 // $router post api/material/edit/:id
 // @desc   編輯訊息接口
@@ -306,9 +314,11 @@ router.post('/edit/:id', passport.authenticate('jwt', { session: false }), (req,
       }
     }
   }
-  Material.findByIdAndUpdate({ _id: req.params.id }, { $set: materialFields }, { new: true }).then((materials) =>
-    res.json(materials)
-  )
+  Material.findByIdAndUpdate(
+    { _id: req.params.id },
+    { $set: materialFields },
+    { new: true }
+  ).then((materials) => res.json(materials))
 })
 
 // $router post api/material/add
@@ -348,11 +358,15 @@ router.post('/add', passport.authenticate('jwt', { session: false }), (req, res)
 // 選擇 delete
 // 使用 hander 要驗證 token
 // body 要放編輯的資料 key:value
-router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Material.findOneAndRemove({ _id: req.params.id })
-    .then((material) => res.json(material))
-    .catch((_err) => res.status(404).json('刪除失敗'))
-})
+router.delete(
+  '/delete/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Material.findOneAndRemove({ _id: req.params.id })
+      .then((material) => res.json(material))
+      .catch((_err) => res.status(404).json('刪除失敗'))
+  }
+)
 
 // $router post api/material/get-material-by-id/:id
 // @desc   透過 _id 取得商品的資料
@@ -361,18 +375,22 @@ router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (
 // 有看到 post 就代表他會使用到 body 傳遞 數據 {}
 // 有看到 /:id 就代表要從 params 接收一個 id 進來
 // 這個接口是根據 _id 返回 該原料的 完整資料
-router.get('/get-material-by-id/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  // query 選擇的條件
-  // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
-  const query = { _id: req.params.id }
-  const options = {}
+router.get(
+  '/get-material-by-id/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // query 選擇的條件
+    // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
+    const query = { _id: req.params.id }
+    const options = {}
 
-  Material.findOne(query, options).then((material) => {
-    // Material.find().then((materials) => {
-    if (!material) {
-      return res.status(400).json('沒有任何原物料資訊')
-    }
-    res.json(material)
-  })
-})
+    Material.findOne(query, options).then((material) => {
+      // Material.find().then((materials) => {
+      if (!material) {
+        return res.status(400).json('沒有任何原物料資訊')
+      }
+      res.json(material)
+    })
+  }
+)
 module.exports = router

@@ -37,7 +37,8 @@ const MaterialSchema = new Schema({
   },
   // 單位售價
   unit_price: {
-    type: String
+    type: String,
+    default: ''
   },
   // 商品售價
   retail_price: {
@@ -168,7 +169,8 @@ const MaterialSchema = new Schema({
   },
   // 加工費用
   processing_fee: {
-    type: String
+    type: String,
+    default: ''
   },
   // 追加的耗材，這邊只根據紙跟布料去計算
   additional_height: {
@@ -182,14 +184,17 @@ const MaterialSchema = new Schema({
     type: String
   },
   pattern_free: {
-    type: Boolean,
-    default: false
+    type: Boolean
   },
   inside_pattern_no: {
     type: String
   },
   inside_pattern_download: {
     type: String
+  },
+  monitoring: {
+    type: Boolean,
+    default: false
   },
   // 共使用了幾個原料
   // 1.要先把單位切到最小，例如：公分，個，組 .. 等等
@@ -204,12 +209,134 @@ const MaterialSchema = new Schema({
     type: Number,
     default: Number(0)
   },
-  // 倉庫的關聯欄位
-  storage_id: {
+  // 倉庫的關聯欄位，一個原料只會對應到一個父親，這邊會是 material storage 的 _id 編號
+  my_father: {
     type: String,
     default: ''
   }
 })
 
+const MaterialStorageSchema = new Schema({
+  // 建立時間
+  create_date: {
+    type: Date,
+    default: Date.now
+  },
+  // 圖片
+  imgs: {
+    type: [String]
+  },
+  // 商品編號
+  type: {
+    type: String
+  },
+  // 商品名稱
+  product_name: {
+    type: String
+  },
+  // 商品單位 碼，公分，克重
+  unit: {
+    type: String
+  },
+  // 單位售價，例如保麗龍一袋9公斤，1800元，要換算到 1800/9000=0.2元
+  unit_price: {
+    type: String,
+    default: ''
+  },
+  // 商品售價，自動產生，單位售價*商品利潤 = 商品售價
+  retail_price: {
+    type: String
+  },
+  // 商品利潤
+  product_profit: {
+    type: String
+  },
+  product_description: {
+    type: String
+  },
+  // 現有庫存 數量
+  storage: {
+    type: String
+  },
+  // 商品顏色
+  product_color: {
+    type: String
+  },
+  // 額外運費
+  extra_freight: {
+    type: String
+  },
+  // 採購天數
+  lead_time: {
+    type: String
+  },
+  // 原料材質
+  raw_material: {
+    type: String
+  },
+  // 最低訂購量
+  minimum_order_quantity: {
+    type: String
+  },
+  // 備註
+  remark: {
+    type: String
+  },
+
+  product_website: {
+    type: String
+  },
+  // 供應商的 _id
+  supplier_id: {
+    type: String
+  },
+  // 修改時間
+  last_modify_date: {
+    type: Date
+  },
+  // 最後修改資料的人
+  last_edit_person: {
+    type: String
+  },
+  // 安全庫存警告
+  stock_alert: {
+    type: String
+  },
+  // 第一層的 _id
+  level_one_id: {
+    type: String
+  },
+  // 第二層的 _id
+  level_two_id: {
+    type: String
+  },
+  // 原料種類 1.一般原物料  2.轉印布料 3.非轉印布料
+  // 4.配件專用，需版型寬，版型高，布料種類，平車費用，裁切費用
+  // 5.紙  6.墨  7.紙箱  8.運費
+  kind: {
+    type: Number
+  },
+
+  // 初始化 0:麥歐
+  // 這邊是代表管理頁面，那個供應商可以看到
+  onwer: {
+    type: Number,
+    default: Number(0)
+  },
+  // 倉庫的關聯欄位，storage 的原料會有很多的孩子
+  // 一但有孩子連結上的狀態，就無法刪除
+  // 這邊會是 materila 的 _id
+  my_children: {
+    type: Array,
+    default: []
+  }
+})
+
 // eslint-disable-next-line no-undef
-module.exports = Material = mongoose.model('materials', MaterialSchema)
+// module.exports = Material = mongoose.model('materials', MaterialSchema)
+
+// // eslint-disable-next-line no-undef
+module.exports = {
+  Material: mongoose.model('materials', MaterialSchema),
+  MaterialStorage: mongoose.model('material_storages', MaterialStorageSchema)
+}
