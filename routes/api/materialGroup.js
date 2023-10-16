@@ -4,7 +4,11 @@ const router = express.Router()
 const passport = require('passport')
 
 // 引入 categroies 才可以做查詢
-const { MaterialGroupOne, MaterialGroupTwo, MaterialGroupMember } = require('../../models/MaterialGroup')
+const {
+  MaterialGroupOne,
+  MaterialGroupTwo,
+  MaterialGroupMember
+} = require('../../models/MaterialGroup')
 
 // $router GET api/categories/test
 // @desc   返回的請求的 json 數據
@@ -327,15 +331,18 @@ router.post('/edit/:id', passport.authenticate('jwt', { session: false }), (req,
       materialGroupFields.choiceLevelTwoValue = req.body.choiceLevelTwoValue.map((x) => x)
     }
     if (req.body.choice_level_three_material) {
-      materialGroupFields.choice_level_three_material = req.body.choice_level_three_material.map((x) => x)
+      materialGroupFields.choice_level_three_material =
+        req.body.choice_level_three_material.map((x) => x)
     }
   }
 
   const filter = { _id: req.params.id }
   const update = { $set: materialGroupFields }
-  const action = { new: false }
+  const action = { new: true }
 
-  MaterialGroupLevel.findByIdAndUpdate(filter, update, action).then((materialGroupOne) => res.json(materialGroupOne))
+  MaterialGroupLevel.findByIdAndUpdate(filter, update, action).then((materialGroupOne) =>
+    res.json(materialGroupOne)
+  )
 })
 
 // $router delete api/material-group/delete-level-one/:id
@@ -344,13 +351,17 @@ router.post('/edit/:id', passport.authenticate('jwt', { session: false }), (req,
 // 選擇 delete
 // 使用 hander 要驗證 token
 // body 要放編輯的資料 key:value
-router.delete('/delete-level-one/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  const query = { _id: req.params.id }
+router.delete(
+  '/delete-level-one/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const query = { _id: req.params.id }
 
-  MaterialGroupOne.findOneAndRemove(query)
-    .then((materialGroupOne) => res.json(materialGroupOne))
-    .catch((_err) => res.status(404).json('刪除失敗'))
-})
+    MaterialGroupOne.findOneAndRemove(query)
+      .then((materialGroupOne) => res.json(materialGroupOne))
+      .catch((_err) => res.status(404).json('刪除失敗'))
+  }
+)
 
 // $router delete api/material-group/delete-level-two/:id
 // @desc   刪除訊息接口
@@ -358,13 +369,17 @@ router.delete('/delete-level-one/:id', passport.authenticate('jwt', { session: f
 // 選擇 delete
 // 使用 hander 要驗證 token
 // body 要放編輯的資料 key:value
-router.delete('/delete-level-two/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  const query = { _id: req.params.id }
+router.delete(
+  '/delete-level-two/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const query = { _id: req.params.id }
 
-  MaterialGroupTwo.findOneAndRemove(query)
-    .then((materialGroupOne) => res.json(materialGroupOne))
-    .catch((_err) => res.status(404).json('刪除失敗'))
-})
+    MaterialGroupTwo.findOneAndRemove(query)
+      .then((materialGroupOne) => res.json(materialGroupOne))
+      .catch((_err) => res.status(404).json('刪除失敗'))
+  }
+)
 
 // $router delete api/material-group/delete/:id
 // @desc   刪除訊息接口
@@ -372,9 +387,13 @@ router.delete('/delete-level-two/:id', passport.authenticate('jwt', { session: f
 // 選擇 delete
 // 使用 hander 要驗證 token
 // body 要放編輯的資料 key:value
-router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  MaterialGroupMember.findOneAndRemove({ _id: req.params.id })
-    .then((materialGroupMember) => res.json(materialGroupMember))
-    .catch((_err) => res.status(404).json('刪除失敗'))
-})
+router.delete(
+  '/delete/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    MaterialGroupMember.findOneAndRemove({ _id: req.params.id })
+      .then((materialGroupMember) => res.json(materialGroupMember))
+      .catch((_err) => res.status(404).json('刪除失敗'))
+  }
+)
 module.exports = router

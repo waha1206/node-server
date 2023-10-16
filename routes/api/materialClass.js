@@ -30,7 +30,7 @@ router.put(
     StorageLevelOneClass.findByIdAndUpdate(
       { _id: _id },
       { $set: materialStorageLevelOneData },
-      { new: false }
+      { new: true }
     ).then((classLevelOneData) => res.json(classLevelOneData))
   }
 )
@@ -76,7 +76,7 @@ router.put(
     StorageLevelTwoClass.findByIdAndUpdate(
       { _id: _id },
       { $set: materialStorageLevelTwoData },
-      { new: false }
+      { new: true }
     ).then((classLevelTwoData) => res.json(classLevelTwoData))
   }
 )
@@ -231,7 +231,7 @@ router.post('/edit/:id', passport.authenticate('jwt', { session: false }), (req,
   const level = req.body.level
   const filter = { _id: req.params.id }
   const update = { $set: materialClassFields }
-  const action = { new: false }
+  const action = { new: true }
 
   let MaterialClassLevel = Object
   MaterialClassLevel = level === 1 ? MaterialClass : MaterialLevelTwoClass

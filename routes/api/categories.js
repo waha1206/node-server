@@ -5,7 +5,11 @@ const passport = require('passport')
 const _ = require('lodash')
 
 // 引入 categroies 才可以做查詢
-const { Categories, CategoriesLevelTwo, CategoriesLevelThree } = require('../../models/Categories')
+const {
+  Categories,
+  CategoriesLevelTwo,
+  CategoriesLevelThree
+} = require('../../models/Categories')
 
 // $router GET api/categories/test
 // @desc   返回的請求的 json 數據
@@ -190,25 +194,29 @@ router.get('/three/:id', passport.authenticate('jwt', { session: false }), (req,
 // @access private
 // 使用 hander 要驗證 token
 // body 不用放，因為他會獲取所有訊息
-router.get('/get-category-by-id/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  // query 選擇的條件
-  // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
-  const query = { _id: req.params.id }
-  const options = {
-    // imgs: 0
+router.get(
+  '/get-category-by-id/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    // query 選擇的條件
+    // options 0 - 忽略 ， 1 - 放第一層 ， 2 - 放第二層
+    const query = { _id: req.params.id }
+    const options = {
+      // imgs: 0
+    }
+    CategoriesLevelThree.find(query, options)
+      .sort({ type: 1 })
+      .then((categories) => {
+        if (!categories) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(categories)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
   }
-  CategoriesLevelThree.find(query, options)
-    .sort({ type: 1 })
-    .then((categories) => {
-      if (!categories) {
-        return res.status(400).json('沒有任何內容')
-      }
-      res.json(categories)
-    })
-    .catch((err) => {
-      res.status(404).json(err)
-    })
-})
+)
 
 // $router get api/categories/:id
 // @desc   獲取單個訊息
@@ -281,17 +289,21 @@ router.post('/edit/:id', passport.authenticate('jwt', { session: false }), (req,
       data.discount = req.body.discount.split('|')
     }
 
-    CategoriesLevelThree.findByIdAndUpdate({ _id: req.params.id }, { $set: data }, { new: false }).then((catrgory) =>
-      res.json(catrgory)
-    )
+    CategoriesLevelThree.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $set: data },
+      { new: true }
+    ).then((catrgory) => res.json(catrgory))
     return
   }
 
   categoryFields.thumbnail = req.body.thumbnail ? req.body.thumbnail : []
 
-  CategoryLevel.findByIdAndUpdate({ _id: req.params.id }, { $set: categoryFields }, { new: false }).then((catrgory) =>
-    res.json(catrgory)
-  )
+  CategoryLevel.findByIdAndUpdate(
+    { _id: req.params.id },
+    { $set: categoryFields },
+    { new: true }
+  ).then((catrgory) => res.json(catrgory))
 })
 
 // $router delete api/categories/delete/:id
@@ -300,22 +312,30 @@ router.post('/edit/:id', passport.authenticate('jwt', { session: false }), (req,
 // 選擇 delete
 // 使用 hander 要驗證 token
 // body 要放編輯的資料 key:value
-router.delete('/delete/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  Categories.findOneAndRemove({ _id: req.params.id })
-    .then((catrgory) => res.json(catrgory))
-    .catch((_err) => res.status(404).json('刪除失敗'))
-})
+router.delete(
+  '/delete/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Categories.findOneAndRemove({ _id: req.params.id })
+      .then((catrgory) => res.json(catrgory))
+      .catch((_err) => res.status(404).json('刪除失敗'))
+  }
+)
 // $router delete api/categories/delete/:id
 // @desc   刪除訊息接口
 // @access private
 // 選擇 delete
 // 使用 hander 要驗證 token
 // body 要放編輯的資料 key:value
-router.delete('/delete-level-two/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  CategoriesLevelTwo.findOneAndRemove({ _id: req.params.id })
-    .then((catrgory) => res.json(catrgory))
-    .catch((_err) => res.status(404).json('刪除失敗'))
-})
+router.delete(
+  '/delete-level-two/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    CategoriesLevelTwo.findOneAndRemove({ _id: req.params.id })
+      .then((catrgory) => res.json(catrgory))
+      .catch((_err) => res.status(404).json('刪除失敗'))
+  }
+)
 
 // $router delete api/categories/delete-level-three/:id
 // @desc   刪除訊息接口
@@ -323,9 +343,13 @@ router.delete('/delete-level-two/:id', passport.authenticate('jwt', { session: f
 // 選擇 delete
 // 使用 hander 要驗證 token
 // body 要放編輯的資料 key:value
-router.delete('/delete-level-three/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-  CategoriesLevelThree.findOneAndRemove({ _id: req.params.id })
-    .then((catrgory) => res.json(catrgory))
-    .catch((_err) => res.status(404).json('刪除失敗'))
-})
+router.delete(
+  '/delete-level-three/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    CategoriesLevelThree.findOneAndRemove({ _id: req.params.id })
+      .then((catrgory) => res.json(catrgory))
+      .catch((_err) => res.status(404).json('刪除失敗'))
+  }
+)
 module.exports = router
