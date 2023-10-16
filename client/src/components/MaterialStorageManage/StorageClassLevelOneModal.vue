@@ -311,7 +311,7 @@ export default {
         this.basicForm
       )
       let data2 = await this.$store.dispatch(this._M.SERVER_GET_STORAGE_LEVEL_ONE_DATA)
-      console.log('data2 :', data2)
+      await this.getAllStorageLevelOneData()
     },
 
     // 刪除這筆資料
