@@ -216,6 +216,9 @@ const MaterialSchema = new Schema({
   }
 })
 
+// schema 表單說明連結
+// https://docs.google.com/spreadsheets/d/1l0C2AZLdgQArMpXq2O35x-luldakcrhpz9TUdB17rgk/edit#gid=1387932891
+
 const MaterialStorageSchema = new Schema({
   // 建立時間
   create_date: {
@@ -234,6 +237,10 @@ const MaterialStorageSchema = new Schema({
   product_name: {
     type: String
   },
+  // 修改時間
+  last_modify_date: {
+    type: Date
+  },
   // 商品單位 碼，公分，克重
   unit: {
     type: String
@@ -249,66 +256,78 @@ const MaterialStorageSchema = new Schema({
   },
   // 商品利潤
   product_profit: {
-    type: String
+    type: String,
+    default: '0'
   },
+  // text area 訂購的須知等等大範圍的文字
   product_description: {
-    type: String
+    type: String,
+    default: ''
   },
   // 現有庫存 數量
   storage: {
-    type: String
+    type: String,
+    default: ''
   },
   // 商品顏色
   product_color: {
-    type: String
+    type: String,
+    default: ''
   },
   // 額外運費
   extra_freight: {
-    type: String
+    type: String,
+    default: ''
   },
   // 採購天數
   lead_time: {
-    type: String
+    type: String,
+    default: ''
   },
   // 原料材質
   raw_material: {
-    type: String
+    type: String,
+    default: ''
   },
   // 最低訂購量
   minimum_order_quantity: {
-    type: String
+    type: String,
+    default: ''
   },
   // 備註
   remark: {
-    type: String
+    type: String,
+    default: ''
   },
 
   product_website: {
-    type: String
+    type: String,
+    default: ''
   },
   // 供應商的 _id
   supplier_id: {
-    type: String
-  },
-  // 修改時間
-  last_modify_date: {
-    type: Date
+    type: String,
+    default: ''
   },
   // 最後修改資料的人
   last_edit_person: {
-    type: String
+    type: String,
+    default: ''
   },
   // 安全庫存警告
   stock_alert: {
-    type: String
+    type: String,
+    default: ''
   },
   // 第一層的 _id
   level_one_id: {
-    type: String
+    type: String,
+    default: ''
   },
   // 第二層的 _id
   level_two_id: {
-    type: String
+    type: String,
+    default: ''
   },
   // 原料種類 1.一般原物料  2.轉印布料 3.非轉印布料
   // 4.配件專用，需版型寬，版型高，布料種類，平車費用，裁切費用
@@ -317,11 +336,10 @@ const MaterialStorageSchema = new Schema({
     type: Number
   },
 
-  // 初始化 0:麥歐
-  // 這邊是代表管理頁面，那個供應商可以看到
-  onwer: {
-    type: Number,
-    default: Number(0)
+  // 這邊是代表管理頁面，那個供應商可以看到，這邊會讀取 supplier 的資料
+  material_onwer: {
+    type: String,
+    default: ''
   },
   // 倉庫的關聯欄位，storage 的原料會有很多的孩子
   // 一但有孩子連結上的狀態，就無法刪除

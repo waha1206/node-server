@@ -6,7 +6,7 @@ const passport = require('passport')
 // 引入 categroies 才可以做查詢
 const SupplierClass = require('../../models/SupplierClass')
 
-// $router GET api/material-class/test
+// $router GET api/supplier-class/test
 // @desc   返回的請求的 json 數據
 // @access public
 router.get('/test', (req, res) => {
@@ -14,7 +14,7 @@ router.get('/test', (req, res) => {
   res.json('msg:SupplierClass works')
 })
 
-// $router post api/material-class/add
+// $router post api/supplier-class/add
 // @desc   創建訊息接口
 // @access private
 // 使用 hander 要驗證 token
@@ -41,7 +41,7 @@ router.post(
   }
 )
 
-// $router get api/material-class
+// $router get api/supplier-class
 // @desc   獲取所有分類資訊
 // @access private
 // 使用 hander 要驗證 token
@@ -63,29 +63,7 @@ router.get(
   }
 )
 
-// $router get api/material-class/:id
-// @desc   獲取單個訊息
-// @access private
-// 使用 hander 要驗證 token
-// 使用 params
-router.get(
-  '/:id',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    SupplierClass.findOne({ _id: req.params._id })
-      .then((supplierClass) => {
-        if (!supplierClass) {
-          return res.status(400).json('沒有任何內容')
-        }
-        res.json(supplierClass)
-      })
-      .catch((err) => {
-        res.status(404).json(err)
-      })
-  }
-)
-
-// $router post api/material-class/edit/:id
+// $router post api/supplier-class/edit/:id
 // @desc   編輯訊息接口
 // @access private
 // 使用 hander 要驗證 token
@@ -109,7 +87,7 @@ router.post(
   }
 )
 
-// $router delete api/material-class/delete/:id
+// $router delete api/supplier-class/delete/:id
 // @desc   刪除訊息接口
 // @access private
 // 選擇 delete
@@ -119,9 +97,34 @@ router.delete(
   '/delete/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
+    res.status(200).json('禁止刪除')
+    return
     SupplierClass.findOneAndRemove({ _id: req.params.id })
       .then((supplierClass) => res.json(supplierClass))
       .catch((_err) => res.status(404).json('刪除失敗'))
   }
 )
+
+// $router get api/supplier-class/:id
+// @desc   獲取單個訊息
+// @access private
+// 使用 hander 要驗證 token
+// 使用 params
+router.get(
+  '/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    SupplierClass.findOne({ _id: req.params._id })
+      .then((supplierClass) => {
+        if (!supplierClass) {
+          return res.status(400).json('沒有任何內容')
+        }
+        res.json(supplierClass)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
 module.exports = router
