@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center h-[40px] leading-none">
+  <div class="text-center leading-none">
     <el-pagination
       background
       @size-change="handleSizeChange"
@@ -34,7 +34,7 @@ export default {
     this.setPaginations(this.paginationData)
   },
   methods: {
-    setPaginations(data) {
+    setPaginations(data = []) {
       this.paginations.page_size = !_.isEmpty(localStorage.getItem(this.localStorageName))
         ? Number(localStorage.getItem(this.localStorageName))
         : 12

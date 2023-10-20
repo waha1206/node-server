@@ -2,42 +2,30 @@
   <div>
     <!-- <div class="flex border-2 border-gray-200 rounded w-auto"> -->
     <div class="flex">
-      <div class="relative">
-        <span class="px-2 text-xl font-bold text-gray-700">{{ title }}</span>
+      <div class="relative flex justify-start items-center">
+        <span class="px-2 text-sm font-bold text-gray-700 w-[100px]">{{ title }}</span>
         <!-- <span class="animate-ping absolute h-2 w-2 rounded-full bg-red-400 opacity-50"></span> -->
 
-        <input
+        <el-input
           id="customer-data-search-input"
           type="text"
-          class="px-4 py-1 focus:ring-transparent w-[250px]"
+          size="mini"
           placeholder="請輸入關鍵字 ..."
           @keyup.esc="fnCleanQueryStr"
           v-model="queryStr"
+          :style="{ width: '250px', fontSize: '16px' }"
         />
-        <span class="absolute right-[30px] top-[5px] text-gray-400 font-bold">{{
+        <span class="absolute right-[35px] text-xs  text-gray-400 font-bold">{{
           getSearchNum
         }}</span>
-      </div>
 
-      <button
-        @mousedown="fnCleanQueryStr"
-        class="px-3 text-white bg-gray-600 hover:bg-gray-800 border-l"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#ffffff"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+        <span
+          @mousedown="fnCleanQueryStr"
+          class="px-3 text-white bg-gray-600 hover:bg-gray-800 border-l w-[24px] h-[28px] flex items-center justify-center text-center"
         >
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
+          <span>X</span>
+        </span>
+      </div>
     </div>
   </div>
 </template>

@@ -19,7 +19,7 @@
 	"editor.fontSize": 14,
 	"editor.lineHeight": 18,
 	"terminal.integrated.fontSize": 12, // terminal 字體大小
-	"files.autoSave": "onWindowChange", // 是否自動儲存檔案
+	"files.autoSave": "off", // 是否自動儲存檔案
 	"editor.fontFamily": "Fira Code",
 	// 注意，win 用戶都要使用 "\\"
 	//"python.pythonPath": "C:\\Users\\twtru\\Anaconda3\\envs\\venv_temp\\python.exe", // 預設的 PYTHON 執行環境

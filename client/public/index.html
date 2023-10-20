@@ -4,7 +4,42 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<!-- <script src="https://cdn.tailwindcss.com"></script> -->
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script>
+			tailwind.config = {
+	  		variants: {
+					extend: {
+						display: ['group-hover'],
+						lineClamp: ['hover'],
+					},
+				},
+				theme: {
+					extend: {
+						backgroundColor: {
+							colorD62872: '#D62872',
+							colorEDE2FF: '#EDE2FF',
+						},
+						colors: {
+							color515151: '#515151',
+							colorD62872: '#D62872',
+						},
+						spacing: {
+							'main-span': '64px',
+						},
+						lineClamp: {
+							10: '10',
+							12: '12',
+						},
+						width: ({ theme }) => ({
+							auto: 'auto',
+							...theme('spacing'),
+							'1/7': '14%',
+							'6/7': '85%',
+						}),
+					},
+				}
+			}
+		</script>
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 		<link rel="icon" href="<%= BASE_URL %>favicon.ico">
 		<script src="https://kit.fontawesome.com/de71e7e1c3.js" crossorigin="anonymous"></script>

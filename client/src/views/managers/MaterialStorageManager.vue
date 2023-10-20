@@ -1,5 +1,5 @@
 <template>
-  <div class="materials-manager bg-colorD62872">
+  <div class="materials-manager ">
     <el-container>
       <el-header>
         <el-button type="primary" size="small" @click="addStorageLevelOneClass"
@@ -23,32 +23,61 @@
         </div>
       </el-header>
       <!-- 分頁 -->
-      <div class="pagination flex justify-start">
-        <div class="text-xs">
-          <MySearch
-            :title="'商品名稱'"
-            :searchData="getSearchData"
-            :searchField="searchField"
-            @search-result="emitResult"
-          ></MySearch>
-        </div>
-        <keep-alive>
-          <!-- 搜尋 -->
+      <div class="mt-2 flex flex-row justify-start items-center w-full">
+        <MySearch
+          :title="'商品名稱'"
+          :searchData="getSearchData"
+          :searchField="searchField"
+          @search-result="emitResult"
+        ></MySearch>
 
-          <MyPagination
-            :paginationData="getSearchResult"
-            :localStorageName="ptah"
-            :tableData.sync="tableData"
-          >
-          </MyPagination>
-        </keep-alive>
+        <!-- 搜尋 -->
+
+        <MyPagination
+          :paginationData="getSearchResult"
+          :localStorageName="ptah"
+          :tableData.sync="tableData"
+        >
+        </MyPagination>
       </div>
       <!-- 分頁結束 -->
-      <el-container>
-        <!-- 內容 -->
-        <p class="text-xl font-bold text-red-700">tailwind css</p>
-        <p class="text-xl font-bold text-blue-700">tailwind css</p>
-      </el-container>
+      <div class="el-main">
+        <div class="p-2 grid grid-cols-8 material-storage-image-container">
+          <div
+            v-for="material in getTableData"
+            :key="material._id"
+            class="  rounded-sm  p-1 "
+          >
+            <!-- 圖片，這邊使用到懶加載技術 -->
+            <div
+              class="flex flex-col w-full items-center justify-center relative  m-[2px] p-[2px] overflow-hidden hover:border border-solid border-red-600"
+            >
+              <!-- 有幾個孩子 -->
+              <div class="absolute top-0 right-0 bg-gray-50 rounded-full z-10">
+                <span
+                  :class="
+                    getChildrenNumber(material)
+                      ? 'bg-red-600 text-white'
+                      : 'text-gray-400'
+                  "
+                  class=" text-xs  w-[20px] h-[20px] flex justify-center items-center rounded-full"
+                >
+                  {{ getChildrenNumber(material) }}
+                </span>
+              </div>
+
+              <img
+                :storage-data-src="material._id"
+                class="storage-search-result hover:scale-105 hover:opacity-75 duration-300"
+                alt=""
+              />
+              <span class="text-xs p-[2px] w-full mt-1">
+                {{ material.product_name }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
     </el-container>
 
     <!-- 非常重要的知識點，遠端讀取資料庫後，要等到接收到遠端資料完畢後，才可以掛載子元件
@@ -88,7 +117,10 @@ export default {
       cascaderValue: [], // 聯集選擇器，綁定項的選擇值
       cascaderOptions: [], // 聯集選擇器 第一層 第二層 第N層 ...
       storageLevelOneClassData: [],
-      storageLevelTwoClassData: []
+      storageLevelTwoClassData: [],
+
+      // ---- material storage all father ----
+      materialStorageData: [] // 要顯示出來的原物料陣列 - 根據 cascaderValue 讀取
     }
   },
 
@@ -111,7 +143,6 @@ export default {
     // 原始資料 → a.給搜尋 → b.給 pagaination → c.給 table
     // a.給搜尋 - 吐回資料 emitResult → this.searchResult
     getSearchData() {
-      // return this.allSupplierData
       return this.materialStorageData
     },
 
@@ -259,7 +290,56 @@ export default {
         JSON.stringify(classOneAndTwoId[1])
       )
       await this.getMaterialStorageByLevelTwo()
+    },
+    // ----------------------- observer go -----------------------
+    // 找到所有的 img 每次搜尋完都要先抓出來
+    observerImg() {
+      const imageContainer = document.querySelector('.material-storage-image-container')
+      const options = {
+        root: imageContainer,
+        rootMargin: '0px 0px 0px 0px',
+        threshold: 0.5
+      }
+      const images = document.querySelectorAll('.storage-search-result')
+      this.observer = new IntersectionObserver(this.callback, options)
+      images.forEach((image) => {
+        if (image.hasAttribute('storage-data-src')) {
+          // console.log('image-has-storage-data-src :', image)
+          this.observer.observe(image)
+        }
+      })
+    },
+
+    // 觀察的 callback
+    async callback(entries) {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return
+        this.loadImg(entry.target)
+        this.observer.unobserve(entry.target)
+      })
+    },
+
+    // 讀取 img
+    async loadImg(target) {
+      const data_src = target.getAttribute('storage-data-src') // 取得屬性 storage-data-src 的值
+      const data = await this.$store.dispatch(
+        _M.SERVER_GET_MATERIAL_STORAGE_IMG_BY_ID,
+        data_src
+      )
+
+      const { imgs } = data
+      if (_.isEmpty(imgs)) target.setAttribute('src', require(`@/assets/noimage.png`))
+      else target.setAttribute('src', imgs[0]) // 設定新的屬性並且賦予它值
+    },
+    // ----------------------- observer end -----------------------
+
+    // ----------------------- 雜七雜八 -----------------------
+    // father 有多少 child
+    getChildrenNumber(material) {
+      return material.my_children.length
     }
+
+    // ----------------------- 雜七雜八 end -----------------------
   }
 }
 </script>
@@ -282,9 +362,13 @@ export default {
 }
 
 .el-main {
-  background-color: #e9eef3;
+  /* background-color: #e9eef3; */
   color: #333;
   text-align: center;
+
+  width: 1740px;
+  height: 100%;
+  padding: 5px;
 }
 
 body > .el-container {
