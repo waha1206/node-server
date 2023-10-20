@@ -14,6 +14,8 @@ import MySearch from './components/global/MySearch.vue'
 
 import _ from 'lodash'
 
+// Vue.component('svgicon', SvgIcon)
+
 // 導入全局變量
 
 import constants from './constants'

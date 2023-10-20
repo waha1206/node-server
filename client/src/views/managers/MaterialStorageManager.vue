@@ -24,6 +24,13 @@
       </el-header>
       <!-- 分頁 -->
       <div class="mt-2 flex flex-row justify-start items-center w-full">
+        <button
+          @click="getMaterialStorageByLevelTwo()"
+          type="button"
+          class="ml-[20px] p-[6px] text-xs font-medium text-center text-white bg-blue-700 rounded-sm hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          更新資料
+        </button>
         <MySearch
           :title="'商品名稱'"
           :searchData="getSearchData"
@@ -60,20 +67,52 @@
                       ? 'bg-red-600 text-white'
                       : 'text-gray-400'
                   "
-                  class=" text-xs  w-[20px] h-[20px] flex justify-center items-center rounded-full"
+                  class=" text-xs w-[20px] h-[20px] flex justify-center items-center rounded-full"
                 >
                   {{ getChildrenNumber(material) }}
                 </span>
               </div>
 
+              <!-- 圖片 -->
               <img
                 :storage-data-src="material._id"
-                class="storage-search-result hover:scale-105 hover:opacity-75 duration-300"
+                class="storage-search-result hover:scale-105  duration-300 hover:opacity-75"
                 alt=""
               />
               <span class="text-xs p-[2px] w-full mt-1">
                 {{ material.product_name }}
               </span>
+
+              <!-- 鎖定或是刪除 -->
+              <div
+                @click="deleteMaterialStorage(material)"
+                class="absolute border shadow border-solid top-1 right-1 bg-gray-50 p-1 hover:scale-105 overflow-hidden duration-300 hover:bg-yellow-300 text-xs"
+              >
+                <span
+                  v-if="getChildrenNumber(material)"
+                  class="bg-red-600 text-white border border-white rounded-sm w-[36px] h-[30px] flex justify-center items-center cursor-not-allowed "
+                >
+                  鎖定
+                </span>
+                <span
+                  v-else
+                  class="border border-red-500 border-solid rounded-sm cursor-pointer w-[36px] h-[30px] flex justify-center items-center"
+                >
+                  刪除
+                </span>
+              </div>
+
+              <!-- 編輯倉庫的原料 -->
+
+              <div
+                class="absolute border shadow border-solid top-1 left-1 bg-gray-50 p-1 hover:scale-105 overflow-hidden duration-300 hover:bg-yellow-300 text-xs"
+              >
+                <span
+                  class="border border-red-500 border-solid rounded-sm cursor-pointer w-[36px] h-[30px] flex justify-center items-center"
+                >
+                  編輯
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -182,12 +221,54 @@ export default {
     },
     // --------------- 跳出視窗部分 end ---------------
 
+    // --------------- material storage 刪除 編輯 ---------------
+    // 刪除 material storage
+    async deleteMaterialStorage(materialStorage) {
+      if (materialStorage.my_children.length) return
+      const resData = await this.$store.dispatch(
+        _M.SERVER_DELETE_MATERIAL_STORAGE,
+        materialStorage._id
+      )
+      const { status, data: deleteMaterialStorageData } = resData
+      console.log('resData :', resData)
+
+      if (status !== 200) {
+        this.$notify({
+          title: '刪除失敗',
+          dangerouslyUseHTMLString: true,
+          message: `
+          <strong>刪除資料出現問題</strong> <br>
+          錯誤代碼：${status}！<br>
+          `,
+          type: 'error', // success warning info error
+          duration: 0,
+          offset: 100
+        })
+        return
+      }
+      // 如果刪除成功，那就更新資料
+      // 1.this.tableData 使用 $set 讓他響應
+      // 2.this.materialStorageData 使用 assign 不要有響應
+      console.log('deleteMaterialStorageData._id :', deleteMaterialStorageData._id)
+      this.tableData = this.tableData.filter(
+        (item) => item._id !== deleteMaterialStorageData._id
+      )
+      this.materialStorageData = this.materialStorageData.filter(
+        (item) => item._id !== deleteMaterialStorageData._id
+      )
+    },
+
+    // 編輯 material storage
+    editMaterialStorage() {
+      //
+    },
+    // --------------- material storage 刪除 編輯 end ---------------
+
     // 搜尋結果
     emitResult(searchResult) {
       this.searchResult = _.cloneDeep(searchResult)
     },
 
-    //
     // 重新讀取 one two class 的資料
     async reloadStorageClassData() {
       await this.getStorageLevelOneClass()

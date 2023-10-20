@@ -550,4 +550,20 @@ router.put(
   }
 )
 
+// $router delete api/material/delete-material-storage/:id
+// @desc   刪除訊息接口
+// @access private
+// 選擇 delete
+// 使用 hander 要驗證 token
+// body 要放編輯的資料 key:value
+router.delete(
+  '/delete-material-storage/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    MaterialStorage.findOneAndRemove({ _id: req.params.id })
+      .then((materialStroage) => res.json(materialStroage))
+      .catch((_err) => res.status(404).json('刪除失敗'))
+  }
+)
+
 module.exports = router

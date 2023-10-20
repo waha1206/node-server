@@ -257,11 +257,11 @@ const actions = {
   },
 
   // 依據 material storage _id 刪除該筆訂單
-  async [_M.SERVER_DELETE_MATERIAL_STORAGE]({}, materialDtorageId) {
+  async [_M.SERVER_DELETE_MATERIAL_STORAGE]({}, materialStorageId) {
     return await axios({
       baseURL: process.env.server_url,
       method: API.materialStorage.deleteAllMaterialStorage.method,
-      url: API.materialStorage.deleteAllMaterialStorage.url + `/${materialDtorageId}`,
+      url: API.materialStorage.deleteAllMaterialStorage.url + `/${materialStorageId}`,
       headers: {
         'Content-Type': 'application/json'
       }
