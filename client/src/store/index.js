@@ -207,7 +207,163 @@ const actions = {
         console.log('讀取資料出現異常！ SERVER_PUT_STORAGE_LEVEL_TWO_DATA')
         return error
       })
+  },
+
+  // ----------------------------------- material storage -----------------------------------
+  // 新增一筆 material storage 資料
+  async [_M.SERVER_ADD_MATERIAL_STORAGE]({}, materialStorageData) {
+    return await axios({
+      baseURL: process.env.server_url,
+      method: API.materialStorage.addMaterialStorage.method,
+      url: API.materialStorage.addMaterialStorage.url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        materialStorageData
+      }
+    })
+      .then((data) => {
+        return data
+      })
+      .catch((error) => {
+        console.log('error :', error)
+        console.log('新增資料出現異常！ SERVER_ADD_MATERIAL_STORAGE')
+        return error
+      })
+  },
+
+  // 修改 material storage 資料
+  async [_M.SERVER_PUT_MATERIAL_STORAGE]({}, materialStorageData) {
+    return await axios({
+      baseURL: process.env.server_url,
+      method: API.materialStorage.putMaterialStorage.method,
+      url: API.materialStorage.putMaterialStorage.url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        materialStorageData
+      }
+    })
+      .then((data) => {
+        return data
+      })
+      .catch((error) => {
+        console.log('error :', error)
+        console.log('讀取資料出現異常！ SERVER_PUT_MATERIAL_STORAGE')
+        return error
+      })
+  },
+
+  // 依據 material storage _id 刪除該筆訂單
+  async [_M.SERVER_DELETE_MATERIAL_STORAGE]({}, materialDtorageId) {
+    return await axios({
+      baseURL: process.env.server_url,
+      method: API.materialStorage.deleteAllMaterialStorage.method,
+      url: API.materialStorage.deleteAllMaterialStorage.url + `/${materialDtorageId}`,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((data) => {
+        // 這邊傳會刪除掉的資料 200 有可能是刪除成功，也有可能是顯示禁止刪除
+        return data
+      })
+      .catch((error) => {
+        console.log(error)
+        console.log('刪除倉庫原料資料錯誤！ SERVER_DELETE_MATERIAL_STORAGE')
+        return error
+      })
+  },
+
+  // 取得所有的 material storage 資料
+  async [_M.SERVER_GET_ALL_MATERIAL_STORAGE]({}) {
+    return await axios({
+      baseURL: process.env.server_url,
+      method: API.materialStorage.getAllMaterialStorage.method,
+      url: API.materialStorage.getAllMaterialStorage.url,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((data) => {
+        return data
+      })
+      .catch((error) => {
+        console.log('error :', error)
+        console.log('讀取資料出現異常！ SERVER_GET_ALL_MATERIAL_STORAGE')
+        return error
+      })
+  },
+
+  // 根據 manyId [_id1, _id2, _id3 ...] material storage 資料
+  async [_M.SERVER_GET_MATERIAL_STORAGE_BY_MANY_ID]({}, arrayManyId) {
+    return await axios({
+      baseURL: process.env.server_url,
+      method: API.materialStorage.getMaterialStorageByManyId.method,
+      url: API.materialStorage.getMaterialStorageByManyId.url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        arrayManyId
+      }
+    })
+      .then((data) => {
+        return data
+      })
+      .catch((error) => {
+        console.log('error :', error)
+        console.log('讀取資料出現異常！ SERVER_GET_MATERIAL_STORAGE_BY_MANY_ID')
+        return error
+      })
+  },
+
+  // 依據 level two class id 取得 material storage 比對的欄位為 level_two_id
+  async [_M.SERVER_GET_MATERIAL_STORAGE_BY_LEVEL_TWO_NO_IMG]({}, levelTwoClassId) {
+    return await await axios({
+      baseURL: process.env.server_url,
+      method: API.materialStorage.getMaterialStorageByLevelTwo.method,
+      url: API.materialStorage.getMaterialStorageByLevelTwo.url + `/${levelTwoClassId}`,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((data) => {
+        // 這邊傳會刪除掉的資料 200 有可能是刪除成功，也有可能是顯示禁止刪除
+        return data
+      })
+      .catch((error) => {
+        console.log(error)
+        console.log(
+          '讀取第二層資料錯誤！ SERVER_GET_MATERIAL_STORAGE_BY_LEVEL_TWO_NO_IMG'
+        )
+        return error
+      })
+  },
+
+  // material storage 透過 material._id 取得 imgs
+  async [_M.SERVER_GET_MATERIAL_STORAGE_IMG_BY_ID]({}, id) {
+    return await axios({
+      method: API.materialStorage.getMaterialStorageImgById.method,
+      url: API.materialStorage.getMaterialStorageImgById.url + `/${id}`,
+      baseURL: process.env.server_url,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((data) => {
+        // commit(_M.SET_MATERIALS_DATA, data.data)
+        return data.data
+      })
+      .catch((error) => {
+        console.log(error)
+        console.log('SERVER_GET_MATERIAL_STORAGE_IMG_BY_ID')
+      })
   }
+
+  // ----------------------------------- material storage end -----------------------------------
 }
 
 export default new Vuex.Store({

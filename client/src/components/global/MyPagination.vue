@@ -82,4 +82,10 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.pagination {
+  text-align: center;
+  height: 40px;
+  line-height: 100%;
+}
+</style>

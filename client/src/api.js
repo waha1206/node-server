@@ -30,6 +30,41 @@ const API = {
     putLevelTwoClass: {
       url: '/api/material-class/put-storage-level-two-class',
       method: 'put'
+    },
+    // 新增 material storage
+    addMaterialStorage: {
+      url: '/api/material/add-material-storage',
+      method: 'post'
+    },
+    // 修改 material storage
+    putMaterialStorage: {
+      url: '/api/material/put-material-storage',
+      method: 'put'
+    },
+    // 刪除 material storage
+    deleteAllMaterialStorage: {
+      url: '/api/material/delete-material-storage',
+      method: 'delete'
+    },
+    // 取得所有 material storage
+    getAllMaterialStorage: {
+      url: '/api/material/get-all-material-storage',
+      method: 'get'
+    },
+    // 根據 _id 取得 material storage [_id1, _id2, _id3, _id4 ...]
+    getMaterialStorageByManyId: {
+      url: '/api/material/get-material-storage-by-many-id',
+      method: 'post'
+    },
+    // 根據 class two _id 取得 material storage
+    getMaterialStorageByLevelTwo: {
+      url: '/api/material/get-material-storage-by-level-two-no-imgs',
+      method: 'get'
+    },
+    // 透過 _id 取得 material storage 的 img (只回傳 imgs 喔)
+    getMaterialStorageImgById: {
+      url: '/api/material/get-material-storage-img-by-id',
+      method: 'get'
     }
   }
 }
