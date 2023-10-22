@@ -17,7 +17,11 @@ const constants = {
   SERVER_GET_MATERIAL_STORAGE_BY_MANY_ID: 'SERVER_GET_MATERIAL_STORAGE_BY_MANY_ID', // 根據 id 取得
   SERVER_GET_MATERIAL_STORAGE_BY_LEVEL_TWO_NO_IMG:
     'SERVER_GET_MATERIAL_STORAGE_BY_LEVEL_TWO_NO_IMG', // 根據第二層 id 取得
-  SERVER_GET_MATERIAL_STORAGE_IMG_BY_ID: 'SERVER_GET_MATERIAL_STORAGE_IMG_BY_ID' // 一次取得很多的 imgs
+  SERVER_GET_MATERIAL_STORAGE_IMG_BY_ID: 'SERVER_GET_MATERIAL_STORAGE_IMG_BY_ID', // 一次取得很多的 imgs
+
+  // ----------------------------------- supplier -----------------------------------
+  SERVER_GET_ALL_SUPPLIER: 'SERVER_GET_ALL_SUPPLIER', // 取得所有供應商資料
+  SERVER_GET_SUPPLIER_CLASS: 'SERVER_GET_SUPPLIER_CLASS' // 取得所有供應商的分類資料
 }
 
 module.exports = constants

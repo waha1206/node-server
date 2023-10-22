@@ -361,9 +361,49 @@ const actions = {
         console.log(error)
         console.log('SERVER_GET_MATERIAL_STORAGE_IMG_BY_ID')
       })
-  }
+  },
 
   // ----------------------------------- material storage end -----------------------------------
+
+  // ----------------------------------- supplier and supplier class -----------------------------------
+  // SERVER 開頭的就是不會經過 store 存資料 這邊是取得所有供應商的資料
+  async [_M.SERVER_GET_ALL_SUPPLIER]({ commit }) {
+    return await axios({
+      baseURL: process.env.server_url,
+      method: API.supplier.getAllSupplier.method,
+      url: API.supplier.getAllSupplier.url,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((data) => {
+        return data.data
+      })
+      .catch((error) => {
+        console.log('supplier.js - SERVER_GET_ALL_SUPPLIER')
+        return error.response
+      })
+  },
+
+  // SERVER 開頭的就是不會經過 store 存資料 這邊是取得所有供應商分類的資料
+  async [_M.SERVER_GET_SUPPLIER_CLASS]({}) {
+    return await axios({
+      baseURL: process.env.server_url,
+      method: API.supplier.getSupplierClass.method,
+      url: API.supplier.getSupplierClass.url,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((data) => {
+        return data.data
+      })
+      .catch((error) => {
+        console.log('supplier.js - SERVER_GET_SUPPLIER_CLASS')
+        return error.response
+      })
+  }
+  // ----------------------------------- supplier end -----------------------------------
 }
 
 export default new Vuex.Store({

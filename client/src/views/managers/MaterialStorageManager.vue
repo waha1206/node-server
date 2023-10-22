@@ -105,6 +105,7 @@
               <!-- 編輯倉庫的原料 -->
 
               <div
+                @click="editMaterialStorageData(material)"
                 class="absolute border shadow border-solid top-1 left-1 bg-gray-50 p-1 hover:scale-105 overflow-hidden duration-300 hover:bg-yellow-300 text-xs"
               >
                 <span
@@ -131,17 +132,27 @@
     <StorageClassLevelTwoModal
       :visible.sync="levelTwoModalVisible"
     ></StorageClassLevelTwoModal>
+    <EditMaterialStorageModal
+      :originalData="originalData"
+      :visible.sync="editMaterialStorageVisible"
+    ></EditMaterialStorageModal>
   </div>
 </template>
 
 <script>
 import StorageClassLevelOneModal from '../../components/MaterialStorageManage/StorageClassLevelOneModal.vue'
 import StorageClassLevelTwoModal from '../../components/MaterialStorageManage/StorageClassLevelTwoModal.vue'
+import EditMaterialStorageModal from '../../components/MaterialStorageManage/EditMaterialStorageModal.vue'
 import _M from '../../constants'
 import _O from '../../other_code'
 
 export default {
   name: 'material-storage-manager',
+  components: {
+    StorageClassLevelOneModal,
+    StorageClassLevelTwoModal,
+    EditMaterialStorageModal
+  },
   data() {
     return {
       // 搜尋的部分，翻頁相關
@@ -153,17 +164,20 @@ export default {
       // 讀取 material storage
       levelOneModalVisible: false, // 跳出新增第一層 class 視窗
       levelTwoModalVisible: false, // 跳出新增第二層 class 視窗
+      editMaterialStorageVisible: false, // 跳出 編輯 material storage 視窗
       cascaderValue: [], // 聯集選擇器，綁定項的選擇值
       cascaderOptions: [], // 聯集選擇器 第一層 第二層 第N層 ...
       storageLevelOneClassData: [],
       storageLevelTwoClassData: [],
 
       // ---- material storage all father ----
-      materialStorageData: [] // 要顯示出來的原物料陣列 - 根據 cascaderValue 讀取
+      materialStorageData: [], // 要顯示出來的原物料陣列 - 根據 cascaderValue 讀取
+
+      // 給子元件要編輯的資料，點擊 【編輯】 按鈕後複製原始資料到這邊
+      originalData: {}
     }
   },
 
-  components: { StorageClassLevelOneModal, StorageClassLevelTwoModal },
   beforeRouteEnter(to, from, next) {
     // console.log('元件內的 beforeRouterEnter，不能使用this,因為此時尚未創建成功')
     next()
@@ -219,6 +233,11 @@ export default {
     addStorageLevelTwoClass() {
       this.levelTwoModalVisible = true
     },
+    editMaterialStorageData(originalData) {
+      this.editMaterialStorageVisible = true
+
+      this.$set(this, 'originalData', originalData)
+    },
     // --------------- 跳出視窗部分 end ---------------
 
     // --------------- material storage 刪除 編輯 ---------------
@@ -249,7 +268,6 @@ export default {
       // 如果刪除成功，那就更新資料
       // 1.this.tableData 使用 $set 讓他響應
       // 2.this.materialStorageData 使用 assign 不要有響應
-      console.log('deleteMaterialStorageData._id :', deleteMaterialStorageData._id)
       this.tableData = this.tableData.filter(
         (item) => item._id !== deleteMaterialStorageData._id
       )

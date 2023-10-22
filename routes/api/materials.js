@@ -536,7 +536,7 @@ router.put(
   '/put-material-storage',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    const { materialStorageData } = _.cloneDeep(req.body)
+    const { materialStorageData } = req.body
     const { _id } = materialStorageData
 
     // 技術點

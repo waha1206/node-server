@@ -66,6 +66,19 @@ const API = {
       url: '/api/material/get-material-storage-img-by-id',
       method: 'get'
     }
+  },
+  // supplier ----------------------------------------
+  supplier: {
+    // 取得所有供應商資料
+    getAllSupplier: {
+      url: '/api/supplier',
+      method: 'get'
+    },
+    // 取得所有供應商的分類
+    getSupplierClass: {
+      url: '/api/supplier-class',
+      method: 'get'
+    }
   }
 }
 
