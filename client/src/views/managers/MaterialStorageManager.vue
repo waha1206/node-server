@@ -135,6 +135,7 @@
     <EditMaterialStorageModal
       :originalData="originalData"
       :visible.sync="editMaterialStorageVisible"
+      @update-edit-data="updateEditData"
     ></EditMaterialStorageModal>
   </div>
 </template>
@@ -276,10 +277,22 @@ export default {
       )
     },
 
-    // 編輯 material storage
-    editMaterialStorage() {
-      //
+    // 元件更新後，通知父元件刷新資料
+    // 1.tableData - 當前頁面
+    // 2.materialStorageData - 總資料 使用 assign 不要響應
+    updateEditData(newData) {
+      const { _id } = newData
+      // all data array
+      const material_index = this.materialStorageData.findIndex(
+        (material) => material._id === _id
+      )
+      if (material_index !== -1)
+        Object.assign(this.materialStorageData[material_index], newData)
+      // table
+      const table_index = this.tableData.findIndex((material) => material._id === _id)
+      if (table_index !== -1) this.$set(this, tableData[material_index], newData)
     },
+
     // --------------- material storage 刪除 編輯 end ---------------
 
     // 搜尋結果

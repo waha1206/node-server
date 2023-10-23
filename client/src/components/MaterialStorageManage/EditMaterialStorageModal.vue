@@ -764,6 +764,12 @@ export default {
         return
       }
 
+      // 把父元件的資料做更新
+      // 1.更新 table
+      // 2.更新所有資料
+
+      this.$emit('update-edit-data', data)
+
       this.$notify({
         title: '資料更新成功',
         dangerouslyUseHTMLString: true,
