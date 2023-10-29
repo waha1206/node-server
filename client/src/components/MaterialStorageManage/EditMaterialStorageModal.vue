@@ -298,7 +298,7 @@
                     class="text-base mb-1"
                     type="textarea"
                     placeholder="商品於採購的時候需要注意的事項。"
-                    v-model="editDataForm.new_product_description"
+                    v-model="editDataForm.product_description"
                     :rows="10"
                     maxlength="1000"
                     show-word-limit
