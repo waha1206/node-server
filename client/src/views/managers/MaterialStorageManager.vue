@@ -65,7 +65,7 @@
                     ? 'bg-red-600'
                     : 'bg-blue-600'
                 "
-                class="absolute text-white text-[12px] p-1 top-[140px] right-1 flex justify-start items-start flex-col"
+                class="absolute text-white text-[12px] p-1 top-[140px] right-1 flex justify-start items-start flex-col z-10"
               >
                 <p>存：{{ material.storage }}</p>
                 <div class=" border border-solid w-full border-white "></div>
