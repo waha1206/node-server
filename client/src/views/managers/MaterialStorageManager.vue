@@ -59,6 +59,18 @@
             <div
               class="flex flex-col w-full items-center justify-center relative  m-[2px] p-[2px] overflow-hidden hover:border border-solid border-red-600"
             >
+              <div
+                :class="
+                  Number(material.stock_alert) > Number(material.storage)
+                    ? 'bg-red-600'
+                    : 'bg-blue-600'
+                "
+                class="absolute text-white text-[12px] p-1 top-[140px] right-1 flex justify-start items-start flex-col"
+              >
+                <p>存：{{ material.storage }}</p>
+                <div class=" border border-solid w-full border-white "></div>
+                <p>安：{{ material.stock_alert }}</p>
+              </div>
               <!-- 有幾個孩子 -->
               <div class="absolute top-0 right-0 bg-gray-50 rounded-full z-10">
                 <span
