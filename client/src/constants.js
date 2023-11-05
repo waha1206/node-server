@@ -21,7 +21,12 @@ const constants = {
 
   // ----------------------------------- supplier -----------------------------------
   SERVER_GET_ALL_SUPPLIER: 'SERVER_GET_ALL_SUPPLIER', // 取得所有供應商資料
-  SERVER_GET_SUPPLIER_CLASS: 'SERVER_GET_SUPPLIER_CLASS' // 取得所有供應商的分類資料
+  SERVER_GET_SUPPLIER_CLASS: 'SERVER_GET_SUPPLIER_CLASS', // 取得所有供應商的分類資料
+
+  // ----------------------------------- unit conversation rate -----------------------------------
+  SERVER_PUT_UNIT_CONVERSATION_RATE: 'SERVER_PUT_UNIT_CONVERSATION_RATE',
+  SERVER_GET_UNIT_CONVERSATION_RATE: 'SERVER_GET_UNIT_CONVERSATION_RATE',
+  SERVER_ADD_UNIT_CONVERSATION_RATE: 'SERVER_ADD_UNIT_CONVERSATION_RATE'
 }
 
 module.exports = constants

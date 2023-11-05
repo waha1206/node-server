@@ -65,8 +65,26 @@ const API = {
     getMaterialStorageImgById: {
       url: '/api/material/get-material-storage-img-by-id',
       method: 'get'
+    },
+
+    // ----------- unit conversation rate
+    // 透過 _id 取得 material storage 的 img (只回傳 imgs 喔)
+    addUnitConversationRate: {
+      url: '/api/material/add-unit-conversation-rate',
+      method: 'post'
+    },
+    // 透過 _id 取得 material storage 的 img (只回傳 imgs 喔)
+    putUnitConversationRate: {
+      url: '/api/material/put-unit-conversation-rate',
+      method: 'put'
+    },
+    // 透過 _id 取得 material storage 的 img (只回傳 imgs 喔)
+    getUnitConversationRate: {
+      url: '/api/material/get-unit-conversation-rate',
+      method: 'get'
     }
   },
+
   // supplier ----------------------------------------
   supplier: {
     // 取得所有供應商資料

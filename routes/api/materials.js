@@ -4,7 +4,7 @@ const router = express.Router()
 const passport = require('passport')
 
 // 引入 User 才可以做查詢
-const { Material, MaterialStorage } = require('../../models/Material')
+const { Material, MaterialStorage, UnitConversationRate } = require('../../models/Material')
 
 // $router GET api/users/test
 // @desc   返回的請求的 json 數據
@@ -563,6 +563,84 @@ router.delete(
     MaterialStorage.findOneAndRemove({ _id: req.params.id })
       .then((materialStroage) => res.json(materialStroage))
       .catch((_err) => res.status(404).json('刪除失敗'))
+  }
+)
+
+// UnitConversationRate
+// ---------------------  這邊是 unit conversation rate 的部分 ---------------------
+// $router get api/material/put-unit-conversation-rate
+// @desc   獲取所有 倉庫配件轉換率的資料
+// @access private
+// 使用 hander 要驗證 token
+// body 不用放，因為他會獲取所有訊息
+// 使用方式 SERVER_PUT_UNIT_CONVERSATION_RATE
+router.put(
+  '/put-unit-conversation-rate',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { unitConversationRateForm } = req.body
+    const { _id } = unitConversationRateForm
+
+    UnitConversationRate.findByIdAndUpdate(
+      { _id: _id },
+      { $set: unitConversationRateForm },
+      { new: false }
+    ).then((classLevelOneData) => res.json(classLevelOneData))
+  }
+)
+
+// $router get api/material/get-unit-conversation-rate
+// @desc   獲取所有分類資訊
+// @access private
+// 使用 hander 要驗證 token
+// body 不用放，因為他會獲取所有訊息
+// 使用方式 SERVER_GET_UNIT_CONVERSATION_RATE
+router.get(
+  '/get-unit-conversation-rate',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    UnitConversationRate.find()
+      .sort({ type: 1 })
+      .then((aaa) => {
+        if (!aaa) {
+          return res.status(200).json('沒有任何內容')
+        }
+        res.json(aaa)
+      })
+      .catch((err) => {
+        res.status(404).json(err)
+      })
+  }
+)
+
+// $router post api/material/add-unit-conversation-rate
+// @desc   創建訊息接口
+// @access private
+// 使用 hander 要驗證 token
+// 使用 body 要放創建的資料 key:value
+// 使用方式 SERVER_ADD_UNIT_CONVERSATION_RATE, unitConversationRateForm
+router.post(
+  '/add-unit-conversation-rate',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const {
+      unitConversationRateForm,
+      unitConversationRateForm: { name }
+    } = req.body
+    const query = { name: name }
+    const options = {}
+
+    UnitConversationRate.findOne(query, options).then((unitConversationRate) => {
+      if (unitConversationRate) {
+        res.status(403).json('Material Storage Level One 的名稱已經存在')
+      } else {
+        new UnitConversationRate(unitConversationRateForm)
+          .save()
+          .then((unitConversationRate) => {
+            res.status(200).json(unitConversationRate)
+          })
+      }
+    })
   }
 )
 

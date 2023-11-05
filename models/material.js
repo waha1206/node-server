@@ -350,11 +350,36 @@ const MaterialStorageSchema = new Schema({
   }
 })
 
+// 共享的模式结构
+const UnitConversationRateSchema = new Schema({
+  create_date: {
+    type: Date,
+    default: Date.now
+  },
+  // 識別代號，獨一無二
+  type: {
+    type: Number, unique: true
+  },
+  // 中文名稱
+  name: {
+    type: String
+  },
+  conversation_rate: {
+    type: Number
+  },
+  // 註解
+  describe: {
+    type: String,
+    default: ''
+  }
+})
+
 // eslint-disable-next-line no-undef
 // module.exports = Material = mongoose.model('materials', MaterialSchema)
 
 // // eslint-disable-next-line no-undef
 module.exports = {
   Material: mongoose.model('materials', MaterialSchema),
-  MaterialStorage: mongoose.model('material_storages', MaterialStorageSchema)
+  MaterialStorage: mongoose.model('material_storages', MaterialStorageSchema),
+  UnitConversationRate: mongoose.model('unit_conversation_rates', UnitConversationRateSchema)
 }

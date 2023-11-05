@@ -8,6 +8,9 @@
         <el-button type="primary" size="small" @click="addStorageLevelTwoClass"
           >新增第二層倉庫分類</el-button
         >
+        <el-button type="primary" size="small" @click="addUnitConverastionRate"
+          >新增採購單位換算</el-button
+        >
         <div class="materal-class-container">
           <el-cascader
             v-model="cascaderValue"
@@ -177,6 +180,7 @@ export default {
       // 讀取 material storage
       levelOneModalVisible: false, // 跳出新增第一層 class 視窗
       levelTwoModalVisible: false, // 跳出新增第二層 class 視窗
+      unitConverastionRateVisible: false, //
       editMaterialStorageVisible: false, // 跳出 編輯 material storage 視窗
       cascaderValue: [], // 聯集選擇器，綁定項的選擇值
       cascaderOptions: [], // 聯集選擇器 第一層 第二層 第N層 ...
@@ -245,6 +249,9 @@ export default {
     },
     addStorageLevelTwoClass() {
       this.levelTwoModalVisible = true
+    },
+    addUnitConverastionRate() {
+      this.unitConverastionRateVisible = true
     },
     editMaterialStorageData(originalData) {
       this.editMaterialStorageVisible = true
