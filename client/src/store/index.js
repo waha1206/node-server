@@ -402,8 +402,76 @@ const actions = {
         console.log('supplier.js - SERVER_GET_SUPPLIER_CLASS')
         return error.response
       })
-  }
+  },
   // ----------------------------------- supplier end -----------------------------------
+
+  // ---------------------unit conversation rate ---------------------
+  // 新增一筆 storage level one class 資料
+  async [_M.SERVER_ADD_UNIT_CONVERSATION_RATE]({}, unitConversationRateForm) {
+    return await axios({
+      // baseURL: 'http://localhost:8080/',
+      method: API.materialStorage.addUnitConversationRate.method,
+      url: API.materialStorage.addUnitConversationRate.url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        unitConversationRateForm
+      }
+    })
+      .then((data) => {
+        return data
+      })
+      .catch((error) => {
+        console.log('error :', error)
+        console.log('新增資料出現異常！ SERVER_ADD_UNIT_CONVERSATION_RATE')
+        return error
+      })
+  },
+
+  // 取得所有的 storage level one class 資料
+  async [_M.SERVER_GET_UNIT_CONVERSATION_RATE]({}) {
+    return await axios({
+      // baseURL: 'http://127.0.0.1:5000/',
+      method: API.materialStorage.getUnitConversationRate.method,
+      url: API.materialStorage.getUnitConversationRate.url,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((data) => {
+        return data
+      })
+      .catch((error) => {
+        console.log('error :', error)
+        console.log('讀取資料出現異常！ SERVER_GET_UNIT_CONVERSATION_RATE')
+        return error
+      })
+  },
+
+  // 更新資料
+  async [_M.SERVER_PUT_UNIT_CONVERSATION_RATE]({}, unitConversationRateForm) {
+    return await axios({
+      // baseURL: 'http://127.0.0.1:5000/',
+      method: API.materialStorage.putUnitConversationRate.method,
+      url: API.materialStorage.putUnitConversationRate.url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        unitConversationRateForm
+      }
+    })
+      .then((data) => {
+        return data
+      })
+      .catch((error) => {
+        console.log('error :', error)
+        console.log('讀取資料出現異常！ SERVER_PUT_UNIT_CONVERSATION_RATE')
+        return error
+      })
+  }
+  // ---------------------unit conversation rate end ---------------------
 }
 
 export default new Vuex.Store({

@@ -152,6 +152,9 @@
       :visible.sync="editMaterialStorageVisible"
       @update-edit-data="updateEditData"
     ></EditMaterialStorageModal>
+    <UnitConversationRateModal
+      :visible.sync="unitConverastionRateVisible"
+    ></UnitConversationRateModal>
   </div>
 </template>
 
@@ -159,6 +162,7 @@
 import StorageClassLevelOneModal from '../../components/MaterialStorageManage/StorageClassLevelOneModal.vue'
 import StorageClassLevelTwoModal from '../../components/MaterialStorageManage/StorageClassLevelTwoModal.vue'
 import EditMaterialStorageModal from '../../components/MaterialStorageManage/EditMaterialStorageModal.vue'
+import UnitConversationRateModal from '../../components/MaterialStorageManage/UnitConversationRateModal.vue'
 import _M from '../../constants'
 import _O from '../../other_code'
 
@@ -167,7 +171,8 @@ export default {
   components: {
     StorageClassLevelOneModal,
     StorageClassLevelTwoModal,
-    EditMaterialStorageModal
+    EditMaterialStorageModal,
+    UnitConversationRateModal
   },
   data() {
     return {

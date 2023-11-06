@@ -627,15 +627,33 @@ router.post(
   (req, res) => {
     const {
       unitConversationRateForm,
-      unitConversationRateForm: { name }
+      unitConversationRateForm: { name },
+      unitConversationRateForm: { type }
     } = req.body
     const query = { name: name }
     const options = {}
 
+    // --------------- 檢查 type 值 是否有重複 ---------------
+    // 創建一個 Set 來儲存有遇到的 type 值
+    const typeSet = new Set()
+    UnitConversationRate.find().then(allData => {
+      for (const obj of allData) {
+        if (!typeSet.has(obj.type)) typeSet.add(obj.type)
+      }
+    })
+    // 檢查 type 是否與數組中的 type 值重複
+    if (typeSet.has(type)) {
+      res.status(203).json({ data: '轉換率編號重複' })
+      return
+    }
+
     UnitConversationRate.findOne(query, options).then((unitConversationRate) => {
+      // --------------- 檢查 name 值 是否有重複 ---------------
       if (unitConversationRate) {
-        res.status(403).json('Material Storage Level One 的名稱已經存在')
+        // 出現錯誤，沒意外是名稱重複，原本給403，改成203
+        res.status(203).json({ data: '轉換率名稱重複' })
       } else {
+        // type name 都沒重複，那就建立新的資料
         new UnitConversationRate(unitConversationRateForm)
           .save()
           .then((unitConversationRate) => {

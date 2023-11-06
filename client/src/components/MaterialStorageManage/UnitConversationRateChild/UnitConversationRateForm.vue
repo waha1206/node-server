@@ -20,12 +20,13 @@
           <label
             for="small-input"
             class="block text-xs font-medium text-gray-900 dark:text-gray-300"
-            >編號 (不可重複)</label
+            >轉換率編號 (不可重複、純數字)</label
           >
           <el-input
             size="mini"
             type="type"
-            v-model="copyUnitConversationRateData.type"
+            v-model="validateTypeIsNumber"
+            @input="validateType"
           ></el-input>
         </div>
       </div>
@@ -35,11 +36,11 @@
           <label
             for="small-input"
             class="block text-xs font-medium text-gray-900 dark:text-gray-300"
-            >單位名稱</label
+            >單位名稱 (不可重複)</label
           >
           <el-input
             size="mini"
-            type="type"
+            type="text"
             v-model="copyUnitConversationRateData.name"
           ></el-input>
         </div>
@@ -66,7 +67,17 @@
 
       <!-- 轉換率 (純數字) -->
       <div class="basis-5/12 pr-2">
-        <!-- 空出來 -->
+        <label
+          for="small-input"
+          class="block text-xs font-medium text-gray-900 dark:text-gray-300"
+          >轉換率 (純數字)</label
+        >
+        <el-input
+          size="mini"
+          type="number"
+          @input="validateConversationRate"
+          v-model="vaildateConversationRateNumber"
+        ></el-input>
       </div>
 
       <!-- 是否啟用，無上限，超過一個會變成輪播 -->
@@ -79,16 +90,20 @@
 
 <script>
 export default {
-  props: ['updateUnitConversationRateData'],
+  props: ['unitConversationRate'],
   data() {
     return {
-      copyUnitConversationRateData: {}
+      copyUnitConversationRateData: {},
+      validateTypeIsNumber: Number(),
+      vaildateConversationRateNumber: Number()
     }
   },
   watch: {
-    updateUnitConversationRateData: {
+    unitConversationRate: {
       handler(val) {
         this.copyUnitConversationRateData = _.cloneDeep(val)
+        this.validateTypeIsNumber = this.copyUnitConversationRateData.type
+        this.vaildateConversationRateNumber = this.copyUnitConversationRateData.conversation_rate
       },
       deep: true,
       immediate: true
@@ -99,6 +114,24 @@ export default {
 
   computed: {},
   methods: {
+    // 驗證 type 欄位
+    validateType() {
+      this.validateTypeIsNumber.replace(/^0+[^0-9]/g, '')
+      let numAsString = this.validateTypeIsNumber.toString()
+      let trimmedNum = numAsString.replace(/^0+/, '0') // 将多个前导零替换为单个零
+      let result = parseInt(trimmedNum, 10)
+      this.copyUnitConversationRateData.type = result
+    },
+
+    // 驗證 轉換率 conversation_rate 欄位
+    validateConversationRate() {
+      this.vaildateConversationRateNumber.replace(/^0+[^0-9]/g, '')
+      let numAsString = this.vaildateConversationRateNumber.toString()
+      let trimmedNum = numAsString.replace(/^0+/, '0') // 将多个前导零替换为单个零
+      let result = parseInt(trimmedNum, 10)
+      this.copyUnitConversationRateData.conversation_rate = result
+    },
+
     // 更新 left side banner 的資料
     async updataUnitConversationRateData() {
       const { status } = await this.$store.dispatch(

@@ -18,7 +18,7 @@
             class="flex justify-between items-center p-2 rounded-t border-b dark:border-gray-600"
           >
             <h3 class="text-xl font-medium text-gray-900 dark:text-white">
-              新增原物料倉庫第一層： {{ getModalInfo }}
+              新增倉庫原料的轉換率： {{ getModalInfo }}
             </h3>
             <button
               @click.stop="closeUnitConverastionRateModal"
@@ -60,7 +60,7 @@
                     <template slot-scope="props">
                       <!-- 這邊可以放元件，如果需要的話 -->
                       <UnitConversationRateForm
-                        :storageLevelOne="props.row"
+                        :unitConversationRate="props.row"
                         @updateUnitConversationRateData="updateUnitConversationRateData"
                       ></UnitConversationRateForm> </template
                   ></el-table-column>
@@ -70,18 +70,18 @@
                   <el-table-column
                     prop="type"
                     label="編號"
-                    header-align="left"
-                    align="left"
-                    width="100"
+                    header-align="center"
+                    align="center"
+                    width="50"
                   ></el-table-column>
 
                   <!-- 單位 -->
                   <el-table-column
                     prop="name"
                     label="單位名稱"
-                    header-align="left"
-                    align="left"
-                    width="200"
+                    header-align="center"
+                    align="center"
+                    width="80"
                   ></el-table-column>
 
                   <!-- 備註說明 -->
@@ -99,7 +99,7 @@
                     label="轉換率"
                     header-align="center"
                     align="center"
-                    width="92"
+                    width="70"
                   >
                   </el-table-column>
 
@@ -158,7 +158,7 @@
 
             <!-- 右邊的輸入區，這邊輸入完成後會清空表單內容 -->
             <div class="ml-2 pl-3 py-2 pr-2 basis-1/4 border-l">
-              <p class="mb-4 text-lg text-gray-600 font-bold">新增第一層分類</p>
+              <p class="mb-4 text-lg text-gray-600 font-bold">新增轉換率</p>
 
               <!-- 表格 -->
               <form @submit.prevent="addUnitConversationRate">
@@ -167,29 +167,50 @@
                     <label
                       for="unit-conversation-rate-modal-name"
                       class="m-0 block text-xs font-medium text-gray-700"
-                      >分類編號 (例如：G0001)</label
+                      >轉換率編號 (例如：1) 純數字</label
                     >
                     <el-input
                       class="mt-2"
                       size="mini"
-                      type="type"
-                      v-model="basicForm.type"
-                      placeholder="請輸入4碼數字 例如：0001"
+                      type="number"
+                      v-model="validateTypeIsNumber"
+                      @input="validateType"
+                      placeholder="請輸入純數字 例如：1，且不可重複"
                     ></el-input>
                   </div>
+                  <!-- 單位名稱 -->
                   <div class="col-span-6 sm:col-span-6">
                     <label
                       for="unit-conversation-rate-modal-name"
                       class="m-0 block text-xs font-medium text-gray-700"
-                      >分類名稱 (例如：拉鍊)</label
+                      >單位名稱 (例如：碼、打、公斤)</label
                     >
                     <el-input
                       class="mt-2"
                       size="mini"
                       type="type"
                       v-model="basicForm.name"
-                      placeholder="請輸入中文名稱"
+                      placeholder="請輸入單位名稱"
                     ></el-input>
+                  </div>
+                  <!-- 單位名稱 -->
+                  <div class="col-span-6 sm:col-span-6">
+                    <label
+                      for="unit-conversation-rate-modal-name"
+                      class="m-0 block text-xs font-medium text-gray-700"
+                      >轉換率 (例如：12(一打))</label
+                    >
+
+                    <!-- 轉換率 -->
+                    <el-input
+                      class="mt-2"
+                      size="mini"
+                      type="number"
+                      v-model="vaildateConversationRateNumber"
+                      @input="validateConversationRate"
+                      placeholder="轉換率"
+                    >
+                    </el-input>
                   </div>
                 </div>
                 <div class="mt-8 text-right">
@@ -222,11 +243,15 @@ export default {
       path: 'unit_conversation_rate_modal', // MyPagination
       unitConversationRateData: [], // 取得單位轉換率的所有資料
       basicForm: {
-        type: '', // 編號 英文+數字
+        type: Number(1), // 純數字
         name: '', // 中文名稱
-        conversation_rate: 1 // 轉換率
+        conversation_rate: Number(1) // 轉換率
       },
-      tableData: []
+      tableData: [],
+      // 驗證 type 欄位是否為數字
+      validateTypeIsNumber: Number(1),
+      // 驗證轉換率
+      vaildateConversationRateNumber: Number(1)
     }
   },
   async mounted() {
@@ -242,13 +267,6 @@ export default {
     }
   },
   computed: {
-    // 檢查是否所有欄位都有填寫
-    checkFiledIsEmpty() {
-      return Object.values(this.basicForm).some((val) => {
-        return _.isEmpty(val)
-      })
-    },
-
     // 取得 倉庫第一層的所有資料
     getUnitConversationRateData() {
       return this.unitConversationRateData
@@ -265,6 +283,22 @@ export default {
     }
   },
   methods: {
+    // 驗證 type 欄位
+    validateType() {
+      this.validateTypeIsNumber.replace(/^0+[^0-9]/g, '')
+      let numAsString = this.validateTypeIsNumber.toString()
+      let trimmedNum = numAsString.replace(/^0+/, '0') // 将多个前导零替换为单个零
+      let result = parseInt(trimmedNum, 10)
+      this.basicForm.type = result
+    },
+    validateConversationRate() {
+      this.vaildateConversationRateNumber.replace(/^0+[^0-9]/g, '')
+      let numAsString = this.vaildateConversationRateNumber.toString()
+      let trimmedNum = numAsString.replace(/^0+/, '0') // 将多个前导零替换为单个零
+      let result = parseInt(trimmedNum, 10)
+      this.basicForm.conversation_rate = result
+    },
+
     // 開啟 expand 根據 ref
     editUnitConversationRateData(row) {
       this.$refs.unitCinversationRateTable.toggleRowExpansion(row)
@@ -275,24 +309,56 @@ export default {
       const { data, status } = await this.$store.dispatch(
         this._M.SERVER_GET_UNIT_CONVERSATION_RATE
       )
-
       this.unitConversationRateData = status === 200 ? data : []
+    },
+
+    // 驗證欄位資料
+    validateBasicForm(basicForm) {
+      for (const key in basicForm) {
+        if (!basicForm[key]) {
+          return false // 如果有任何字段为空（假值），则返回 false
+        }
+      }
+      return true // 所有字段都包含数据，返回 true
     },
 
     // 新增一筆轉換率資料
     async addUnitConversationRate() {
-      if (this.checkFiledIsEmpty) {
+      const isValid = this.validateBasicForm(this.basicForm)
+
+      if (!isValid) {
         this.$message({
           message: '有星號的欄位都必須要填寫喔！',
           type: 'error'
         })
         return
       }
-
-      await this.$store.dispatch(
+      const { data, status } = await this.$store.dispatch(
         this._M.SERVER_ADD_UNIT_CONVERSATION_RATE,
         this.basicForm
       )
+
+      if (status === 203) {
+        this.$notify({
+          title: '單位名稱重複',
+          dangerouslyUseHTMLString: true,
+          message: `
+          <strong>錯誤代碼：</strong> <br>
+          代碼：${status}<br>
+          訊息：${data.data}<br>
+          `,
+          type: 'error', // success warning info error
+          duration: 0,
+          offset: 100
+        })
+        return
+      }
+
+      this.$message({
+        message: '創建轉換率成功！',
+        type: 'success'
+      })
+
       await this.getAllUnitConversationRateData()
     },
 
@@ -310,13 +376,18 @@ export default {
     handleCurrentChange() {},
 
     // emit
-    updateUnitConversationRateData(storageLevelOne) {
+    updateUnitConversationRateData(unitConversationRate) {
       let itemToModify = this.unitConversationRateData.find(
-        (item) => item._id === storageLevelOne._id
+        (item) => item._id === unitConversationRate._id
       )
+      // 如果有從 所有的 unitConversationRateData 裡面找到資料，就修改他
       if (itemToModify) {
-        const { name, type, describe } = storageLevelOne
+        const { name, type, describe, conversation_rate } = unitConversationRate
         Object.assign(itemToModify, { name, type, describe, conversation_rate })
+        this.$message({
+          message: '更新資料成功！',
+          type: 'success'
+        })
       }
     }
   }
