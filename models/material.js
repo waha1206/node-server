@@ -350,7 +350,7 @@ const MaterialStorageSchema = new Schema({
   }
 })
 
-// 共享的模式结构
+// storage material 的單位轉換率
 const UnitConversationRateSchema = new Schema({
   create_date: {
     type: Date,
@@ -358,7 +358,8 @@ const UnitConversationRateSchema = new Schema({
   },
   // 識別代號，獨一無二
   type: {
-    type: Number, unique: true
+    type: Number,
+    unique: true
   },
   // 中文名稱
   name: {
@@ -381,5 +382,8 @@ const UnitConversationRateSchema = new Schema({
 module.exports = {
   Material: mongoose.model('materials', MaterialSchema),
   MaterialStorage: mongoose.model('material_storages', MaterialStorageSchema),
-  UnitConversationRate: mongoose.model('unit_conversation_rates', UnitConversationRateSchema)
+  UnitConversationRate: mongoose.model(
+    'unit_conversation_rates',
+    UnitConversationRateSchema
+  )
 }

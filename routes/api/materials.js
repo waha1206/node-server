@@ -4,7 +4,11 @@ const router = express.Router()
 const passport = require('passport')
 
 // 引入 User 才可以做查詢
-const { Material, MaterialStorage, UnitConversationRate } = require('../../models/Material')
+const {
+  Material,
+  MaterialStorage,
+  UnitConversationRate
+} = require('../../models/Material')
 
 // $router GET api/users/test
 // @desc   返回的請求的 json 數據
@@ -483,9 +487,7 @@ router.get(
       '00008' // 運費
     ]
     // 如果 true 那就找 kind 符合的資料回傳 ， 如果 false 就找 level_two_id 符合的回傳
-    let query = kind_rule.includes(_id)
-      ? { kind: Number(_id) }
-      : { level_two_id: _id }
+    let query = kind_rule.includes(_id) ? { kind: Number(_id) } : { level_two_id: _id }
 
     // 如果 _id = '00000' ，代表要取得所有資料
     if (_id === '00000') query = {}
@@ -590,7 +592,7 @@ router.put(
 )
 
 // $router get api/material/get-unit-conversation-rate
-// @desc   獲取所有分類資訊
+// @desc   獲取所有轉換率資訊
 // @access private
 // 使用 hander 要驗證 token
 // body 不用放，因為他會獲取所有訊息

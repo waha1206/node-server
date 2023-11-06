@@ -6,7 +6,7 @@
       <div class="basis-1/12 pr-2">
         <div class=" flex justify-center items-center h-full w-full">
           <span
-            @click="updataStorageLevelOneData()"
+            @click="updataUnitConversationRateData()"
             class="text-xs  hover:bg-gradient-to-r hover:from-yellow-500 hover:to-pink-500 text-white bg-gradient-to-r from-sky-500 to-indigo-500 focus:ring-4 font-xs rounded-sm  px-2 py-1 text-center cursor-pointer m-auto"
           >
             更新
@@ -20,33 +20,28 @@
           <label
             for="small-input"
             class="block text-xs font-medium text-gray-900 dark:text-gray-300"
-            >分類編號 (不可重複)</label
+            >編號 (不可重複)</label
           >
           <el-input
             size="mini"
             type="type"
-            v-model="copyStorageLevelOneData.type"
+            v-model="copyUnitConversationRateData.type"
           ></el-input>
         </div>
       </div>
-      <!-- 商品名稱 (第一層) -->
+      <!-- 單位名稱 -->
       <div class="basis-6/12 pr-2">
         <div>
           <label
             for="small-input"
             class="block text-xs font-medium text-gray-900 dark:text-gray-300"
-            >分類名稱 (第一層)</label
+            >單位名稱</label
           >
           <el-input
             size="mini"
             type="type"
-            v-model="copyStorageLevelOneData.name"
+            v-model="copyUnitConversationRateData.name"
           ></el-input>
-          <!-- <input
-            type="text"
-            v-model="copyStorageLevelOneData.name"
-            class="block p-2 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          /> -->
         </div>
       </div>
     </div>
@@ -65,11 +60,11 @@
         <el-input
           size="mini"
           type="type"
-          v-model="copyStorageLevelOneData.describe"
+          v-model="copyUnitConversationRateData.describe"
         ></el-input>
       </div>
 
-      <!-- 0:影片 1:圖片 2:轉址 -->
+      <!-- 轉換率 (純數字) -->
       <div class="basis-5/12 pr-2">
         <!-- 空出來 -->
       </div>
@@ -84,16 +79,16 @@
 
 <script>
 export default {
-  props: ['storageLevelOne'],
+  props: ['updateUnitConversationRateData'],
   data() {
     return {
-      copyStorageLevelOneData: {}
+      copyUnitConversationRateData: {}
     }
   },
   watch: {
-    storageLevelOne: {
+    updateUnitConversationRateData: {
       handler(val) {
-        this.copyStorageLevelOneData = _.cloneDeep(val)
+        this.copyUnitConversationRateData = _.cloneDeep(val)
       },
       deep: true,
       immediate: true
@@ -105,14 +100,14 @@ export default {
   computed: {},
   methods: {
     // 更新 left side banner 的資料
-    async updataStorageLevelOneData() {
+    async updataUnitConversationRateData() {
       const { status } = await this.$store.dispatch(
-        this._M.SERVER_PUT_STORAGE_LEVEL_ONE_DATA,
-        this.copyStorageLevelOneData
+        this._M.SERVER_PUT_UNIT_CONVERSATION_RATE,
+        this.copyUnitConversationRateData
       )
       if (status === 200) {
         // 這邊是 emit 的用法
-        this.$emit('updateStorageLevelOneData', this.copyStorageLevelOneData)
+        this.$emit('updateUnitConversationRateData', this.copyUnitConversationRateData)
       }
     }
   }
