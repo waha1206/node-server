@@ -347,6 +347,11 @@ const MaterialStorageSchema = new Schema({
   my_children: {
     type: Array,
     default: []
+  },
+  // 單位轉換率 識別代號
+  conversation_type: {
+    type: Number,
+    default: 1
   }
 })
 
@@ -359,14 +364,17 @@ const UnitConversationRateSchema = new Schema({
   // 識別代號，獨一無二
   type: {
     type: Number,
-    unique: true
+    unique: true,
+    default: 1
   },
-  // 中文名稱
+  // 單位中文名稱
   name: {
     type: String
   },
+  // 單位轉換率
   conversation_rate: {
-    type: Number
+    type: Number,
+    default: 1
   },
   // 註解
   describe: {

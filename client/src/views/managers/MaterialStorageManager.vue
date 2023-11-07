@@ -306,15 +306,15 @@ export default {
     // 2.materialStorageData - 總資料 使用 assign 不要響應
     updateEditData(newData) {
       const { _id } = newData
-      // all data array
+      // // all data array
       const material_index = this.materialStorageData.findIndex(
         (material) => material._id === _id
       )
       if (material_index !== -1)
         Object.assign(this.materialStorageData[material_index], newData)
-      // table
+      // // table
       const table_index = this.tableData.findIndex((material) => material._id === _id)
-      if (table_index !== -1) this.$set(this, tableData[material_index], newData)
+      if (table_index !== -1) this.$set(this.tableData, material_index, newData)
     },
 
     // --------------- material storage 刪除 編輯 end ---------------

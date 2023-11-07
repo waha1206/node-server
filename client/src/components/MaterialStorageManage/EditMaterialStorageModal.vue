@@ -393,9 +393,10 @@
                     ></el-input>
                   </div>
                 </div>
-                <!-- 第一層大分類 -->
+
+                <!-- 分類 cascader 聯集選擇器 -->
                 <div class="grid grid-cols-6 gap-6 mt-2">
-                  <div class="col-span-6 sm:col-span-6">
+                  <div class="cursor-not-allowed col-span-6 sm:col-span-6">
                     <!-- 下拉式選單 -->
                     <label
                       for="storage-class-level-two-modal-name"
@@ -412,9 +413,32 @@
                       @change="handleChange"
                     ></el-cascader>
                   </div>
-                  <!-- 第三列 -->
-                  <div class="col-span-6 sm:col-span-6">
-                    <!-- 尚未決定內容 -->
+                </div>
+
+                <!-- 轉換率 -->
+                <div class="grid grid-cols-6 gap-6 mt-2">
+                  <div class="cursor-not-allowed col-span-6 sm:col-span-6">
+                    <!-- 下拉式選單 -->
+                    <label
+                      for="storage-class-level-two-modal-name"
+                      class="mb-1 block  font-medium text-gray-700"
+                      >轉換率</label
+                    >
+                    <el-select
+                      @change="unitConversationRateTypeChange"
+                      v-model="unitConversationRateType"
+                      placeholder="請選擇轉換率"
+                      filterable
+                      size="mini"
+                      :style="{ width: '100%' }"
+                    >
+                      <el-option
+                        v-for="(item, index) in unitConversationRateOption"
+                        :key="item.value"
+                        :value="item.value"
+                        :label="item.label"
+                      ></el-option>
+                    </el-select>
                   </div>
                 </div>
 
@@ -483,6 +507,11 @@ export default {
       settingOnwerModalVisible: false,
       onwerName: '', // 使用者名稱的顯示
 
+      // 單位轉換率
+      unitConversationRateType: Number(), // 給選擇器用的，存放 value
+      unitConversationRateData: [], // 取得單位轉換率的所有資料
+      unitConversationRateOption: [], // 單位轉換率選擇器
+
       // 驗證欄位
       REQUIRED_FIELDS: [
         'product_name',
@@ -490,7 +519,8 @@ export default {
         'storage',
         'level_one_id',
         'level_two_id',
-        'material_onwer' // 這邊會是 supplier 的 _id 字串
+        'material_onwer', // 這邊會是 supplier 的 _id 字串
+        'conversation_type'
       ]
     }
   },
@@ -554,6 +584,10 @@ export default {
 
         // 修改時間
         this.editDataForm.last_modify_date = new Date()
+
+        // 轉換率
+        this.editDataForm.conversation_type = storageData.conversation_type
+        this.$set(this, 'unitConversationRateType', storageData.conversation_type)
       },
       deep: true
     },
@@ -632,12 +666,15 @@ export default {
     }
   },
   methods: {
-    // 重新讀取 one two class 的資料
+    // 重新讀取 one two class 與 單位轉換率 的資料
     async reloadStorageClassData() {
       await this.getStorageLevelOneClass()
       await this.getStorageLevelTwoClass()
+      await this.getAllUnitConversationRateData()
       // 初始化聯集選擇器
       this.initClassOption()
+      // 初始化單位轉換率
+      this.initUnitConversationRateOption()
     },
 
     // 讀取 倉庫分類 第一層
@@ -650,6 +687,14 @@ export default {
     async getStorageLevelTwoClass() {
       const resData = await this.$store.dispatch(_M.SERVER_GET_STORAGE_LEVEL_TWO_DATA)
       this.storageLevelTwoClassData = [...resData.data]
+    },
+
+    // 取得所有轉換率的資料
+    async getAllUnitConversationRateData() {
+      const { data, status } = await this.$store.dispatch(
+        this._M.SERVER_GET_UNIT_CONVERSATION_RATE
+      )
+      this.unitConversationRateData = status === 200 ? data : []
     },
 
     // 初始化 cascader 聯集選擇器，建立 options 第一層/第二層 ...
@@ -669,6 +714,22 @@ export default {
                 label: item.type + ' ' + item.name
               })
           })
+          options.push(obj)
+          return options
+        },
+        []
+      )
+    },
+
+    // 初始化 cascader 聯集選擇器，建立 options 單位中文名稱/單位轉換率 ...
+    // options:[{value, label, children:[{value, label}]}]
+    initUnitConversationRateOption() {
+      this.unitConversationRateOption = this.unitConversationRateData.reduce(
+        (options, currentConversation) => {
+          let obj = {
+            value: currentConversation.type,
+            label: `${currentConversation.type}. 單位名稱：${currentConversation.name}   轉換率：${currentConversation.conversation_rate}`
+          }
           options.push(obj)
           return options
         },
@@ -795,6 +856,12 @@ export default {
         }
       })
       return isValid
+    },
+
+    // 當 單位選擇器發生 change 事件
+    unitConversationRateTypeChange(value) {
+      this.editDataForm.conversation_type = value
+      this.unitConversationRateType = value
     }
   }
 }
