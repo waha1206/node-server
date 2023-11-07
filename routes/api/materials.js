@@ -624,7 +624,7 @@ router.get(
 router.post(
   '/add-unit-conversation-rate',
   passport.authenticate('jwt', { session: false }),
-  (req, res) => {
+  async (req, res) => {
     const {
       unitConversationRateForm,
       unitConversationRateForm: { name },
@@ -636,7 +636,7 @@ router.post(
     // --------------- 檢查 type 值 是否有重複 ---------------
     // 創建一個 Set 來儲存有遇到的 type 值
     const typeSet = new Set()
-    UnitConversationRate.find().then(allData => {
+    await UnitConversationRate.find().then((allData) => {
       for (const obj of allData) {
         if (!typeSet.has(obj.type)) typeSet.add(obj.type)
       }
@@ -646,6 +646,10 @@ router.post(
       res.status(203).json({ data: '轉換率編號重複' })
       return
     }
+
+    // 檢測用
+    // res.status(200).json({ data: '暫時中斷' })
+    // return
 
     UnitConversationRate.findOne(query, options).then((unitConversationRate) => {
       // --------------- 檢查 name 值 是否有重複 ---------------
