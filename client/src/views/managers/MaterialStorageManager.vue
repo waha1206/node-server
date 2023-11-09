@@ -62,6 +62,16 @@
             <div
               class="flex flex-col w-full items-center justify-center relative  m-[2px] p-[2px] overflow-hidden hover:border border-solid border-red-600"
             >
+              <!-- 轉換單位名稱 與 轉換率 -->
+              <div
+                class="bg-gray-400 absolute text-white text-[12px] p-1 top-[52px] left-1 flex flex-row justify-start items-start  z-10"
+              >
+                <span class="mr-1">{{ getConversationName(material) }}</span>
+                <span>|</span>
+                <span class="ml-1">{{ getConversationRate(material) }}</span>
+              </div>
+
+              <!-- 庫存 與 安全庫存 -->
               <div
                 :class="
                   Number(material.stock_alert) > Number(material.storage)
@@ -74,6 +84,7 @@
                 <div class=" border border-solid w-full border-white "></div>
                 <p>安：{{ material.stock_alert }}</p>
               </div>
+
               <!-- 有幾個孩子 -->
               <div class="absolute top-0 right-0 bg-gray-50 rounded-full z-10">
                 <span
@@ -196,7 +207,10 @@ export default {
       materialStorageData: [], // 要顯示出來的原物料陣列 - 根據 cascaderValue 讀取
 
       // 給子元件要編輯的資料，點擊 【編輯】 按鈕後複製原始資料到這邊
-      originalData: {}
+      originalData: {},
+
+      // 單位轉換率的所有資料
+      unitConversationRateData: [] // 取得單位轉換率的所有資料
     }
   },
 
@@ -231,6 +245,7 @@ export default {
       this.$nextTick(() => {
         this.observerImg()
       })
+
       return this.tableData
     },
 
@@ -274,7 +289,6 @@ export default {
         materialStorage._id
       )
       const { status, data: deleteMaterialStorageData } = resData
-      console.log('resData :', resData)
 
       if (status !== 200) {
         this.$notify({
@@ -326,6 +340,7 @@ export default {
 
     // 重新讀取 one two class 的資料
     async reloadStorageClassData() {
+      await this.getAllUnitConversationRateData()
       await this.getStorageLevelOneClass()
       await this.getStorageLevelTwoClass()
       // 初始化聯集選擇器
@@ -473,9 +488,40 @@ export default {
     // father 有多少 child
     getChildrenNumber(material) {
       return material.my_children.length
-    }
+    },
 
     // ----------------------- 雜七雜八 end -----------------------
+
+    // ----------------------- 轉換率 -----------------------
+    // 取得所有轉換率的資料
+    async getAllUnitConversationRateData() {
+      const { data, status } = await this.$store.dispatch(
+        this._M.SERVER_GET_UNIT_CONVERSATION_RATE
+      )
+      this.unitConversationRateData = status === 200 ? data : []
+    },
+
+    // 取得轉換率的 name
+    getConversationName(material) {
+      const { order_value } = material
+      // 先找到 他的 conversation 資料
+      const findConversationObj = this.unitConversationRateData.find((conversation) => {
+        return conversation.type === material.conversation_type
+      })
+      return findConversationObj.name
+    },
+
+    // 取得轉換率的 rate
+    getConversationRate(material) {
+      const { order_value } = material
+      // 先找到 他的 conversation 資料
+      const findConversationObj = this.unitConversationRateData.find((conversation) => {
+        return conversation.type === material.conversation_type
+      })
+      return findConversationObj.conversation_rate
+    }
+
+    // ----------------------- 轉換率 end -----------------------
   }
 }
 </script>
