@@ -26,7 +26,10 @@ const constants = {
   // ----------------------------------- unit conversation rate -----------------------------------
   SERVER_PUT_UNIT_CONVERSATION_RATE: 'SERVER_PUT_UNIT_CONVERSATION_RATE',
   SERVER_GET_UNIT_CONVERSATION_RATE: 'SERVER_GET_UNIT_CONVERSATION_RATE',
-  SERVER_ADD_UNIT_CONVERSATION_RATE: 'SERVER_ADD_UNIT_CONVERSATION_RATE'
+  SERVER_ADD_UNIT_CONVERSATION_RATE: 'SERVER_ADD_UNIT_CONVERSATION_RATE',
+
+  // ----------------------------------- material -----------------------------------
+  SERVER_GET_MATERIAL_BY_MANY_ID: 'SERVER_GET_MATERIAL_BY_MANY_ID' // 根據 id 取得 多筆原料
 }
 
 module.exports = constants

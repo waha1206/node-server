@@ -405,7 +405,7 @@ const actions = {
   },
   // ----------------------------------- supplier end -----------------------------------
 
-  // ---------------------unit conversation rate ---------------------
+  // --------------------- unit conversation rate ---------------------
   // 新增一筆 storage level one class 資料
   async [_M.SERVER_ADD_UNIT_CONVERSATION_RATE]({}, unitConversationRateForm) {
     return await axios({
@@ -470,8 +470,34 @@ const actions = {
         console.log('讀取資料出現異常！ SERVER_PUT_UNIT_CONVERSATION_RATE')
         return error
       })
+  },
+  // --------------------- unit conversation rate end ---------------------
+
+  // --------------------- material ---------------------
+  // 根據 manyId [_id1, _id2, _id3 ...] material  資料
+  async [_M.SERVER_GET_MATERIAL_BY_MANY_ID]({}, arrayManyId) {
+    return await axios({
+      baseURL: process.env.server_url,
+      method: API.material.getMaterialByManyId.method,
+      url: API.material.getMaterialByManyId.url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        arrayManyId
+      }
+    })
+      .then((data) => {
+        return data
+      })
+      .catch((error) => {
+        console.log('error :', error)
+        console.log('讀取資料出現異常！ SERVER_GET_MATERIAL_BY_MANY_ID')
+        return error
+      })
   }
-  // ---------------------unit conversation rate end ---------------------
+
+  // --------------------- material end ---------------------
 }
 
 export default new Vuex.Store({

@@ -88,9 +88,10 @@
               <!-- 有幾個孩子 -->
               <div class="absolute top-0 right-0 bg-gray-50 rounded-full z-10">
                 <span
+                  @click="showStorageChildrenModal(material)"
                   :class="
                     getChildrenNumber(material)
-                      ? 'bg-red-600 text-white'
+                      ? 'bg-red-600 text-white cursor-pointer'
                       : 'text-gray-400'
                   "
                   class=" text-xs w-[20px] h-[20px] flex justify-center items-center rounded-full"
@@ -166,6 +167,10 @@
     <UnitConversationRateModal
       :visible.sync="unitConverastionRateVisible"
     ></UnitConversationRateModal>
+    <ShowStorageChildrenModal
+      :fatherData="showStorageChildrenModalData"
+      :visible.sync="showStorageChildrenModalVisible"
+    ></ShowStorageChildrenModal>
   </div>
 </template>
 
@@ -174,6 +179,7 @@ import StorageClassLevelOneModal from '../../components/MaterialStorageManage/St
 import StorageClassLevelTwoModal from '../../components/MaterialStorageManage/StorageClassLevelTwoModal.vue'
 import EditMaterialStorageModal from '../../components/MaterialStorageManage/EditMaterialStorageModal.vue'
 import UnitConversationRateModal from '../../components/MaterialStorageManage/UnitConversationRateModal.vue'
+import ShowStorageChildrenModal from '../../components/MaterialStorageManage/AhowStorageChildrenModal.vue'
 import _M from '../../constants'
 import _O from '../../other_code'
 
@@ -183,7 +189,8 @@ export default {
     StorageClassLevelOneModal,
     StorageClassLevelTwoModal,
     EditMaterialStorageModal,
-    UnitConversationRateModal
+    UnitConversationRateModal,
+    ShowStorageChildrenModal
   },
   data() {
     return {
@@ -198,6 +205,8 @@ export default {
       levelTwoModalVisible: false, // 跳出新增第二層 class 視窗
       unitConverastionRateVisible: false, //
       editMaterialStorageVisible: false, // 跳出 編輯 material storage 視窗
+      showStorageChildrenModalVisible: false, // 跳出 我的孩子的頁面
+      showStorageChildrenModalData: {}, // 要查詢孩子的倉庫原料
       cascaderValue: [], // 聯集選擇器，綁定項的選擇值
       cascaderOptions: [], // 聯集選擇器 第一層 第二層 第N層 ...
       storageLevelOneClassData: [],
@@ -264,6 +273,12 @@ export default {
 
   methods: {
     // --------------- 跳出視窗部分 ---------------
+    // 顯示有幾個小孩 (原料)
+    showStorageChildrenModal(storageMaterial) {
+      this.showStorageChildrenModalData = storageMaterial
+      this.showStorageChildrenModalVisible = true
+    },
+
     addStorageLevelOneClass() {
       this.levelOneModalVisible = true
     },

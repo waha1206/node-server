@@ -97,6 +97,15 @@ const API = {
       url: '/api/supplier-class',
       method: 'get'
     }
+  },
+
+  // material ----------------------------------------
+  material: {
+    // 根據 _id 取得 material [_id1, _id2, _id3, _id4 ...]
+    getMaterialByManyId: {
+      url: '/api/material/get-material-by-many-id',
+      method: 'post'
+    }
   }
 }
 

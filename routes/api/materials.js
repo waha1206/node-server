@@ -17,6 +17,37 @@ router.get('/test', (req, res) => {
   res.json('msg:material is works')
 })
 
+// $router get api/material/get-material-by-many-id
+// @desc   透過 code 取得報價單
+// @access private
+// 使用 hander 要驗證 token
+// 有看到 patch 就代表他會使用到 body 傳遞 數據 {}
+// 有看到 /:id 就代表要從 params 接收一個 id 進來 當然，這裡沒有
+router.post(
+  '/get-material-by-many-id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { arrayManyId } = req.body
+
+    // 如果是 buyer 就取回該 buyer 的資料。如果是 sales 就取回所有資料
+    const query = { _id: { $in: arrayManyId } }
+    const options = {
+      // _id: 1
+    }
+    Material.find(query, options)
+      .sort({ create_date: -1 }) // 如果需要排序的話
+      .then((materials) => {
+        if (!materials) {
+          return res.status(203).json([])
+        }
+        res.json(materials)
+      })
+      .catch(() => {
+        res.status(203).json([])
+      })
+  }
+)
+
 // $router POST api/material/upload
 // @desc   返回的請求的 json 數據
 // @access public
