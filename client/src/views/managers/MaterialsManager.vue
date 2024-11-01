@@ -188,7 +188,7 @@
           <el-table-column label="供應商" width="180" align="center">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="left">
-                <div v-if="scope.row.supplier_id">
+                <div v-if="scope.row.supplier_id" class="max-w-md">
                   <p>供應商名稱: {{ getSupplierById(scope.row).company }}</p>
                   <p>公司統編：{{ getSupplierById(scope.row).tax_id_number }}</p>
                   <p>資本額：{{ getSupplierById(scope.row).registered_capital }}</p>
@@ -207,7 +207,7 @@
                   <p>店面電話：{{ getSupplierById(scope.row).storefront_telephone }}</p>
                   <p>店面傳真：{{ getSupplierById(scope.row).storefront_fax }}</p>
                   <p>店面地址：{{ getSupplierById(scope.row).storefront_address }}</p>
-                  <p>
+                  <p class="text-blue-500">
                     官網：<a :href="getSupplierById(scope.row).website" target="_blank">{{
                       getSupplierById(scope.row).website
                     }}</a>
@@ -307,514 +307,516 @@
 </template>
 
 <script>
-import MaterialClassDialog from '../../components/MaterialsManager/MaterialClassDialog'
-import MaterialEditDialog from '../../components/MaterialsManager/MaterialEditDialog'
-import MaterialSupplierDialog from '../../components/MaterialsManager/MateriaSupplierDialog'
-import MaterialLevelTwoDialog from '../../components/MaterialsManager/MaterialLevelTwoDialog'
-import { MessageBox } from 'element-ui'
-import { mapGetters } from 'vuex'
+  import MaterialClassDialog from '../../components/MaterialsManager/MaterialClassDialog'
+  import MaterialEditDialog from '../../components/MaterialsManager/MaterialEditDialog'
+  import MaterialSupplierDialog from '../../components/MaterialsManager/MateriaSupplierDialog'
+  import MaterialLevelTwoDialog from '../../components/MaterialsManager/MaterialLevelTwoDialog'
+  import { MessageBox } from 'element-ui'
+  import { mapGetters } from 'vuex'
 
-export default {
-  name: 'materials-manager',
-  data() {
-    return {
-      choiceLevelTwoValue: [], // 一開始選好後，會顯示 table 的資料，要選擇 one / two
-      levelOneTowOption: [], // 所有可選擇的 one / two 層資料
-      materialClassName: '',
-      tableData: [],
-      materialClassData: [],
-      materialLevelTwoClassData: [],
-      allMaterialData: [],
-      allSupplierlData: [],
-      allUserNameId: [],
-      supplierClassData: [],
-      search: '',
-      innerDialog: false,
-      materialsData: [], // 開始就先讀取資料庫的數據
-      levelThreeFormDate: {}, // 給 子元件傳遞的第三層資料
-      emptyLevelThreeFormDate: {
-        type: '',
-        imgs: [],
-        old_serial_numbers: '',
-        product_name: '',
-        unit_price: '',
-        company_profit: '',
-        unit: '',
-        product_category: '',
-        the_cost: '',
-        retail_price: '',
-        product_profit: '',
-        product_description: '',
-        storage: '',
-        product_color: '',
-        various_elements: '',
-        material_class: '',
-        level_two_id: '',
-        length: '',
-        extra_freight: '',
-        lead_time: '',
-        raw_material: '',
-        minimum_order_quantity: '',
-        supplier: '',
-        supplier_contact_person: '',
-        supplier_phone_number: '',
-        supplier_fax_number: '',
-        supplier_cell_phone: '',
-        supplier_address: '',
-        supplier_email: '',
-        remark: '',
-        supplier_bank_information: '',
-        product_website: '',
-        supplier_number: '',
-        product_picture_website: '',
-        create_date: '',
-        last_modify_date: '',
-        last_edit_person: '',
-        stock_alert: '',
-        processing_fee_flag: false,
-        kind: 1,
-        cloth_width: '',
-        crop_fee: '',
-        tailor_fee: '',
-        layout_height: '',
-        layout_width: '',
-        accessory_cloth_id: '',
-        pattern_download: '',
-        pattern_no: '',
-        processing_fee: '',
-        additional_height: '',
-        typesetting: false,
-        pattern_free: false,
-        inside_pattern_no: '',
-        inside_pattern_download: ''
-      },
-      // 編輯原物料的分類跳出視窗
-      formData: {
-        type: '',
-        name: '',
-        describe: '',
-        last_modify_user: '',
-        id: ''
-      },
-      dialog: {
-        show: false,
-        title: '展示一下',
-        option: 'edit'
-      },
-      levelTwoDialog: {
-        show: false,
-        title: '展示一下',
-        option: 'edit'
-      },
-      // 控制 supplier dialog 的物件
-      materialSupplierDialog: {
-        show: false,
-        title: '請選擇供應商',
-        option: 'edit',
-        material_id: ''
-      },
-      // 編輯原物料的跳出視窗
-      materialEditDialog: {
-        show: false,
-        title: '展示一下',
-        option: 'edit',
-        materialClass: ''
-      },
-      // 控制分頁
-      my_paginations: {
-        page_index: 1, // 位於當前第幾頁
-        total: 0, // 總數
-        page_size: 10, // 每一頁顯示幾條數據
-        page_sizes: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 100] // 選擇一頁要顯示多少條
-        // layouts: 'total, sizes, prev, pager, next, jumper'
-      }
-    }
-  },
-  computed: {
-    ...mapGetters(['user'])
-  },
-  components: {
-    MaterialClassDialog,
-    MaterialEditDialog,
-    MaterialLevelTwoDialog,
-    MaterialSupplierDialog
-  },
-  beforeRouteEnter(to, from, next) {
-    // console.log('元件內的 beforeRouterEnter，不能使用this,因為此時尚未創建成功')
-    next()
-  },
-  beforeRouteLeave(to, from, next) {
-    // console.log('beforeRouteLeave 我要離開這個元件了')
-    next()
-  },
-  created() {
-    this.getMaterials()
-    this.getMaterialClass()
-    this.getMaterialLevelTwoClass()
-    this.getUserInfo()
-    this.getSuppliers()
-    this.getSupplierClass()
-  },
-  mounted() {
-    this.setCascaderOptions()
-  },
-  watch: {
-    materialClassData() {
-      if (!this.materialClassData.length && !this.materialLevelTwoClassData.length) return
-      this.setLevelOneTowOption()
-    },
-    materialLevelTwoClassData() {
-      if (!this.materialClassData.length && !this.materialLevelTwoClassData.length) return
-      this.setLevelOneTowOption()
-    }
-  },
-  methods: {
-    setCascaderOptions() {
-      // ，就讀回來上次的紀錄
-      if (localStorage.MaterialLevelOneValue && localStorage.MaterialLevelTwoValue) {
-        this.choiceLevelTwoValue[0] = localStorage.MaterialLevelOneValue
-        this.choiceLevelTwoValue[1] = localStorage.MaterialLevelTwoValue
-      }
-    },
-    // 當選擇 one / two 時，有變化就會來到這邊
-    onOptionsChange(value) {
-      // 當分類選擇異動的時候，再重新的撈第三層的商品資料
-      localStorage.MaterialLevelOneValue = value[0]
-      localStorage.MaterialLevelTwoValue = value[1]
-      // localStorage.material_class = value
-      this.getMaterials()
-    },
-    // 當 group level one / two 的資料都完整後，在來這邊整理資料
-    setLevelOneTowOption() {
-      this.levelOneTowOption = []
-      // this.materialClassData
-      this.materialClassData.forEach((item) => {
-        // console.log(index, item.name, item._id)
-        let obj = {
-          value: '',
-          label: '',
-          children: []
+  export default {
+    name: 'materials-manager',
+    data() {
+      return {
+        choiceLevelTwoValue: [], // 一開始選好後，會顯示 table 的資料，要選擇 one / two
+        levelOneTowOption: [], // 所有可選擇的 one / two 層資料
+        materialClassName: '',
+        tableData: [],
+        materialClassData: [],
+        materialLevelTwoClassData: [],
+        allMaterialData: [],
+        allSupplierlData: [],
+        allUserNameId: [],
+        supplierClassData: [],
+        search: '',
+        innerDialog: false,
+        materialsData: [], // 開始就先讀取資料庫的數據
+        levelThreeFormDate: {}, // 給 子元件傳遞的第三層資料
+        emptyLevelThreeFormDate: {
+          type: '',
+          imgs: [],
+          old_serial_numbers: '',
+          product_name: '',
+          unit_price: '',
+          company_profit: '',
+          unit: '',
+          product_category: '',
+          the_cost: '',
+          retail_price: '',
+          product_profit: '',
+          product_description: '',
+          storage: '',
+          product_color: '',
+          various_elements: '',
+          material_class: '',
+          level_two_id: '',
+          length: '',
+          extra_freight: '',
+          lead_time: '',
+          raw_material: '',
+          minimum_order_quantity: '',
+          supplier: '',
+          supplier_contact_person: '',
+          supplier_phone_number: '',
+          supplier_fax_number: '',
+          supplier_cell_phone: '',
+          supplier_address: '',
+          supplier_email: '',
+          remark: '',
+          supplier_bank_information: '',
+          product_website: '',
+          supplier_number: '',
+          product_picture_website: '',
+          create_date: '',
+          last_modify_date: '',
+          last_edit_person: '',
+          stock_alert: '',
+          processing_fee_flag: false,
+          kind: 1,
+          cloth_width: '',
+          crop_fee: '',
+          tailor_fee: '',
+          layout_height: '',
+          layout_width: '',
+          accessory_cloth_id: '',
+          pattern_download: '',
+          pattern_no: '',
+          processing_fee: '',
+          additional_height: '',
+          typesetting: false,
+          pattern_free: false,
+          inside_pattern_no: '',
+          inside_pattern_download: ''
+        },
+        // 編輯原物料的分類跳出視窗
+        formData: {
+          type: '',
+          name: '',
+          describe: '',
+          last_modify_user: '',
+          id: ''
+        },
+        dialog: {
+          show: false,
+          title: '展示一下',
+          option: 'edit'
+        },
+        levelTwoDialog: {
+          show: false,
+          title: '展示一下',
+          option: 'edit'
+        },
+        // 控制 supplier dialog 的物件
+        materialSupplierDialog: {
+          show: false,
+          title: '請選擇供應商',
+          option: 'edit',
+          material_id: ''
+        },
+        // 編輯原物料的跳出視窗
+        materialEditDialog: {
+          show: false,
+          title: '展示一下',
+          option: 'edit',
+          materialClass: ''
+        },
+        // 控制分頁
+        my_paginations: {
+          page_index: 1, // 位於當前第幾頁
+          total: 0, // 總數
+          page_size: 10, // 每一頁顯示幾條數據
+          page_sizes: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 100] // 選擇一頁要顯示多少條
+          // layouts: 'total, sizes, prev, pager, next, jumper'
         }
-        obj.value = item._id
-        obj.label = item.type + ' ' + item.name
-        this.levelOneTowOption.push(obj)
-      })
+      }
+    },
+    computed: {
+      ...mapGetters(['user'])
+    },
+    components: {
+      MaterialClassDialog,
+      MaterialEditDialog,
+      MaterialLevelTwoDialog,
+      MaterialSupplierDialog
+    },
+    beforeRouteEnter(to, from, next) {
+      // console.log('元件內的 beforeRouterEnter，不能使用this,因為此時尚未創建成功')
+      next()
+    },
+    beforeRouteLeave(to, from, next) {
+      // console.log('beforeRouteLeave 我要離開這個元件了')
+      next()
+    },
+    created() {
+      this.getMaterials()
+      this.getMaterialClass()
+      this.getMaterialLevelTwoClass()
+      this.getUserInfo()
+      this.getSuppliers()
+      this.getSupplierClass()
+    },
+    mounted() {
+      this.setCascaderOptions()
+    },
+    watch: {
+      materialClassData() {
+        if (!this.materialClassData.length && !this.materialLevelTwoClassData.length)
+          return
+        this.setLevelOneTowOption()
+      },
+      materialLevelTwoClassData() {
+        if (!this.materialClassData.length && !this.materialLevelTwoClassData.length)
+          return
+        this.setLevelOneTowOption()
+      }
+    },
+    methods: {
+      setCascaderOptions() {
+        // ，就讀回來上次的紀錄
+        if (localStorage.MaterialLevelOneValue && localStorage.MaterialLevelTwoValue) {
+          this.choiceLevelTwoValue[0] = localStorage.MaterialLevelOneValue
+          this.choiceLevelTwoValue[1] = localStorage.MaterialLevelTwoValue
+        }
+      },
+      // 當選擇 one / two 時，有變化就會來到這邊
+      onOptionsChange(value) {
+        // 當分類選擇異動的時候，再重新的撈第三層的商品資料
+        localStorage.MaterialLevelOneValue = value[0]
+        localStorage.MaterialLevelTwoValue = value[1]
+        // localStorage.material_class = value
+        this.getMaterials()
+      },
+      // 當 group level one / two 的資料都完整後，在來這邊整理資料
+      setLevelOneTowOption() {
+        this.levelOneTowOption = []
+        // this.materialClassData
+        this.materialClassData.forEach((item) => {
+          // console.log(index, item.name, item._id)
+          let obj = {
+            value: '',
+            label: '',
+            children: []
+          }
+          obj.value = item._id
+          obj.label = item.type + ' ' + item.name
+          this.levelOneTowOption.push(obj)
+        })
 
-      for (let i = 0; i < this.levelOneTowOption.length; i++) {
-        const level_one_id = this.levelOneTowOption[i].value
-        this.materialLevelTwoClassData.forEach((item) => {
-          if (item.level_one_id === level_one_id) {
-            let obj2 = {
-              value: '',
-              label: ''
+        for (let i = 0; i < this.levelOneTowOption.length; i++) {
+          const level_one_id = this.levelOneTowOption[i].value
+          this.materialLevelTwoClassData.forEach((item) => {
+            if (item.level_one_id === level_one_id) {
+              let obj2 = {
+                value: '',
+                label: ''
+              }
+              obj2.value = item._id
+              obj2.label = item.type + ' ' + item.name
+              this.levelOneTowOption[i].children.push(obj2)
             }
-            obj2.value = item._id
-            obj2.label = item.type + ' ' + item.name
-            this.levelOneTowOption[i].children.push(obj2)
+          })
+        }
+        this.getMaterials()
+      },
+      getSupplierById(row) {
+        let supplier = {}
+        this.allSupplierlData.forEach((e) => {
+          if (e._id === row.supplier_id) {
+            supplier = e
           }
         })
-      }
-      this.getMaterials()
-    },
-    getSupplierById(row) {
-      let supplier = {}
-      this.allSupplierlData.forEach((e) => {
-        if (e._id === row.supplier_id) {
-          supplier = e
-        }
-      })
-      return supplier
-    },
-    getSupplierNameById(row) {
-      let supplierName = ''
-      this.allSupplierlData.forEach((e) => {
-        if (e._id === row.supplier_id) {
-          supplierName = e.company
-        }
-      })
-      return supplierName
-    },
-    getSupplierClass() {
-      this.$axios
-        .get('/api/supplier-class')
-        .then((res) => {
-          // console.log('views/FundList.vue', res)
-          this.supplierClassData = res.data
-          // 設置分頁數據
-          // this.setPaginations()
+        return supplier
+      },
+      getSupplierNameById(row) {
+        let supplierName = ''
+        this.allSupplierlData.forEach((e) => {
+          if (e._id === row.supplier_id) {
+            supplierName = e.company
+          }
         })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-    // handleMaterialClassChange(value) {
-    //   localStorage.material_class = value
-    //   this.getMaterials()
-    // },
-    handleSizeChange(page_size) {
-      // 切換每頁有幾條數據
-
-      localStorage.material_page_size = page_size
-      this.my_paginations.page_index = 1
-      this.my_paginations.page_size = page_size
-      this.tableData = this.allMaterialData.filter((item, index) => {
-        return index < page_size
-      })
-    },
-    handleCurrentChange(page) {
-      // 獲取當前頁面
-      let index = this.my_paginations.page_size * (page - 1)
-      // 數據的總數
-      let nums = this.my_paginations.page_size * page
-      // 容器
-      let tables = []
-      for (let i = index; i < nums; i++) {
-        if (this.allMaterialData[i]) {
-          tables.push(this.allMaterialData[i])
-        }
-        this.tableData = tables
-      }
-    },
-    handleAddMaterial() {
-      this.materialEditDialog = {
-        show: true,
-        title: '原物料編輯',
-        option: 'add',
-        materialClass: ''
-      }
-      // 這邊要處理 add form
-      this.levelThreeFormDate = Object.assign({}, this.emptyLevelThreeFormDate)
-    },
-    handleEditMaterial(row) {
-      this.materialEditDialog = {
-        show: true,
-        title: '原物料編輯',
-        option: 'edit',
-        materialClass: this.getMaterilaClassOneNameById(row)
-      }
-      // 這邊要處理 edit form
-      this.levelThreeFormDate = Object.assign({}, row)
-    },
-    handleEditSupplier(row) {
-      // 把該原料的 _id 編號傳給子元件，然後在子元件更新資料庫的欄位 supplier_id
-      this.materialSupplierDialog = {
-        show: true,
-        title: '請選擇供應商',
-        option: 'edit',
-        material: row._id
-      }
-    },
-    // 直接修改 checkbox 加工費用 flag
-    checkboxChange(material) {
-      let uploadForm = {}
-      uploadForm = Object.assign({}, material)
-      uploadForm.last_edit_person = this.user.id
-      uploadForm.last_modify_date = new Date()
-      // 把 array 轉換成字串 +上 | 符號上傳，到了 server 端，再使用 split('|') 還原成 array [0, 1, 2] 再塞到資料庫
-      // 因為再使用 axios 傳送資料的時候，只能使用字串，不能使用 [<String 1>, <String 2>, ....]
-      if (uploadForm.imgs.length > 0) {
-        uploadForm.imgs = uploadForm.imgs.join('|')
-      }
-
-      const url = `edit/${material._id}`
-      this.$axios
-        .post(`/api/material/${url}`, uploadForm)
-        .then((res) => {
-          // 添加成功
-          this.$message({
-            message: '修改加工費 flag',
-            type: 'success'
+        return supplierName
+      },
+      getSupplierClass() {
+        this.$axios
+          .get('/api/supplier-class')
+          .then((res) => {
+            // console.log('views/FundList.vue', res)
+            this.supplierClassData = res.data
+            // 設置分頁數據
+            // this.setPaginations()
           })
-        })
-        .catch((err) => {
-          console.log(
-            'axios添加數據失敗==>MaterialManage.vue 修改加工費的 flag 失敗！==>',
-            err
-          )
-        })
-    },
-    handleDeleteMaterial(index, row) {
-      MessageBox.confirm(
-        '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
-        '嚴重警告！！！'
-      )
-        .then(() => {
-          // 防止誤刪除
-          return
-          this.$axios.delete(`/api/material/delete/${row._id}`).then((res) => {
-            this.$message('刪除成功！')
-            this.getMaterials()
+          .catch((err) => {
+            console.log(err)
           })
-        })
-        .catch(() => {
-          this.$message('您取消刪除了～鬆一口氣')
-        })
-    },
-    getMaterialClass() {
-      this.$axios
-        .get('/api/material-class/one')
-        .then((res) => {
-          // console.log('views/FundList.vue', res)
-          this.materialClassData = res.data
-          // 設置分頁數據
-          // this.setPaginations()
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-    getMaterialLevelTwoClass() {
-      this.$axios
-        .get('/api/material-class/two')
-        .then((res) => {
-          // console.log('views/FundList.vue', res)
-          this.materialLevelTwoClassData = res.data
-          // 設置分頁數據
-          // this.setPaginations()
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-    getMaterials() {
-      // 	第一次進來，要是沒有找到 localStorage.material_class 就會全讀資料庫
-      // 如果有紀錄的話，就會只讀紀錄部分的分類商品
+      },
+      // handleMaterialClassChange(value) {
+      //   localStorage.material_class = value
+      //   this.getMaterials()
+      // },
+      handleSizeChange(page_size) {
+        // 切換每頁有幾條數據
 
-      if (!this.choiceLevelTwoValue[1]) return
-      this.$axios
-        .get(`/api/material/get-from-class/${this.choiceLevelTwoValue[1]}`)
-        .then((res) => {
-          this.allMaterialData = res.data
-          this.allMaterialData.sort(function(a, b) {
-            return Number(a.type) - Number(b.type)
+        localStorage.material_page_size = page_size
+        this.my_paginations.page_index = 1
+        this.my_paginations.page_size = page_size
+        this.tableData = this.allMaterialData.filter((item, index) => {
+          return index < page_size
+        })
+      },
+      handleCurrentChange(page) {
+        // 獲取當前頁面
+        let index = this.my_paginations.page_size * (page - 1)
+        // 數據的總數
+        let nums = this.my_paginations.page_size * page
+        // 容器
+        let tables = []
+        for (let i = index; i < nums; i++) {
+          if (this.allMaterialData[i]) {
+            tables.push(this.allMaterialData[i])
+          }
+          this.tableData = tables
+        }
+      },
+      handleAddMaterial() {
+        this.materialEditDialog = {
+          show: true,
+          title: '原物料編輯',
+          option: 'add',
+          materialClass: ''
+        }
+        // 這邊要處理 add form
+        this.levelThreeFormDate = Object.assign({}, this.emptyLevelThreeFormDate)
+      },
+      handleEditMaterial(row) {
+        this.materialEditDialog = {
+          show: true,
+          title: '原物料編輯',
+          option: 'edit',
+          materialClass: this.getMaterilaClassOneNameById(row)
+        }
+        // 這邊要處理 edit form
+        this.levelThreeFormDate = Object.assign({}, row)
+      },
+      handleEditSupplier(row) {
+        // 把該原料的 _id 編號傳給子元件，然後在子元件更新資料庫的欄位 supplier_id
+        this.materialSupplierDialog = {
+          show: true,
+          title: '請選擇供應商',
+          option: 'edit',
+          material: row._id
+        }
+      },
+      // 直接修改 checkbox 加工費用 flag
+      checkboxChange(material) {
+        let uploadForm = {}
+        uploadForm = Object.assign({}, material)
+        uploadForm.last_edit_person = this.user.id
+        uploadForm.last_modify_date = new Date()
+        // 把 array 轉換成字串 +上 | 符號上傳，到了 server 端，再使用 split('|') 還原成 array [0, 1, 2] 再塞到資料庫
+        // 因為再使用 axios 傳送資料的時候，只能使用字串，不能使用 [<String 1>, <String 2>, ....]
+        if (uploadForm.imgs.length > 0) {
+          uploadForm.imgs = uploadForm.imgs.join('|')
+        }
+
+        const url = `edit/${material._id}`
+        this.$axios
+          .post(`/api/material/${url}`, uploadForm)
+          .then((res) => {
+            // 添加成功
+            this.$message({
+              message: '修改加工費 flag',
+              type: 'success'
+            })
           })
-          this.setPaginations()
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-    setPaginations() {
-      // 分頁屬性設置
-      this.my_paginations.total = this.allMaterialData.length
-      this.my_paginations.page_index = 1
-      if (localStorage.material_page_size) {
-        this.my_paginations.page_size = Number(localStorage.material_page_size)
-      } else {
-        this.my_paginations.page_size = 5
-      }
-      // 設置分頁數據
-      this.tableData = this.allMaterialData.filter((item, index) => {
-        return index < this.my_paginations.page_size
-      })
-    },
-    // 添加一筆新的商品分類代號 TD SS GG ... 等等
-    addMaterialLevelOneClass() {
-      this.dialog = {
-        show: true,
-        title: '新增原物料分類',
-        option: 'add'
-      }
-    },
-    addMaterialLevelTwoClass() {
-      this.levelTwoDialog = {
-        show: true,
-        title: '新增第二層分類',
-        option: 'add'
-      }
-      // console.log(this.levelTwoDialog)
-    },
-    getMaterilaClassOneNameById(row) {
-      let className = ''
-      this.materialClassData.forEach((e) => {
-        if (e._id === row.material_class) {
-          className = e.name
+          .catch((err) => {
+            console.log(
+              'axios添加數據失敗==>MaterialManage.vue 修改加工費的 flag 失敗！==>',
+              err
+            )
+          })
+      },
+      handleDeleteMaterial(index, row) {
+        MessageBox.confirm(
+          '注意！資料刪除會不可挽回！請確認此資料無其他應用！',
+          '嚴重警告！！！'
+        )
+          .then(() => {
+            // 防止誤刪除
+            return
+            this.$axios.delete(`/api/material/delete/${row._id}`).then((res) => {
+              this.$message('刪除成功！')
+              this.getMaterials()
+            })
+          })
+          .catch(() => {
+            this.$message('您取消刪除了～鬆一口氣')
+          })
+      },
+      getMaterialClass() {
+        this.$axios
+          .get('/api/material-class/one')
+          .then((res) => {
+            // console.log('views/FundList.vue', res)
+            this.materialClassData = res.data
+            // 設置分頁數據
+            // this.setPaginations()
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
+      getMaterialLevelTwoClass() {
+        this.$axios
+          .get('/api/material-class/two')
+          .then((res) => {
+            // console.log('views/FundList.vue', res)
+            this.materialLevelTwoClassData = res.data
+            // 設置分頁數據
+            // this.setPaginations()
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
+      getMaterials() {
+        // 	第一次進來，要是沒有找到 localStorage.material_class 就會全讀資料庫
+        // 如果有紀錄的話，就會只讀紀錄部分的分類商品
+
+        if (!this.choiceLevelTwoValue[1]) return
+        this.$axios
+          .get(`/api/material/get-from-class/${this.choiceLevelTwoValue[1]}`)
+          .then((res) => {
+            this.allMaterialData = res.data
+            this.allMaterialData.sort(function(a, b) {
+              return Number(a.type) - Number(b.type)
+            })
+            this.setPaginations()
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
+      setPaginations() {
+        // 分頁屬性設置
+        this.my_paginations.total = this.allMaterialData.length
+        this.my_paginations.page_index = 1
+        if (localStorage.material_page_size) {
+          this.my_paginations.page_size = Number(localStorage.material_page_size)
+        } else {
+          this.my_paginations.page_size = 5
         }
-      })
-      return className
-    },
-    getMaterilaClassTwoNameById(row) {
-      let className = ''
-      this.materialLevelTwoClassData.forEach((e) => {
-        if (e._id === row.level_two_id) {
-          className = e.name
+        // 設置分頁數據
+        this.tableData = this.allMaterialData.filter((item, index) => {
+          return index < this.my_paginations.page_size
+        })
+      },
+      // 添加一筆新的商品分類代號 TD SS GG ... 等等
+      addMaterialLevelOneClass() {
+        this.dialog = {
+          show: true,
+          title: '新增原物料分類',
+          option: 'add'
         }
-      })
-      return className
-    },
-    getUserInfo() {
-      this.$axios
-        .get('/api/user/user-info')
-        .then((res) => {
-          this.allUserNameId = res.data
+      },
+      addMaterialLevelTwoClass() {
+        this.levelTwoDialog = {
+          show: true,
+          title: '新增第二層分類',
+          option: 'add'
+        }
+        // console.log(this.levelTwoDialog)
+      },
+      getMaterilaClassOneNameById(row) {
+        let className = ''
+        this.materialClassData.forEach((e) => {
+          if (e._id === row.material_class) {
+            className = e.name
+          }
         })
-        .catch((err) => {
-          console.log(err)
+        return className
+      },
+      getMaterilaClassTwoNameById(row) {
+        let className = ''
+        this.materialLevelTwoClassData.forEach((e) => {
+          if (e._id === row.level_two_id) {
+            className = e.name
+          }
         })
-    },
-    getSuppliers() {
-      // 撈整個資料庫所有的供應商資料
-      this.$axios
-        .get('/api/supplier')
-        .then((res) => {
-          this.allSupplierlData = res.data
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+        return className
+      },
+      getUserInfo() {
+        this.$axios
+          .get('/api/user/user-info')
+          .then((res) => {
+            this.allUserNameId = res.data
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
+      getSuppliers() {
+        // 撈整個資料庫所有的供應商資料
+        this.$axios
+          .get('/api/supplier')
+          .then((res) => {
+            this.allSupplierlData = res.data
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
     }
   }
-}
 </script>
 
 <style scoped>
-.el-header,
-.el-footer {
-  background-color: #b3c0d1;
-  color: #333;
-  text-align: left;
-  line-height: 60px;
-}
+  .el-header,
+  .el-footer {
+    background-color: #b3c0d1;
+    color: #333;
+    text-align: left;
+    line-height: 60px;
+  }
 
-.el-aside {
-  background-color: #d3dce6;
-  color: #333;
-  text-align: center;
-  line-height: 800px;
-  border: 1px solid red;
-}
+  .el-aside {
+    background-color: #d3dce6;
+    color: #333;
+    text-align: center;
+    line-height: 800px;
+    border: 1px solid red;
+  }
 
-.el-main {
-  background-color: #e9eef3;
-  color: #333;
-  text-align: center;
-}
+  .el-main {
+    background-color: #e9eef3;
+    color: #333;
+    text-align: center;
+  }
 
-body > .el-container {
-  margin-bottom: 40px;
-}
+  body > .el-container {
+    margin-bottom: 40px;
+  }
 
-.el-container:nth-child(5) .el-aside,
-.el-container:nth-child(6) .el-aside {
-  line-height: 260px;
-}
+  .el-container:nth-child(5) .el-aside,
+  .el-container:nth-child(6) .el-aside {
+    line-height: 260px;
+  }
 
-.el-container:nth-child(7) .el-aside {
-  line-height: 320px;
-}
+  .el-container:nth-child(7) .el-aside {
+    line-height: 320px;
+  }
 
-.pagination {
-  text-align: left;
-  margin-top: 3px;
-}
-.materal-class-container {
-  display: inline-block;
-  margin-left: 10px;
-  width: 300px !important;
-}
+  .pagination {
+    text-align: left;
+    margin-top: 3px;
+  }
+  .materal-class-container {
+    display: inline-block;
+    margin-left: 10px;
+    width: 300px !important;
+  }
 
-/* 直接調整 el-cascader 沒有用，因為外面套了一個 div 該 class 為 .el-cascader--mini */
-.el-cascader--mini {
-  width: 100% !important;
-}
+  /* 直接調整 el-cascader 沒有用，因為外面套了一個 div 該 class 為 .el-cascader--mini */
+  .el-cascader--mini {
+    width: 100% !important;
+  }
 </style>
